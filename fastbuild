@@ -36,7 +36,9 @@ if [ "$KTS" != "" ]; then
     org.jetbrains.kotlin.preloading.Preloader \
     org.jetbrains.kotlin.cli.jvm.K2JVMCompiler \
     $KTS \
-    -d $PWD/target/classes
+    -d $PWD/target/classes \
+    -cp $PWD/target/classes
+
 fi
 
 if [ "$1" == "run" ]; then
