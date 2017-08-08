@@ -17,10 +17,11 @@ fun main(args: Array<String>) {
   }
 
   if (true) { // if development mode
-    service.staticFiles.location("/public")
     val projectDir = System.getProperty("user.dir")
     val staticDir = "/src/main/resources/public"
     service.staticFiles.externalLocation(projectDir + staticDir)
+  } else {
+    service.staticFiles.location("/public")
   }
 
   service.get("/", webapp.getRoot)
