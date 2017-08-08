@@ -1,6 +1,7 @@
 package es
 
 data class EsN(
+    val id: Int?,
     val es: String?,
     val en: String?,
     val gender: EsGender?

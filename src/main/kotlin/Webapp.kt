@@ -21,6 +21,7 @@ data class Webapp(
       <h2>Nouns</h2>
       <table border='1'>
         <tr>
+          <th>id</th>
           <th>article</th>
           <th>es</th>
           <th>en</th>
@@ -29,6 +30,7 @@ data class Webapp(
 
     for (noun in bank.nouns) {
       html.append("<tr>")
+      html.append("<td>${noun.id}</td>")
       html.append("<td>${genderToArticle(noun.gender)}</td>")
       html.append("<td>${nullToBlank(noun.es)}</td>")
       html.append("<td>${nullToBlank(noun.en)}</td>")
@@ -37,6 +39,7 @@ data class Webapp(
 
     html.append("""
         <tr>
+          <td></td>
           <td><input type='text' name='article'></td>
           <td><input type='text' name='es'></td>
           <td><input type='text' name='en'></td>
@@ -51,14 +54,14 @@ data class Webapp(
   }
 
   val addNounPost = { req: Request, res: Response ->
-    val newNoun = EsN(
+    val newNoun = EsN(null,
         blankToNull(req.queryParams("es")),
         blankToNull(req.queryParams("en")),
         articleToGender(req.queryParams("article")))
 
     val bank = Bank.loadFrom(bankFile)
     if (newNoun.isSavable()) {
-      bank.nouns.add(newNoun)
+      bank.addNoun(newNoun)
     }
     bank.saveTo(bankFile)
 
