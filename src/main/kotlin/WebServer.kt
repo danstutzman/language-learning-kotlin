@@ -31,4 +31,8 @@ fun main(args: Array<String>) {
   service.post("/hear-es-recall-uni", webapp.postHearEsRecallUni)
   service.get("/hear-en-es/:card_id", webapp.getHearEnEs)
   service.post("/hear-en-es", webapp.postHearEnEs)
+
+  service.afterAfter { req, res ->
+    logger.info("${req.requestMethod()} ${req.pathInfo()} ${res.status()}")
+  }
 }
