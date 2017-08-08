@@ -34,14 +34,19 @@
   ],
   "exposures": [
     {
-      "cardId": 1,
-      "type": "READ_ES_ACK_UNI",
-      "time": 1502212646
+      "cardId": 2,
+      "type": "HEAR_ES_RECALL_UNI",
+      "time": 1502221768
     },
     {
       "cardId": 1,
-      "type": "READ_ES_ACK_UNI",
-      "time": 1502212647
+      "type": "HEAR_ES_RECALL_UNI",
+      "time": 1502221769
+    },
+    {
+      "cardId": 5,
+      "type": "HEAR_ES_RECALL_UNI",
+      "time": 1502221862
     }
   ]
 }

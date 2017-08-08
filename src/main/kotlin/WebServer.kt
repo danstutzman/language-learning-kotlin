@@ -25,8 +25,8 @@ fun main(args: Array<String>) {
 
   service.get("/", webapp.getRoot)
   service.post("/add-noun", webapp.postAddNoun)
-  service.get("/read-es-ack-uni", webapp.getReadEsAckUni)
-  service.post("/read-es-ack-uni", webapp.postReadEsAckUni)
+  service.get("/read-es-recall-uni", webapp.getReadEsRecallUni)
+  service.post("/read-es-recall-uni", webapp.postReadEsRecallUni)
+  service.get("/hear-es-recall-uni", webapp.getHearEsRecallUni)
+  service.post("/hear-es-recall-uni", webapp.postHearEsRecallUni)
 }
-
-

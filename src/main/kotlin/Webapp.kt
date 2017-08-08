@@ -15,6 +15,7 @@ data class Webapp(
     <html>
       <head>
         <link rel='stylesheet' type='text/css' href='style.css'>
+        <script src='script.js'></script>
       </head>
       <body>"""
   val CLOSE_BODY_TAG = "</body></html>"
@@ -25,7 +26,8 @@ data class Webapp(
 
     html.append(OPEN_BODY_TAG)
     html.append("""
-      <a href='/read-es-ack-uni'>Read Spanish, acknowledge meaning</a>
+      <a href='/read-es-recall-uni'>Read Spanish, recall meaning</a><br>
+      <a href='/hear-es-recall-uni'>Hear Spanish, recall meaning</a><br>
       """)
 
     html.append("""
@@ -81,31 +83,60 @@ data class Webapp(
     res.redirect("/")
   }
 
-  val getReadEsAckUni = { _: Request, _: Response ->
+  val getReadEsRecallUni = { _: Request, _: Response ->
     val bank = Bank.loadFrom(bankFile)
     val random = Random()
     val randomNoun = bank.chooseRandomNoun()
 
-
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
-    html.append("<form method='post' action='/read-es-ack-uni'>")
+    html.append("<form method='post' action='/read-es-recall-uni'>")
     html.append("<input type='hidden' name='card_id' value='${randomNoun.id}'>")
-    html.append("<h2>Read Spanish, acknowledge meaning</h2>")
+    html.append("<input type='hidden' name='action' value=''>")
+    html.append("<h2>Read Spanish, recall meaning</h2>")
     html.append("<i>${genderToArticle(randomNoun.gender)} ${randomNoun.es}</i><br>")
-    html.append("<button name='action' value='i_remember'>I remember</button>")
-    html.append("<button name='action' value='i_forget'>I forget</button>")
+    html.append("<button class='i-remember' name='action' value='i-remember'>I remember</button>")
+    html.append("<button class='i-forget' name='action' value='i-forget'>I forget</button>")
     html.append("</form>")
     html.append(CLOSE_BODY_TAG)
   }
 
-  val postReadEsAckUni = { req: Request, res: Response ->
+  val postReadEsRecallUni = { req: Request, res: Response ->
     val bank = Bank.loadFrom(bankFile)
     val card = bank.findCardById(req.queryParams("card_id").toInt())
-    bank.addExposure(card.id!!, ExposureType.READ_ES_ACK_UNI)
+    bank.addExposure(card.id!!, ExposureType.READ_ES_RECALL_UNI)
     bank.saveTo(bankFile)
 
-    res.redirect("/read-es-ack-uni")
+    res.redirect("/read-es-recall-uni")
+  }
+
+  val getHearEsRecallUni = { _: Request, _: Response ->
+    val bank = Bank.loadFrom(bankFile)
+    val random = Random()
+    val randomNoun = bank.chooseRandomNoun()
+
+    Runtime.getRuntime().exec("/usr/bin/say -v Juan la casa")
+
+    val html = StringBuilder()
+    html.append(OPEN_BODY_TAG)
+    html.append("<form method='post' action='/hear-es-recall-uni'>")
+    html.append("<input type='hidden' name='card_id' value='${randomNoun.id}'>")
+    html.append("<input type='hidden' name='action' value=''>")
+    html.append("<h2>Hear Spanish, recall meaning</h2>")
+    html.append("(now playing through speakers)<br>")
+    html.append("<button class='i-remember' name='action' value='i-remember'>I <u>R</u>emember</button>")
+    html.append("<button class='i-forget' name='action' value='i-forget'>I <u>F</u>orget</button>")
+    html.append("</form>")
+    html.append(CLOSE_BODY_TAG)
+  }
+
+  val postHearEsRecallUni = { req: Request, res: Response ->
+    val bank = Bank.loadFrom(bankFile)
+    val card = bank.findCardById(req.queryParams("card_id").toInt())
+    bank.addExposure(card.id!!, ExposureType.HEAR_ES_RECALL_UNI)
+    bank.saveTo(bankFile)
+
+    res.redirect("/hear-es-recall-uni")
   }
 }
 
