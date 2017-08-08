@@ -1,8 +1,9 @@
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spark.Service
 import java.io.File
 
-val logger = LoggerFactory.getLogger("webapp/WebServer.kt")
+val logger: Logger = LoggerFactory.getLogger("webapp/WebServer.kt")
 
 fun main(args: Array<String>) {
   val port = 3000
