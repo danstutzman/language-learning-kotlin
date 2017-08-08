@@ -7,7 +7,7 @@ import java.io.File
 data class Webapp(
     val bankFile: File
 ) {
-  val rootGet = { req: Request, res: Response ->
+  val rootGet = { _: Request, _: Response ->
     val bank = Bank.loadFrom(bankFile)
     val html = StringBuilder()
     html.append("""
@@ -20,23 +20,24 @@ data class Webapp(
       <h2>Nouns</h2>
       <table border='1'>
         <tr>
-          <th>English</th>
+          <th>es</th>
+          <th>en</th>
         </tr>
     """)
 
     for (noun in bank.nouns) {
-      html.append("""
-      <tr>
-        <td>${noun.en}</td>
-      </tr>
-    """)
+      html.append("<tr>")
+      html.append("<td>${nullToBlank(noun.es)}</td>")
+      html.append("<td>${nullToBlank(noun.en)}</td>")
+      html.append("</tr>")
     }
 
     html.append("""
-      <tr>
-        <td><input type='text' name='new_english'></td>
-        <td><button>Add</button></td>
-      </tr>
+        <tr>
+          <td><input type='text' name='es'></td>
+          <td><input type='text' name='en'></td>
+          <td><button>Add</button></td>
+        </tr>
     """)
     html.append("""
       </table>
@@ -46,12 +47,21 @@ data class Webapp(
   }
 
   val addNounPost = { req: Request, res: Response ->
-    val newEnglish = req.queryParams("new_english")
+    val newNoun = EsN(
+        req.queryParams("es").blankToNull(),
+        req.queryParams("en").blankToNull())
 
     val bank = Bank.loadFrom(bankFile)
-    bank.nouns.add(EsN(newEnglish))
+    if (newNoun.isSavable()) {
+      bank.nouns.add(newNoun)
+    }
     bank.saveTo(bankFile)
 
     res.redirect("/")
   }
 }
+
+private fun String.blankToNull(): String? =
+    if (this == "") null else this
+
+private fun nullToBlank(s: String?) = if (s == null) "" else s
