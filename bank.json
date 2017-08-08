@@ -34,8 +34,14 @@
   ],
   "exposures": [
     {
-      "cardId": 5,
-      "type": "READ_ES_ACK_UNI"
+      "cardId": 1,
+      "type": "READ_ES_ACK_UNI",
+      "time": 1502212646
+    },
+    {
+      "cardId": 1,
+      "type": "READ_ES_ACK_UNI",
+      "time": 1502212647
     }
   ]
 }
