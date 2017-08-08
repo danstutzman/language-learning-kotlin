@@ -1,11 +1,11 @@
 import bank.Bank
+import bank.Exposure
 import bank.ExposureType
 import es.EsGender
 import es.EsN
 import spark.Request
 import spark.Response
 import java.io.File
-import java.util.Random
 
 
 data class Webapp(
@@ -85,18 +85,20 @@ data class Webapp(
 
   val getReadEsRecallUni = { _: Request, _: Response ->
     val bank = Bank.loadFrom(bankFile)
-    val random = Random()
-    val randomNoun = bank.chooseRandomNoun()
+    val noun = bank.chooseRandomNoun()
+    val script = "${genderToArticle(noun.gender)} ${noun.es}"
 
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
     html.append("<form method='post' action='/read-es-recall-uni'>")
-    html.append("<input type='hidden' name='card_id' value='${randomNoun.id}'>")
+    html.append("<input type='hidden' name='card_id' value='${noun.id}'>")
+    html.append("<input type='hidden' name='presented_at' value='${System.currentTimeMillis()}'>")
+    html.append("<input type='hidden' name='first_responded_at' value=''>")
     html.append("<input type='hidden' name='action' value=''>")
     html.append("<h2>Read Spanish, recall meaning</h2>")
-    html.append("<i>${genderToArticle(randomNoun.gender)} ${randomNoun.es}</i><br>")
-    html.append("<button class='i-remember' name='action' value='i-remember'>I remember</button>")
-    html.append("<button class='i-forget' name='action' value='i-forget'>I forget</button>")
+    html.append("<i>${script}</i><br>")
+    html.append("<button class='i-remember'>I remember</button>")
+    html.append("<button class='i-forget'>I forget</button>")
     html.append("</form>")
     html.append(CLOSE_BODY_TAG)
   }
@@ -104,7 +106,21 @@ data class Webapp(
   val postReadEsRecallUni = { req: Request, res: Response ->
     val bank = Bank.loadFrom(bankFile)
     val card = bank.findCardById(req.queryParams("card_id").toInt())
-    bank.addExposure(card.id!!, ExposureType.READ_ES_RECALL_UNI)
+    val presentedAt = req.queryParams("presented_at").toLong()
+    val firstRespondedAt = req.queryParams("first_responded_at").toLong()
+    val wasRecalled = when (req.queryParams("action")) {
+      "i_remember" -> true
+      "i_forget" -> true
+      else -> throw RuntimeException("Invalid action value '${req.queryParams("action")}'")
+    }
+
+    bank.addExposure(Exposure(
+        card.id!!,
+        ExposureType.READ_ES_RECALL_UNI,
+        presentedAt,
+        firstRespondedAt,
+        wasRecalled
+    ))
     bank.saveTo(bankFile)
 
     res.redirect("/read-es-recall-uni")
@@ -112,20 +128,22 @@ data class Webapp(
 
   val getHearEsRecallUni = { _: Request, _: Response ->
     val bank = Bank.loadFrom(bankFile)
-    val random = Random()
-    val randomNoun = bank.chooseRandomNoun()
+    val noun = bank.chooseRandomNoun()
+    val script = "${genderToArticle(noun.gender)} ${noun.es}"
 
-    Runtime.getRuntime().exec("/usr/bin/say -v Juan la casa")
+    Runtime.getRuntime().exec("/usr/bin/say -v Juan \"${script}\"")
 
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
     html.append("<form method='post' action='/hear-es-recall-uni'>")
-    html.append("<input type='hidden' name='card_id' value='${randomNoun.id}'>")
+    html.append("<input type='hidden' name='card_id' value='${noun.id}'>")
+    html.append("<input type='hidden' name='presented_at' value='${System.currentTimeMillis()}'>")
+    html.append("<input type='hidden' name='first_responded_at' value=''>")
     html.append("<input type='hidden' name='action' value=''>")
     html.append("<h2>Hear Spanish, recall meaning</h2>")
     html.append("(now playing through speakers)<br>")
-    html.append("<button class='i-remember' name='action' value='i-remember'>I <u>R</u>emember</button>")
-    html.append("<button class='i-forget' name='action' value='i-forget'>I <u>F</u>orget</button>")
+    html.append("<button class='i-remember'>I <u>R</u>emember</button>")
+    html.append("<button class='i-forget'>I <u>F</u>orget</button>")
     html.append("</form>")
     html.append(CLOSE_BODY_TAG)
   }
@@ -133,7 +151,21 @@ data class Webapp(
   val postHearEsRecallUni = { req: Request, res: Response ->
     val bank = Bank.loadFrom(bankFile)
     val card = bank.findCardById(req.queryParams("card_id").toInt())
-    bank.addExposure(card.id!!, ExposureType.HEAR_ES_RECALL_UNI)
+    val presentedAt = req.queryParams("presented_at").toLong()
+    val firstRespondedAt = req.queryParams("first_responded_at").toLong()
+    val wasRecalled = when (req.queryParams("action")) {
+      "i_remember" -> true
+      "i_forget" -> false
+      else -> throw RuntimeException("Invalid action value '${req.queryParams("action")}'")
+    }
+
+    bank.addExposure(Exposure(
+        card.id!!,
+        ExposureType.HEAR_ES_RECALL_UNI,
+        presentedAt,
+        firstRespondedAt,
+        wasRecalled
+    ))
     bank.saveTo(bankFile)
 
     res.redirect("/hear-es-recall-uni")

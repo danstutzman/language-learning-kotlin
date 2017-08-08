@@ -34,19 +34,25 @@
   ],
   "exposures": [
     {
-      "cardId": 2,
+      "cardId": 6,
       "type": "HEAR_ES_RECALL_UNI",
-      "time": 1502221768
+      "presentedAt": 1502224080196,
+      "firstRespondedAt": 1502224083443,
+      "wasRecalled": false
     },
     {
-      "cardId": 1,
+      "cardId": 2,
       "type": "HEAR_ES_RECALL_UNI",
-      "time": 1502221769
+      "presentedAt": 1502224083494,
+      "firstRespondedAt": 1502224084818,
+      "wasRecalled": true
     },
     {
       "cardId": 5,
       "type": "HEAR_ES_RECALL_UNI",
-      "time": 1502221862
+      "presentedAt": 1502224084844,
+      "firstRespondedAt": 1502224085882,
+      "wasRecalled": true
     }
   ]
 }

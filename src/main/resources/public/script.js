@@ -1,11 +1,19 @@
 function clickedIRemember() {
-  document.forms[0]['action'].value = 'i-remember'
-  document.forms[0].submit()
+  var form = document.forms[0]
+  if (form['first_responded_at'].value == '') {
+    form['first_responded_at'].value = new Date().getTime()
+  }
+  form['action'].value = 'i_remember'
+  form.submit()
 }
 
 function clickedIForget() {
-  document.forms[0]['action'].value = 'i-forget'
-  document.forms[0].submit()
+  var form = document.forms[0]
+  if (form['first_responded_at'].value == '') {
+    form['first_responded_at'].value = new Date().getTime()
+  }
+  form['action'].value = 'i_forget'
+  form.submit()
 }
 
 document.addEventListener('keypress', function(event) {
@@ -15,3 +23,10 @@ document.addEventListener('keypress', function(event) {
     clickedIForget()
   }
 })
+
+for (const element of document.getElementsByClassName('i-remember')) {
+  element.addEventListener('click', clickedIRemember)
+}
+for (const element of document.getElementsByClassName('i-forget')) {
+  element.addEventListener('click', clickedIForget)
+}

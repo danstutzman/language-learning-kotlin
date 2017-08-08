@@ -23,14 +23,20 @@ class Bank {
     }
 
     for (exposure in exposures) {
-      if (exposure.cardId == null) {
+      if (exposure.cardId == 0) {
         throw RuntimeException("Exposure $exposure is missing cardId")
       }
       if (exposure.type == null) {
         throw RuntimeException("Exposure $exposure is missing type")
       }
-      if (exposure.time == 0) {
-        throw RuntimeException("Exposure $exposure is missing time")
+      if (exposure.presentedAt == 0L) {
+        throw RuntimeException("Exposure $exposure is missing presentedAt")
+      }
+      if (exposure.firstRespondedAt == 0L) {
+        throw RuntimeException("Exposure $exposure is missing firstResponsedAt")
+      }
+      if (exposure.wasRecalled == null) {
+        throw RuntimeException("Exposure $exposure is missing wasRecalled")
       }
     }
   }
@@ -62,10 +68,13 @@ class Bank {
 
   fun listNouns() = nouns
 
-  private fun secondsPastEpochUtc() =
+  private fun nowSeconds() =
       (System.currentTimeMillis() / 1000).toInt()
 
-  fun addExposure(cardId: Int, type: ExposureType) {
-    exposures = exposures.plus(Exposure(cardId, type, secondsPastEpochUtc()))
+  private fun nowMillis() =
+      System.currentTimeMillis().toLong()
+
+  fun addExposure(exposure: Exposure) {
+    exposures = exposures.plus(exposure)
   }
 }
