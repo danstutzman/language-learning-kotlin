@@ -37,8 +37,7 @@ if [ "$KTS" != "" ]; then
     org.jetbrains.kotlin.cli.jvm.K2JVMCompiler \
     $KTS \
     -d $PWD/target/classes \
-    -cp $PWD/target/classes
-
+    -cp `cat .mvn-classpath`:target/classes
 fi
 
 if [ "$1" == "run" ]; then
