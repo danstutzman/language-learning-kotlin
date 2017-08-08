@@ -1,12 +1,12 @@
-import bank.Bank
 import org.slf4j.LoggerFactory
 import spark.Service
+import java.io.File
 
 val logger = LoggerFactory.getLogger("webapp/WebServer.kt")
 
 fun main(args: Array<String>) {
   val port = 3000
-  val webapp = Webapp(Bank())
+  val webapp = Webapp(File("bank.json"))
 
   logger.info("Starting server port=${port}")
   val service = Service.ignite().port(port)

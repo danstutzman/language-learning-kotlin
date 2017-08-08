@@ -2,11 +2,13 @@ import bank.Bank
 import es.EsN
 import spark.Request
 import spark.Response
+import java.io.File
 
 data class Webapp(
-    val bank: Bank
+    val bankFile: File
 ) {
   val rootGet = { req: Request, res: Response ->
+    val bank = Bank.loadFrom(bankFile)
     val html = StringBuilder()
     html.append("""
       <style>
@@ -45,7 +47,11 @@ data class Webapp(
 
   val addNounPost = { req: Request, res: Response ->
     val newEnglish = req.queryParams("new_english")
+
+    val bank = Bank.loadFrom(bankFile)
     bank.nouns.add(EsN(newEnglish))
+    bank.saveTo(bankFile)
+
     res.redirect("/")
   }
 }
