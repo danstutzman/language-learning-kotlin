@@ -36,8 +36,8 @@ data class Webapp(
       <h2>Nouns</h2>
       <table border='1'>
         <tr>
-          <th>id</th>
-          <th>article</th>
+          <th class='id'>id</th>
+          <th class='article'>article</th>
           <th>es</th>
           <th>en</th>
         </tr>
@@ -45,8 +45,8 @@ data class Webapp(
 
     for (noun in bank.listNouns()) {
       html.append("<tr>")
-      html.append("<td>${noun.id}</td>")
-      html.append("<td>${genderToArticle(noun.gender)}</td>")
+      html.append("<td class='id'>${noun.id}</td>")
+      html.append("<td class='article'>${genderToArticle(noun.gender)}</td>")
       html.append("<td>${nullToBlank(noun.es)}</td>")
       html.append("<td>${nullToBlank(noun.en)}</td>")
       html.append("</tr>")
@@ -54,11 +54,10 @@ data class Webapp(
 
     html.append("""
         <tr>
-          <td></td>
-          <td><input type='text' name='article'></td>
+          <td class='id'><button>Add</button></td>
+          <td class='article'><input type='text' name='article'></td>
           <td><input type='text' name='es'></td>
           <td><input type='text' name='en'></td>
-          <td><button>Add</button></td>
         </tr>
     """)
     html.append("""

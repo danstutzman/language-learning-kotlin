@@ -1,3 +1,14 @@
 body {
   font-family: sans-serif;
 }
+th {
+  text-align: left;
+}
+th.id,
+td.id {
+  max-width: 50px;
+}
+th.article,
+td.article {
+  max-width: 50px;
+}
