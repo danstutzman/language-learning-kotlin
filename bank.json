@@ -2,11 +2,18 @@
   "nouns": [
     {
       "es": "vida",
-      "en": "life"
+      "en": "life",
+      "gender": "F"
     },
     {
       "es": "casa",
-      "en": "house"
+      "en": "house",
+      "gender": "F"
+    },
+    {
+      "es": "día",
+      "en": "day",
+      "gender": "M"
     }
   ]
 }
