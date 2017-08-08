@@ -1,20 +1,29 @@
 import bank.Bank
+import bank.ExposureType
 import es.EsGender
 import es.EsN
 import spark.Request
 import spark.Response
 import java.io.File
+import java.util.Random
+
 
 data class Webapp(
     val bankFile: File
 ) {
-  val rootGet = { _: Request, _: Response ->
+  val STYLE_HTML = """
+    <style>
+      body { font-family:sans-serif; }
+    </style>"""
+
+  val getRoot = { _: Request, _: Response ->
     val bank = Bank.loadFrom(bankFile)
     val html = StringBuilder()
+
+    html.append(STYLE_HTML)
     html.append("""
-      <style>
-        body { font-family:sans-serif; }
-      </style>""")
+      <a href='/read-es-ack-uni'>Read Spanish, acknowledge meaning</a>
+      """)
 
     html.append("""
       <form method='post' action='/add-noun'>
@@ -26,9 +35,9 @@ data class Webapp(
           <th>es</th>
           <th>en</th>
         </tr>
-    """)
+      """)
 
-    for (noun in bank.nouns) {
+    for (noun in bank.listNouns()) {
       html.append("<tr>")
       html.append("<td>${noun.id}</td>")
       html.append("<td>${genderToArticle(noun.gender)}</td>")
@@ -53,7 +62,7 @@ data class Webapp(
     html.toString()
   }
 
-  val addNounPost = { req: Request, res: Response ->
+  val postAddNoun = { req: Request, res: Response ->
     val newNoun = EsN(null,
         blankToNull(req.queryParams("es")),
         blankToNull(req.queryParams("en")),
@@ -68,6 +77,31 @@ data class Webapp(
     res.redirect("/")
   }
 
+  val getReadEsAckUni = { _: Request, _: Response ->
+    val bank = Bank.loadFrom(bankFile)
+    val random = Random()
+    val randomNoun = bank.chooseRandomNoun()
+
+
+    val html = StringBuilder()
+    html.append(STYLE_HTML)
+    html.append("<form method='post' action='/read-es-ack-uni'>")
+    html.append("<input type='hidden' name='card_id' value='${randomNoun.id}'>")
+    html.append("<h2>Read Spanish, acknowledge meaning</h2>")
+    html.append("<i>${genderToArticle(randomNoun.gender)} ${randomNoun.es}</i><br>")
+    html.append("<button name='action' value='i_remember'>I remember</button>")
+    html.append("<button name='action' value='i_forget'>I forget</button>")
+    html.append("</form>")
+  }
+
+  val postReadEsAckUni = { req: Request, res: Response ->
+    val bank = Bank.loadFrom(bankFile)
+    val card = bank.findCardById(req.queryParams("card_id").toInt())
+    bank.addExposure(card.id!!, ExposureType.READ_ES_ACK_UNI)
+    bank.saveTo(bankFile)
+
+    res.redirect("/read-es-ack-uni")
+  }
 }
 
 private fun blankToNull(s: String): String? =

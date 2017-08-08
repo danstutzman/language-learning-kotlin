@@ -22,8 +22,10 @@ fun main(args: Array<String>) {
     service.staticFiles.externalLocation(projectDir + staticDir)
   }
 
-  service.get("/", webapp.rootGet)
-  service.post("/add-noun", webapp.addNounPost)
+  service.get("/", webapp.getRoot)
+  service.post("/add-noun", webapp.postAddNoun)
+  service.get("/read-es-ack-uni", webapp.getReadEsAckUni)
+  service.post("/read-es-ack-uni", webapp.postReadEsAckUni)
 }
 
 

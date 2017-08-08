@@ -31,5 +31,11 @@
       "en": "trunk",
       "gender": "M"
     }
+  ],
+  "exposures": [
+    {
+      "cardId": 5,
+      "type": "READ_ES_ACK_UNI"
+    }
   ]
 }
