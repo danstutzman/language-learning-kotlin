@@ -1,3 +1,4 @@
+import bank.Bank
 import org.slf4j.LoggerFactory
 import spark.Service
 
@@ -5,7 +6,7 @@ val logger = LoggerFactory.getLogger("webapp/WebServer.kt")
 
 fun main(args: Array<String>) {
   val port = 3000
-  val webapp = Webapp()
+  val webapp = Webapp(Bank())
 
   logger.info("Starting server port=${port}")
   val service = Service.ignite().port(port)
@@ -21,7 +22,8 @@ fun main(args: Array<String>) {
     service.staticFiles.externalLocation(projectDir + staticDir)
   }
 
-  service.get("/", webapp.root)
+  service.get("/", webapp.rootGet)
+  service.post("/add-noun", webapp.addNounPost)
 }
 
 
