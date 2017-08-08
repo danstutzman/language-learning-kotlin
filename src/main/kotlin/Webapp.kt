@@ -11,16 +11,19 @@ import java.util.Random
 data class Webapp(
     val bankFile: File
 ) {
-  val STYLE_HTML = """
-    <style>
-      body { font-family:sans-serif; }
-    </style>"""
+  val OPEN_BODY_TAG = """
+    <html>
+      <head>
+        <link rel='stylesheet' type='text/css' href='style.css'>
+      </head>
+      <body>"""
+  val CLOSE_BODY_TAG = "</body></html>"
 
   val getRoot = { _: Request, _: Response ->
     val bank = Bank.loadFrom(bankFile)
     val html = StringBuilder()
 
-    html.append(STYLE_HTML)
+    html.append(OPEN_BODY_TAG)
     html.append("""
       <a href='/read-es-ack-uni'>Read Spanish, acknowledge meaning</a>
       """)
@@ -59,6 +62,7 @@ data class Webapp(
       </table>
       </form>
     """)
+    html.append(CLOSE_BODY_TAG)
     html.toString()
   }
 
@@ -84,7 +88,7 @@ data class Webapp(
 
 
     val html = StringBuilder()
-    html.append(STYLE_HTML)
+    html.append(OPEN_BODY_TAG)
     html.append("<form method='post' action='/read-es-ack-uni'>")
     html.append("<input type='hidden' name='card_id' value='${randomNoun.id}'>")
     html.append("<h2>Read Spanish, acknowledge meaning</h2>")
@@ -92,6 +96,7 @@ data class Webapp(
     html.append("<button name='action' value='i_remember'>I remember</button>")
     html.append("<button name='action' value='i_forget'>I forget</button>")
     html.append("</form>")
+    html.append(CLOSE_BODY_TAG)
   }
 
   val postReadEsAckUni = { req: Request, res: Response ->
