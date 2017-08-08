@@ -35,7 +35,9 @@ class Bank {
       if (exposure.firstRespondedAt == 0L) {
         throw RuntimeException("Exposure $exposure is missing firstResponsedAt")
       }
-      if (exposure.wasRecalled == null) {
+      if ((exposure.type == ExposureType.HEAR_ES_RECALL_UNI ||
+          exposure.type == ExposureType.READ_ES_RECALL_UNI) &&
+          exposure.wasRecalled == null) {
         throw RuntimeException("Exposure $exposure is missing wasRecalled")
       }
     }

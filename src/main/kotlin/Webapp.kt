@@ -6,6 +6,7 @@ import es.EsN
 import spark.Request
 import spark.Response
 import java.io.File
+import kotlin.concurrent.thread
 
 
 data class Webapp(
@@ -14,8 +15,8 @@ data class Webapp(
   val OPEN_BODY_TAG = """
     <html>
       <head>
-        <link rel='stylesheet' type='text/css' href='style.css'>
-        <script src='script.js'></script>
+        <link rel='stylesheet' type='text/css' href='/style.css'>
+        <script src='/script.js'></script>
       </head>
       <body>"""
   val CLOSE_BODY_TAG = "</body></html>"
@@ -97,6 +98,9 @@ data class Webapp(
     html.append("<input type='hidden' name='action' value=''>")
     html.append("<h2>Read Spanish, recall meaning</h2>")
     html.append("<i>${script}</i><br>")
+    html.append("<span class='timer-3s-left'>3</span>")
+    html.append("<span class='timer-2s-left'>2</span>")
+    html.append("<span class='timer-1s-left'>1</span><br>")
     html.append("<button class='i-remember'>I remember</button>")
     html.append("<button class='i-forget'>I forget</button>")
     html.append("</form>")
@@ -110,7 +114,8 @@ data class Webapp(
     val firstRespondedAt = req.queryParams("first_responded_at").toLong()
     val wasRecalled = when (req.queryParams("action")) {
       "i_remember" -> true
-      "i_forget" -> true
+      "i_forget" -> false
+      "okay" -> false
       else -> throw RuntimeException("Invalid action value '${req.queryParams("action")}'")
     }
 
@@ -142,6 +147,9 @@ data class Webapp(
     html.append("<input type='hidden' name='action' value=''>")
     html.append("<h2>Hear Spanish, recall meaning</h2>")
     html.append("(now playing through speakers)<br>")
+    html.append("<span class='timer-3s-left'>3</span>")
+    html.append("<span class='timer-2s-left'>2</span>")
+    html.append("<span class='timer-1s-left'>1</span><br>")
     html.append("<button class='i-remember'>I <u>R</u>emember</button>")
     html.append("<button class='i-forget'>I <u>F</u>orget</button>")
     html.append("</form>")
@@ -156,6 +164,7 @@ data class Webapp(
     val wasRecalled = when (req.queryParams("action")) {
       "i_remember" -> true
       "i_forget" -> false
+      "okay" -> false
       else -> throw RuntimeException("Invalid action value '${req.queryParams("action")}'")
     }
 
@@ -168,8 +177,57 @@ data class Webapp(
     ))
     bank.saveTo(bankFile)
 
+    if (wasRecalled) {
+      res.redirect("/hear-es-recall-uni")
+    } else {
+      res.redirect("/hear-en-es/${card.id}")
+    }
+  }
+
+  val getHearEnEs = { req: Request, res: Response ->
+    println(req.params())
+    val bank = Bank.loadFrom(bankFile)
+    val noun = bank.findCardById(req.params("card_id").toInt()) as EsN
+    val scriptEn = "the ${noun.en}"
+    val scriptEs = "${genderToArticle(noun.gender)} ${noun.es}"
+    thread {
+      val process = Runtime.getRuntime().exec("/usr/bin/say \"${scriptEn}\"")
+      process.waitFor()
+      Runtime.getRuntime().exec("/usr/bin/say -r 100 -v Juan \"${scriptEs}\"")
+    }
+
+    val html = StringBuilder()
+    html.append(OPEN_BODY_TAG)
+    html.append("<form method='post' action='/hear-en-es'>")
+    html.append("<input type='hidden' name='card_id' value='${noun.id}'>")
+    html.append("<input type='hidden' name='presented_at' value='${System.currentTimeMillis()}'>")
+    html.append("<input type='hidden' name='first_responded_at' value=''>")
+    html.append("<input type='hidden' name='action' value=''>")
+    html.append("<h2>Hear English and Spanish</h2>")
+    html.append("${scriptEn} = <i>${scriptEs}</i><br>")
+    html.append("<button class='okay'><u>O</u>kay</button>")
+    html.append("</form>")
+    html.append(CLOSE_BODY_TAG)
+  }
+
+  val postHearEnEs = { req: Request, res: Response ->
+    val bank = Bank.loadFrom(bankFile)
+    val card = bank.findCardById(req.queryParams("card_id").toInt())
+    val presentedAt = req.queryParams("presented_at").toLong()
+    val firstRespondedAt = req.queryParams("first_responded_at").toLong()
+
+    bank.addExposure(Exposure(
+        card.id!!,
+        ExposureType.HEAR_EN_ES,
+        presentedAt,
+        firstRespondedAt,
+        null
+    ))
+    bank.saveTo(bankFile)
+
     res.redirect("/hear-es-recall-uni")
   }
+
 }
 
 private fun blankToNull(s: String): String? =

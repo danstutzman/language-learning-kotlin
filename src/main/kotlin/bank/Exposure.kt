@@ -8,5 +8,5 @@ data class Exposure(
     val presentedAt: Long,
     val firstRespondedAt: Long,
 
-    val wasRecalled: Boolean
+    val wasRecalled: Boolean?
 ) {}

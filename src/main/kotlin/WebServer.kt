@@ -29,4 +29,6 @@ fun main(args: Array<String>) {
   service.post("/read-es-recall-uni", webapp.postReadEsRecallUni)
   service.get("/hear-es-recall-uni", webapp.getHearEsRecallUni)
   service.post("/hear-es-recall-uni", webapp.postHearEsRecallUni)
+  service.get("/hear-en-es/:card_id", webapp.getHearEnEs)
+  service.post("/hear-en-es", webapp.postHearEnEs)
 }
