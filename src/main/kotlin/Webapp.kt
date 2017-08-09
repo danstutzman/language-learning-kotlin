@@ -17,9 +17,24 @@ data class Webapp(
       <head>
         <link rel='stylesheet' type='text/css' href='/style.css'>
         <script src='/script.js'></script>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
       </head>
       <body>"""
   val CLOSE_BODY_TAG = "</body></html>"
+
+  val START_MOBILE = """<div class='mobile'>
+      <div class='mobile-body'>
+      """
+  val END_MOBILE = """
+    </div>
+    <div class='mobile-links'>
+      <div class='mobile-link'><a href='/mobile1'>Add</a></div>
+      <div class='mobile-link'><a href='/mobile2'>List</a></div>
+      <div class='mobile-link'><a href='/mobile3'>Fast Q</a></div>
+      <div class='mobile-link'><a href='/mobile4'>Repair</a></div>
+      <div class='mobile-link'><a href='/mobile5'>Slow Q</a></div>
+    </div>
+  </div>"""
 
   val getRoot = { _: Request, _: Response ->
     val bank = Bank.loadFrom(bankFile)
@@ -231,6 +246,60 @@ data class Webapp(
     res.redirect("/hear-es-recall-uni")
   }
 
+  val getMobile1 = { req: Request, res: Response ->
+    val html = StringBuilder()
+    html.append(OPEN_BODY_TAG)
+    html.append(START_MOBILE)
+    html.append("<h1>Add new words</h1>")
+    html.append("<h2>(either Spanish or English)</h2>")
+    html.append("<input class='add-input' type='text'>")
+    html.append("<script>document.getElementsByClassName('add-input')[0].focus()</script>")
+    html.append(END_MOBILE)
+    html.append(CLOSE_BODY_TAG)
+  }
+
+  val getMobile2 = { req: Request, res: Response ->
+    val bank = Bank.loadFrom(bankFile)
+    val numNouns = bank.listNouns().size
+
+    val html = StringBuilder()
+    html.append(OPEN_BODY_TAG)
+    html.append(START_MOBILE)
+    html.append("<h1>List of cards</h1>")
+    html.append("<a href='/mobile2/nouns'><span class='num-in-part-of-speech'>${numNouns}</span>Nouns</a>")
+    html.append(END_MOBILE)
+    html.append(CLOSE_BODY_TAG)
+  }
+
+  val getMobile3 = { req: Request, res: Response ->
+    val html = StringBuilder()
+    html.append(OPEN_BODY_TAG)
+    html.append(START_MOBILE)
+    html.append("<h1>Fast quiz</h1>")
+    html.append("<h2>Tap if you remember</h2>")
+    html.append("<h2>Otherwise wait for next card</h2>")
+    html.append("<button class='start-quiz'>Start quiz</button>")
+    html.append(END_MOBILE)
+    html.append(CLOSE_BODY_TAG)
+  }
+
+  val getMobile4 = { req: Request, res: Response ->
+    val html = StringBuilder()
+    html.append(OPEN_BODY_TAG)
+    html.append(START_MOBILE)
+    html.append("<h1>Repair forgotten cards</h1>")
+    html.append(END_MOBILE)
+    html.append(CLOSE_BODY_TAG)
+  }
+
+  val getMobile5 = { req: Request, res: Response ->
+    val html = StringBuilder()
+    html.append(OPEN_BODY_TAG)
+    html.append(START_MOBILE)
+    html.append("<h1>Slow quiz</h1>")
+    html.append(END_MOBILE)
+    html.append(CLOSE_BODY_TAG)
+  }
 }
 
 private fun blankToNull(s: String): String? =
