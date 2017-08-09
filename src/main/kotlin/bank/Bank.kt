@@ -79,4 +79,18 @@ class Bank {
   fun addExposure(exposure: Exposure) {
     exposures = exposures.plus(exposure)
   }
+
+  fun updateNumSuccesses(cardId: Int, wasRecalled: Boolean) {
+    nouns = nouns.map { noun ->
+      if (noun.id == cardId) {
+        if (wasRecalled) {
+          noun.copy(numRepeatedSuccesses = noun.numRepeatedSuccesses + 1)
+        } else {
+          noun.copy(numRepeatedSuccesses = 0)
+        }
+      } else {
+        noun
+      }
+    }
+  }
 }

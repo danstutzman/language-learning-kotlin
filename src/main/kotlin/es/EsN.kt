@@ -4,7 +4,8 @@ data class EsN(
     val id: Int?,
     val es: String?,
     val en: String?,
-    val gender: EsGender?
+    val gender: EsGender?,
+    val numRepeatedSuccesses: Int
 ) {
   fun isComplete() = es != null &&
       en != null &&

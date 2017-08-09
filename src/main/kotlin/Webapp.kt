@@ -40,6 +40,7 @@ data class Webapp(
           <th class='article'>article</th>
           <th>es</th>
           <th>en</th>
+          <th>score</th>
         </tr>
       """)
 
@@ -49,6 +50,7 @@ data class Webapp(
       html.append("<td class='article'>${genderToArticle(noun.gender)}</td>")
       html.append("<td>${nullToBlank(noun.es)}</td>")
       html.append("<td>${nullToBlank(noun.en)}</td>")
+      html.append("<td>${noun.numRepeatedSuccesses}</td>")
       html.append("</tr>")
     }
 
@@ -72,7 +74,8 @@ data class Webapp(
     val newNoun = EsN(null,
         blankToNull(req.queryParams("es")),
         blankToNull(req.queryParams("en")),
-        articleToGender(req.queryParams("article")))
+        articleToGender(req.queryParams("article")),
+        0)
 
     val bank = Bank.loadFrom(bankFile)
     if (newNoun.isSavable()) {
@@ -125,6 +128,7 @@ data class Webapp(
         firstRespondedAt,
         wasRecalled
     ))
+    bank.updateNumSuccesses(card.id!!, wasRecalled)
     bank.saveTo(bankFile)
 
     res.redirect("/read-es-recall-uni")
