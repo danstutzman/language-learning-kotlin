@@ -103,8 +103,8 @@ data class Webapp(
     html.append("<span class='timer-3s-left'>3</span>")
     html.append("<span class='timer-2s-left'>2</span>")
     html.append("<span class='timer-1s-left'>1</span><br>")
-    html.append("<button class='i-remember'>I remember</button>")
-    html.append("<button class='i-forget'>I forget</button>")
+    html.append("<button class='i-remember'>I <u>R</u>emember</button>")
+    html.append("<button class='i-forget'>I <u>F</u>orget</button>")
     html.append("</form>")
     html.append(CLOSE_BODY_TAG)
   }
