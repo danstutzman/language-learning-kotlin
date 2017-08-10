@@ -37,6 +37,7 @@ fun main(args: Array<String>) {
   service.get("/mobile3", webapp.getMobile3)
   service.get("/mobile4", webapp.getMobile4)
   service.get("/mobile5", webapp.getMobile5)
+  service.post("/api/sync", webapp.postApiSync)
 
   service.afterAfter { req, res ->
     logger.info("${req.requestMethod()} ${req.pathInfo()} ${res.status()}")

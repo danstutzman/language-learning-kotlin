@@ -1,6 +1,7 @@
 import bank.Bank
 import bank.Exposure
 import bank.ExposureType
+import com.google.gson.GsonBuilder
 import es.EsGender
 import es.EsN
 import spark.Request
@@ -299,6 +300,11 @@ data class Webapp(
     html.append("<h1>Slow quiz</h1>")
     html.append(END_MOBILE)
     html.append(CLOSE_BODY_TAG)
+  }
+
+  val postApiSync = { req: Request, res: Response ->
+    val bank = Bank.loadFrom(bankFile)
+    GsonBuilder().setPrettyPrinting().create().toJson(bank)
   }
 }
 
