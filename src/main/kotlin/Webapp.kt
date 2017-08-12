@@ -1,12 +1,18 @@
 import bank.Bank
 import bank.Exposure
 import bank.ExposureType
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import es.EsGender
 import es.EsN
+import org.jooq.SQLDialect
+import org.jooq.generated.tables.Actions.ACTIONS
+import org.jooq.impl.DSL
 import spark.Request
 import spark.Response
 import java.io.File
+import java.sql.DriverManager
+import java.sql.Timestamp
 import kotlin.concurrent.thread
 
 
@@ -303,10 +309,59 @@ data class Webapp(
   }
 
   val postApiSync = { req: Request, res: Response ->
-    val bank = Bank.loadFrom(bankFile)
-    GsonBuilder().setPrettyPrinting().create().toJson(bank)
+    System.setProperty("org.jooq.no-logo", "true")
+    val jdbcUrl = "jdbc:postgresql://localhost:5432/language_learning_kotlin"
+    val conn = DriverManager.getConnection(jdbcUrl, "postgres", "")
+    val create = DSL.using(conn, SQLDialect.POSTGRES_9_5)
+
+    val request = Gson().fromJson(req.body(), BankApiRequest::class.java)
+    val newActions = mutableListOf<Action>()
+    for (action in request.actionsFromClient) {
+      val newAction = create
+          .insertInto(ACTIONS, ACTIONS.ACTION_ID, ACTIONS.CREATED_AT)
+          .values(action.actionId, Timestamp(System.currentTimeMillis().toLong()))
+          .returning(ACTIONS.ACTION_ID, ACTIONS.CREATED_AT)
+          .fetchOne()
+          .into(Action::class.java)
+      newActions.add(newAction)
+    }
+
+    val actionsToClient = mutableListOf<ActionJustId>()
+    val rows = create
+        .select(ACTIONS.ACTION_ID)
+        .from(ACTIONS)
+        .fetch()
+    for (row in rows) {
+      val actionToClient = ActionJustId(
+          row.getValue(ACTIONS.ACTION_ID))
+      actionsToClient.add(actionToClient)
+    }
+    val response = BankApiResponse(actionsToClient)
+
+    res.header("Access-Control-Allow-Origin", "*")
+    res.header("Content-Type", "application/json")
+    GsonBuilder().setPrettyPrinting().create().toJson(response)
   }
 }
+
+data class Action(
+    val actionId: Int,
+    val createdAt: Timestamp?
+)
+
+data class ActionJustId(
+    val actionId: Int
+)
+
+data class BankApiRequest(
+    val clientId: Int,
+    val clientIdToMaxSyncedActionId: Map<String, Int>,
+    val actionsFromClient: List<Action>
+)
+
+data class BankApiResponse(
+    val actionsToClient: List<ActionJustId>
+)
 
 private fun blankToNull(s: String): String? =
     if (s == "") null else s
