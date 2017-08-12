@@ -1,13 +1,18 @@
+import db.Db
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spark.Service
 import java.io.File
+import java.sql.DriverManager
 
 val logger: Logger = LoggerFactory.getLogger("webapp/WebServer.kt")
 
 fun main(args: Array<String>) {
   val port = 3000
-  val webapp = Webapp(File("bank.json"))
+  System.setProperty("org.jooq.no-logo", "true")
+  val jdbcUrl = "jdbc:postgresql://localhost:5432/language_learning_kotlin"
+  val conn = DriverManager.getConnection(jdbcUrl, "postgres", "")
+  val webapp = Webapp(File("bank.json"), Db(conn))
 
   logger.info("Starting server port=${port}")
   val service = Service.ignite().port(port)
