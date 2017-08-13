@@ -4,6 +4,7 @@ import bank.ExposureType
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import db.Action
+import db.ActionUnsafe
 import db.Db
 import es.EsGender
 import es.EsN
@@ -306,9 +307,12 @@ data class Webapp(
   }
 
   val postApiSync = { req: Request, res: Response ->
-    val request = Gson().fromJson(req.body(), BankApiRequest::class.java)
+    val request = Gson()
+        .fromJson(req.body(), BankApiRequestUnsafe::class.java)
+        .toSafe()
+
     for (action in request.actionsFromClient) {
-      db.createAction(action.actionId)
+      db.createAction(action.actionId, action.type)
     }
 
     val actionsToClient =
@@ -321,11 +325,29 @@ data class Webapp(
   }
 }
 
+data class BankApiRequestUnsafe(
+    val clientId: Int?,
+    val clientIdToMaxSyncedActionId: Map<String?, Int?>?,
+    val actionsFromClient: List<ActionUnsafe>?
+
+) {
+  fun toSafe(): BankApiRequest {
+    return BankApiRequest(
+        clientId!!,
+        clientIdToMaxSyncedActionId!!.map({ (k, v) ->
+          k!!.toInt() to v!!
+        }).toMap(),
+        actionsFromClient!!.map { action ->
+          action!!.toSafe()
+        })
+  }
+}
+
 data class BankApiRequest(
     val clientId: Int,
-    val clientIdToMaxSyncedActionId: Map<String, Int>,
+    val clientIdToMaxSyncedActionId: Map<Int, Int>,
     val actionsFromClient: List<Action>
-)
+) {}
 
 data class BankApiResponse(
     val actionsToClient: List<Action>
