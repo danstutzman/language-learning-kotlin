@@ -8,17 +8,20 @@ import java.sql.Timestamp
 
 data class Action(
     val actionId: Int,
-    val type: String
+    val type: String,
+    val createdAtMillis: Long
 )
 
 data class ActionUnsafe(
     val actionId: Int?,
-    val type: String?
+    val type: String?,
+    val createdAtMillis: Long?
 ) {
   fun toSafe(): Action {
     return Action(
         actionId!!,
-        type!!)
+        type!!,
+        createdAtMillis!!)
   }
 }
 
@@ -35,15 +38,19 @@ class Db(
         throw RuntimeException("numRowsAffected ${numRowsAffected} != 1")
       }
 
-  fun createAction(actionId: Int, type: String) {
+  fun createAction(action: Action) {
     create
         .insertInto(ACTIONS,
             ACTIONS.ACTION_ID,
-            ACTIONS.TYPE)
-        .values(actionId, type)
+            ACTIONS.TYPE,
+            ACTIONS.CREATED_AT_MILLIS)
+        .values(action.actionId,
+            action.type,
+            action.createdAtMillis)
         .returning(
             ACTIONS.ACTION_ID,
-            ACTIONS.TYPE)
+            ACTIONS.TYPE,
+            ACTIONS.CREATED_AT_MILLIS)
         .fetchOne()
   }
 
@@ -57,14 +64,18 @@ class Db(
 
     val actions = mutableListOf<Action>()
     val rows = create
-        .select(ACTIONS.ACTION_ID, ACTIONS.TYPE)
+        .select(
+            ACTIONS.ACTION_ID,
+            ACTIONS.TYPE,
+            ACTIONS.CREATED_AT_MILLIS)
         .from(ACTIONS)
         .where(where.toString())
         .fetch()
     for (row in rows) {
       actions.add(ActionUnsafe(
           row.getValue(ACTIONS.ACTION_ID),
-          row.getValue(ACTIONS.TYPE)
+          row.getValue(ACTIONS.TYPE),
+          row.getValue(ACTIONS.CREATED_AT_MILLIS)
       ).toSafe())
     }
     return actions

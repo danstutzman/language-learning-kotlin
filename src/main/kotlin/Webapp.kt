@@ -312,7 +312,7 @@ data class Webapp(
         .toSafe()
 
     for (action in request.actionsFromClient) {
-      db.createAction(action.actionId, action.type)
+      db.createAction(action)
     }
 
     val actionsToClient =
