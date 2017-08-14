@@ -350,7 +350,7 @@ data class BankApiRequest(
 ) {}
 
 data class BankApiResponse(
-    val actionsToClient: List<Action>
+    val actionsToClient: List<ActionUnsafe>
 )
 
 private fun blankToNull(s: String): String? =
