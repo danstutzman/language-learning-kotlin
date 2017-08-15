@@ -43,6 +43,7 @@ fun main(args: Array<String>) {
   service.get("/mobile4", webapp.getMobile4)
   service.get("/mobile5", webapp.getMobile5)
   service.post("/api/sync", webapp.postApiSync)
+  service.get("/speak/:filename", webapp.getSpeakText)
 
   service.afterAfter { req, res ->
     logger.info("${req.requestMethod()} ${req.pathInfo()} ${res.status()}")

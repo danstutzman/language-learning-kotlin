@@ -323,6 +323,24 @@ data class Webapp(
     res.header("Content-Type", "application/json")
     GsonBuilder().setPrettyPrinting().create().toJson(response)
   }
+
+  val getSpeakText = { req: Request, res: Response ->
+    val filename = req.params("filename")
+    if (filename.endsWith(".wav")) {
+      val scriptEs = filename.substringBeforeLast(".wav")
+      val process1 = Runtime.getRuntime().exec(
+          "/usr/bin/say -r 100 -v Juan \"${scriptEs}\" -o speak.aiff")
+      process1.waitFor()
+      val process2 = Runtime.getRuntime().exec(
+          "sox speak.aiff speak.wav")
+      process2.waitFor()
+
+      res.header("Content-Type", "audio/wav")
+      File("speak.wav").readBytes()
+    } else {
+      res.status(404)
+    }
+  }
 }
 
 data class BankApiRequestUnsafe(
