@@ -326,17 +326,17 @@ data class Webapp(
 
   val getSpeakText = { req: Request, res: Response ->
     val filename = req.params("filename")
-    if (filename.endsWith(".wav")) {
-      val scriptEs = filename.substringBeforeLast(".wav")
+    if (filename.endsWith(".mp3")) {
+      val scriptEs = filename.substringBeforeLast(".mp3")
       val process1 = Runtime.getRuntime().exec(
           "/usr/bin/say -r 100 -v Juan \"${scriptEs}\" -o speak.aiff")
       process1.waitFor()
       val process2 = Runtime.getRuntime().exec(
-          "sox speak.aiff speak.wav")
+          "lame speak.aiff speak.mp3")
       process2.waitFor()
 
-      res.header("Content-Type", "audio/wav")
-      File("speak.wav").readBytes()
+      res.header("Content-Type", "audio/mpeg")
+      File("speak.mp3").readBytes()
     } else {
       res.status(404)
     }
