@@ -43,7 +43,7 @@ DECLARE
   , ['back','espalda','F']
   , ['hip','cadera','F']
   , ['jaw','mandibula','F']
-  , ['hombro','shoulder','M']
+  , ['shoulder','hombro','M']
   , ['thumb','pulgar','M']
   , ['tongue','lengua','F']
   , ['throat','garganta','F']
