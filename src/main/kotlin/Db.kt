@@ -12,13 +12,13 @@ data class Action(
     val type: String,
     val createdAtMillis: Long,
     val cardJson: String?,
-    val cardId: Int?,
     val exposureJson: String?
 )
 
-data class CardUnsafe(
-    val type: String?,
-    val gender: String?,
+data class Card(
+    val cardId: Int,
+    val type: String,
+    val gender: String,
     val es: String,
     val en: String
 )
@@ -32,8 +32,7 @@ data class ActionUnsafe(
     val actionId: Int?,
     val type: String?,
     val createdAtMillis: Long?,
-    val card: CardUnsafe?,
-    val cardId: Int?,
+    val card: Card?,
     val exposure: ExposureUnsafe?
 ) {
   fun toSafe(): Action {
@@ -42,7 +41,6 @@ data class ActionUnsafe(
         type!!,
         createdAtMillis!!,
         if (card != null) Gson().toJson(card) else null,
-        cardId,
         if (exposure != null) Gson().toJson(exposure) else null
     )
   }
@@ -68,20 +66,17 @@ class Db(
             ACTIONS.TYPE,
             ACTIONS.CREATED_AT_MILLIS,
             ACTIONS.CARD_JSON,
-            ACTIONS.CARD_ID,
             ACTIONS.EXPOSURE_JSON)
         .values(action.actionId,
             action.type,
             action.createdAtMillis,
             action.cardJson,
-            action.cardId,
             action.exposureJson)
         .returning(
             ACTIONS.ACTION_ID,
             ACTIONS.TYPE,
             ACTIONS.CREATED_AT_MILLIS,
             ACTIONS.CARD_JSON,
-            ACTIONS.CARD_ID,
             ACTIONS.EXPOSURE_JSON)
         .fetchOne()
   }
@@ -101,7 +96,6 @@ class Db(
             ACTIONS.TYPE,
             ACTIONS.CREATED_AT_MILLIS,
             ACTIONS.CARD_JSON,
-            ACTIONS.CARD_ID,
             ACTIONS.EXPOSURE_JSON)
         .from(ACTIONS)
         .where(where.toString())
@@ -109,10 +103,9 @@ class Db(
     for (row in rows) {
       val cardJson: String? = row.getValue(ACTIONS.CARD_JSON)
       val exposureJson: String? = row.getValue(ACTIONS.EXPOSURE_JSON)
-      val card: CardUnsafe? =
+      val card: Card? =
           if (cardJson != null) {
-            Gson().fromJson<CardUnsafe>(
-                cardJson, CardUnsafe::class.java)
+            Gson().fromJson<Card>(cardJson, Card::class.java)
           } else {
             null
           }
@@ -128,7 +121,6 @@ class Db(
           row.getValue(ACTIONS.TYPE),
           row.getValue(ACTIONS.CREATED_AT_MILLIS),
           card,
-          row.getValue(ACTIONS.CARD_ID),
           exposure
       ))
     }

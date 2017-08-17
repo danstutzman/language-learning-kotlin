@@ -36,6 +36,7 @@ BEGIN
 			EXTRACT(EPOCH FROM NOW()) * 1000,
 			NOW(),
 			'{"type":"EsN",' ||
+      ' "cardId":"' || m[1] || '",' ||
       ' "gender":"' || m[2] || '",' ||
       ' "es":"' || m[3] || '",' ||
       ' "en":"' || m[4] || '"}'
