@@ -336,6 +336,7 @@ data class Webapp(
       process2.waitFor()
 
       res.header("Content-Type", "audio/mpeg")
+      res.header("Access-Control-Allow-Origin", "*")
       File("speak.mp3").readBytes()
     } else {
       res.status(404)
