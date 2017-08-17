@@ -329,7 +329,8 @@ data class Webapp(
     if (filename.endsWith(".mp3")) {
       val scriptEs = filename.substringBeforeLast(".mp3")
       val process1 = Runtime.getRuntime().exec(
-          "/usr/bin/say -r 100 -v Juan \"${scriptEs}\" -o speak.aiff")
+          "/usr/bin/say -v Juan \"${scriptEs}\" -o speak.aiff")
+      // TODO: -r 100 for slower
       process1.waitFor()
       val process2 = Runtime.getRuntime().exec(
           "lame speak.aiff speak.mp3")
