@@ -4,6 +4,7 @@ CREATE TABLE actions (
   created_at_millis BIGINT NOT NULL,
   synced_at         TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   card_json         TEXT,
+  card_id           INT,
   exposure_json     TEXT,
   PRIMARY KEY (action_id)
 );

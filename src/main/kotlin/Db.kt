@@ -12,6 +12,7 @@ data class Action(
     val type: String,
     val createdAtMillis: Long,
     val cardJson: String?,
+    val cardId: Int?,
     val exposureJson: String?
 )
 
@@ -32,6 +33,7 @@ data class ActionUnsafe(
     val type: String?,
     val createdAtMillis: Long?,
     val card: CardUnsafe?,
+    val cardId: Int?,
     val exposure: ExposureUnsafe?
 ) {
   fun toSafe(): Action {
@@ -40,6 +42,7 @@ data class ActionUnsafe(
         type!!,
         createdAtMillis!!,
         if (card != null) Gson().toJson(card) else null,
+        cardId,
         if (exposure != null) Gson().toJson(exposure) else null
     )
   }
@@ -65,17 +68,20 @@ class Db(
             ACTIONS.TYPE,
             ACTIONS.CREATED_AT_MILLIS,
             ACTIONS.CARD_JSON,
+            ACTIONS.CARD_ID,
             ACTIONS.EXPOSURE_JSON)
         .values(action.actionId,
             action.type,
             action.createdAtMillis,
             action.cardJson,
+            action.cardId,
             action.exposureJson)
         .returning(
             ACTIONS.ACTION_ID,
             ACTIONS.TYPE,
             ACTIONS.CREATED_AT_MILLIS,
             ACTIONS.CARD_JSON,
+            ACTIONS.CARD_ID,
             ACTIONS.EXPOSURE_JSON)
         .fetchOne()
   }
@@ -95,6 +101,7 @@ class Db(
             ACTIONS.TYPE,
             ACTIONS.CREATED_AT_MILLIS,
             ACTIONS.CARD_JSON,
+            ACTIONS.CARD_ID,
             ACTIONS.EXPOSURE_JSON)
         .from(ACTIONS)
         .where(where.toString())
@@ -121,6 +128,7 @@ class Db(
           row.getValue(ACTIONS.TYPE),
           row.getValue(ACTIONS.CREATED_AT_MILLIS),
           card,
+          row.getValue(ACTIONS.CARD_ID),
           exposure
       ))
     }
