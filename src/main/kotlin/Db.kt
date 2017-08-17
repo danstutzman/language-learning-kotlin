@@ -1,11 +1,14 @@
 package db
 
 import com.google.gson.Gson
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import org.jooq.SQLDialect
 import org.jooq.generated.tables.Actions.ACTIONS
 import org.jooq.impl.DSL
 import java.sql.Connection
 import java.sql.Timestamp
+
 
 data class Action(
     val actionId: Int,
@@ -15,26 +18,12 @@ data class Action(
     val exposureJson: String?
 )
 
-data class Card(
-    val cardId: Int,
-    val type: String,
-    val gender: String,
-    val es: String,
-    val en: String,
-    val mnemonic: String
-)
-
-data class ExposureUnsafe(
-    val cardId: Int?,
-    val remembered: Boolean?
-)
-
 data class ActionUnsafe(
     val actionId: Int?,
     val type: String?,
     val createdAtMillis: Long?,
-    val card: Card?,
-    val exposure: ExposureUnsafe?
+    val card: JsonObject?,
+    val exposure: JsonObject?
 ) {
   fun toSafe(): Action {
     return Action(
@@ -104,16 +93,15 @@ class Db(
     for (row in rows) {
       val cardJson: String? = row.getValue(ACTIONS.CARD_JSON)
       val exposureJson: String? = row.getValue(ACTIONS.EXPOSURE_JSON)
-      val card: Card? =
+      val card: JsonObject? =
           if (cardJson != null) {
-            Gson().fromJson<Card>(cardJson, Card::class.java)
+            JsonParser().parse(cardJson).asJsonObject
           } else {
             null
           }
-      val exposure: ExposureUnsafe? =
+      val exposure: JsonObject? =
           if (exposureJson != null) {
-            Gson().fromJson<ExposureUnsafe>(
-                exposureJson, ExposureUnsafe::class.java)
+            JsonParser().parse(exposureJson).asJsonObject
           } else {
             null
           }
