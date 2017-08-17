@@ -20,7 +20,8 @@ data class Card(
     val type: String,
     val gender: String,
     val es: String,
-    val en: String
+    val en: String,
+    val mnemonic: String
 )
 
 data class ExposureUnsafe(
