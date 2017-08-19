@@ -42,7 +42,7 @@ DECLARE
   , ['hand','mano','F']
   , ['back','espalda','F']
   , ['hip','cadera','F']
-  , ['jaw','mandibula','F']
+  , ['jaw','mandíbula','F']
   , ['shoulder','hombro','M']
   , ['thumb','pulgar','M']
   , ['tongue','lengua','F']
