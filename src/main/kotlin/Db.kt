@@ -14,7 +14,8 @@ data class Action(
     val actionId: Int,
     val type: String,
     val createdAtMillis: Long,
-    val cardJson: String?,
+    val cardAddJson: String?,
+    val cardUpdateJson: String?,
     val exposureJson: String?
 )
 
@@ -22,7 +23,8 @@ data class ActionUnsafe(
     val actionId: Int?,
     val type: String?,
     val createdAtMillis: Long?,
-    val card: JsonObject?,
+    val cardAdd: JsonObject?,
+    val cardUpdate: JsonObject?,
     val exposure: JsonObject?
 ) {
   fun toSafe(): Action {
@@ -30,7 +32,8 @@ data class ActionUnsafe(
         actionId!!,
         type!!,
         createdAtMillis!!,
-        if (card != null) Gson().toJson(card) else null,
+        if (cardAdd != null) Gson().toJson(cardAdd) else null,
+        if (cardUpdate != null) Gson().toJson(cardUpdate) else null,
         if (exposure != null) Gson().toJson(exposure) else null
     )
   }
@@ -55,18 +58,21 @@ class Db(
             ACTIONS.ACTION_ID,
             ACTIONS.TYPE,
             ACTIONS.CREATED_AT_MILLIS,
-            ACTIONS.CARD_JSON,
+            ACTIONS.CARD_ADD_JSON,
+            ACTIONS.CARD_UPDATE_JSON,
             ACTIONS.EXPOSURE_JSON)
         .values(action.actionId,
             action.type,
             action.createdAtMillis,
-            action.cardJson,
+            action.cardAddJson,
+            action.cardUpdateJson,
             action.exposureJson)
         .returning(
             ACTIONS.ACTION_ID,
             ACTIONS.TYPE,
             ACTIONS.CREATED_AT_MILLIS,
-            ACTIONS.CARD_JSON,
+            ACTIONS.CARD_ADD_JSON,
+            ACTIONS.CARD_UPDATE_JSON,
             ACTIONS.EXPOSURE_JSON)
         .fetchOne()
   }
@@ -85,17 +91,35 @@ class Db(
             ACTIONS.ACTION_ID,
             ACTIONS.TYPE,
             ACTIONS.CREATED_AT_MILLIS,
-            ACTIONS.CARD_JSON,
+            ACTIONS.CARD_ADD_JSON,
+            ACTIONS.CARD_UPDATE_JSON,
             ACTIONS.EXPOSURE_JSON)
         .from(ACTIONS)
         .where(where.toString())
         .fetch()
     for (row in rows) {
-      val cardJson: String? = row.getValue(ACTIONS.CARD_JSON)
+      val cardAddJson: String? = row.getValue(ACTIONS.CARD_ADD_JSON)
+      val cardUpdateJson: String? = row.getValue(ACTIONS.CARD_UPDATE_JSON)
       val exposureJson: String? = row.getValue(ACTIONS.EXPOSURE_JSON)
-      val card: JsonObject? =
-          if (cardJson != null) {
-            JsonParser().parse(cardJson).asJsonObject
+      val cardAdd: JsonObject? =
+          if (cardAddJson != null) {
+            try {
+              JsonParser().parse(cardAddJson).asJsonObject
+            } catch (e: com.google.gson.JsonSyntaxException) {
+              System.err.println("Bad JSON was: ${cardAddJson}")
+              throw e
+            }
+          } else {
+            null
+          }
+      val cardUpdate: JsonObject? =
+          if (cardUpdateJson != null) {
+            try {
+              JsonParser().parse(cardUpdateJson).asJsonObject
+            } catch (e: com.google.gson.JsonSyntaxException) {
+              System.err.println("Bad JSON was: ${cardUpdateJson}")
+              throw e
+            }
           } else {
             null
           }
@@ -109,7 +133,8 @@ class Db(
           row.getValue(ACTIONS.ACTION_ID),
           row.getValue(ACTIONS.TYPE),
           row.getValue(ACTIONS.CREATED_AT_MILLIS),
-          card,
+          cardAdd,
+          cardUpdate,
           exposure
       ))
     }
