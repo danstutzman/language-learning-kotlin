@@ -5,6 +5,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.jooq.SQLDialect
 import org.jooq.generated.tables.Actions.ACTIONS
+import org.jooq.generated.tables.Exposures.EXPOSURES
 import org.jooq.impl.DSL
 import java.sql.Connection
 import java.sql.Timestamp
@@ -15,8 +16,7 @@ data class Action(
     val type: String,
     val createdAtMillis: Long,
     val cardAddJson: String?,
-    val cardUpdateJson: String?,
-    val exposureJson: String?
+    val cardUpdateJson: String?
 )
 
 data class ActionUnsafe(
@@ -24,8 +24,7 @@ data class ActionUnsafe(
     val type: String?,
     val createdAtMillis: Long?,
     val cardAdd: JsonObject?,
-    val cardUpdate: JsonObject?,
-    val exposure: JsonObject?
+    val cardUpdate: JsonObject?
 ) {
   fun toSafe(): Action {
     return Action(
@@ -33,11 +32,18 @@ data class ActionUnsafe(
         type!!,
         createdAtMillis!!,
         if (cardAdd != null) Gson().toJson(cardAdd) else null,
-        if (cardUpdate != null) Gson().toJson(cardUpdate) else null,
-        if (exposure != null) Gson().toJson(exposure) else null
+        if (cardUpdate != null) Gson().toJson(cardUpdate) else null
     )
   }
 }
+
+data class ExposureUnsafe(
+    val type: String?,
+    val es: String?,
+    val promptedAt: Long?,
+    val respondedAt: Long?
+)
+
 
 class Db(
     private val conn: Connection
@@ -59,21 +65,18 @@ class Db(
             ACTIONS.TYPE,
             ACTIONS.CREATED_AT_MILLIS,
             ACTIONS.CARD_ADD_JSON,
-            ACTIONS.CARD_UPDATE_JSON,
-            ACTIONS.EXPOSURE_JSON)
+            ACTIONS.CARD_UPDATE_JSON)
         .values(action.actionId,
             action.type,
             action.createdAtMillis,
             action.cardAddJson,
-            action.cardUpdateJson,
-            action.exposureJson)
+            action.cardUpdateJson)
         .returning(
             ACTIONS.ACTION_ID,
             ACTIONS.TYPE,
             ACTIONS.CREATED_AT_MILLIS,
             ACTIONS.CARD_ADD_JSON,
-            ACTIONS.CARD_UPDATE_JSON,
-            ACTIONS.EXPOSURE_JSON)
+            ACTIONS.CARD_UPDATE_JSON)
         .fetchOne()
   }
 
@@ -92,15 +95,13 @@ class Db(
             ACTIONS.TYPE,
             ACTIONS.CREATED_AT_MILLIS,
             ACTIONS.CARD_ADD_JSON,
-            ACTIONS.CARD_UPDATE_JSON,
-            ACTIONS.EXPOSURE_JSON)
+            ACTIONS.CARD_UPDATE_JSON)
         .from(ACTIONS)
         .where(where.toString())
         .fetch()
     for (row in rows) {
       val cardAddJson: String? = row.getValue(ACTIONS.CARD_ADD_JSON)
       val cardUpdateJson: String? = row.getValue(ACTIONS.CARD_UPDATE_JSON)
-      val exposureJson: String? = row.getValue(ACTIONS.EXPOSURE_JSON)
       val cardAdd: JsonObject? =
           if (cardAddJson != null) {
             try {
@@ -123,21 +124,31 @@ class Db(
           } else {
             null
           }
-      val exposure: JsonObject? =
-          if (exposureJson != null) {
-            JsonParser().parse(exposureJson).asJsonObject
-          } else {
-            null
-          }
       actions.add(ActionUnsafe(
           row.getValue(ACTIONS.ACTION_ID),
           row.getValue(ACTIONS.TYPE),
           row.getValue(ACTIONS.CREATED_AT_MILLIS),
           cardAdd,
-          cardUpdate,
-          exposure
+          cardUpdate
       ))
     }
     return actions
+  }
+
+  fun logExposures(exposures: List<ExposureUnsafe>) {
+    var insert = create.insertInto(EXPOSURES,
+        EXPOSURES.TYPE,
+        EXPOSURES.ES,
+        EXPOSURES.PROMPTED_AT,
+        EXPOSURES.RESPONDED_AT)
+    for (exposure in exposures) {
+      insert = insert.values(
+          exposure.type,
+          exposure.es,
+          exposure.promptedAt,
+          exposure.respondedAt
+      )
+    }
+    insert.execute()
   }
 }

@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder
 import db.Action
 import db.ActionUnsafe
 import db.Db
+import db.ExposureUnsafe
 import es.EsGender
 import es.EsN
 import spark.Request
@@ -311,6 +312,8 @@ data class Webapp(
         .fromJson(req.body(), BankApiRequestUnsafe::class.java)
         .toSafe()
 
+    db.logExposures(request.exposures)
+
     for (action in request.actionsFromClient) {
       db.createAction(action)
     }
@@ -348,8 +351,8 @@ data class Webapp(
 data class BankApiRequestUnsafe(
     val clientId: Int?,
     val clientIdToMaxSyncedActionId: Map<String?, Int?>?,
-    val actionsFromClient: List<ActionUnsafe>?
-
+    val actionsFromClient: List<ActionUnsafe>?,
+    val exposures: List<ExposureUnsafe>?
 ) {
   fun toSafe(): BankApiRequest {
     return BankApiRequest(
@@ -359,14 +362,18 @@ data class BankApiRequestUnsafe(
         }).toMap(),
         actionsFromClient!!.map { action ->
           action!!.toSafe()
-        })
+        },
+        exposures!!
+    )
   }
 }
+
 
 data class BankApiRequest(
     val clientId: Int,
     val clientIdToMaxSyncedActionId: Map<Int, Int>,
-    val actionsFromClient: List<Action>
+    val actionsFromClient: List<Action>,
+    val exposures: List<ExposureUnsafe>
 ) {}
 
 data class BankApiResponse(

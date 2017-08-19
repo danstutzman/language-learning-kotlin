@@ -73,4 +73,13 @@ BEGIN
     action_id := action_id + 10;
    END LOOP;
 END
-$do$
+$do$;
+
+CREATE TABLE exposures (
+  id            SERIAL NOT NULL,
+  type          TEXT NOT NULL,
+  es            TEXT NOT NULL,
+  prompted_at   BIGINT NOT NULL,
+  responded_at  BIGINT NOT NULL,
+  PRIMARY KEY (id)
+);
