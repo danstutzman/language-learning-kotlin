@@ -47,7 +47,6 @@ DECLARE
   , ['tongue','lengua','F','tongue length for languages']
   , ['throat','garganta','F','throat can''t gargle gargantuan']
   ];
-DECLARE
   action_id int8 := 10;
 BEGIN
 	FOREACH m SLICE 1 IN ARRAY arr
