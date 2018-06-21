@@ -1,0 +1,116 @@
+{
+  "skills": [
+    {
+      "cardId": 11,
+      "delay": 10000,
+      "endurance": 0,
+      "lastCorrectAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardId": 12,
+      "delay": 10000,
+      "endurance": 0,
+      "lastCorrectAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardId": 21,
+      "delay": 10000,
+      "endurance": 0,
+      "lastCorrectAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardId": 22,
+      "delay": 10000,
+      "endurance": 0,
+      "lastCorrectAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardId": 23,
+      "delay": 10000,
+      "endurance": 0,
+      "lastCorrectAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardId": 24,
+      "delay": 10000,
+      "endurance": 0,
+      "lastCorrectAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardId": 25,
+      "delay": 10000,
+      "endurance": 0,
+      "lastCorrectAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardId": 26,
+      "delay": 10000,
+      "endurance": 0,
+      "lastCorrectAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardId": 31,
+      "delay": 20000,
+      "endurance": 0,
+      "lastCorrectAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardId": 32,
+      "delay": 20000,
+      "endurance": 0,
+      "lastCorrectAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardId": 33,
+      "delay": 20000,
+      "endurance": 0,
+      "lastCorrectAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardId": 34,
+      "delay": 20000,
+      "endurance": 0,
+      "lastCorrectAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardId": 35,
+      "delay": 20000,
+      "endurance": 0,
+      "lastCorrectAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardId": 36,
+      "delay": 20000,
+      "endurance": 0,
+      "lastCorrectAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardId": 41,
+      "delay": 10000,
+      "endurance": 0,
+      "lastCorrectAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardId": 51,
+      "delay": 20000,
+      "endurance": 0,
+      "lastCorrectAt": 0,
+      "mnemonic": ""
+    }
+  ]
+}

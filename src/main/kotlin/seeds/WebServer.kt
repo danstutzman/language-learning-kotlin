@@ -3,6 +3,7 @@ package seeds
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import db.Db
+import java.io.File
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spark.Service
@@ -10,6 +11,8 @@ import spark.Service
 val logger: Logger = LoggerFactory.getLogger("seeds/WebServer.kt")
 
 val DELAY_THRESHOLD = 10000
+
+val skillsFile = File("./skills.json")
 
 data class GlossRow (
   val cardId: Int,
@@ -221,6 +224,23 @@ fun handleGet(req: spark.Request, res: spark.Response): String {
   return GsonBuilder().setPrettyPrinting().create().toJson(response)
 }
 
+data class SkillsPost(
+  val skills: Array<SkillRow>?
+) {}
+
+fun handlePost(req: spark.Request, res: spark.Response): String {
+  val skillsPost = Gson().fromJson(req.body(), SkillsPost::class.java)
+  if (skillsPost.skills == null) {
+    res.status(400)
+    return "{\"errors\":[\"Missing skills\"]}"
+  }
+
+  skillsFile.writeText(
+    GsonBuilder().setPrettyPrinting().create().toJson(skillsPost))
+
+  return "{}"
+}
+
 fun main(args: Array<String>) {
   System.setProperty("org.jooq.no-logo", "true")
 
@@ -233,6 +253,7 @@ fun main(args: Array<String>) {
   }
 
   service.get("/", ::handleGet)
+  service.post("/", ::handlePost)
 
   service.afterAfter { req, res ->
     logger.info("${req.requestMethod()} ${req.pathInfo()} ${res.status()}")
