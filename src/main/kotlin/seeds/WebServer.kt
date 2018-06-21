@@ -146,8 +146,10 @@ fun handleGet(req: spark.Request, res: spark.Response): String {
     .fromJson(skillsExportFile.readText(), SkillsExport::class.java)
   val skillRowByCardId = skillsExport.skillExports.map {
     val card = when (it.cardType) {
+      "Det"         -> detByEs[it.cardKey]!!
       "IClause"     -> iClauseByKey[it.cardKey]!!
       "Inf"         -> infByEs[it.cardKey]!!
+      "N"           -> nByEs[it.cardKey]!!
       "NP"          -> npByEs[it.cardKey]!!
       "RegV"        -> regVByKey[it.cardKey]!!
       "RegVPattern" -> regVPatternByKey[it.cardKey]!!
