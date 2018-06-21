@@ -12,7 +12,7 @@ val logger: Logger = LoggerFactory.getLogger("seeds/WebServer.kt")
 
 val DELAY_THRESHOLD = 10000
 
-val skillsFile = File("./skills.json")
+val skillsUploadFile = File("./skillsUpload.json")
 
 data class GlossRow (
   val cardId: Int,
@@ -205,15 +205,21 @@ fun handleGet(req: spark.Request, res: spark.Response): String {
       it.getQuizQuestion()
     )
   }
+
+  val skillsUpload: SkillsUpload = Gson()
+    .fromJson(skillsUploadFile.readText(), SkillsUpload::class.java)
+  println(skillsUpload)
   val skillRows = cards.map {
-    SkillRow(
+    skillsUpload.skillByCardId!![it.cardId] ?: SkillRow(
       it.cardId,
       if (it.getChildrenCardIds().size == 0)
         DELAY_THRESHOLD else DELAY_THRESHOLD * 2,
       0,
       0,
-      "")
+      ""
+    )
   }
+
   val response = linkedMapOf(
     "cards" to cardRows,
     "skills" to skillRows
@@ -224,19 +230,19 @@ fun handleGet(req: spark.Request, res: spark.Response): String {
   return GsonBuilder().setPrettyPrinting().create().toJson(response)
 }
 
-data class SkillsPost(
-  val skills: Array<SkillRow>?
+data class SkillsUpload(
+  val skillByCardId: Map<Int, SkillRow>?
 ) {}
 
 fun handlePost(req: spark.Request, res: spark.Response): String {
-  val skillsPost = Gson().fromJson(req.body(), SkillsPost::class.java)
-  if (skillsPost.skills == null) {
+  val skillsUpload = Gson().fromJson(req.body(), SkillsUpload::class.java)
+  if (skillsUpload.skillByCardId == null) {
     res.status(400)
-    return "{\"errors\":[\"Missing skills\"]}"
+    return "{\"errors\":[\"Missing skillByCardId\"]}"
   }
 
-  skillsFile.writeText(
-    GsonBuilder().setPrettyPrinting().create().toJson(skillsPost))
+  skillsUploadFile.writeText(
+    GsonBuilder().setPrettyPrinting().create().toJson(skillsUpload))
 
   return "{}"
 }
