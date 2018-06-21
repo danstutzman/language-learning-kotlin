@@ -43,7 +43,7 @@ data class SkillRow(
   val cardId: Int,
   val delay: Int,
   val endurance: Int,
-  val lastCorrectAt: Int,
+  val lastSeenAt: Int,
   val mnemonic: String
 ) {}
 
@@ -157,7 +157,7 @@ fun handleGet(req: spark.Request, res: spark.Response): String {
       card.cardId,
       it.delay,
       it.endurance,
-      it.lastCorrectAt,
+      it.lastSeenAt,
       it.mnemonic
     ))
   }.toMap()
@@ -192,7 +192,7 @@ data class SkillExport(
   val cardKey: String,
   val delay: Int,
   val endurance: Int,
-  val lastCorrectAt: Int,
+  val lastSeenAt: Int,
   val mnemonic: String
 ) {}
 
