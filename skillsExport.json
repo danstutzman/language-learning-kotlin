@@ -251,7 +251,7 @@
     {
       "cardType": "N",
       "cardKey": "cuello",
-      "delay": 10000,
+      "delay": 100000,
       "endurance": 0,
       "lastSeenAt": 1529612658,
       "mnemonic": ""
@@ -283,7 +283,7 @@
     {
       "cardType": "N",
       "cardKey": "tobillo",
-      "delay": 10000,
+      "delay": 100000,
       "endurance": 0,
       "lastSeenAt": 1529612663,
       "mnemonic": ""

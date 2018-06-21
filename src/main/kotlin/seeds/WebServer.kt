@@ -10,7 +10,7 @@ import spark.Service
 
 val logger: Logger = LoggerFactory.getLogger("seeds/WebServer.kt")
 
-val DELAY_THRESHOLD = 10000
+val DELAY_THRESHOLD = 100000
 
 val skillsExportFile = File("./skillsExport.json")
 
