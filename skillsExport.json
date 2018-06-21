@@ -3,129 +3,129 @@
     {
       "cardType": "Inf",
       "cardKey": "preguntar",
-      "delay": 994,
-      "endurance": 0,
-      "lastCorrectAt": 1529594365,
+      "delay": 1308,
+      "endurance": 2598,
+      "lastCorrectAt": 1529597333,
       "mnemonic": ""
     },
     {
       "cardType": "Inf",
       "cardKey": "comer",
-      "delay": 10000,
-      "endurance": 0,
-      "lastCorrectAt": 0,
+      "delay": 1582,
+      "endurance": 2598,
+      "lastCorrectAt": 1529597338,
       "mnemonic": ""
     },
     {
       "cardType": "RegVPattern",
       "cardKey": "AR11PRES",
-      "delay": 10000,
-      "endurance": 0,
-      "lastCorrectAt": 0,
+      "delay": 2456,
+      "endurance": 2598,
+      "lastCorrectAt": 1529597342,
       "mnemonic": ""
     },
     {
       "cardType": "RegVPattern",
       "cardKey": "AR13PRES",
-      "delay": 10000,
-      "endurance": 0,
-      "lastCorrectAt": 0,
+      "delay": 1297,
+      "endurance": 2596,
+      "lastCorrectAt": 1529597347,
       "mnemonic": ""
     },
     {
       "cardType": "RegVPattern",
       "cardKey": "ER11PRES",
-      "delay": 10000,
-      "endurance": 0,
-      "lastCorrectAt": 0,
+      "delay": 1766,
+      "endurance": 2591,
+      "lastCorrectAt": 1529597351,
       "mnemonic": ""
     },
     {
       "cardType": "RegVPattern",
       "cardKey": "ER13PRES",
-      "delay": 10000,
-      "endurance": 0,
-      "lastCorrectAt": 0,
+      "delay": 1539,
+      "endurance": 2592,
+      "lastCorrectAt": 1529597356,
       "mnemonic": ""
     },
     {
       "cardType": "RegVPattern",
       "cardKey": "AR11PRET",
-      "delay": 10000,
-      "endurance": 0,
-      "lastCorrectAt": 0,
+      "delay": 3928,
+      "endurance": 2591,
+      "lastCorrectAt": 1529597360,
       "mnemonic": ""
     },
     {
       "cardType": "RegVPattern",
       "cardKey": "AR13PRET",
-      "delay": 10000,
-      "endurance": 0,
-      "lastCorrectAt": 0,
+      "delay": 1250,
+      "endurance": 2591,
+      "lastCorrectAt": 1529597366,
       "mnemonic": ""
     },
     {
       "cardType": "RegV",
       "cardKey": "preguntarAR11PRES",
-      "delay": 10994,
-      "endurance": 0,
-      "lastCorrectAt": 0,
+      "delay": 2350,
+      "endurance": 2589,
+      "lastCorrectAt": 1529597370,
       "mnemonic": ""
     },
     {
       "cardType": "RegV",
       "cardKey": "preguntarAR13PRES",
-      "delay": 10994,
-      "endurance": 0,
-      "lastCorrectAt": 0,
+      "delay": 1116,
+      "endurance": 2587,
+      "lastCorrectAt": 1529597375,
       "mnemonic": ""
     },
     {
       "cardType": "RegV",
       "cardKey": "comerER11PRES",
-      "delay": 20000,
-      "endurance": 0,
-      "lastCorrectAt": 0,
+      "delay": 1133,
+      "endurance": 2591,
+      "lastCorrectAt": 1529597384,
       "mnemonic": ""
     },
     {
       "cardType": "RegV",
       "cardKey": "comerER13PRES",
-      "delay": 20000,
-      "endurance": 0,
-      "lastCorrectAt": 0,
+      "delay": 1755,
+      "endurance": 2582,
+      "lastCorrectAt": 1529597379,
       "mnemonic": ""
     },
     {
       "cardType": "RegV",
       "cardKey": "preguntarAR11PRET",
-      "delay": 10994,
-      "endurance": 0,
-      "lastCorrectAt": 0,
+      "delay": 1525,
+      "endurance": 2586,
+      "lastCorrectAt": 1529597388,
       "mnemonic": ""
     },
     {
       "cardType": "RegV",
       "cardKey": "preguntarAR13PRET",
-      "delay": 10994,
-      "endurance": 0,
-      "lastCorrectAt": 0,
+      "delay": 1480,
+      "endurance": 2584,
+      "lastCorrectAt": 1529597392,
       "mnemonic": ""
     },
     {
       "cardType": "NP",
       "cardKey": "yo",
-      "delay": 10000,
-      "endurance": 0,
-      "lastCorrectAt": 0,
+      "delay": 1900,
+      "endurance": 2585,
+      "lastCorrectAt": 1529597398,
       "mnemonic": ""
     },
     {
       "cardType": "IClause",
       "cardKey": "agent\u003dyo v\u003dcomerER11PRES",
-      "delay": 20000,
-      "endurance": 0,
-      "lastCorrectAt": 0,
+      "delay": 1733,
+      "endurance": 2586,
+      "lastCorrectAt": 1529597403,
       "mnemonic": ""
     }
   ]
