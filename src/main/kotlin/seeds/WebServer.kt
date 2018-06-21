@@ -48,30 +48,32 @@ data class SkillRow(
 ) {}
 
 fun handleGet(req: spark.Request, res: spark.Response): String {
+  var nextCardId = 1
+
   val infs = listOf(
-    Inf(11, "preguntar", "ask", "asked"),
-    Inf(12, "comer", "eat", "ate")
-  )
+    Inf(0, "preguntar", "ask", "asked"),
+    Inf(0, "comer", "eat", "ate")
+  ).map { it.copy(cardId = nextCardId++) }
   val infByEs = infs.map { Pair(it.es, it) }.toMap()
 
   val regVPatterns = listOf(
-    RegVPattern(21, InfCategory.AR, 1, 1, Tense.PRES, "-o"),
-    RegVPattern(22, InfCategory.AR, 1, 3, Tense.PRES, "-a"),
-    RegVPattern(23, InfCategory.ER, 1, 1, Tense.PRES, "-o"),
-    RegVPattern(24, InfCategory.ER, 1, 3, Tense.PRES, "-e"),
-    RegVPattern(25, InfCategory.AR, 1, 1, Tense.PRET, "-é"),
-    RegVPattern(26, InfCategory.AR, 1, 3, Tense.PRET, "-ó")
-  )
+    RegVPattern(0, InfCategory.AR, 1, 1, Tense.PRES, "-o"),
+    RegVPattern(0, InfCategory.AR, 1, 3, Tense.PRES, "-a"),
+    RegVPattern(0, InfCategory.ER, 1, 1, Tense.PRES, "-o"),
+    RegVPattern(0, InfCategory.ER, 1, 3, Tense.PRES, "-e"),
+    RegVPattern(0, InfCategory.AR, 1, 1, Tense.PRET, "-é"),
+    RegVPattern(0, InfCategory.AR, 1, 3, Tense.PRET, "-ó")
+  ).map { it.copy(cardId = nextCardId++) }
   val regVPatternByKey = regVPatterns.map { Pair(it.getKey(), it) }.toMap()
 
   val regVs = listOf(
-    RegV(31, infByEs["preguntar"]!!, regVPatternByKey["AR11PRES"]!!),
-    RegV(32, infByEs["preguntar"]!!, regVPatternByKey["AR13PRES"]!!),
-    RegV(33, infByEs["comer"]!!,     regVPatternByKey["ER11PRES"]!!),
-    RegV(34, infByEs["comer"]!!,     regVPatternByKey["ER13PRES"]!!),
-    RegV(35, infByEs["preguntar"]!!, regVPatternByKey["AR11PRET"]!!),
-    RegV(36, infByEs["preguntar"]!!, regVPatternByKey["AR13PRET"]!!)
-  )
+    RegV(0, infByEs["preguntar"]!!, regVPatternByKey["AR11PRES"]!!),
+    RegV(0, infByEs["preguntar"]!!, regVPatternByKey["AR13PRES"]!!),
+    RegV(0, infByEs["comer"]!!,     regVPatternByKey["ER11PRES"]!!),
+    RegV(0, infByEs["comer"]!!,     regVPatternByKey["ER13PRES"]!!),
+    RegV(0, infByEs["preguntar"]!!, regVPatternByKey["AR11PRET"]!!),
+    RegV(0, infByEs["preguntar"]!!, regVPatternByKey["AR13PRET"]!!)
+  ).map { it.copy(cardId = nextCardId++) }
   val regVByKey = regVs.map { Pair(it.getKey(), it) }.toMap()
 
   val dets = listOf(
@@ -83,7 +85,7 @@ fun handleGet(req: spark.Request, res: spark.Response): String {
     Det(0, "este", "this",  Gender.M),
     Det(0, "esta", "this",  Gender.F),
     Det(0, "cada", "every", null)
-  )
+  ).map { it.copy(cardId = nextCardId++) }
   val detByEs = dets.map { Pair(it.es, it) }.toMap()
 
   val ns = listOf(
@@ -113,17 +115,17 @@ fun handleGet(req: spark.Request, res: spark.Response): String {
     N(0, "pulgar", "thumb", Gender.M),
     N(0, "lengua", "tongue", Gender.F),
     N(0, "garganta", "throat", Gender.F)
-  )
+  ).map { it.copy(cardId = nextCardId++) }
   val nByEs = ns.map { Pair(it.es, it) }.toMap()
 
   val nps = listOf(
-    NP(41, "yo", "I")
-  )
+    NP(0, "yo", "I")
+  ).map { it.copy(cardId = nextCardId++) }
   val npByEs = nps.map { Pair(it.es, it) }.toMap()
 
   val iClauses = listOf(
-    IClause(51, nps[0], regVByKey["comerER11PRES"]!!)
-  )
+    IClause(0, nps[0], regVByKey["comerER11PRES"]!!)
+  ).map { it.copy(cardId = nextCardId++) }
   val iClauseByKey = iClauses.map { Pair(it.getKey(), it) }.toMap()
 
   val cards = infs + regVPatterns + regVs + ns + dets + nps + iClauses
