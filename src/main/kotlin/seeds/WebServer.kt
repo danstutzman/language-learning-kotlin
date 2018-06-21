@@ -155,6 +155,72 @@ data class SkillRow(
   val mnemonic: String
 ) {}
 
+fun handleGet(req: spark.Request, res: spark.Response): String {
+  val infs = listOf(
+    Inf(11, "preguntar", "ask", "asked"),
+    Inf(12, "comer", "eat", "ate")
+  )
+  val infByEs = infs.map { Pair(it.es, it) }.toMap()
+
+  val regVPatterns = listOf(
+    RegVPattern(21, InfCategory.AR, 1, 1, Tense.PRES, "-o"),
+    RegVPattern(22, InfCategory.AR, 1, 3, Tense.PRES, "-a"),
+    RegVPattern(23, InfCategory.ER, 1, 1, Tense.PRES, "-o"),
+    RegVPattern(24, InfCategory.ER, 1, 3, Tense.PRES, "-e"),
+    RegVPattern(25, InfCategory.AR, 1, 1, Tense.PRET, "-é"),
+    RegVPattern(26, InfCategory.AR, 1, 3, Tense.PRET, "-ó")
+  )
+  val regVPatternByKey = regVPatterns.map { Pair(it.getKey(), it) }.toMap()
+
+  val regVs = listOf(
+    RegV(31, infByEs["preguntar"]!!, regVPatternByKey["AR11PRES"]!!),
+    RegV(32, infByEs["preguntar"]!!, regVPatternByKey["AR13PRES"]!!),
+    RegV(33, infByEs["comer"]!!,     regVPatternByKey["ER11PRES"]!!),
+    RegV(34, infByEs["comer"]!!,     regVPatternByKey["ER13PRES"]!!),
+    RegV(35, infByEs["preguntar"]!!, regVPatternByKey["AR11PRET"]!!),
+    RegV(36, infByEs["preguntar"]!!, regVPatternByKey["AR13PRET"]!!)
+  )
+  val regVByKey = regVs.map { Pair(it.getKey(), it) }.toMap()
+
+  val nps = listOf(
+    NP(41, "yo", "I")
+  )
+
+  val iClauses = listOf(
+    IClause(51, nps[0], regVByKey["comerER11PRES"]!!)
+  )
+
+  val cards = infs + regVPatterns + regVs + nps + iClauses
+  val cardRows = cards.map {
+    val type = it.javaClass.name.split('.').last()
+    CardRow(
+      it.cardId,
+      type,
+      it.getChildrenCardIds(),
+      it.getGlossRows(),
+      it.getEsWords(),
+      it.getQuizQuestion()
+    )
+  }
+  val skillRows = cards.map {
+    SkillRow(
+      it.cardId,
+      if (it.getChildrenCardIds().size == 0)
+        DELAY_THRESHOLD else DELAY_THRESHOLD * 2,
+      0,
+      0,
+      "")
+  }
+  val response = linkedMapOf(
+    "cards" to cardRows,
+    "skills" to skillRows
+  )
+
+  res.header("Access-Control-Allow-Origin", "*")
+  res.header("Content-Type", "application/json")
+  return GsonBuilder().setPrettyPrinting().create().toJson(response)
+}
+
 fun main(args: Array<String>) {
   System.setProperty("org.jooq.no-logo", "true")
 
@@ -166,72 +232,7 @@ fun main(args: Array<String>) {
     e.printStackTrace()
   }
 
-  service.get("/") { req, res ->
-    val infs = listOf(
-      Inf(11, "preguntar", "ask", "asked"),
-      Inf(12, "comer", "eat", "ate")
-    )
-    val infByEs = infs.map { Pair(it.es, it) }.toMap()
-
-
-    val regVPatterns = listOf(
-      RegVPattern(21, InfCategory.AR, 1, 1, Tense.PRES, "-o"),
-      RegVPattern(22, InfCategory.AR, 1, 3, Tense.PRES, "-a"),
-      RegVPattern(23, InfCategory.ER, 1, 1, Tense.PRES, "-o"),
-      RegVPattern(24, InfCategory.ER, 1, 3, Tense.PRES, "-e"),
-      RegVPattern(25, InfCategory.AR, 1, 1, Tense.PRET, "-é"),
-      RegVPattern(26, InfCategory.AR, 1, 3, Tense.PRET, "-ó")
-    )
-    val regVPatternByKey = regVPatterns.map { Pair(it.getKey(), it) }.toMap()
-
-		val regVs = listOf(
-      RegV(31, infByEs["preguntar"]!!, regVPatternByKey["AR11PRES"]!!),
-      RegV(32, infByEs["preguntar"]!!, regVPatternByKey["AR13PRES"]!!),
-      RegV(33, infByEs["comer"]!!,     regVPatternByKey["ER11PRES"]!!),
-      RegV(34, infByEs["comer"]!!,     regVPatternByKey["ER13PRES"]!!),
-      RegV(35, infByEs["preguntar"]!!, regVPatternByKey["AR11PRET"]!!),
-      RegV(36, infByEs["preguntar"]!!, regVPatternByKey["AR13PRET"]!!)
-    )
-    val regVByKey = regVs.map { Pair(it.getKey(), it) }.toMap()
-
-    val nps = listOf(
-      NP(41, "yo", "I")
-    )
-
-    val iClauses = listOf(
-      IClause(51, nps[0], regVByKey["comerER11PRES"]!!)
-    )
-
-    val cards = infs + regVPatterns + regVs + nps + iClauses
-    val cardRows = cards.map {
-      val type = it.javaClass.name.split('.').last()
-      CardRow(
-        it.cardId,
-        type,
-        it.getChildrenCardIds(),
-        it.getGlossRows(),
-        it.getEsWords(),
-        it.getQuizQuestion()
-      )
-    }
-    val skillRows = cards.map {
-      SkillRow(
-        it.cardId,
-        if (it.getChildrenCardIds().size == 0)
-          DELAY_THRESHOLD else DELAY_THRESHOLD * 2,
-        0,
-        0,
-        "")
-    }
-    val response = linkedMapOf(
-      "cards" to cardRows,
-      "skills" to skillRows
-    )
-
-    res.header("Access-Control-Allow-Origin", "*")
-    res.header("Content-Type", "application/json")
-    GsonBuilder().setPrettyPrinting().create().toJson(response)
-  }
+  service.get("/", ::handleGet)
 
   service.afterAfter { req, res ->
     logger.info("${req.requestMethod()} ${req.pathInfo()} ${res.status()}")
