@@ -1,116 +1,132 @@
 {
-  "skillByCardId": {
-    "11": {
-      "cardId": 11,
-      "delay": 924,
+  "skillExports": [
+    {
+      "cardType": "Inf",
+      "cardKey": "preguntar",
+      "delay": 994,
       "endurance": 0,
-      "lastCorrectAt": 1529591769,
+      "lastCorrectAt": 1529594365,
       "mnemonic": ""
     },
-    "12": {
-      "cardId": 12,
+    {
+      "cardType": "Inf",
+      "cardKey": "comer",
       "delay": 10000,
       "endurance": 0,
       "lastCorrectAt": 0,
       "mnemonic": ""
     },
-    "21": {
-      "cardId": 21,
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "AR11PRES",
       "delay": 10000,
       "endurance": 0,
       "lastCorrectAt": 0,
       "mnemonic": ""
     },
-    "22": {
-      "cardId": 22,
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "AR13PRES",
       "delay": 10000,
       "endurance": 0,
       "lastCorrectAt": 0,
       "mnemonic": ""
     },
-    "23": {
-      "cardId": 23,
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "ER11PRES",
       "delay": 10000,
       "endurance": 0,
       "lastCorrectAt": 0,
       "mnemonic": ""
     },
-    "24": {
-      "cardId": 24,
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "ER13PRES",
       "delay": 10000,
       "endurance": 0,
       "lastCorrectAt": 0,
       "mnemonic": ""
     },
-    "25": {
-      "cardId": 25,
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "AR11PRET",
       "delay": 10000,
       "endurance": 0,
       "lastCorrectAt": 0,
       "mnemonic": ""
     },
-    "26": {
-      "cardId": 26,
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "AR13PRET",
       "delay": 10000,
       "endurance": 0,
       "lastCorrectAt": 0,
       "mnemonic": ""
     },
-    "31": {
-      "cardId": 31,
-      "delay": 10924,
+    {
+      "cardType": "RegV",
+      "cardKey": "preguntarAR11PRES",
+      "delay": 10994,
       "endurance": 0,
       "lastCorrectAt": 0,
       "mnemonic": ""
     },
-    "32": {
-      "cardId": 32,
-      "delay": 10924,
+    {
+      "cardType": "RegV",
+      "cardKey": "preguntarAR13PRES",
+      "delay": 10994,
       "endurance": 0,
       "lastCorrectAt": 0,
       "mnemonic": ""
     },
-    "33": {
-      "cardId": 33,
+    {
+      "cardType": "RegV",
+      "cardKey": "comerER11PRES",
       "delay": 20000,
       "endurance": 0,
       "lastCorrectAt": 0,
       "mnemonic": ""
     },
-    "34": {
-      "cardId": 34,
+    {
+      "cardType": "RegV",
+      "cardKey": "comerER13PRES",
       "delay": 20000,
       "endurance": 0,
       "lastCorrectAt": 0,
       "mnemonic": ""
     },
-    "35": {
-      "cardId": 35,
-      "delay": 10924,
+    {
+      "cardType": "RegV",
+      "cardKey": "preguntarAR11PRET",
+      "delay": 10994,
       "endurance": 0,
       "lastCorrectAt": 0,
       "mnemonic": ""
     },
-    "36": {
-      "cardId": 36,
-      "delay": 10924,
+    {
+      "cardType": "RegV",
+      "cardKey": "preguntarAR13PRET",
+      "delay": 10994,
       "endurance": 0,
       "lastCorrectAt": 0,
       "mnemonic": ""
     },
-    "41": {
-      "cardId": 41,
+    {
+      "cardType": "NP",
+      "cardKey": "yo",
       "delay": 10000,
       "endurance": 0,
       "lastCorrectAt": 0,
       "mnemonic": ""
     },
-    "51": {
-      "cardId": 51,
+    {
+      "cardType": "IClause",
+      "cardKey": "agent\u003dyo v\u003dcomerER11PRES",
       "delay": 20000,
       "endurance": 0,
       "lastCorrectAt": 0,
       "mnemonic": ""
     }
-  }
+  ]
 }

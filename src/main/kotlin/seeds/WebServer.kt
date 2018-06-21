@@ -12,7 +12,7 @@ val logger: Logger = LoggerFactory.getLogger("seeds/WebServer.kt")
 
 val DELAY_THRESHOLD = 10000
 
-val skillsUploadFile = File("./skillsUpload.json")
+val skillsExportFile = File("./skillsExport.json")
 
 data class GlossRow (
   val cardId: Int,
@@ -24,6 +24,7 @@ interface Card {
   val cardId: Int
   fun getChildrenCardIds(): List<Int>
   fun getEsWords(): List<String>
+  fun getKey(): String
   fun getGlossRows(): List<GlossRow>
   fun getQuizQuestion(): String
 }
@@ -36,6 +37,7 @@ data class Inf (
 ): Card {
   override fun getChildrenCardIds(): List<Int> = listOf()
   override fun getEsWords(): List<String> = listOf(es)
+  override fun getKey(): String = es
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(cardId, enPresent, es))
   override fun getQuizQuestion(): String = "to ${enPresent}"
@@ -60,6 +62,12 @@ val NUMBER_AND_PERSON_TO_EN_PRONOUN = linkedMapOf(
   Pair(2, 3) to "they"
 )
 
+val PERSON_TO_DESCRIPTION = linkedMapOf(
+  1 to "1st person",
+  2 to "2nd person",
+  3 to "3rd person"
+)
+
 data class RegVPattern (
   override val cardId: Int,
   val infCategory: InfCategory,
@@ -70,13 +78,14 @@ data class RegVPattern (
 ): Card {
   fun getEnPronoun(): String =
     NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)]!!
-  fun getKey(): String = "${infCategory}${number}${person}${tense}"
+  override fun getKey(): String = "${infCategory}${number}${person}${tense}"
   override fun getChildrenCardIds(): List<Int> = listOf<Int>()
   override fun getEsWords(): List<String> = listOf(es)
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(cardId, "(${getEnPronoun()})", es))
   override fun getQuizQuestion(): String =
-    "${infCategory} verb suffix for ${getEnPronoun()} in ${tense}"
+    "Conjugation for ${infCategory} verbs for ${PERSON_TO_DESCRIPTION[person]
+      } ${tense}"
 }
 
 data class NP (
@@ -87,6 +96,7 @@ data class NP (
   override fun getChildrenCardIds(): List<Int> = listOf<Int>()
   override fun getEsWords(): List<String> = listOf(es)
   override fun getGlossRows(): List<GlossRow> = listOf(GlossRow(cardId, en, es))
+  override fun getKey(): String = es
   override fun getQuizQuestion(): String = en
 }
 
@@ -103,7 +113,6 @@ data class RegV (
   val inf: Inf,
   val pattern: RegVPattern
 ): Card {
-  fun getKey(): String = "${inf.es}${pattern.getKey()}"
   fun getEnVerb(): String = when(pattern.tense) {
     Tense.PRES -> inf.enPresent + NUMBER_AND_PERSON_TO_EN_VERB_SUFFIX[
       Pair(pattern.number, pattern.person)]!!
@@ -118,6 +127,7 @@ data class RegV (
   override fun getGlossRows(): List<GlossRow> = listOf(
     GlossRow(inf.cardId, getEnVerb(), getEsVerbPrefix())) +
     pattern.getGlossRows()
+  override fun getKey(): String = "${inf.getKey()}${pattern.getKey()}"
   override fun getQuizQuestion(): String =
     "(${pattern.getEnPronoun()}) ${getEnVerb()}"
 }
@@ -137,6 +147,7 @@ data class IClause(
     listOf(v.getEsWords()[0] + ".")
   override fun getGlossRows(): List<GlossRow> =
     agent.getGlossRows() + v.getGlossRows()
+  override fun getKey(): String = "agent=${agent.getKey()} v=${v.getKey()}"
   override fun getQuizQuestion(): String =
     capitalizeFirstLetter(agent.getQuizQuestion()) + " " + v.getEnVerb() + "."
 }
@@ -144,6 +155,7 @@ data class IClause(
 data class CardRow(
   val cardId: Int,
   val type: String,
+  val key: String,
   val childrenCardIds: List<Int>,
   val glossRows: List<GlossRow>,
   val esWords: List<String>,
@@ -188,10 +200,12 @@ fun handleGet(req: spark.Request, res: spark.Response): String {
   val nps = listOf(
     NP(41, "yo", "I")
   )
+  val npByEs = nps.map { Pair(it.es, it) }.toMap()
 
   val iClauses = listOf(
     IClause(51, nps[0], regVByKey["comerER11PRES"]!!)
   )
+  val iClauseByKey = iClauses.map { Pair(it.getKey(), it) }.toMap()
 
   val cards = infs + regVPatterns + regVs + nps + iClauses
   val cardRows = cards.map {
@@ -199,6 +213,7 @@ fun handleGet(req: spark.Request, res: spark.Response): String {
     CardRow(
       it.cardId,
       type,
+      it.getKey(),
       it.getChildrenCardIds(),
       it.getGlossRows(),
       it.getEsWords(),
@@ -206,11 +221,28 @@ fun handleGet(req: spark.Request, res: spark.Response): String {
     )
   }
 
-  val skillsUpload: SkillsUpload = Gson()
-    .fromJson(skillsUploadFile.readText(), SkillsUpload::class.java)
-  println(skillsUpload)
+  val skillsExport: SkillsExport = Gson()
+    .fromJson(skillsExportFile.readText(), SkillsExport::class.java)
+  val skillRowByCardId = skillsExport.skillExports.map {
+    val card = when (it.cardType) {
+      "IClause"     -> iClauseByKey[it.cardKey]!!
+      "Inf"         -> infByEs[it.cardKey]!!
+      "NP"          -> npByEs[it.cardKey]!!
+      "RegV"        -> regVByKey[it.cardKey]!!
+      "RegVPattern" -> regVPatternByKey[it.cardKey]!!
+      else -> throw RuntimeException("Unexpected cardType ${it.cardType}")
+    }
+    Pair(card.cardId, SkillRow(
+      card.cardId,
+      it.delay,
+      it.endurance,
+      it.lastCorrectAt,
+      it.mnemonic
+    ))
+  }.toMap()
+
   val skillRows = cards.map {
-    skillsUpload.skillByCardId!![it.cardId] ?: SkillRow(
+    skillRowByCardId[it.cardId] ?: SkillRow(
       it.cardId,
       if (it.getChildrenCardIds().size == 0)
         DELAY_THRESHOLD else DELAY_THRESHOLD * 2,
@@ -231,18 +263,31 @@ fun handleGet(req: spark.Request, res: spark.Response): String {
 }
 
 data class SkillsUpload(
-  val skillByCardId: Map<Int, SkillRow>?
+  val skillExports: List<SkillExport>?
+) {}
+
+data class SkillExport(
+  val cardType: String,
+  val cardKey: String,
+  val delay: Int,
+  val endurance: Int,
+  val lastCorrectAt: Int,
+  val mnemonic: String
+) {}
+
+data class SkillsExport(
+  val skillExports: List<SkillExport>
 ) {}
 
 fun handlePost(req: spark.Request, res: spark.Response): String {
   val skillsUpload = Gson().fromJson(req.body(), SkillsUpload::class.java)
-  if (skillsUpload.skillByCardId == null) {
+  if (skillsUpload.skillExports == null) {
     res.status(400)
-    return "{\"errors\":[\"Missing skillByCardId\"]}"
+    return "{\"errors\":[\"Missing skillExports\"]}"
   }
 
-  skillsUploadFile.writeText(
-    GsonBuilder().setPrettyPrinting().create().toJson(skillsUpload))
+  skillsExportFile.writeText(GsonBuilder().setPrettyPrinting().create().toJson(
+    SkillsExport(skillsUpload.skillExports)))
 
   return "{}"
 }
