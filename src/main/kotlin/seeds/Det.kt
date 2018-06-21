@@ -10,5 +10,6 @@ data class Det (
   override fun getEsWords(): List<String> = listOf(es)
   override fun getGlossRows(): List<GlossRow> = listOf(GlossRow(cardId, en, es))
   override fun getKey(): String = es
-  override fun getQuizQuestion(): String = en
+  override fun getQuizQuestion(): String =
+    if (gender == null) en else "${en} (${GENDER_TO_DESCRIPTION[gender]})"
 }
