@@ -74,6 +74,48 @@ fun handleGet(req: spark.Request, res: spark.Response): String {
   )
   val regVByKey = regVs.map { Pair(it.getKey(), it) }.toMap()
 
+  val dets = listOf(
+    Det(0, "el",   "the",   Gender.M),
+    Det(0, "la",   "the",   Gender.F),
+    Det(0, "un",   "a",     Gender.M),
+    Det(0, "una",  "a",     Gender.F),
+    Det(0, "mi",   "my",    null),
+    Det(0, "este", "this",  Gender.M),
+    Det(0, "esta", "this",  Gender.F),
+    Det(0, "cada", "every", null)
+  )
+  val detByEs = dets.map { Pair(it.es, it) }.toMap()
+
+  val ns = listOf(
+    N(0, "brazo", "arm", Gender.M),
+    N(0, "pierna", "leg", Gender.F),
+    N(0, "corazón", "heart", Gender.M),
+    N(0, "estómago", "stomach", Gender.M),
+    N(0, "ojo", "eye", Gender.M),
+    N(0, "nariz", "nose", Gender.F),
+    N(0, "boca", "mouth", Gender.F),
+    N(0, "oreja", "ear", Gender.F),
+    N(0, "cara", "face", Gender.F),
+    N(0, "cuello", "neck", Gender.M),
+    N(0, "dedo", "finger", Gender.M),
+    N(0, "pie", "foot", Gender.M),
+    N(0, "muslo", "thigh", Gender.M),
+    N(0, "tobillo", "ankle", Gender.M),
+    N(0, "codo", "elbow", Gender.M),
+    N(0, "muñeca", "wrist", Gender.F),
+    N(0, "cuerpo", "body", Gender.M),
+    N(0, "diente", "tooth", Gender.M),
+    N(0, "mano", "hand", Gender.F),
+    N(0, "espalda", "back", Gender.F),
+    N(0, "cadera", "hip", Gender.F),
+    N(0, "mandíbula", "jaw", Gender.F),
+    N(0, "hombro", "shoulder", Gender.M),
+    N(0, "pulgar", "thumb", Gender.M),
+    N(0, "lengua", "tongue", Gender.F),
+    N(0, "garganta", "throat", Gender.F)
+  )
+  val nByEs = ns.map { Pair(it.es, it) }.toMap()
+
   val nps = listOf(
     NP(41, "yo", "I")
   )
@@ -84,7 +126,7 @@ fun handleGet(req: spark.Request, res: spark.Response): String {
   )
   val iClauseByKey = iClauses.map { Pair(it.getKey(), it) }.toMap()
 
-  val cards = infs + regVPatterns + regVs + nps + iClauses
+  val cards = infs + regVPatterns + regVs + ns + dets + nps + iClauses
   val cardRows = cards.map {
     val type = it.javaClass.name.split('.').last()
     CardRow(
