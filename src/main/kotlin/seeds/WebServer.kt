@@ -47,30 +47,18 @@ data class SkillRow(
   val mnemonic: String
 ) {}
 
-val cardIdSequence = IdSequence()
-
-val infList = InfList(cardIdSequence)
-var nextCardId = cardIdSequence.nextId()
-
-val regVPatterns = listOf(
-  RegVPattern(0, InfCategory.AR, 1, 1, Tense.PRES, "-o"),
-  RegVPattern(0, InfCategory.AR, 1, 3, Tense.PRES, "-a"),
-  RegVPattern(0, InfCategory.ER, 1, 1, Tense.PRES, "-o"),
-  RegVPattern(0, InfCategory.ER, 1, 3, Tense.PRES, "-e"),
-  RegVPattern(0, InfCategory.AR, 1, 1, Tense.PRET, "-é"),
-  RegVPattern(0, InfCategory.AR, 1, 3, Tense.PRET, "-ó")
-).map { it.copy(cardId = nextCardId++) }
-val regVPatternByKey = regVPatterns.map { Pair(it.getKey(), it) }.toMap()
-val regVPatternByQuestion =
-  Assertions.assertUniqKeys(regVPatterns.map { Pair(it.getQuizQuestion(), it) })
+val cardIdSequence  = IdSequence()
+val infList         = InfList(cardIdSequence)
+val regVPatternList = RegVPatternList(cardIdSequence)
+var nextCardId      = cardIdSequence.nextId()
 
 val regVs = listOf(
-  RegV(0, infList.byEs("preguntar"), regVPatternByKey["AR11PRES"]!!),
-  RegV(0, infList.byEs("preguntar"), regVPatternByKey["AR13PRES"]!!),
-  RegV(0, infList.byEs("comer"),     regVPatternByKey["ER11PRES"]!!),
-  RegV(0, infList.byEs("comer"),     regVPatternByKey["ER13PRES"]!!),
-  RegV(0, infList.byEs("preguntar"), regVPatternByKey["AR11PRET"]!!),
-  RegV(0, infList.byEs("preguntar"), regVPatternByKey["AR13PRET"]!!)
+  RegV(0, infList.byEs("preguntar"), regVPatternList.byKey("AR11PRES")),
+  RegV(0, infList.byEs("preguntar"), regVPatternList.byKey("AR13PRES")),
+  RegV(0, infList.byEs("comer"),     regVPatternList.byKey("ER11PRES")),
+  RegV(0, infList.byEs("comer"),     regVPatternList.byKey("ER13PRES")),
+  RegV(0, infList.byEs("preguntar"), regVPatternList.byKey("AR11PRET")),
+  RegV(0, infList.byEs("preguntar"), regVPatternList.byKey("AR13PRET"))
 ).map { it.copy(cardId = nextCardId++) }
 val regVByKey = regVs.map { Pair(it.getKey(), it) }.toMap()
 val regVByQuestion =
@@ -239,7 +227,8 @@ val iClauseByQuestion =
   Assertions.assertUniqKeys(iClauses.map { Pair(it.getQuizQuestion(), it) })
 
 val cards = infList.infs +
-  regVPatterns + regVs + uniqVs + ns + dets + nps + iClauses
+  regVPatternList.regVPatterns +
+  regVs + uniqVs + ns + dets + nps + iClauses
 val cardRows = cards.map {
   val type = it.javaClass.name.split('.').last()
   CardRow(
@@ -267,7 +256,7 @@ fun handleGet(
       "N"           -> nByEs[it.cardKey]!!
       "NP"          -> npByEs[it.cardKey]!!
       "RegV"        -> regVByKey[it.cardKey]!!
-      "RegVPattern" -> regVPatternByKey[it.cardKey]!!
+      "RegVPattern" -> regVPatternList.byKey(it.cardKey)
       "UniqV"       -> uniqVByKey[it.cardKey]!!
       else -> throw RuntimeException("Unexpected cardType ${it.cardType}")
     }
