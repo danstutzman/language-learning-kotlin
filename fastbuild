@@ -41,5 +41,5 @@ if [ "$KTS" != "" ]; then
 fi
 
 if [ "$1" == "run" ]; then
-  java -cp `cat .mvn-classpath`:target/classes WebServerKt
+  java -cp `cat .mvn-classpath`:target/classes com.danstutzman.WebServerKt
 fi

@@ -1,4 +1,4 @@
-package seeds
+package com.danstutzman.seeds
 
 interface Card {
   val cardId: Int

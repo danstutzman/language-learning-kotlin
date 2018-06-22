@@ -1,4 +1,4 @@
-package en
+package com.danstutzman.en
 
 class EnPronouns {
   companion object {

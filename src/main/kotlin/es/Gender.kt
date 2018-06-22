@@ -1,4 +1,4 @@
-package es
+package com.danstutzman.es
 
 val GENDER_TO_DESCRIPTION = linkedMapOf(
   Gender.M to "masc.",

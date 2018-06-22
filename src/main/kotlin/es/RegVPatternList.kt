@@ -1,7 +1,7 @@
-package es
+package com.danstutzman.es
 
-import seeds.Assertions
-import seeds.IdSequence
+import com.danstutzman.seeds.Assertions
+import com.danstutzman.seeds.IdSequence
 
 val regVPatternsWithoutIds = listOf(
   RegVPattern(0, InfCategory.AR, 1, 1, Tense.PRES, "-o"),

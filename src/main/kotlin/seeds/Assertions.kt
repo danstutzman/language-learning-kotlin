@@ -1,4 +1,4 @@
-package seeds
+package com.danstutzman.seeds
 
 class Assertions {
   companion object {

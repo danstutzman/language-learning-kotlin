@@ -1,4 +1,4 @@
-package db
+package com.danstutzman.db
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject

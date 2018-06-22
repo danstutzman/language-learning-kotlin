@@ -1,8 +1,8 @@
-package es
+package com.danstutzman.es
 
-import en.EnVerbs
-import seeds.Card
-import seeds.GlossRow
+import com.danstutzman.en.EnVerbs
+import com.danstutzman.seeds.Card
+import com.danstutzman.seeds.GlossRow
 
 data class Inf (
   override val cardId: Int,

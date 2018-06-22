@@ -1,4 +1,4 @@
-package seeds
+package com.danstutzman.seeds
 
 class IdSequence {
   var nextId = 1

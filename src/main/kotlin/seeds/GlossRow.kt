@@ -1,4 +1,4 @@
-package seeds
+package com.danstutzman.seeds
 
 data class GlossRow (
   val cardId: Int,

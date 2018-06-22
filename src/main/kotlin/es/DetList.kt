@@ -1,7 +1,7 @@
-package es
+package com.danstutzman.es
 
-import seeds.Assertions
-import seeds.IdSequence
+import com.danstutzman.seeds.Assertions
+import com.danstutzman.seeds.IdSequence
 
 val detsWithoutIds = listOf(
   Det(0, "el",   "the",   Gender.M),

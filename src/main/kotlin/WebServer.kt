@@ -1,4 +1,6 @@
-import db.Db
+package com.danstutzman
+
+import com.danstutzman.db.Db
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spark.Service

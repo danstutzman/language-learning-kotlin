@@ -1,4 +1,4 @@
-package es
+package com.danstutzman.es
 
 enum class InfCategory {
   AR,
