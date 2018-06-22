@@ -17,6 +17,14 @@
       "mnemonic": ""
     },
     {
+      "cardType": "Inf",
+      "cardKey": "ser",
+      "delay": 3797,
+      "endurance": 0,
+      "lastSeenAt": 1529628664,
+      "mnemonic": ""
+    },
+    {
       "cardType": "RegVPattern",
       "cardKey": "AR11PRES",
       "delay": 2456,
@@ -110,6 +118,86 @@
       "delay": 2611,
       "endurance": 2584,
       "lastSeenAt": 1529597392,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "UniqV",
+      "cardKey": "soy",
+      "delay": 1643,
+      "endurance": 0,
+      "lastSeenAt": 1529628669,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "UniqV",
+      "cardKey": "eres",
+      "delay": 2016,
+      "endurance": 0,
+      "lastSeenAt": 1529628671,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "UniqV",
+      "cardKey": "es",
+      "delay": 1670,
+      "endurance": 0,
+      "lastSeenAt": 1529628674,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "UniqV",
+      "cardKey": "somos",
+      "delay": 1333,
+      "endurance": 0,
+      "lastSeenAt": 1529628677,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "UniqV",
+      "cardKey": "son",
+      "delay": 2530,
+      "endurance": 0,
+      "lastSeenAt": 1529628679,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "UniqV",
+      "cardKey": "fui-ser",
+      "delay": 2392,
+      "endurance": 0,
+      "lastSeenAt": 1529628683,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "UniqV",
+      "cardKey": "fuiste-ser",
+      "delay": 1842,
+      "endurance": 0,
+      "lastSeenAt": 1529628686,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "UniqV",
+      "cardKey": "fue-ser",
+      "delay": 3882,
+      "endurance": 0,
+      "lastSeenAt": 1529628721,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "UniqV",
+      "cardKey": "fuimos-ser",
+      "delay": 3524,
+      "endurance": 0,
+      "lastSeenAt": 1529628726,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "UniqV",
+      "cardKey": "fueron-ser",
+      "delay": 3108,
+      "endurance": 0,
+      "lastSeenAt": 1529628730,
       "mnemonic": ""
     },
     {

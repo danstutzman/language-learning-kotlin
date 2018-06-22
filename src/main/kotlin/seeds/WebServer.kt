@@ -47,12 +47,16 @@ data class SkillRow(
   val mnemonic: String
 ) {}
 
-fun handleGet(req: spark.Request, res: spark.Response): String {
+fun handleGet(
+  @Suppress("UNUSED_PARAMETER") req: spark.Request,
+  res: spark.Response
+): String {
   var nextCardId = 1
 
   val infs = listOf(
     Inf(0, "preguntar", "ask", "asked"),
-    Inf(0, "comer", "eat", "ate")
+    Inf(0, "comer", "eat", "ate"),
+    Inf(0, "ser", "be", "was")
   ).map { it.copy(cardId = nextCardId++) }
   val infByEs = infs.map { Pair(it.es, it) }.toMap()
 
@@ -75,6 +79,61 @@ fun handleGet(req: spark.Request, res: spark.Response): String {
     RegV(0, infByEs["preguntar"]!!, regVPatternByKey["AR13PRET"]!!)
   ).map { it.copy(cardId = nextCardId++) }
   val regVByKey = regVs.map { Pair(it.getKey(), it) }.toMap()
+
+  val uniqVs = listOf(
+    UniqV(0, "soy",       "am",   infByEs["ser"]!!,     1, 1, Tense.PRES),
+    UniqV(0, "eres",      "are",  infByEs["ser"]!!,     1, 2, Tense.PRES),
+    UniqV(0, "es",        "is",   infByEs["ser"]!!,     1, 3, Tense.PRES),
+    UniqV(0, "somos",     "are",  infByEs["ser"]!!,     2, 1, Tense.PRES),
+    UniqV(0, "son",       "are",  infByEs["ser"]!!,     2, 3, Tense.PRES),
+    UniqV(0, "fui",       "was",  infByEs["ser"]!!,     1, 1, Tense.PRET),
+    UniqV(0, "fuiste",    "were", infByEs["ser"]!!,     1, 2, Tense.PRET),
+    UniqV(0, "fue",       "was",  infByEs["ser"]!!,     1, 3, Tense.PRET),
+    UniqV(0, "fuimos",    "were", infByEs["ser"]!!,     2, 1, Tense.PRET),
+    UniqV(0, "fueron",    "were", infByEs["ser"]!!,     2, 3, Tense.PRET)
+/*
+    UniqV(0, "estoy",     infByEs["estar"]!!,   1, 1, Tense.PRES),
+    UniqV(0, "estás",     infByEs["estar"]!!,   1, 2, Tense.PRES),
+    UniqV(0, "está",      infByEs["estar"]!!,   1, 3, Tense.PRES),
+    UniqV(0, "están",     infByEs["estar"]!!,   2, 3, Tense.PRES),
+    UniqV(0, "tengo",     infByEs["tener"]!!,   1, 1, Tense.PRES),
+    UniqV(0, "hago",      infByEs["hacer"]!!,   1, 1, Tense.PRES),
+    UniqV(0, "digo",      infByEs["decir"]!!,   1, 1, Tense.PRES),
+    UniqV(0, "dijeron",   infByEs["decir"]!!,   2, 3, Tense.PRET),
+    UniqV(0, "voy",       infByEs["ir"]!!,      1, 1, Tense.PRES),
+    UniqV(0, "vas",       infByEs["ir"]!!,      1, 2, Tense.PRES),
+    UniqV(0, "va",        infByEs["ir"]!!,      1, 3, Tense.PRES),
+    UniqV(0, "vamos",     infByEs["ir"]!!,      2, 1, Tense.PRES),
+    UniqV(0, "van",       infByEs["ir"]!!,      2, 3, Tense.PRES),
+    UniqV(0, "fui",       infByEs["ir"]!!,      1, 1, Tense.PRET),
+    UniqV(0, "fuiste",    infByEs["ir"]!!,      1, 2, Tense.PRET),
+    UniqV(0, "fue",       infByEs["ir"]!!,      1, 3, Tense.PRET),
+    UniqV(0, "fuimos",    infByEs["ir"]!!,      2, 1, Tense.PRET),
+    UniqV(0, "fueron",    infByEs["ir"]!!,      2, 3, Tense.PRET),
+    UniqV(0, "veo",       infByEs["ver"]!!,     1, 1, Tense.PRES),
+    UniqV(0, "vi",        infByEs["ver"]!!,     1, 1, Tense.PRET),
+    UniqV(0, "vio",       infByEs["ver"]!!,     1, 3, Tense.PRET),
+    UniqV(0, "vimos",     infByEs["ver"]!!,     2, 1, Tense.PRET),
+    UniqV(0, "doy",       infByEs["dar"]!!,     1, 1, Tense.PRES),
+    UniqV(0, "di",        infByEs["dar"]!!,     1, 1, Tense.PRET),
+    UniqV(0, "diste",     infByEs["dar"]!!,     1, 2, Tense.PRET),
+    UniqV(0, "dio",       infByEs["dar"]!!,     1, 3, Tense.PRET),
+    UniqV(0, "dimos",     infByEs["dar"]!!,     2, 1, Tense.PRET),
+    UniqV(0, "dieron",    infByEs["dar"]!!,     2, 3, Tense.PRET),
+    UniqV(0, "sé",        infByEs["saber"]!!,   1, 1, Tense.PRES),
+    UniqV(0, "pongo",     infByEs["poner"]!!,   1, 1, Tense.PRES),
+    UniqV(0, "vengo",     infByEs["venir"]!!,   1, 1, Tense.PRES),
+    UniqV(0, "salgo",     infByEs["salir"]!!,   1, 1, Tense.PRES),
+    UniqV(0, "parezco",   infByEs["parecer"]!!, 1, 1, Tense.PRES),
+    UniqV(0, "conozco",   infByEs["conocer"]!!, 1, 1, Tense.PRES),
+    UniqV(0, "empecé",    infByEs["empezar"]!!, 1, 1, Tense.PRET),
+    UniqV(0, "envío",     infByEs["enviar"]!!,  1, 1, Tense.PRES),
+    UniqV(0, "envías",    infByEs["enviar"]!!,  1, 2, Tense.PRES),
+    UniqV(0, "envía",     infByEs["enviar"]!!,  1, 3, Tense.PRES),
+    UniqV(0, "envían",    infByEs["enviar"]!!,  2, 1, Tense.PRES)
+*/
+  ).map { it.copy(cardId = nextCardId++) }
+  val uniqVByKey = uniqVs.map { Pair(it.getKey(), it) }.toMap()
 
   val dets = listOf(
     Det(0, "el",   "the",   Gender.M),
@@ -128,7 +187,7 @@ fun handleGet(req: spark.Request, res: spark.Response): String {
   ).map { it.copy(cardId = nextCardId++) }
   val iClauseByKey = iClauses.map { Pair(it.getKey(), it) }.toMap()
 
-  val cards = infs + regVPatterns + regVs + ns + dets + nps + iClauses
+  val cards = infs + regVPatterns + regVs + uniqVs + ns + dets + nps + iClauses
   val cardRows = cards.map {
     val type = it.javaClass.name.split('.').last()
     CardRow(
@@ -153,6 +212,7 @@ fun handleGet(req: spark.Request, res: spark.Response): String {
       "NP"          -> npByEs[it.cardKey]!!
       "RegV"        -> regVByKey[it.cardKey]!!
       "RegVPattern" -> regVPatternByKey[it.cardKey]!!
+      "UniqV"       -> uniqVByKey[it.cardKey]!!
       else -> throw RuntimeException("Unexpected cardType ${it.cardType}")
     }
     Pair(card.cardId, SkillRow(

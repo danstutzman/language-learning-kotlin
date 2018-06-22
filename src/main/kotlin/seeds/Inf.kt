@@ -7,6 +7,14 @@ data class Inf (
   val enPast: String
 ): Card {
   override fun getChildrenCardIds(): List<Int> = listOf()
+  fun getEnVerb(number: Int, person: Int, tense: Tense): String =
+    when (tense) {
+      Tense.PRES ->
+        enPresent +
+        EnVerbs.NUMBER_AND_PERSON_TO_EN_VERB_SUFFIX[Pair(number, person)]!!
+      Tense.PRET -> enPast
+      else -> throw RuntimeException("Unexpected tense ${tense}")
+    }
   override fun getEsWords(): List<String> = listOf(es)
   override fun getKey(): String = es
   override fun getGlossRows(): List<GlossRow> =
