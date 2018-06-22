@@ -59,7 +59,7 @@ fun main(args: Array<String>) {
   System.setProperty("org.jooq.no-logo", "true")
 
   val port = 3000
-  val webApp = graphql.WebApp()
+  // val webApp = graphql.WebApp()
   logger.info("Starting server port=${port}")
   val service = Service.ignite().port(port)
 
@@ -67,7 +67,7 @@ fun main(args: Array<String>) {
     e.printStackTrace()
   }
 
-  service.post("/", webApp.getRoot)
+  // service.post("/", webApp.getRoot)
 
   service.post("/graphql", ::graphqlEndpoint)
 
