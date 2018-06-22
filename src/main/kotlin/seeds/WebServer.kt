@@ -50,6 +50,7 @@ data class SkillRow(
 val cardIdSequence  = IdSequence()
 val infList         = InfList(cardIdSequence)
 val regVPatternList = RegVPatternList(cardIdSequence)
+val nList           = NList(cardIdSequence)
 var nextCardId      = cardIdSequence.nextId()
 
 val regVs = listOf(
@@ -182,38 +183,6 @@ val detByEs = dets.map { Pair(it.es, it) }.toMap()
 val detByQuestion =
   Assertions.assertUniqKeys(dets.map { Pair(it.getQuizQuestion(), it) })
 
-val ns = listOf(
-  N(0, "brazo", "arm", Gender.M),
-  N(0, "pierna", "leg", Gender.F),
-  N(0, "corazón", "heart", Gender.M),
-  N(0, "estómago", "stomach", Gender.M),
-  N(0, "ojo", "eye", Gender.M),
-  N(0, "nariz", "nose", Gender.F),
-  N(0, "boca", "mouth", Gender.F),
-  N(0, "oreja", "ear", Gender.F),
-  N(0, "cara", "face", Gender.F),
-  N(0, "cuello", "neck", Gender.M),
-  N(0, "dedo", "finger", Gender.M),
-  N(0, "pie", "foot", Gender.M),
-  N(0, "muslo", "thigh", Gender.M),
-  N(0, "tobillo", "ankle", Gender.M),
-  N(0, "codo", "elbow", Gender.M),
-  N(0, "muñeca", "wrist", Gender.F),
-  N(0, "cuerpo", "body", Gender.M),
-  N(0, "diente", "tooth", Gender.M),
-  N(0, "mano", "hand", Gender.F),
-  N(0, "espalda", "back", Gender.F),
-  N(0, "cadera", "hip", Gender.F),
-  N(0, "mandíbula", "jaw", Gender.F),
-  N(0, "hombro", "shoulder", Gender.M),
-  N(0, "pulgar", "thumb", Gender.M),
-  N(0, "lengua", "tongue", Gender.F),
-  N(0, "garganta", "throat", Gender.F)
-).map { it.copy(cardId = nextCardId++) }
-val nByEs = ns.map { Pair(it.es, it) }.toMap()
-val nByQuestion =
-  Assertions.assertUniqKeys(ns.map { Pair(it.getQuizQuestion(), it) })
-
 val nps = listOf(
   NP(0, "yo", "I")
 ).map { it.copy(cardId = nextCardId++) }
@@ -228,7 +197,8 @@ val iClauseByQuestion =
 
 val cards = infList.infs +
   regVPatternList.regVPatterns +
-  regVs + uniqVs + ns + dets + nps + iClauses
+  nList.ns +
+  regVs + uniqVs + dets + nps + iClauses
 val cardRows = cards.map {
   val type = it.javaClass.name.split('.').last()
   CardRow(
@@ -253,7 +223,7 @@ fun handleGet(
       "Det"         -> detByEs[it.cardKey]!!
       "IClause"     -> iClauseByKey[it.cardKey]!!
       "Inf"         -> infList.byEs(it.cardKey)
-      "N"           -> nByEs[it.cardKey]!!
+      "N"           -> nList.byEs(it.cardKey)
       "NP"          -> npByEs[it.cardKey]!!
       "RegV"        -> regVByKey[it.cardKey]!!
       "RegVPattern" -> regVPatternList.byKey(it.cardKey)
