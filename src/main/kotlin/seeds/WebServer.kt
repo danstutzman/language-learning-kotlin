@@ -53,6 +53,7 @@ val regVPatternList = RegVPatternList(cardIdSequence)
 val nList           = NList(cardIdSequence)
 val detList         = DetList(cardIdSequence)
 val uniqVList       = UniqVList(cardIdSequence, infList)
+val npList          = NPList(cardIdSequence)
 var nextCardId      = cardIdSequence.nextId()
 
 val regVs = listOf(
@@ -67,13 +68,8 @@ val regVByKey = regVs.map { Pair(it.getKey(), it) }.toMap()
 val regVByQuestion =
   Assertions.assertUniqKeys(regVs.map { Pair(it.getQuizQuestion(), it) })
 
-val nps = listOf(
-  NP(0, "yo", "I")
-).map { it.copy(cardId = nextCardId++) }
-val npByEs = nps.map { Pair(it.es, it) }.toMap()
-
 val iClauses = listOf(
-  IClause(0, nps[0], regVByKey["comerER11PRES"]!!)
+  IClause(0, npList.byEs("yo"), regVByKey["comerER11PRES"]!!)
 ).map { it.copy(cardId = nextCardId++) }
 val iClauseByKey = iClauses.map { Pair(it.getKey(), it) }.toMap()
 val iClauseByQuestion =
@@ -84,7 +80,9 @@ val cards = infList.infs +
   nList.ns +
   detList.dets +
   uniqVList.uniqVs +
-  regVs + nps + iClauses
+  npList.nps +
+  regVs +
+  iClauses
 val cardRows = cards.map {
   val type = it.javaClass.name.split('.').last()
   CardRow(
@@ -110,7 +108,7 @@ fun handleGet(
       "IClause"     -> iClauseByKey[it.cardKey]!!
       "Inf"         -> infList.byKey(it.cardKey)
       "N"           -> nList.byEs(it.cardKey)
-      "NP"          -> npByEs[it.cardKey]!!
+      "NP"          -> npList.byEs(it.cardKey)
       "RegV"        -> regVByKey[it.cardKey]!!
       "RegVPattern" -> regVPatternList.byKey(it.cardKey)
       "UniqV"       -> uniqVList.byKey(it.cardKey)
