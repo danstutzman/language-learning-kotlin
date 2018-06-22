@@ -14,7 +14,6 @@ data class Inf (
         enPresent +
         EnVerbs.NUMBER_AND_PERSON_TO_EN_VERB_SUFFIX[Pair(number, person)]!!
       Tense.PRET -> enPast
-      else -> throw RuntimeException("Unexpected tense ${tense}")
     } + if (enDisambiguation != null) " ${enDisambiguation}" else ""
   override fun getEsWords(): List<String> = listOf(es)
   override fun getKey(): String = es
