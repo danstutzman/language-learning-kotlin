@@ -15,7 +15,7 @@ data class RegVPattern (
   val es: String
 ): Card {
   fun getEnPronoun(): String =
-    NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)]!!
+    EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)]!!
   override fun getKey(): String = "${infCategory}${number}${person}${tense}"
   override fun getChildrenCardIds(): List<Int> = listOf<Int>()
   override fun getEsWords(): List<String> = listOf(es)
