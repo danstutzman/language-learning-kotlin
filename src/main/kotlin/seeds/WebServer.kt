@@ -185,8 +185,8 @@ fun main(args: Array<String>) {
     e.printStackTrace()
   }
 
-  service.get("/", ::handleGet)
-  service.post("/", ::handlePost)
+  service.get("/api", ::handleGet)
+  service.post("/api", ::handlePost)
 
   service.afterAfter { req, res ->
     logger.info("${req.requestMethod()} ${req.pathInfo()} ${res.status()}")
