@@ -51,6 +51,7 @@ val cardIdSequence  = IdSequence()
 val infList         = InfList(cardIdSequence)
 val regVPatternList = RegVPatternList(cardIdSequence)
 val nList           = NList(cardIdSequence)
+val detList         = DetList(cardIdSequence)
 var nextCardId      = cardIdSequence.nextId()
 
 val regVs = listOf(
@@ -169,20 +170,6 @@ val uniqVByKey = uniqVs.map { Pair(it.getKey(), it) }.toMap()
 val uniqVByQuestion =
   Assertions.assertUniqKeys(uniqVs.map { Pair(it.getQuizQuestion(), it) })
 
-val dets = listOf(
-  Det(0, "el",   "the",   Gender.M),
-  Det(0, "la",   "the",   Gender.F),
-  Det(0, "un",   "a",     Gender.M),
-  Det(0, "una",  "a",     Gender.F),
-  Det(0, "mi",   "my",    null),
-  Det(0, "este", "this",  Gender.M),
-  Det(0, "esta", "this",  Gender.F),
-  Det(0, "cada", "every", null)
-).map { it.copy(cardId = nextCardId++) }
-val detByEs = dets.map { Pair(it.es, it) }.toMap()
-val detByQuestion =
-  Assertions.assertUniqKeys(dets.map { Pair(it.getQuizQuestion(), it) })
-
 val nps = listOf(
   NP(0, "yo", "I")
 ).map { it.copy(cardId = nextCardId++) }
@@ -198,7 +185,8 @@ val iClauseByQuestion =
 val cards = infList.infs +
   regVPatternList.regVPatterns +
   nList.ns +
-  regVs + uniqVs + dets + nps + iClauses
+  detList.dets +
+  regVs + uniqVs + nps + iClauses
 val cardRows = cards.map {
   val type = it.javaClass.name.split('.').last()
   CardRow(
@@ -220,7 +208,7 @@ fun handleGet(
     .fromJson(skillsExportFile.readText(), SkillsExport::class.java)
   val skillRowByCardId = skillsExport.skillExports.map {
     val card = when (it.cardType) {
-      "Det"         -> detByEs[it.cardKey]!!
+      "Det"         -> detList.byEs(it.cardKey)
       "IClause"     -> iClauseByKey[it.cardKey]!!
       "Inf"         -> infList.byEs(it.cardKey)
       "N"           -> nList.byEs(it.cardKey)
