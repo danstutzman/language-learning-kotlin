@@ -22,5 +22,5 @@ data class Inf (
     listOf(GlossRow(cardId, enPresent, es))
   override fun getQuizQuestion(): String =
     "to ${enPresent}" +
-    if (enDisambiguation != null) " ${enDisambiguation}" else ""
+    if (enDisambiguation != null) " (${enDisambiguation})" else ""
 }
