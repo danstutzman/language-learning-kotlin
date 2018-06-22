@@ -1,6 +1,6 @@
 package seeds
 
-val infsWithoutIds = listOf(
+private val infsWithoutIds = listOf(
   Inf(0, "comer",     "eat",    "ate",      null),
   Inf(0, "conocer",   "know",   "knew",     "person"),
   Inf(0, "dar",       "give",   "gave",     null),
@@ -20,17 +20,17 @@ val infsWithoutIds = listOf(
   Inf(0, "ver",       "see",    "saw",      null),
   Inf(0, "venir",     "come",   "came",     null)
 )
-val infByQuestion = Assertions.assertUniqKeys(infsWithoutIds.map {
+private val infByQuestion = Assertions.assertUniqKeys(infsWithoutIds.map {
   Pair(it.getQuizQuestion(), it)
 })
 
 class InfList {
   val infs: List<Inf>
-  val infByEs: Map<String, Inf>
+  val infByKey: Map<String, Inf>
 
   constructor(cardIdSequence: IdSequence) {
     infs = infsWithoutIds.map { it.copy(cardId = cardIdSequence.nextId()) }
-    infByEs = infs.map { Pair(it.es, it) }.toMap()
+    infByKey = infs.map { Pair(it.getKey(), it) }.toMap()
   }
-  fun byEs(es: String): Inf = infByEs[es]!!
+  fun byKey(key: String): Inf = infByKey[key]!!
 }
