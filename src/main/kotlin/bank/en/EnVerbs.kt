@@ -1,4 +1,4 @@
-package com.danstutzman.en
+package com.danstutzman.bank.en
 
 class EnVerbs {
   companion object {

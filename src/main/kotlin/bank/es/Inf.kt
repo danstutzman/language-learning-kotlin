@@ -1,8 +1,8 @@
-package com.danstutzman.es
+package com.danstutzman.bank.es
 
-import com.danstutzman.en.EnVerbs
 import com.danstutzman.bank.Card
 import com.danstutzman.bank.GlossRow
+import com.danstutzman.bank.en.EnVerbs
 
 data class Inf (
   override val cardId: Int,

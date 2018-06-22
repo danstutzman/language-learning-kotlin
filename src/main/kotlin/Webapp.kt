@@ -1,16 +1,16 @@
 package com.danstutzman
 
-import com.danstutzman.es.DetList
-import com.danstutzman.es.IClause
-import com.danstutzman.es.InfList
-import com.danstutzman.es.NList
-import com.danstutzman.es.NPList
-import com.danstutzman.es.RegV
-import com.danstutzman.es.RegVPatternList
-import com.danstutzman.es.UniqVList
 import com.danstutzman.bank.Assertions
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.IdSequence
+import com.danstutzman.bank.es.DetList
+import com.danstutzman.bank.es.IClause
+import com.danstutzman.bank.es.InfList
+import com.danstutzman.bank.es.NList
+import com.danstutzman.bank.es.NPList
+import com.danstutzman.bank.es.RegV
+import com.danstutzman.bank.es.RegVPatternList
+import com.danstutzman.bank.es.UniqVList
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import org.slf4j.Logger

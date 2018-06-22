@@ -1,4 +1,4 @@
-package com.danstutzman.es
+package com.danstutzman.bank.es
 
 enum class Tense {
   PRES,

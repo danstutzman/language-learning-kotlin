@@ -1,12 +1,13 @@
-package com.danstutzman.es
+package com.danstutzman.bank.es
 
 import com.danstutzman.bank.Card
 import com.danstutzman.bank.GlossRow
 
-data class NP (
+data class N (
   override val cardId: Int,
   val es: String,
-  val en: String
+  val en: String,
+  val gender: Gender
 ): Card {
   override fun getChildrenCardIds(): List<Int> = listOf<Int>()
   override fun getEsWords(): List<String> = listOf(es)

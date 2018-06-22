@@ -1,4 +1,4 @@
-package com.danstutzman.es
+package com.danstutzman.bank.es
 
 import com.danstutzman.bank.Assertions
 import com.danstutzman.bank.IdSequence

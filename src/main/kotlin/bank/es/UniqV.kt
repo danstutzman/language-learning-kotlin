@@ -1,8 +1,8 @@
-package com.danstutzman.es
+package com.danstutzman.bank.es
 
-import com.danstutzman.en.EnPronouns
 import com.danstutzman.bank.Card
 import com.danstutzman.bank.GlossRow
+import com.danstutzman.bank.en.EnPronouns
 
 data class UniqV (
   override val cardId: Int,
