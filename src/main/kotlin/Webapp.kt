@@ -1,8 +1,10 @@
 package com.danstutzman
 
 import com.danstutzman.bank.Assertions
+import com.danstutzman.bank.Bank
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.IdSequence
+import com.danstutzman.bank.SkillsUpload
 import com.danstutzman.bank.es.DetList
 import com.danstutzman.bank.es.IClause
 import com.danstutzman.bank.es.InfList
@@ -13,105 +15,17 @@ import com.danstutzman.bank.es.RegVPatternList
 import com.danstutzman.bank.es.UniqVList
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import java.io.File
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spark.Request
 import spark.Response
-import java.io.File
-
-val logger: Logger = LoggerFactory.getLogger("Webapp.kt")
-
-val DELAY_THRESHOLD = 100000
-
-data class CardRow(
-  val cardId: Int,
-  val type: String,
-  val key: String,
-  val childrenCardIds: List<Int>,
-  val glossRows: List<GlossRow>,
-  val esWords: List<String>,
-  val quizQuestion: String
-) {}
-
-data class SkillRow(
-  val cardId: Int,
-  val delay: Int,
-  val endurance: Int,
-  val lastSeenAt: Int,
-  val mnemonic: String
-) {}
-
-val cardIdSequence  = IdSequence()
-val infList         = InfList(cardIdSequence)
-val regVPatternList = RegVPatternList(cardIdSequence)
-val nList           = NList(cardIdSequence)
-val detList         = DetList(cardIdSequence)
-val uniqVList       = UniqVList(cardIdSequence, infList)
-val npList          = NPList(cardIdSequence)
-var nextCardId      = cardIdSequence.nextId()
-
-val regVs = listOf(
-  RegV(0, infList.byKey("preguntar"), regVPatternList.byKey("AR11PRES")),
-  RegV(0, infList.byKey("preguntar"), regVPatternList.byKey("AR13PRES")),
-  RegV(0, infList.byKey("comer"),     regVPatternList.byKey("ER11PRES")),
-  RegV(0, infList.byKey("comer"),     regVPatternList.byKey("ER13PRES")),
-  RegV(0, infList.byKey("preguntar"), regVPatternList.byKey("AR11PRET")),
-  RegV(0, infList.byKey("preguntar"), regVPatternList.byKey("AR13PRET"))
-).map { it.copy(cardId = nextCardId++) }
-val regVByKey = regVs.map { Pair(it.getKey(), it) }.toMap()
-val regVByQuestion =
-  Assertions.assertUniqKeys(regVs.map { Pair(it.getQuizQuestion(), it) })
-
-val iClauses = listOf(
-  IClause(0, npList.byEs("yo"), regVByKey["comerER11PRES"]!!)
-).map { it.copy(cardId = nextCardId++) }
-val iClauseByKey = iClauses.map { Pair(it.getKey(), it) }.toMap()
-val iClauseByQuestion =
-  Assertions.assertUniqKeys(iClauses.map { Pair(it.getQuizQuestion(), it) })
-
-val cards = infList.infs +
-  regVPatternList.regVPatterns +
-  nList.ns +
-  detList.dets +
-  uniqVList.uniqVs +
-  npList.nps +
-  regVs +
-  iClauses
-val cardRows = cards.map {
-  val type = it.javaClass.name.split('.').last()
-  CardRow(
-    it.cardId,
-    type,
-    it.getKey(),
-    it.getChildrenCardIds(),
-    it.getGlossRows(),
-    it.getEsWords(),
-    it.getQuizQuestion()
-  )
-}
-
-data class SkillsUpload(
-  val skillExports: List<SkillExport>?
-) {}
-
-data class SkillExport(
-  val cardType: String,
-  val cardKey: String,
-  val delay: Int,
-  val endurance: Int,
-  val lastSeenAt: Int,
-  val mnemonic: String
-) {}
-
-data class SkillsExport(
-  val skillExports: List<SkillExport>
-) {}
-
-
-
-
 
 class Webapp(val skillsExportFile: File) {
+  val logger: Logger = LoggerFactory.getLogger("Webapp.kt")
+
+  val bank = Bank(skillsExportFile)
+
   val OPEN_BODY_TAG = """
     <html>
       <head>
@@ -133,45 +47,7 @@ class Webapp(val skillsExportFile: File) {
   }
 
   val getApi = { req: Request, res: Response ->
-    val skillsExport: SkillsExport = Gson()
-      .fromJson(skillsExportFile.readText(), SkillsExport::class.java)
-    val skillRowByCardId = skillsExport.skillExports.map {
-      val card = when (it.cardType) {
-        "Det"         -> detList.byEs(it.cardKey)
-        "IClause"     -> iClauseByKey[it.cardKey]!!
-        "Inf"         -> infList.byKey(it.cardKey)
-        "N"           -> nList.byEs(it.cardKey)
-        "NP"          -> npList.byEs(it.cardKey)
-        "RegV"        -> regVByKey[it.cardKey]!!
-        "RegVPattern" -> regVPatternList.byKey(it.cardKey)
-        "UniqV"       -> uniqVList.byKey(it.cardKey)
-        else -> throw RuntimeException("Unexpected cardType ${it.cardType}")
-      }
-      Pair(card.cardId, SkillRow(
-        card.cardId,
-        it.delay,
-        it.endurance,
-        it.lastSeenAt,
-        it.mnemonic
-      ))
-    }.toMap()
-
-    val skillRows = cards.map {
-      skillRowByCardId[it.cardId] ?: SkillRow(
-        it.cardId,
-        if (it.getChildrenCardIds().size == 0)
-          DELAY_THRESHOLD else DELAY_THRESHOLD * 2,
-        0,
-        0,
-        ""
-      )
-    }
-
-    val response = linkedMapOf(
-      "cards" to cardRows,
-      "skills" to skillRows
-    )
-
+    val response = bank.getCardsAndSkills()
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Content-Type", "application/json")
     GsonBuilder().setPrettyPrinting().create().toJson(response)
@@ -179,18 +55,9 @@ class Webapp(val skillsExportFile: File) {
 
   val postApi = { req: Request, res: Response ->
     val skillsUpload = Gson().fromJson(req.body(), SkillsUpload::class.java)
-    if (skillsUpload.skillExports == null) {
-      res.status(400)
-      res.header("Access-Control-Allow-Origin", "*")
-      res.header("Content-Type", "application/json")
-      "{\"errors\":[\"Missing skillExports\"]}"
-    } else {
-      skillsExportFile.writeText(
-        GsonBuilder().setPrettyPrinting().create().toJson(
-          SkillsExport(skillsUpload.skillExports)))
-      res.header("Access-Control-Allow-Origin", "*")
-      res.header("Content-Type", "application/json")
-      "{}"
-    }
+    bank.saveSkillsExport(skillsUpload)
+    res.header("Access-Control-Allow-Origin", "*")
+    res.header("Content-Type", "application/json")
+    "{}"
   }
 }
