@@ -162,7 +162,7 @@
     },
     {
       "cardType": "RegVPattern",
-      "cardKey": "ER11PRES",
+      "cardKey": "ERIR11PRES",
       "delay": 2042,
       "endurance": 85405,
       "lastSeenAt": 1529682756,
@@ -170,7 +170,7 @@
     },
     {
       "cardType": "RegVPattern",
-      "cardKey": "ER13PRES",
+      "cardKey": "ERIR13PRES",
       "delay": 1222,
       "endurance": 85403,
       "lastSeenAt": 1529682759,
@@ -882,7 +882,7 @@
     },
     {
       "cardType": "RegV",
-      "cardKey": "comerER11PRES",
+      "cardKey": "comerERIR11PRES",
       "delay": 4140,
       "endurance": 2591,
       "lastSeenAt": 1529597384,
@@ -890,7 +890,7 @@
     },
     {
       "cardType": "RegV",
-      "cardKey": "comerER13PRES",
+      "cardKey": "comerERIR13PRES",
       "delay": 3320,
       "endurance": 2582,
       "lastSeenAt": 1529597379,
@@ -914,7 +914,7 @@
     },
     {
       "cardType": "IClause",
-      "cardKey": "agent\u003dyo v\u003dcomerER11PRES",
+      "cardKey": "agent\u003dyo v\u003dcomerERIR11PRES",
       "delay": 6040,
       "endurance": 2586,
       "lastSeenAt": 1529611879,

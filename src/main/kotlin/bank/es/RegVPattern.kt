@@ -4,6 +4,11 @@ import com.danstutzman.bank.Card
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.en.EnPronouns
 
+val NUMBER_TO_DESCRIPTION = linkedMapOf(
+  1 to "singular",
+  2 to "plural"
+)
+
 val PERSON_TO_DESCRIPTION = linkedMapOf(
   1 to "1st person",
   2 to "2nd person",
@@ -27,5 +32,5 @@ data class RegVPattern (
     listOf(GlossRow(cardId, "(${getEnPronoun()})", es))
   override fun getQuizQuestion(): String =
     "Conjugation for ${infCategory} verbs for ${PERSON_TO_DESCRIPTION[person]
-      } ${tense}"
+      } ${NUMBER_TO_DESCRIPTION[number]} ${tense}"
 }

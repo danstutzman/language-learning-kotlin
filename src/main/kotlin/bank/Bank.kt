@@ -87,8 +87,8 @@ class Bank(
   val regVs = listOf(
     RegV(0, infList.byEs("preguntar")!!, regVPatternList.byKey("AR11PRES")),
     RegV(0, infList.byEs("preguntar")!!, regVPatternList.byKey("AR13PRES")),
-    RegV(0, infList.byEs("comer")!!,     regVPatternList.byKey("ER11PRES")),
-    RegV(0, infList.byEs("comer")!!,     regVPatternList.byKey("ER13PRES")),
+    RegV(0, infList.byEs("comer")!!,     regVPatternList.byKey("ERIR11PRES")),
+    RegV(0, infList.byEs("comer")!!,     regVPatternList.byKey("ERIR13PRES")),
     RegV(0, infList.byEs("preguntar")!!, regVPatternList.byKey("AR11PRET")),
     RegV(0, infList.byEs("preguntar")!!, regVPatternList.byKey("AR13PRET"))
   ).map { it.copy(cardId = cardIdSequence.nextId()) }

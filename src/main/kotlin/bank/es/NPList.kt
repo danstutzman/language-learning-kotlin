@@ -4,7 +4,8 @@ import com.danstutzman.bank.Assertions
 import com.danstutzman.bank.IdSequence
 
 val npsWithoutIds = listOf(
-  NP(0, "yo", "I")
+  NP(0, "yo", "I"),
+  NP(0, "tú", "you")
 )
 val npByQuestion = Assertions.assertUniqKeys(
 	npsWithoutIds.map { Pair(it.getQuizQuestion(), it) })

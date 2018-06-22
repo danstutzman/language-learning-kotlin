@@ -4,3 +4,6 @@
 - !IClause
   agent: yo
   v: pregunté
+- !IClause
+  agent: tú
+  v: preguntaste
