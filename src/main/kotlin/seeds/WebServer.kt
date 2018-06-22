@@ -47,42 +47,10 @@ data class SkillRow(
   val mnemonic: String
 ) {}
 
-fun <T> assertUniqKeys(pairs: List<Pair<String, T>>) {
-  val map = mutableMapOf<String, T>()
-  for (pair in pairs) {
-    val oldValue = map.get(pair.first)
-    if (oldValue != null) {
-      throw RuntimeException(
-        "Key ${pair.first} has two values: ${oldValue} and ${pair.second}")
-    }
-    map.put(pair.first, pair.second)
-  }
-}
+val cardIdSequence = IdSequence()
 
-var nextCardId = 1
-
-val infs = listOf(
-  Inf(0, "comer",     "eat",    "ate",      null),
-  Inf(0, "conocer",   "know",   "knew",     "person"),
-  Inf(0, "dar",       "give",   "gave",     null),
-  Inf(0, "decir",     "say",    "said",     null),
-  Inf(0, "empezar",   "start",  "started",  null),
-  Inf(0, "enviar",    "send",   "sent",     null),
-  Inf(0, "estar",     "be",     "was",      "how"),
-  Inf(0, "hacer",     "do",     "did",      null),
-  Inf(0, "ir",        "go",     "went",     null),
-  Inf(0, "parecer",   "seem",   "seemed",   null),
-  Inf(0, "poner",     "put",    "put",      null),
-  Inf(0, "preguntar", "ask",    "asked",    null),
-  Inf(0, "saber",     "know",   "knew",     "thing"),
-  Inf(0, "salir",     "go out", "went out", null),
-  Inf(0, "ser",       "be",     "was",      "what"),
-  Inf(0, "tener",     "have",   "had",      null),
-  Inf(0, "ver",       "see",    "saw",      null),
-  Inf(0, "venir",     "come",   "came",     null)
-).map { it.copy(cardId = nextCardId++) }
-val infByEs = infs.map { Pair(it.es, it) }.toMap()
-val infByQuestion = assertUniqKeys(infs.map { Pair(it.getQuizQuestion(), it) })
+val infList = InfList(cardIdSequence)
+var nextCardId = cardIdSequence.nextId()
 
 val regVPatterns = listOf(
   RegVPattern(0, InfCategory.AR, 1, 1, Tense.PRES, "-o"),
@@ -94,93 +62,123 @@ val regVPatterns = listOf(
 ).map { it.copy(cardId = nextCardId++) }
 val regVPatternByKey = regVPatterns.map { Pair(it.getKey(), it) }.toMap()
 val regVPatternByQuestion =
-  assertUniqKeys(regVPatterns.map { Pair(it.getQuizQuestion(), it) })
+  Assertions.assertUniqKeys(regVPatterns.map { Pair(it.getQuizQuestion(), it) })
 
 val regVs = listOf(
-  RegV(0, infByEs["preguntar"]!!, regVPatternByKey["AR11PRES"]!!),
-  RegV(0, infByEs["preguntar"]!!, regVPatternByKey["AR13PRES"]!!),
-  RegV(0, infByEs["comer"]!!,     regVPatternByKey["ER11PRES"]!!),
-  RegV(0, infByEs["comer"]!!,     regVPatternByKey["ER13PRES"]!!),
-  RegV(0, infByEs["preguntar"]!!, regVPatternByKey["AR11PRET"]!!),
-  RegV(0, infByEs["preguntar"]!!, regVPatternByKey["AR13PRET"]!!)
+  RegV(0, infList.byEs("preguntar"), regVPatternByKey["AR11PRES"]!!),
+  RegV(0, infList.byEs("preguntar"), regVPatternByKey["AR13PRES"]!!),
+  RegV(0, infList.byEs("comer"),     regVPatternByKey["ER11PRES"]!!),
+  RegV(0, infList.byEs("comer"),     regVPatternByKey["ER13PRES"]!!),
+  RegV(0, infList.byEs("preguntar"), regVPatternByKey["AR11PRET"]!!),
+  RegV(0, infList.byEs("preguntar"), regVPatternByKey["AR13PRET"]!!)
 ).map { it.copy(cardId = nextCardId++) }
 val regVByKey = regVs.map { Pair(it.getKey(), it) }.toMap()
 val regVByQuestion =
-  assertUniqKeys(regVs.map { Pair(it.getQuizQuestion(), it) })
+  Assertions.assertUniqKeys(regVs.map { Pair(it.getQuizQuestion(), it) })
 
 val uniqVs = listOf(
-  UniqV(0, "soy",       "am",   infByEs["ser"]!!,     1, 1, Tense.PRES,
+  UniqV(0, "soy",       "am",   infList.byEs("ser"),     1, 1, Tense.PRES,
     "what"),
-  UniqV(0, "eres",      "are",  infByEs["ser"]!!,     1, 2, Tense.PRES,
+  UniqV(0, "eres",      "are",  infList.byEs("ser"),     1, 2, Tense.PRES,
     "what"),
-  UniqV(0, "es",        "is",   infByEs["ser"]!!,     1, 3, Tense.PRES,
+  UniqV(0, "es",        "is",   infList.byEs("ser"),     1, 3, Tense.PRES,
     "what"),
-  UniqV(0, "somos",     "are",  infByEs["ser"]!!,     2, 1, Tense.PRES,
+  UniqV(0, "somos",     "are",  infList.byEs("ser"),     2, 1, Tense.PRES,
     "what"),
-  UniqV(0, "son",       "are",  infByEs["ser"]!!,     2, 3, Tense.PRES,
+  UniqV(0, "son",       "are",  infList.byEs("ser"),     2, 3, Tense.PRES,
     "what"),
-  UniqV(0, "fui",       "was",  infByEs["ser"]!!,     1, 1, Tense.PRET,
+  UniqV(0, "fui",       "was",  infList.byEs("ser"),     1, 1, Tense.PRET,
     "what"),
-  UniqV(0, "fuiste",    "were", infByEs["ser"]!!,     1, 2, Tense.PRET,
+  UniqV(0, "fuiste",    "were", infList.byEs("ser"),     1, 2, Tense.PRET,
     "what"),
-  UniqV(0, "fue",       "was",  infByEs["ser"]!!,     1, 3, Tense.PRET,
+  UniqV(0, "fue",       "was",  infList.byEs("ser"),     1, 3, Tense.PRET,
     "what"),
-  UniqV(0, "fuimos",    "were", infByEs["ser"]!!,     2, 1, Tense.PRET,
+  UniqV(0, "fuimos",    "were", infList.byEs("ser"),     2, 1, Tense.PRET,
     "what"),
-  UniqV(0, "fueron",    "were", infByEs["ser"]!!,     2, 3, Tense.PRET,
+  UniqV(0, "fueron",    "were", infList.byEs("ser"),     2, 3, Tense.PRET,
     "what"),
-  UniqV(0, "estoy",     "am",   infByEs["estar"]!!,   1, 1, Tense.PRES,
+  UniqV(0, "estoy",     "am",   infList.byEs("estar"),   1, 1, Tense.PRES,
     "how"),
-  UniqV(0, "estás",     "are",  infByEs["estar"]!!,   1, 2, Tense.PRES,
+  UniqV(0, "estás",     "are",  infList.byEs("estar"),   1, 2, Tense.PRES,
     "how"),
-  UniqV(0, "está",      "is",   infByEs["estar"]!!,   1, 3, Tense.PRES,
+  UniqV(0, "está",      "is",   infList.byEs("estar"),   1, 3, Tense.PRES,
     "how"),
-  UniqV(0, "están",     "are",  infByEs["estar"]!!,   2, 3, Tense.PRES,
+  UniqV(0, "están",     "are",  infList.byEs("estar"),   2, 3, Tense.PRES,
     "how"),
-  UniqV(0, "tengo",     "have", infByEs["tener"]!!,   1, 1, Tense.PRES, null),
-  UniqV(0, "hago",      "do",   infByEs["hacer"]!!,   1, 1, Tense.PRES, null),
-  UniqV(0, "digo",      "say",  infByEs["decir"]!!,   1, 1, Tense.PRES, null),
-  UniqV(0, "dijeron",   "said", infByEs["decir"]!!,   2, 3, Tense.PRET, null),
-  UniqV(0, "voy",       "go",   infByEs["ir"]!!,      1, 1, Tense.PRES, null),
-  UniqV(0, "vas",       "go",   infByEs["ir"]!!,      1, 2, Tense.PRES, null),
-  UniqV(0, "va",        "goes", infByEs["ir"]!!,      1, 3, Tense.PRES, null),
-  UniqV(0, "vamos",     "go",   infByEs["ir"]!!,      2, 1, Tense.PRES, null),
-  UniqV(0, "van",       "go",   infByEs["ir"]!!,      2, 3, Tense.PRES, null),
-  UniqV(0, "fui",       "went", infByEs["ir"]!!,      1, 1, Tense.PRET, null),
-  UniqV(0, "fuiste",    "went", infByEs["ir"]!!,      1, 2, Tense.PRET, null),
-  UniqV(0, "fue",       "went", infByEs["ir"]!!,      1, 3, Tense.PRET, null),
-  UniqV(0, "fuimos",    "went", infByEs["ir"]!!,      2, 1, Tense.PRET, null),
-  UniqV(0, "fueron",    "went", infByEs["ir"]!!,      2, 3, Tense.PRET, null),
-  UniqV(0, "veo",       "see",  infByEs["ver"]!!,     1, 1, Tense.PRES, null),
-  UniqV(0, "vi",        "saw",  infByEs["ver"]!!,     1, 1, Tense.PRET, null),
-  UniqV(0, "vio",       "saw",  infByEs["ver"]!!,     1, 3, Tense.PRET, null),
-  UniqV(0, "vimos",     "saw",  infByEs["ver"]!!,     2, 1, Tense.PRET, null),
-  UniqV(0, "doy",       "give", infByEs["dar"]!!,     1, 1, Tense.PRES, null),
-  UniqV(0, "di",        "gave", infByEs["dar"]!!,     1, 1, Tense.PRET, null),
-  UniqV(0, "diste",     "gave", infByEs["dar"]!!,     1, 2, Tense.PRET, null),
-  UniqV(0, "dio",       "gave", infByEs["dar"]!!,     1, 3, Tense.PRET, null),
-  UniqV(0, "dimos",     "gave", infByEs["dar"]!!,     2, 1, Tense.PRET, null),
-  UniqV(0, "dieron",    "gave", infByEs["dar"]!!,     2, 3, Tense.PRET, null),
-  UniqV(0, "sé",        "know", infByEs["saber"]!!,   1, 1, Tense.PRES,
+  UniqV(0, "tengo",     "have", infList.byEs("tener"),   1, 1, Tense.PRES,
+    null),
+  UniqV(0, "hago",      "do",   infList.byEs("hacer"),   1, 1, Tense.PRES,
+    null),
+  UniqV(0, "digo",      "say",  infList.byEs("decir"),   1, 1, Tense.PRES,
+    null),
+  UniqV(0, "dijeron",   "said", infList.byEs("decir"),   2, 3, Tense.PRET,
+    null),
+  UniqV(0, "voy",       "go",   infList.byEs("ir"),      1, 1, Tense.PRES,
+    null),
+  UniqV(0, "vas",       "go",   infList.byEs("ir"),      1, 2, Tense.PRES,
+    null),
+  UniqV(0, "va",        "goes", infList.byEs("ir"),      1, 3, Tense.PRES,
+    null),
+  UniqV(0, "vamos",     "go",   infList.byEs("ir"),      2, 1, Tense.PRES,
+    null),
+  UniqV(0, "van",       "go",   infList.byEs("ir"),      2, 3, Tense.PRES,
+    null),
+  UniqV(0, "fui",       "went", infList.byEs("ir"),      1, 1, Tense.PRET,
+    null),
+  UniqV(0, "fuiste",    "went", infList.byEs("ir"),      1, 2, Tense.PRET,
+    null),
+  UniqV(0, "fue",       "went", infList.byEs("ir"),      1, 3, Tense.PRET,
+    null),
+  UniqV(0, "fuimos",    "went", infList.byEs("ir"),      2, 1, Tense.PRET,
+    null),
+  UniqV(0, "fueron",    "went", infList.byEs("ir"),      2, 3, Tense.PRET,
+    null),
+  UniqV(0, "veo",       "see",  infList.byEs("ver"),     1, 1, Tense.PRES,
+    null),
+  UniqV(0, "vi",        "saw",  infList.byEs("ver"),     1, 1, Tense.PRET,
+    null),
+  UniqV(0, "vio",       "saw",  infList.byEs("ver"),     1, 3, Tense.PRET,
+    null),
+  UniqV(0, "vimos",     "saw",  infList.byEs("ver"),     2, 1, Tense.PRET,
+    null),
+  UniqV(0, "doy",       "give", infList.byEs("dar"),     1, 1, Tense.PRES,
+    null),
+  UniqV(0, "di",        "gave", infList.byEs("dar"),     1, 1, Tense.PRET,
+    null),
+  UniqV(0, "diste",     "gave", infList.byEs("dar"),     1, 2, Tense.PRET,
+    null),
+  UniqV(0, "dio",       "gave", infList.byEs("dar"),     1, 3, Tense.PRET,
+    null),
+  UniqV(0, "dimos",     "gave", infList.byEs("dar"),     2, 1, Tense.PRET,
+    null),
+  UniqV(0, "dieron",    "gave", infList.byEs("dar"),     2, 3, Tense.PRET,
+    null),
+  UniqV(0, "sé",        "know", infList.byEs("saber"),   1, 1, Tense.PRES,
     "thing"),
-  UniqV(0, "pongo",     "put",  infByEs["poner"]!!,   1, 1, Tense.PRES, null),
-  UniqV(0, "vengo",     "come", infByEs["venir"]!!,   1, 1, Tense.PRES, null),
-  UniqV(0, "salgo",     "go out",    infByEs["salir"]!!,   1, 1, Tense.PRES,
+  UniqV(0, "pongo",     "put",  infList.byEs("poner"),   1, 1, Tense.PRES,
     null),
-  UniqV(0, "parezco",   "look like", infByEs["parecer"]!!, 1, 1, Tense.PRES,
+  UniqV(0, "vengo",     "come", infList.byEs("venir"),   1, 1, Tense.PRES,
     null),
-  UniqV(0, "conozco",   "know",      infByEs["conocer"]!!, 1, 1, Tense.PRES,
+  UniqV(0, "salgo",     "go out",  infList.byEs("salir"),   1, 1, Tense.PRES,
+    null),
+  UniqV(0, "parezco", "look like", infList.byEs("parecer"), 1, 1, Tense.PRES,
+    null),
+  UniqV(0, "conozco", "know",      infList.byEs("conocer"), 1, 1, Tense.PRES,
     "person"),
-  UniqV(0, "empecé",    "started",   infByEs["empezar"]!!, 1, 1, Tense.PRET,
+  UniqV(0, "empecé",  "started",   infList.byEs("empezar"), 1, 1, Tense.PRET,
     null),
-  UniqV(0, "envío",     "sent", infByEs["enviar"]!!,  1, 1, Tense.PRES, null),
-  UniqV(0, "envías",    "sent", infByEs["enviar"]!!,  1, 2, Tense.PRES, null),
-  UniqV(0, "envía",     "sent", infByEs["enviar"]!!,  1, 3, Tense.PRES, null),
-  UniqV(0, "envían",    "sent", infByEs["enviar"]!!,  2, 1, Tense.PRES, null)
+  UniqV(0, "envío",   "sent", infList.byEs("enviar"),  1, 1, Tense.PRES,
+    null),
+  UniqV(0, "envías",  "sent", infList.byEs("enviar"),  1, 2, Tense.PRES,
+    null),
+  UniqV(0, "envía",   "sent", infList.byEs("enviar"),  1, 3, Tense.PRES,
+    null),
+  UniqV(0, "envían",    "sent", infList.byEs("enviar"),  2, 1, Tense.PRES,
+    null)
 ).map { it.copy(cardId = nextCardId++) }
 val uniqVByKey = uniqVs.map { Pair(it.getKey(), it) }.toMap()
 val uniqVByQuestion =
-  assertUniqKeys(uniqVs.map { Pair(it.getQuizQuestion(), it) })
+  Assertions.assertUniqKeys(uniqVs.map { Pair(it.getQuizQuestion(), it) })
 
 val dets = listOf(
   Det(0, "el",   "the",   Gender.M),
@@ -193,7 +191,8 @@ val dets = listOf(
   Det(0, "cada", "every", null)
 ).map { it.copy(cardId = nextCardId++) }
 val detByEs = dets.map { Pair(it.es, it) }.toMap()
-val detByQuestion = assertUniqKeys(dets.map { Pair(it.getQuizQuestion(), it) })
+val detByQuestion =
+  Assertions.assertUniqKeys(dets.map { Pair(it.getQuizQuestion(), it) })
 
 val ns = listOf(
   N(0, "brazo", "arm", Gender.M),
@@ -224,7 +223,8 @@ val ns = listOf(
   N(0, "garganta", "throat", Gender.F)
 ).map { it.copy(cardId = nextCardId++) }
 val nByEs = ns.map { Pair(it.es, it) }.toMap()
-val nByQuestion = assertUniqKeys(ns.map { Pair(it.getQuizQuestion(), it) })
+val nByQuestion =
+  Assertions.assertUniqKeys(ns.map { Pair(it.getQuizQuestion(), it) })
 
 val nps = listOf(
   NP(0, "yo", "I")
@@ -236,9 +236,10 @@ val iClauses = listOf(
 ).map { it.copy(cardId = nextCardId++) }
 val iClauseByKey = iClauses.map { Pair(it.getKey(), it) }.toMap()
 val iClauseByQuestion =
-  assertUniqKeys(iClauses.map { Pair(it.getQuizQuestion(), it) })
+  Assertions.assertUniqKeys(iClauses.map { Pair(it.getQuizQuestion(), it) })
 
-val cards = infs + regVPatterns + regVs + uniqVs + ns + dets + nps + iClauses
+val cards = infList.infs +
+  regVPatterns + regVs + uniqVs + ns + dets + nps + iClauses
 val cardRows = cards.map {
   val type = it.javaClass.name.split('.').last()
   CardRow(
@@ -262,7 +263,7 @@ fun handleGet(
     val card = when (it.cardType) {
       "Det"         -> detByEs[it.cardKey]!!
       "IClause"     -> iClauseByKey[it.cardKey]!!
-      "Inf"         -> infByEs[it.cardKey]!!
+      "Inf"         -> infList.byEs(it.cardKey)
       "N"           -> nByEs[it.cardKey]!!
       "NP"          -> npByEs[it.cardKey]!!
       "RegV"        -> regVByKey[it.cardKey]!!
