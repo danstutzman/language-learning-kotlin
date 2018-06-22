@@ -13,7 +13,7 @@ data class UniqV (
   val person: Int,
   val tense: Tense,
   val enDisambiguation: String?
-): Card {
+): Card, V {
   override fun getChildrenCardIds(): List<Int> = listOf<Int>()
   override fun getEsWords(): List<String> = listOf(es)
   override fun getGlossRows(): List<GlossRow> =

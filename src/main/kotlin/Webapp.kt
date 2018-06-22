@@ -21,10 +21,8 @@ import org.slf4j.LoggerFactory
 import spark.Request
 import spark.Response
 
-class Webapp(val skillsExportFile: File) {
+class Webapp(val bank: Bank) {
   val logger: Logger = LoggerFactory.getLogger("Webapp.kt")
-
-  val bank = Bank(skillsExportFile)
 
   val OPEN_BODY_TAG = """
     <html>

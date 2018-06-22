@@ -6,7 +6,7 @@ import com.danstutzman.bank.IdSequence
 private data class D(
   val es: String,
   val en: String,
-  val infKey: String,
+  val infEs: String,
   val number: Int,
   val person: Int,
   val tense: Tense,
@@ -70,6 +70,7 @@ private val uniqVsWithoutIds = listOf(
 
 class UniqVList {
   val uniqVs: List<UniqV>
+  val uniqVsByEs: Map<String, List<UniqV>>
   val uniqVByKey: Map<String, UniqV>
 
   constructor(cardIdSequence: IdSequence, infList: InfList) {
@@ -78,7 +79,7 @@ class UniqVList {
         cardId = cardIdSequence.nextId(),
         es = it.es,
         en = it.en,
-        inf = infList.byKey(it.infKey),
+        inf = infList.byEs(it.infEs)!!,
         number = it.number,
         person = it.person,
         tense = it.tense,
@@ -87,7 +88,24 @@ class UniqVList {
     }
     val uniqVByQuestion = Assertions.assertUniqKeys(
       uniqVs.map { Pair(it.getQuizQuestion(), it) })
+
+    uniqVsByEs = mutableMapOf<String, List<UniqV>>()
+    for (uniqV in uniqVs) {
+      uniqVsByEs[uniqV.es] =
+        (uniqVsByEs[uniqV.es] ?: listOf<UniqV>()) + listOf(uniqV)
+    }
+
     uniqVByKey = uniqVs.map { Pair(it.getKey(), it) }.toMap()
+  }
+  fun byEs(es: String): UniqV? {
+    val uniqVs = uniqVsByEs[es]
+    if (uniqVs == null) {
+      return null
+    } else if (uniqVs.size == 1) {
+      return uniqVs[0]
+    } else {
+      throw RuntimeException("Multiple uniqVs for es=${es}")
+    }
   }
   fun byKey(key: String): UniqV = uniqVByKey[key]!!
 }

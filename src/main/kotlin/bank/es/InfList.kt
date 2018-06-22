@@ -29,11 +29,11 @@ private val infByQuestion = Assertions.assertUniqKeys(infsWithoutIds.map {
 
 class InfList {
   val infs: List<Inf>
-  val infByKey: Map<String, Inf>
+  val infByEs: Map<String, Inf>
 
   constructor(cardIdSequence: IdSequence) {
     infs = infsWithoutIds.map { it.copy(cardId = cardIdSequence.nextId()) }
-    infByKey = infs.map { Pair(it.getKey(), it) }.toMap()
+    infByEs = infs.map { Pair(it.es, it) }.toMap()
   }
-  fun byKey(key: String): Inf = infByKey[key]!!
+  fun byEs(es: String): Inf? = infByEs[es]
 }

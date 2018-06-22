@@ -10,7 +10,7 @@ data class Inf (
   val enPresent: String,
   val enPast: String,
   val enDisambiguation: String?
-): Card {
+): Card, V {
   override fun getChildrenCardIds(): List<Int> = listOf()
   fun getEnVerb(number: Int, person: Int, tense: Tense): String =
     when (tense) {

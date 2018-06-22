@@ -11,8 +11,11 @@ import com.danstutzman.bank.es.NPList
 import com.danstutzman.bank.es.RegV
 import com.danstutzman.bank.es.RegVPatternList
 import com.danstutzman.bank.es.UniqVList
+import com.danstutzman.bank.es.VCloud
+import com.esotericsoftware.yamlbeans.YamlReader
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import java.io.FileReader
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spark.Request
@@ -20,6 +23,15 @@ import spark.Response
 import java.io.File
 
 const val DELAY_THRESHOLD = 100000
+
+data class IClausesYaml (
+  val iClauses: List<IClauseYaml>? = null
+) {}
+
+data class IClauseYaml (
+  var agent: String? = null,
+  var v: String? = null
+) {}
 
 data class CardRow(
   val cardId: Int,
@@ -57,7 +69,8 @@ data class SkillsExport(
 ) {}
 
 class Bank(
-  val skillsExportFile: File
+  val skillsExportFile: File,
+  val iClausesYamlFile: File
 ) {
   val logger: Logger = LoggerFactory.getLogger("Webapp.kt")
 
@@ -68,23 +81,32 @@ class Bank(
   val detList         = DetList(cardIdSequence)
   val uniqVList       = UniqVList(cardIdSequence, infList)
   val npList          = NPList(cardIdSequence)
-  var nextCardId      = cardIdSequence.nextId()
+  val vCloud          = VCloud(cardIdSequence, infList, uniqVList,
+                          regVPatternList)
 
   val regVs = listOf(
-    RegV(0, infList.byKey("preguntar"), regVPatternList.byKey("AR11PRES")),
-    RegV(0, infList.byKey("preguntar"), regVPatternList.byKey("AR13PRES")),
-    RegV(0, infList.byKey("comer"),     regVPatternList.byKey("ER11PRES")),
-    RegV(0, infList.byKey("comer"),     regVPatternList.byKey("ER13PRES")),
-    RegV(0, infList.byKey("preguntar"), regVPatternList.byKey("AR11PRET")),
-    RegV(0, infList.byKey("preguntar"), regVPatternList.byKey("AR13PRET"))
-  ).map { it.copy(cardId = nextCardId++) }
+    RegV(0, infList.byEs("preguntar")!!, regVPatternList.byKey("AR11PRES")),
+    RegV(0, infList.byEs("preguntar")!!, regVPatternList.byKey("AR13PRES")),
+    RegV(0, infList.byEs("comer")!!,     regVPatternList.byKey("ER11PRES")),
+    RegV(0, infList.byEs("comer")!!,     regVPatternList.byKey("ER13PRES")),
+    RegV(0, infList.byEs("preguntar")!!, regVPatternList.byKey("AR11PRET")),
+    RegV(0, infList.byEs("preguntar")!!, regVPatternList.byKey("AR13PRET"))
+  ).map { it.copy(cardId = cardIdSequence.nextId()) }
   val regVByKey = regVs.map { Pair(it.getKey(), it) }.toMap()
   val regVByQuestion =
     Assertions.assertUniqKeys(regVs.map { Pair(it.getQuizQuestion(), it) })
 
-  val iClauses = listOf(
-    IClause(0, npList.byEs("yo"), regVByKey["comerER11PRES"]!!)
-  ).map { it.copy(cardId = nextCardId++) }
+  val reader = YamlReader(FileReader(iClausesYamlFile))
+  val ignored =
+    reader.getConfig().setClassTag("IClause", IClauseYaml::class.java)
+  val iClausesYaml = reader.read(List::class.java) as List<IClauseYaml>
+  val iClauses = iClausesYaml.map { yaml ->
+    IClause(
+      cardIdSequence.nextId(),
+      npList.byEs(yaml.agent!!),
+      vCloud.byEs(yaml.v!!) as RegV
+    )
+  }
   val iClauseByKey = iClauses.map { Pair(it.getKey(), it) }.toMap()
   val iClauseByQuestion =
     Assertions.assertUniqKeys(iClauses.map { Pair(it.getQuizQuestion(), it) })
@@ -118,7 +140,7 @@ class Bank(
       val card = when (it.cardType) {
         "Det"         -> detList.byEs(it.cardKey)
         "IClause"     -> iClauseByKey[it.cardKey]!!
-        "Inf"         -> infList.byKey(it.cardKey)
+        "Inf"         -> infList.byEs(it.cardKey)!!
         "N"           -> nList.byEs(it.cardKey)
         "NP"          -> npList.byEs(it.cardKey)
         "RegV"        -> regVByKey[it.cardKey]!!
