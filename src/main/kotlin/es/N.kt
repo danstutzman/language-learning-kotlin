@@ -1,7 +1,7 @@
 package com.danstutzman.es
 
-import com.danstutzman.seeds.Card
-import com.danstutzman.seeds.GlossRow
+import com.danstutzman.bank.Card
+import com.danstutzman.bank.GlossRow
 
 data class N (
   override val cardId: Int,

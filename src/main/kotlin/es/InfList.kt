@@ -1,7 +1,7 @@
 package com.danstutzman.es
 
-import com.danstutzman.seeds.Assertions
-import com.danstutzman.seeds.IdSequence
+import com.danstutzman.bank.Assertions
+import com.danstutzman.bank.IdSequence
 
 private val infsWithoutIds = listOf(
   Inf(0, "comer",     "eat",    "ate",      null),

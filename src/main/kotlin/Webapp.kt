@@ -8,9 +8,9 @@ import com.danstutzman.es.NPList
 import com.danstutzman.es.RegV
 import com.danstutzman.es.RegVPatternList
 import com.danstutzman.es.UniqVList
-import com.danstutzman.seeds.Assertions
-import com.danstutzman.seeds.GlossRow
-import com.danstutzman.seeds.IdSequence
+import com.danstutzman.bank.Assertions
+import com.danstutzman.bank.GlossRow
+import com.danstutzman.bank.IdSequence
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import org.slf4j.Logger

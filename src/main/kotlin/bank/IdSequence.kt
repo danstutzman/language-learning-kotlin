@@ -1,4 +1,4 @@
-package com.danstutzman.seeds
+package com.danstutzman.bank
 
 class IdSequence {
   var nextId = 1
