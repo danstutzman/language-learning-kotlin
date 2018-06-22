@@ -1,4 +1,8 @@
-package seeds
+package es
+
+import en.EnPronouns
+import seeds.Card
+import seeds.GlossRow
 
 val PERSON_TO_DESCRIPTION = linkedMapOf(
   1 to "1st person",

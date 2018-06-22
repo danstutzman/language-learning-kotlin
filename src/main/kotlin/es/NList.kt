@@ -1,4 +1,7 @@
-package seeds
+package es
+
+import seeds.Assertions
+import seeds.IdSequence
 
 val nsWithoutIds = listOf(
   N(0, "brazo", "arm", Gender.M),

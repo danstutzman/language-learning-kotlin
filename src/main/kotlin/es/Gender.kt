@@ -1,4 +1,4 @@
-package seeds
+package es
 
 val GENDER_TO_DESCRIPTION = linkedMapOf(
   Gender.M to "masc.",

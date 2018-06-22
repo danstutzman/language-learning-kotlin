@@ -1,4 +1,7 @@
-package seeds
+package es
+
+import seeds.Assertions
+import seeds.IdSequence
 
 val regVPatternsWithoutIds = listOf(
   RegVPattern(0, InfCategory.AR, 1, 1, Tense.PRES, "-o"),

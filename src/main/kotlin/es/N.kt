@@ -1,4 +1,7 @@
-package seeds
+package es
+
+import seeds.Card
+import seeds.GlossRow
 
 data class N (
   override val cardId: Int,

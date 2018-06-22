@@ -1,4 +1,7 @@
-package seeds
+package es
+
+import seeds.Assertions
+import seeds.IdSequence
 
 val detsWithoutIds = listOf(
   Det(0, "el",   "the",   Gender.M),

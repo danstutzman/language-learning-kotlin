@@ -1,4 +1,4 @@
-package seeds
+package es
 
 enum class InfCategory {
   AR,

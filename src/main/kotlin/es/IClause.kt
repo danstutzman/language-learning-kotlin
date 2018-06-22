@@ -1,4 +1,7 @@
-package seeds
+package es
+
+import seeds.Card
+import seeds.GlossRow
 
 fun capitalizeFirstLetter(s: String) =
   s.substring(0, 1).toUpperCase() + s.substring(1)

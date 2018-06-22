@@ -1,4 +1,7 @@
-package seeds
+package es
+
+import seeds.Assertions
+import seeds.IdSequence
 
 private data class D(
   val es: String,

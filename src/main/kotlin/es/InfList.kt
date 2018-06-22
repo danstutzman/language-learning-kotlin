@@ -1,4 +1,7 @@
-package seeds
+package es
+
+import seeds.Assertions
+import seeds.IdSequence
 
 private val infsWithoutIds = listOf(
   Inf(0, "comer",     "eat",    "ate",      null),

@@ -1,4 +1,8 @@
-package seeds
+package es
+
+import en.EnPronouns
+import seeds.Card
+import seeds.GlossRow
 
 data class UniqV (
   override val cardId: Int,

@@ -1,4 +1,4 @@
-package seeds
+package en
 
 class EnVerbs {
   companion object {

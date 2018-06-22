@@ -1,4 +1,8 @@
-package seeds
+package es
+
+import en.EnVerbs
+import seeds.Card
+import seeds.GlossRow
 
 data class Inf (
   override val cardId: Int,

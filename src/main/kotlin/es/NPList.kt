@@ -1,4 +1,7 @@
-package seeds
+package es
+
+import seeds.Assertions
+import seeds.IdSequence
 
 val npsWithoutIds = listOf(
   NP(0, "yo", "I")
