@@ -10,6 +10,8 @@ import com.danstutzman.bank.es.NList
 import com.danstutzman.bank.es.NPList
 import com.danstutzman.bank.es.RegV
 import com.danstutzman.bank.es.RegVPatternList
+import com.danstutzman.bank.es.StemChange
+import com.danstutzman.bank.es.StemChangeList
 import com.danstutzman.bank.es.UniqVList
 import com.danstutzman.bank.es.VCloud
 import com.esotericsoftware.yamlbeans.YamlReader
@@ -81,8 +83,8 @@ class Bank(
   val detList         = DetList(cardIdSequence)
   val uniqVList       = UniqVList(cardIdSequence, infList)
   val npList          = NPList(cardIdSequence)
+  val stemChangeList  = StemChangeList(cardIdSequence, infList)
   val vCloud          = VCloud(cardIdSequence, infList, uniqVList,
-                          regVPatternList)
 
   val regVs = listOf(
     RegV(0, infList.byEs("preguntar")!!, regVPatternList.byKey("AR11PRES")),
@@ -95,6 +97,7 @@ class Bank(
   val regVByKey = regVs.map { Pair(it.getKey(), it) }.toMap()
   val regVByQuestion =
     Assertions.assertUniqKeys(regVs.map { Pair(it.getQuizQuestion(), it) })
+                          regVPatternList, stemChangeList)
 
   val reader = YamlReader(FileReader(iClausesYamlFile))
   val ignored =
@@ -104,7 +107,7 @@ class Bank(
     IClause(
       cardIdSequence.nextId(),
       npList.byEs(yaml.agent!!),
-      vCloud.byEs(yaml.v!!) as RegV
+      vCloud.byEs(yaml.v!!)
     )
   }
   val iClauseByKey = iClauses.map { Pair(it.getKey(), it) }.toMap()
@@ -117,7 +120,8 @@ class Bank(
     detList.dets +
     uniqVList.uniqVs +
     npList.nps +
-    regVs +
+    vCloud.vs +
+    stemChangeList.stemChanges +
     iClauses
   val cardRows = cards.map {
     val type = it.javaClass.name.split('.').last()
@@ -145,6 +149,7 @@ class Bank(
         "NP"          -> npList.byEs(it.cardKey)
         "RegV"        -> regVByKey[it.cardKey]!!
         "RegVPattern" -> regVPatternList.byKey(it.cardKey)
+        "StemChange"  -> stemChangeList.byKey(it.cardKey)
         "UniqV"       -> uniqVList.byKey(it.cardKey)
         else -> throw RuntimeException("Unexpected cardType ${it.cardType}")
       }

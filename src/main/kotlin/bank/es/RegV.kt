@@ -11,8 +11,8 @@ data class RegV (
   fun getEsVerbPrefix(): String = inf.es.substring(0, inf.es.length - 2) + "-"
   override fun getChildrenCardIds(): List<Int> =
     listOf<Int>(inf.cardId, pattern.cardId)
-  fun getEnVerb() =
-    inf.getEnVerb(pattern.number, pattern.person, pattern.tense)
+  override fun getEnVerb() =
+    inf.getEnVerbFor(pattern.number, pattern.person, pattern.tense)
   fun getEs(): String =
     inf.es.substring(0, inf.es.length - 2) + pattern.es.substring(1)
   override fun getEsWords(): List<String> = listOf(getEs())

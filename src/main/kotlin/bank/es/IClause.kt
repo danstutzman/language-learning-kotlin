@@ -9,7 +9,7 @@ fun capitalizeFirstLetter(s: String) =
 data class IClause(
   override val cardId: Int,
   val agent: NP,
-  val v: RegV
+  val v: V
 ): Card {
   override fun getChildrenCardIds(): List<Int> =
     listOf<Int>(agent.cardId, v.cardId)

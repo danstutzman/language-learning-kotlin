@@ -15,6 +15,7 @@ data class UniqV (
   val enDisambiguation: String?
 ): Card, V {
   override fun getChildrenCardIds(): List<Int> = listOf<Int>()
+  override fun getEnVerb(): String = en
   override fun getEsWords(): List<String> = listOf(es)
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(cardId, en, es))

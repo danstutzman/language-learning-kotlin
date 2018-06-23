@@ -12,7 +12,8 @@ data class Inf (
   val enDisambiguation: String?
 ): Card, V {
   override fun getChildrenCardIds(): List<Int> = listOf()
-  fun getEnVerb(number: Int, person: Int, tense: Tense): String =
+  override fun getEnVerb(): String = enPresent
+  fun getEnVerbFor(number: Int, person: Int, tense: Tense): String =
     when (tense) {
       Tense.PRES ->
         enPresent +
@@ -24,6 +25,6 @@ data class Inf (
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(cardId, enPresent, es))
   override fun getQuizQuestion(): String =
-    "to ${enPresent}" +
+    if (enPresent == "can") "to be able to" else "to ${enPresent}" +
     if (enDisambiguation != null) " (${enDisambiguation})" else ""
 }

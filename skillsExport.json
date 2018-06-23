@@ -2,6 +2,14 @@
   "skillExports": [
     {
       "cardType": "Inf",
+      "cardKey": "andar",
+      "delay": 3983,
+      "endurance": 0,
+      "lastSeenAt": 1529713715,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "Inf",
       "cardKey": "comer",
       "delay": 2098,
       "endurance": 85406,
@@ -14,6 +22,14 @@
       "delay": 100000,
       "endurance": 0,
       "lastSeenAt": 1529629493,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "Inf",
+      "cardKey": "contar",
+      "delay": 1506,
+      "endurance": 0,
+      "lastSeenAt": 1529713720,
       "mnemonic": ""
     },
     {
@@ -38,6 +54,22 @@
       "delay": 1374,
       "endurance": 0,
       "lastSeenAt": 1529629525,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "Inf",
+      "cardKey": "encontrar",
+      "delay": 1752,
+      "endurance": 0,
+      "lastSeenAt": 1529713723,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "Inf",
+      "cardKey": "entender",
+      "delay": 1261,
+      "endurance": 0,
+      "lastSeenAt": 1529713725,
       "mnemonic": ""
     },
     {
@@ -82,6 +114,30 @@
     },
     {
       "cardType": "Inf",
+      "cardKey": "pedir",
+      "delay": 1590,
+      "endurance": 0,
+      "lastSeenAt": 1529713727,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "Inf",
+      "cardKey": "pensar",
+      "delay": 1149,
+      "endurance": 0,
+      "lastSeenAt": 1529713730,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "Inf",
+      "cardKey": "poder",
+      "delay": 72791,
+      "endurance": 0,
+      "lastSeenAt": 1529713821,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "Inf",
       "cardKey": "poner",
       "delay": 1120,
       "endurance": 0,
@@ -98,6 +154,22 @@
     },
     {
       "cardType": "Inf",
+      "cardKey": "querer",
+      "delay": 1354,
+      "endurance": 0,
+      "lastSeenAt": 1529713894,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "Inf",
+      "cardKey": "recordar",
+      "delay": 1395,
+      "endurance": 0,
+      "lastSeenAt": 1529713897,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "Inf",
       "cardKey": "saber",
       "delay": 5601,
       "endurance": 0,
@@ -110,6 +182,22 @@
       "delay": 2380,
       "endurance": 0,
       "lastSeenAt": 1529629556,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "Inf",
+      "cardKey": "seguir",
+      "delay": 2060,
+      "endurance": 0,
+      "lastSeenAt": 1529713899,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "Inf",
+      "cardKey": "sentir",
+      "delay": 1156,
+      "endurance": 0,
+      "lastSeenAt": 1529713902,
       "mnemonic": ""
     },
     {
@@ -145,11 +233,27 @@
       "mnemonic": ""
     },
     {
+      "cardType": "Inf",
+      "cardKey": "volver",
+      "delay": 1317,
+      "endurance": 0,
+      "lastSeenAt": 1529713904,
+      "mnemonic": ""
+    },
+    {
       "cardType": "RegVPattern",
       "cardKey": "AR11PRES",
       "delay": 2091,
       "endurance": 85406,
       "lastSeenAt": 1529682748,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "AR12PRES",
+      "delay": 7202,
+      "endurance": 0,
+      "lastSeenAt": 1529690243,
       "mnemonic": ""
     },
     {
@@ -162,18 +266,18 @@
     },
     {
       "cardType": "RegVPattern",
-      "cardKey": "ERIR11PRES",
-      "delay": 2042,
-      "endurance": 85405,
-      "lastSeenAt": 1529682756,
+      "cardKey": "AR21PRES",
+      "delay": 5435,
+      "endurance": 0,
+      "lastSeenAt": 1529690251,
       "mnemonic": ""
     },
     {
       "cardType": "RegVPattern",
-      "cardKey": "ERIR13PRES",
-      "delay": 1222,
-      "endurance": 85403,
-      "lastSeenAt": 1529682759,
+      "cardKey": "AR23PRES",
+      "delay": 3310,
+      "endurance": 0,
+      "lastSeenAt": 1529690257,
       "mnemonic": ""
     },
     {
@@ -186,10 +290,162 @@
     },
     {
       "cardType": "RegVPattern",
+      "cardKey": "AR12PRET",
+      "delay": 10536,
+      "endurance": 0,
+      "lastSeenAt": 1529690261,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
       "cardKey": "AR13PRET",
       "delay": 1250,
       "endurance": 2591,
       "lastSeenAt": 1529597366,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "AR21PRET",
+      "delay": 10139,
+      "endurance": 0,
+      "lastSeenAt": 1529690273,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "AR23PRET",
+      "delay": 13801,
+      "endurance": 0,
+      "lastSeenAt": 1529690284,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "ERIR11PRES",
+      "delay": 2042,
+      "endurance": 85405,
+      "lastSeenAt": 1529682756,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "ERIR12PRES",
+      "delay": 3086,
+      "endurance": 0,
+      "lastSeenAt": 1529713906,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "ERIR13PRES",
+      "delay": 1222,
+      "endurance": 85403,
+      "lastSeenAt": 1529682759,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "ERIR23PRES",
+      "delay": 1203,
+      "endurance": 0,
+      "lastSeenAt": 1529713909,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "ERIR11PRET",
+      "delay": 3570,
+      "endurance": 0,
+      "lastSeenAt": 1529713911,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "ERIR12PRET",
+      "delay": 3746,
+      "endurance": 0,
+      "lastSeenAt": 1529713916,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "ERIR13PRET",
+      "delay": 3982,
+      "endurance": 0,
+      "lastSeenAt": 1529713921,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "ERIR21PRET",
+      "delay": 3295,
+      "endurance": 0,
+      "lastSeenAt": 1529713926,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "ERIR23PRET",
+      "delay": 3659,
+      "endurance": 0,
+      "lastSeenAt": 1529713930,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "ER21PRES",
+      "delay": 6954,
+      "endurance": 0,
+      "lastSeenAt": 1529713935,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "IR21PRES",
+      "delay": 1714,
+      "endurance": 0,
+      "lastSeenAt": 1529713943,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "STEMPRET11PRET",
+      "delay": 3379,
+      "endurance": 0,
+      "lastSeenAt": 1529713945,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "STEMPRET12PRET",
+      "delay": 3811,
+      "endurance": 0,
+      "lastSeenAt": 1529713950,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "STEMPRET13PRET",
+      "delay": 2347,
+      "endurance": 0,
+      "lastSeenAt": 1529713955,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "STEMPRET21PRET",
+      "delay": 3337,
+      "endurance": 0,
+      "lastSeenAt": 1529713958,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegVPattern",
+      "cardKey": "STEMPRET23PRET",
+      "delay": 1153,
+      "endurance": 0,
+      "lastSeenAt": 1529713962,
       "mnemonic": ""
     },
     {
@@ -865,6 +1121,206 @@
       "mnemonic": ""
     },
     {
+      "cardType": "NP",
+      "cardKey": "tú",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "pued-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "tien-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "quier-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "sig-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "encuentr-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "vien-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "piens-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "vuelv-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "sient-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "cuent-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "empiez-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "dic-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "recuerd-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "pid-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "entiend-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "anduv-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "sup-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "quis-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "pus-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "vin-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "dij-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "tuv-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "hic-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChange",
+      "cardKey": "pud-",
+      "delay": 100000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
       "cardType": "RegV",
       "cardKey": "preguntarAR11PRES",
       "delay": 3452,
@@ -915,9 +1371,49 @@
     {
       "cardType": "IClause",
       "cardKey": "agent\u003dyo v\u003dcomerERIR11PRES",
-      "delay": 6040,
-      "endurance": 2586,
-      "lastSeenAt": 1529611879,
+      "delay": 200000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "IClause",
+      "cardKey": "agent\u003dyo v\u003dpreguntarAR11PRET",
+      "delay": 200000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "IClause",
+      "cardKey": "agent\u003dtú v\u003dpreguntarAR12PRET",
+      "delay": 200000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "IClause",
+      "cardKey": "agent\u003dyo v\u003dtuv-STEMPRET11PRET",
+      "delay": 200000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "IClause",
+      "cardKey": "agent\u003dyo v\u003dtengo",
+      "delay": 200000,
+      "endurance": 0,
+      "lastSeenAt": 0,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "IClause",
+      "cardKey": "agent\u003dtú v\u003dtien-ERIR12PRES",
+      "delay": 200000,
+      "endurance": 0,
+      "lastSeenAt": 0,
       "mnemonic": ""
     }
   ]

@@ -7,7 +7,8 @@ class VCloud(
   val cardIdSequence: IdSequence,
   val infList: InfList,
   val uniqVList: UniqVList,
-  val regVPatternList: RegVPatternList
+  val regVPatternList: RegVPatternList,
+  val stemChangeList: StemChangeList
 ) {
   fun byEs(conjugation: String): V {
     val maybeUniqV = uniqVList.byEs(conjugation)
@@ -34,6 +35,20 @@ class VCloud(
           val newV = RegV(0, inf, pattern)
           if (newV.getEs() == conjugation) {
             return newV.copy(cardId = cardIdSequence.nextId())
+          }
+        }
+      }
+    }
+
+    for (stemChange in stemChangeList.stemChanges) {
+      val base = stemChange.stem.substring(0, stemChange.stem.length - 1)
+      if (conjugation.startsWith(base)) {
+        for (pattern in possiblePatterns) {
+          if (pattern.tense == stemChange.tense && InfCategory.isInfCategory(
+            stemChange.inf.es,
+            pattern.infCategory,
+            pattern.tense == Tense.PRET)) {
+            return StemChangeV(cardIdSequence.nextId(), stemChange, pattern)
           }
         }
       }
