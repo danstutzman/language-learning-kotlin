@@ -8,8 +8,7 @@ data class StemChangeV (
   val stemChange: StemChange,
   val pattern: RegVPattern
 ): Card, V {
-  override fun getChildrenCardIds(): List<Int> =
-    listOf(stemChange.cardId, pattern.cardId)
+  override fun getChildrenCards(): List<Card> = listOf(stemChange, pattern)
   override fun getEnVerb() =
     stemChange.inf.getEnVerbFor(pattern.number, pattern.person, pattern.tense)
   fun getEs(): String =

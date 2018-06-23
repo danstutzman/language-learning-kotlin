@@ -11,8 +11,7 @@ data class IClause(
   val agent: NP,
   val v: V
 ): Card {
-  override fun getChildrenCardIds(): List<Int> =
-    listOf<Int>(agent.cardId, v.cardId)
+  override fun getChildrenCards(): List<Card> = listOf(agent, v)
   override fun getEsWords(): List<String> =
     listOf(capitalizeFirstLetter(agent.getEsWords()[0])) +
     listOf(v.getEsWords()[0] + ".")

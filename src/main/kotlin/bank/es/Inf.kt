@@ -11,7 +11,7 @@ data class Inf (
   val enPast: String,
   val enDisambiguation: String?
 ): Card, V {
-  override fun getChildrenCardIds(): List<Int> = listOf()
+  override fun getChildrenCards(): List<Card> = listOf()
   override fun getEnVerb(): String = enPresent
   fun getEnVerbFor(number: Int, person: Int, tense: Tense): String =
     when (tense) {

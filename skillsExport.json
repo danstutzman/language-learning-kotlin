@@ -2,146 +2,10 @@
   "skillExports": [
     {
       "cardType": "Inf",
-      "cardKey": "andar",
-      "delay": 3983,
-      "endurance": 0,
-      "lastSeenAt": 1529713715,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
       "cardKey": "comer",
       "delay": 2098,
       "endurance": 85406,
       "lastSeenAt": 1529682744,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "conocer",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 1529629493,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "contar",
-      "delay": 1506,
-      "endurance": 0,
-      "lastSeenAt": 1529713720,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "dar",
-      "delay": 2378,
-      "endurance": 0,
-      "lastSeenAt": 1529629517,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "decir",
-      "delay": 3940,
-      "endurance": 0,
-      "lastSeenAt": 1529629520,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "empezar",
-      "delay": 1374,
-      "endurance": 0,
-      "lastSeenAt": 1529629525,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "encontrar",
-      "delay": 1752,
-      "endurance": 0,
-      "lastSeenAt": 1529713723,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "entender",
-      "delay": 1261,
-      "endurance": 0,
-      "lastSeenAt": 1529713725,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "enviar",
-      "delay": 1295,
-      "endurance": 0,
-      "lastSeenAt": 1529629527,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "estar",
-      "delay": 7871,
-      "endurance": 0,
-      "lastSeenAt": 1529629529,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "hacer",
-      "delay": 1426,
-      "endurance": 0,
-      "lastSeenAt": 1529629538,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "ir",
-      "delay": 2261,
-      "endurance": 0,
-      "lastSeenAt": 1529629540,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "parecer",
-      "delay": 1994,
-      "endurance": 0,
-      "lastSeenAt": 1529629543,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "pedir",
-      "delay": 1590,
-      "endurance": 0,
-      "lastSeenAt": 1529713727,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "pensar",
-      "delay": 1149,
-      "endurance": 0,
-      "lastSeenAt": 1529713730,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "poder",
-      "delay": 72791,
-      "endurance": 0,
-      "lastSeenAt": 1529713821,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "poner",
-      "delay": 1120,
-      "endurance": 0,
-      "lastSeenAt": 1529629546,
       "mnemonic": ""
     },
     {
@@ -153,171 +17,19 @@
       "mnemonic": ""
     },
     {
-      "cardType": "Inf",
-      "cardKey": "querer",
-      "delay": 1354,
-      "endurance": 0,
-      "lastSeenAt": 1529713894,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "recordar",
-      "delay": 1395,
-      "endurance": 0,
-      "lastSeenAt": 1529713897,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "saber",
-      "delay": 5601,
-      "endurance": 0,
-      "lastSeenAt": 1529629548,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "salir",
-      "delay": 2380,
-      "endurance": 0,
-      "lastSeenAt": 1529629556,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "seguir",
-      "delay": 2060,
-      "endurance": 0,
-      "lastSeenAt": 1529713899,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "sentir",
-      "delay": 1156,
-      "endurance": 0,
-      "lastSeenAt": 1529713902,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "ser",
-      "delay": 3797,
-      "endurance": 0,
-      "lastSeenAt": 1529628664,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "tener",
-      "delay": 1335,
-      "endurance": 0,
-      "lastSeenAt": 1529629559,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "ver",
-      "delay": 2530,
-      "endurance": 0,
-      "lastSeenAt": 1529629561,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "venir",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 1529629565,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Inf",
-      "cardKey": "volver",
-      "delay": 1317,
-      "endurance": 0,
-      "lastSeenAt": 1529713904,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "AR11PRES",
-      "delay": 2091,
-      "endurance": 85406,
-      "lastSeenAt": 1529682748,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "AR12PRES",
-      "delay": 7202,
-      "endurance": 0,
-      "lastSeenAt": 1529690243,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "AR13PRES",
-      "delay": 4084,
-      "endurance": 85404,
-      "lastSeenAt": 1529682751,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "AR21PRES",
-      "delay": 5435,
-      "endurance": 0,
-      "lastSeenAt": 1529690251,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "AR23PRES",
-      "delay": 3310,
-      "endurance": 0,
-      "lastSeenAt": 1529690257,
-      "mnemonic": ""
-    },
-    {
       "cardType": "RegVPattern",
       "cardKey": "AR11PRET",
-      "delay": 3928,
-      "endurance": 2591,
-      "lastSeenAt": 1529597360,
+      "delay": 4379,
+      "endurance": 119455,
+      "lastSeenAt": 1529716815,
       "mnemonic": ""
     },
     {
       "cardType": "RegVPattern",
       "cardKey": "AR12PRET",
-      "delay": 10536,
-      "endurance": 0,
-      "lastSeenAt": 1529690261,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "AR13PRET",
-      "delay": 1250,
-      "endurance": 2591,
-      "lastSeenAt": 1529597366,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "AR21PRET",
-      "delay": 10139,
-      "endurance": 0,
-      "lastSeenAt": 1529690273,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "AR23PRET",
-      "delay": 13801,
-      "endurance": 0,
-      "lastSeenAt": 1529690284,
+      "delay": 4883,
+      "endurance": 26576,
+      "lastSeenAt": 1529716837,
       "mnemonic": ""
     },
     {
@@ -331,1089 +43,145 @@
     {
       "cardType": "RegVPattern",
       "cardKey": "ERIR12PRES",
-      "delay": 3086,
+      "delay": 3552,
       "endurance": 0,
-      "lastSeenAt": 1529713906,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "ERIR13PRES",
-      "delay": 1222,
-      "endurance": 85403,
-      "lastSeenAt": 1529682759,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "ERIR23PRES",
-      "delay": 1203,
-      "endurance": 0,
-      "lastSeenAt": 1529713909,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "ERIR11PRET",
-      "delay": 3570,
-      "endurance": 0,
-      "lastSeenAt": 1529713911,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "ERIR12PRET",
-      "delay": 3746,
-      "endurance": 0,
-      "lastSeenAt": 1529713916,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "ERIR13PRET",
-      "delay": 3982,
-      "endurance": 0,
-      "lastSeenAt": 1529713921,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "ERIR21PRET",
-      "delay": 3295,
-      "endurance": 0,
-      "lastSeenAt": 1529713926,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "ERIR23PRET",
-      "delay": 3659,
-      "endurance": 0,
-      "lastSeenAt": 1529713930,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "ER21PRES",
-      "delay": 6954,
-      "endurance": 0,
-      "lastSeenAt": 1529713935,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "IR21PRES",
-      "delay": 1714,
-      "endurance": 0,
-      "lastSeenAt": 1529713943,
+      "lastSeenAt": 1529716878,
       "mnemonic": ""
     },
     {
       "cardType": "RegVPattern",
       "cardKey": "STEMPRET11PRET",
-      "delay": 3379,
-      "endurance": 0,
-      "lastSeenAt": 1529713945,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "STEMPRET12PRET",
-      "delay": 3811,
-      "endurance": 0,
-      "lastSeenAt": 1529713950,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "STEMPRET13PRET",
-      "delay": 2347,
-      "endurance": 0,
-      "lastSeenAt": 1529713955,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "STEMPRET21PRET",
-      "delay": 3337,
-      "endurance": 0,
-      "lastSeenAt": 1529713958,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegVPattern",
-      "cardKey": "STEMPRET23PRET",
-      "delay": 1153,
-      "endurance": 0,
-      "lastSeenAt": 1529713962,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "brazo",
-      "delay": 1536,
-      "endurance": 1350,
-      "lastSeenAt": 1529613819,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "pierna",
-      "delay": 1126,
-      "endurance": 1350,
-      "lastSeenAt": 1529613822,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "corazón",
-      "delay": 936,
-      "endurance": 1348,
-      "lastSeenAt": 1529613823,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "estómago",
-      "delay": 909,
-      "endurance": 1348,
-      "lastSeenAt": 1529613825,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "ojo",
-      "delay": 1437,
-      "endurance": 1348,
-      "lastSeenAt": 1529613827,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "nariz",
-      "delay": 904,
-      "endurance": 1348,
-      "lastSeenAt": 1529613829,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "boca",
-      "delay": 1661,
-      "endurance": 1347,
-      "lastSeenAt": 1529613831,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "oreja",
-      "delay": 906,
-      "endurance": 1347,
-      "lastSeenAt": 1529613833,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "cara",
-      "delay": 887,
-      "endurance": 1347,
-      "lastSeenAt": 1529613835,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "cuello",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 1529613777,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "dedo",
-      "delay": 782,
-      "endurance": 1335,
-      "lastSeenAt": 1529613836,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "pie",
-      "delay": 945,
-      "endurance": 1335,
-      "lastSeenAt": 1529613838,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "muslo",
-      "delay": 2223,
-      "endurance": 1335,
-      "lastSeenAt": 1529613840,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "tobillo",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 1529613898,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "codo",
-      "delay": 2217,
-      "endurance": 1328,
-      "lastSeenAt": 1529613843,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "muñeca",
-      "delay": 1037,
-      "endurance": 1315,
-      "lastSeenAt": 1529613845,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "cuerpo",
-      "delay": 929,
-      "endurance": 1313,
-      "lastSeenAt": 1529613848,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "diente",
-      "delay": 941,
-      "endurance": 1233,
-      "lastSeenAt": 1529613850,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "mano",
-      "delay": 1007,
-      "endurance": 1231,
-      "lastSeenAt": 1529613851,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "espalda",
-      "delay": 1361,
-      "endurance": 1230,
-      "lastSeenAt": 1529613853,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "cadera",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 1529613855,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "mandíbula",
-      "delay": 4168,
-      "endurance": 1238,
-      "lastSeenAt": 1529613866,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "hombro",
-      "delay": 6621,
-      "endurance": 1231,
-      "lastSeenAt": 1529613871,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "pulgar",
-      "delay": 2151,
-      "endurance": 1235,
-      "lastSeenAt": 1529613879,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "lengua",
-      "delay": 10307,
-      "endurance": 1234,
-      "lastSeenAt": 1529613881,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "N",
-      "cardKey": "garganta",
-      "delay": 982,
-      "endurance": 1242,
-      "lastSeenAt": 1529613893,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Det",
-      "cardKey": "el",
-      "delay": 2198,
-      "endurance": 1817,
-      "lastSeenAt": 1529613805,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Det",
-      "cardKey": "la",
-      "delay": 983,
-      "endurance": 1359,
-      "lastSeenAt": 1529613808,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Det",
-      "cardKey": "un",
-      "delay": 1329,
-      "endurance": 1358,
-      "lastSeenAt": 1529613810,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Det",
-      "cardKey": "una",
-      "delay": 742,
-      "endurance": 1358,
-      "lastSeenAt": 1529613812,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Det",
-      "cardKey": "mi",
-      "delay": 961,
-      "endurance": 1356,
-      "lastSeenAt": 1529613813,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Det",
-      "cardKey": "este",
-      "delay": 2167,
-      "endurance": 1241,
-      "lastSeenAt": 1529613895,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Det",
-      "cardKey": "esta",
-      "delay": 1703,
-      "endurance": 1352,
-      "lastSeenAt": 1529613815,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "Det",
-      "cardKey": "cada",
-      "delay": 1262,
-      "endurance": 1350,
-      "lastSeenAt": 1529613817,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "soy",
-      "delay": 1643,
-      "endurance": 0,
-      "lastSeenAt": 1529628669,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "eres",
-      "delay": 2016,
-      "endurance": 0,
-      "lastSeenAt": 1529628671,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "es",
-      "delay": 1670,
-      "endurance": 0,
-      "lastSeenAt": 1529628674,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "somos",
-      "delay": 1333,
-      "endurance": 0,
-      "lastSeenAt": 1529628677,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "son",
-      "delay": 2530,
-      "endurance": 0,
-      "lastSeenAt": 1529628679,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "fui-ser",
-      "delay": 2392,
-      "endurance": 0,
-      "lastSeenAt": 1529628683,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "fuiste-ser",
-      "delay": 1842,
-      "endurance": 0,
-      "lastSeenAt": 1529628686,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "fue-ser",
-      "delay": 3882,
-      "endurance": 0,
-      "lastSeenAt": 1529628721,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "fuimos-ser",
-      "delay": 3524,
-      "endurance": 0,
-      "lastSeenAt": 1529628726,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "fueron-ser",
-      "delay": 3108,
-      "endurance": 0,
-      "lastSeenAt": 1529628730,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "estoy",
-      "delay": 3196,
-      "endurance": 0,
-      "lastSeenAt": 1529629568,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "estás",
-      "delay": 2058,
-      "endurance": 0,
-      "lastSeenAt": 1529629574,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "está",
-      "delay": 4196,
-      "endurance": 0,
-      "lastSeenAt": 1529629577,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "están",
-      "delay": 19337,
-      "endurance": 0,
-      "lastSeenAt": 1529629582,
+      "delay": 4232,
+      "endurance": 2908,
+      "lastSeenAt": 1529716853,
       "mnemonic": ""
     },
     {
       "cardType": "UniqV",
       "cardKey": "tengo",
-      "delay": 5826,
-      "endurance": 0,
-      "lastSeenAt": 1529629603,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "hago",
-      "delay": 2259,
-      "endurance": 0,
-      "lastSeenAt": 1529629619,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "digo",
-      "delay": 1470,
-      "endurance": 0,
-      "lastSeenAt": 1529629623,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "dijeron",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 1529629625,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "voy",
-      "delay": 3442,
-      "endurance": 0,
-      "lastSeenAt": 1529629631,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "vas",
-      "delay": 8508,
-      "endurance": 0,
-      "lastSeenAt": 1529629635,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "va",
-      "delay": 1828,
-      "endurance": 0,
-      "lastSeenAt": 1529629645,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "vamos",
-      "delay": 1603,
-      "endurance": 0,
-      "lastSeenAt": 1529629647,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "van",
-      "delay": 1669,
-      "endurance": 0,
-      "lastSeenAt": 1529629650,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "fui-ir",
-      "delay": 3068,
-      "endurance": 0,
-      "lastSeenAt": 1529629652,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "fuiste-ir",
-      "delay": 1322,
-      "endurance": 0,
-      "lastSeenAt": 1529629657,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "fue-ir",
-      "delay": 3807,
-      "endurance": 0,
-      "lastSeenAt": 1529629659,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "fuimos-ir",
-      "delay": 4724,
-      "endurance": 0,
-      "lastSeenAt": 1529629664,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "fueron-ir",
-      "delay": 2459,
-      "endurance": 0,
-      "lastSeenAt": 1529629669,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "veo",
-      "delay": 2123,
-      "endurance": 0,
-      "lastSeenAt": 1529629672,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "vi",
-      "delay": 2567,
-      "endurance": 0,
-      "lastSeenAt": 1529629675,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "vio",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 1529629679,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "vimos",
-      "delay": 3572,
-      "endurance": 0,
-      "lastSeenAt": 1529629687,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "doy",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 1529629692,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "di",
-      "delay": 4100,
-      "endurance": 0,
-      "lastSeenAt": 1529629696,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "diste",
-      "delay": 2064,
-      "endurance": 0,
-      "lastSeenAt": 1529629701,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "dio",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 1529629704,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "dimos",
-      "delay": 3174,
-      "endurance": 0,
-      "lastSeenAt": 1529629711,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "dieron",
-      "delay": 6707,
-      "endurance": 0,
-      "lastSeenAt": 1529629715,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "sé",
-      "delay": 2555,
-      "endurance": 0,
-      "lastSeenAt": 1529629724,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "pongo",
-      "delay": 2075,
-      "endurance": 0,
-      "lastSeenAt": 1529629727,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "vengo",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 1529629730,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "salgo",
-      "delay": 2780,
-      "endurance": 0,
-      "lastSeenAt": 1529629733,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "parezco",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 1529629736,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "conozco",
-      "delay": 1994,
-      "endurance": 0,
-      "lastSeenAt": 1529629748,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "empecé",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 1529629751,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "envío",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 1529629755,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "envías",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 1529629756,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "envía",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 1529629767,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "UniqV",
-      "cardKey": "envían",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 1529629768,
+      "delay": 1843,
+      "endurance": 87231,
+      "lastSeenAt": 1529716834,
       "mnemonic": ""
     },
     {
       "cardType": "NP",
       "cardKey": "yo",
-      "delay": 1900,
-      "endurance": 2585,
-      "lastSeenAt": 1529597398,
+      "delay": 2729,
+      "endurance": 119429,
+      "lastSeenAt": 1529716827,
       "mnemonic": ""
     },
     {
       "cardType": "NP",
       "cardKey": "tú",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "pued-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
+      "delay": 1080,
+      "endurance": 77,
+      "lastSeenAt": 1529716858,
       "mnemonic": ""
     },
     {
       "cardType": "StemChange",
       "cardKey": "tien-",
-      "delay": 100000,
+      "delay": 2430,
       "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "quier-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "sig-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "encuentr-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "vien-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "piens-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "vuelv-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "sient-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "cuent-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "empiez-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "dic-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "recuerd-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "pid-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "entiend-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "anduv-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "sup-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "quis-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "pus-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "vin-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "dij-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
+      "lastSeenAt": 1529716883,
       "mnemonic": ""
     },
     {
       "cardType": "StemChange",
       "cardKey": "tuv-",
-      "delay": 100000,
+      "delay": 1425,
       "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "hic-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "StemChange",
-      "cardKey": "pud-",
-      "delay": 100000,
-      "endurance": 0,
-      "lastSeenAt": 0,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegV",
-      "cardKey": "preguntarAR11PRES",
-      "delay": 3452,
-      "endurance": 2589,
-      "lastSeenAt": 1529597370,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegV",
-      "cardKey": "preguntarAR13PRES",
-      "delay": 5445,
-      "endurance": 2587,
-      "lastSeenAt": 1529597375,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegV",
-      "cardKey": "comerERIR11PRES",
-      "delay": 4140,
-      "endurance": 2591,
-      "lastSeenAt": 1529597384,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegV",
-      "cardKey": "comerERIR13PRES",
-      "delay": 3320,
-      "endurance": 2582,
-      "lastSeenAt": 1529597379,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegV",
-      "cardKey": "preguntarAR11PRET",
-      "delay": 5289,
-      "endurance": 2586,
-      "lastSeenAt": 1529597388,
-      "mnemonic": ""
-    },
-    {
-      "cardType": "RegV",
-      "cardKey": "preguntarAR13PRET",
-      "delay": 2611,
-      "endurance": 2584,
-      "lastSeenAt": 1529597392,
+      "lastSeenAt": 1529716787,
       "mnemonic": ""
     },
     {
       "cardType": "IClause",
       "cardKey": "agent\u003dyo v\u003dcomerERIR11PRES",
-      "delay": 200000,
+      "delay": 3897,
       "endurance": 0,
-      "lastSeenAt": 0,
+      "lastSeenAt": 1529716864,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegV",
+      "cardKey": "comerERIR11PRES",
+      "delay": 1168,
+      "endurance": 0,
+      "lastSeenAt": 1529716867,
       "mnemonic": ""
     },
     {
       "cardType": "IClause",
       "cardKey": "agent\u003dyo v\u003dpreguntarAR11PRET",
-      "delay": 200000,
+      "delay": 3747,
       "endurance": 0,
-      "lastSeenAt": 0,
+      "lastSeenAt": 1529716821,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegV",
+      "cardKey": "preguntarAR11PRET",
+      "delay": 1018,
+      "endurance": 0,
+      "lastSeenAt": 1529716825,
       "mnemonic": ""
     },
     {
       "cardType": "IClause",
       "cardKey": "agent\u003dtú v\u003dpreguntarAR12PRET",
-      "delay": 200000,
+      "delay": 2475,
       "endurance": 0,
-      "lastSeenAt": 0,
+      "lastSeenAt": 1529716843,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "RegV",
+      "cardKey": "preguntarAR12PRET",
+      "delay": 1395,
+      "endurance": 0,
+      "lastSeenAt": 1529716850,
       "mnemonic": ""
     },
     {
       "cardType": "IClause",
       "cardKey": "agent\u003dyo v\u003dtuv-STEMPRET11PRET",
-      "delay": 200000,
+      "delay": 8386,
       "endurance": 0,
-      "lastSeenAt": 0,
+      "lastSeenAt": 1529716792,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChangeV",
+      "cardKey": "tuv-STEMPRET11PRET",
+      "delay": 5657,
+      "endurance": 0,
+      "lastSeenAt": 1529716797,
       "mnemonic": ""
     },
     {
       "cardType": "IClause",
       "cardKey": "agent\u003dyo v\u003dtengo",
-      "delay": 200000,
+      "delay": 4572,
       "endurance": 0,
-      "lastSeenAt": 0,
+      "lastSeenAt": 1529716831,
       "mnemonic": ""
     },
     {
       "cardType": "IClause",
       "cardKey": "agent\u003dtú v\u003dtien-ERIR12PRES",
-      "delay": 200000,
+      "delay": 7062,
       "endurance": 0,
-      "lastSeenAt": 0,
+      "lastSeenAt": 1529716869,
+      "mnemonic": ""
+    },
+    {
+      "cardType": "StemChangeV",
+      "cardKey": "tien-ERIR12PRES",
+      "delay": 5982,
+      "endurance": 0,
+      "lastSeenAt": 1529716873,
       "mnemonic": ""
     }
   ]

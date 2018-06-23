@@ -70,6 +70,19 @@ data class SkillsExport(
   val skillExports: List<SkillExport>
 ) {}
 
+fun descendantsOf(cards: Iterable<Card>): Set<Card> {
+  val children = mutableSetOf<Card>()
+  for (card in cards) {
+    children.addAll(card.getChildrenCards())
+  }
+  if (children.size > 0) {
+    children.addAll(descendantsOf(children))
+  }
+  return children
+}
+
+fun cardType(card: Card): String = card::class.java.name.split(".").last()
+
 class Bank(
   val skillsExportFile: File,
   val iClausesYamlFile: File
@@ -85,18 +98,6 @@ class Bank(
   val npList          = NPList(cardIdSequence)
   val stemChangeList  = StemChangeList(cardIdSequence, infList)
   val vCloud          = VCloud(cardIdSequence, infList, uniqVList,
-
-  val regVs = listOf(
-    RegV(0, infList.byEs("preguntar")!!, regVPatternList.byKey("AR11PRES")),
-    RegV(0, infList.byEs("preguntar")!!, regVPatternList.byKey("AR13PRES")),
-    RegV(0, infList.byEs("comer")!!,     regVPatternList.byKey("ERIR11PRES")),
-    RegV(0, infList.byEs("comer")!!,     regVPatternList.byKey("ERIR13PRES")),
-    RegV(0, infList.byEs("preguntar")!!, regVPatternList.byKey("AR11PRET")),
-    RegV(0, infList.byEs("preguntar")!!, regVPatternList.byKey("AR13PRET"))
-  ).map { it.copy(cardId = cardIdSequence.nextId()) }
-  val regVByKey = regVs.map { Pair(it.getKey(), it) }.toMap()
-  val regVByQuestion =
-    Assertions.assertUniqKeys(regVs.map { Pair(it.getQuizQuestion(), it) })
                           regVPatternList, stemChangeList)
 
   val reader = YamlReader(FileReader(iClausesYamlFile))
@@ -114,22 +115,14 @@ class Bank(
   val iClauseByQuestion =
     Assertions.assertUniqKeys(iClauses.map { Pair(it.getQuizQuestion(), it) })
 
-  val cards = infList.infs +
-    regVPatternList.regVPatterns +
-    nList.ns +
-    detList.dets +
-    uniqVList.uniqVs +
-    npList.nps +
-    vCloud.vs +
-    stemChangeList.stemChanges +
-    iClauses
+  val cards = iClauses.toSet() + descendantsOf(iClauses)
   val cardRows = cards.map {
     val type = it.javaClass.name.split('.').last()
     CardRow(
       it.cardId,
       type,
       it.getKey(),
-      it.getChildrenCardIds(),
+      it.getChildrenCards().map { it.cardId },
       it.getGlossRows(),
       it.getEsWords(),
       it.getQuizQuestion()
@@ -140,37 +133,27 @@ class Bank(
     .fromJson(skillsExportFile.readText(), SkillsExport::class.java)
 
   fun getCardsAndSkills(): Map<String, Any> {
-    val skillRowByCardId = skillsExport.skillExports.map {
-      val card = when (it.cardType) {
-        "Det"         -> detList.byEs(it.cardKey)
-        "IClause"     -> iClauseByKey[it.cardKey]!!
-        "Inf"         -> infList.byEs(it.cardKey)!!
-        "N"           -> nList.byEs(it.cardKey)
-        "NP"          -> npList.byEs(it.cardKey)
-        "RegV"        -> regVByKey[it.cardKey]!!
-        "RegVPattern" -> regVPatternList.byKey(it.cardKey)
-        "StemChange"  -> stemChangeList.byKey(it.cardKey)
-        "UniqV"       -> uniqVList.byKey(it.cardKey)
-        else -> throw RuntimeException("Unexpected cardType ${it.cardType}")
-      }
-      Pair(card.cardId, SkillRow(
-        card.cardId,
-        it.delay,
-        it.endurance,
-        it.lastSeenAt,
-        it.mnemonic
-      ))
+    val skillExportByCardTypeAndKey = skillsExport.skillExports.map {
+      Pair(Pair(it.cardType, it.cardKey), it)
     }.toMap()
 
     val skillRows = cards.map {
-      skillRowByCardId[it.cardId] ?: SkillRow(
-        it.cardId,
-        if (it.getChildrenCardIds().size == 0)
-          DELAY_THRESHOLD else DELAY_THRESHOLD * 2,
-        0,
-        0,
-        ""
-      )
+      val skillExport = 
+        skillExportByCardTypeAndKey[Pair(cardType(it), it.getKey())]
+      if (skillExport != null) {
+        SkillRow(it.cardId,
+          skillExport.delay,
+          skillExport.endurance,
+          skillExport.lastSeenAt,
+          skillExport.mnemonic)
+      } else {
+        SkillRow(it.cardId,
+          if (it.getChildrenCards().size == 0)
+            DELAY_THRESHOLD else DELAY_THRESHOLD * 2,
+          0,
+          0,
+          "")
+      }
     }
 
     return linkedMapOf(

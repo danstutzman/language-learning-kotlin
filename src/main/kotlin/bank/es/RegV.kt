@@ -9,8 +9,7 @@ data class RegV (
   val pattern: RegVPattern
 ): Card, V {
   fun getEsVerbPrefix(): String = inf.es.substring(0, inf.es.length - 2) + "-"
-  override fun getChildrenCardIds(): List<Int> =
-    listOf<Int>(inf.cardId, pattern.cardId)
+  override fun getChildrenCards(): List<Card> = listOf(inf, pattern)
   override fun getEnVerb() =
     inf.getEnVerbFor(pattern.number, pattern.person, pattern.tense)
   fun getEs(): String =
