@@ -6,20 +6,30 @@ import com.danstutzman.bank.GlossRow
 val noGlossRows = listOf<GlossRow>()
 val noWords = listOf<String>()
 
-data class IClauseLink(
+fun capitalizeFirstLetter(s: String) =
+  s.substring(0, 1).toUpperCase() + s.substring(1)
+
+fun capitalizeAndAddPunctuation(words: List<String>, isQuestion: Boolean):
+  List<String> =
+  listOf(capitalizeFirstLetter(words[0])) +
+  words.slice(1..(words.size - 1)) +
+  listOf(words[words.size - 1] +
+  if (isQuestion) "?" else ".")
+
+data class IClause(
   override val cardId: Int,
   val subject: NP?,
   val v: V,
-  val nomComp: Card?,
+  val dObj: NP?,
   val advComp: Adv?,
   val isQuestion: Boolean
 ): Card {
   override fun getChildrenCards(): List<Card> =
-    listOf(subject, v, nomComp, advComp).filterNotNull()
+    listOf(subject, v, dObj, advComp).filterNotNull()
   override fun getEsWords(): List<String> = capitalizeAndAddPunctuation(
     (if (subject != null && !isQuestion) subject.getEsWords() else noWords) +
     v.getEsWords() +
-    (if (nomComp != null) nomComp.getEsWords() else noWords) +
+    (if (dObj != null) dObj.getEsWords() else noWords) +
     (if (advComp != null) advComp.getEsWords() else noWords) +
     (if (subject != null && isQuestion) subject.getEsWords() else noWords),
     isQuestion)
@@ -27,13 +37,13 @@ data class IClauseLink(
     (if (subject != null && !isQuestion) subject.getGlossRows()
       else noGlossRows) +
     v.getGlossRows() +
-    (if (nomComp != null) nomComp.getGlossRows() else noGlossRows) +
+    (if (dObj != null) dObj.getGlossRows() else noGlossRows) +
     (if (advComp != null) advComp.getGlossRows() else noGlossRows) +
     (if (subject != null && isQuestion) subject.getGlossRows() else noGlossRows)
   override fun getKey(): String =
     "subject=${subject?.getKey() ?: ""}," +
     "v=${v.getKey()}," +
-    "nomComp=${nomComp?.getKey() ?: ""}," +
+    "dObj=${dObj?.getKey() ?: ""}," +
     "advComp=${advComp?.getKey() ?: ""}," +
     "isQuestion=${isQuestion}"
   override fun getQuizQuestion(): String = capitalizeFirstLetter(
@@ -42,7 +52,7 @@ data class IClauseLink(
     v.getEnVerb() +
     (if (subject != null && isQuestion) " " + subject.getQuizQuestion()
       else "") +
-    (if (nomComp != null) " " + nomComp.getQuizQuestion() else "") +
+    (if (dObj != null) " " + dObj.getQuizQuestion() else "") +
     (if (advComp != null) " " + advComp.getQuizQuestion() else "")
   ) + (if (isQuestion) "?" else ".")
 }

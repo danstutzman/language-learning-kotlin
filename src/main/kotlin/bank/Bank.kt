@@ -5,8 +5,7 @@ import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.IdSequence
 import com.danstutzman.bank.es.AdvList
 import com.danstutzman.bank.es.DetList
-import com.danstutzman.bank.es.IClauseAction
-import com.danstutzman.bank.es.IClauseLink
+import com.danstutzman.bank.es.IClause
 import com.danstutzman.bank.es.InfList
 import com.danstutzman.bank.es.NList
 import com.danstutzman.bank.es.NP
@@ -31,17 +30,10 @@ import java.io.File
 
 const val DELAY_THRESHOLD = 100000
 
-data class IClauseActionYaml (
+data class IClauseYaml (
   var agent: String? = null,
   var v: String? = null,
   var dObj: String? = null,
-  var _isQuestion: Boolean? = null
-) {}
-
-data class IClauseLinkYaml (
-  var subject: String? = null,
-  var v: String? = null,
-  var nomComp: String? = null,
   var advComp: String? = null,
   var _isQuestion: Boolean? = null
 ) {}
@@ -180,8 +172,7 @@ class Bank(
 
   fun parseEsYaml(yaml: String): Card {
     val reader = YamlReader(StringReader(yaml))
-    reader.getConfig().setClassTag("IClauseAction", IClauseActionYaml::class.java)
-    reader.getConfig().setClassTag("IClauseLink", IClauseLinkYaml::class.java)
+    reader.getConfig().setClassTag("IClause", IClauseYaml::class.java)
     reader.getConfig().setClassTag("NP", NPYaml::class.java)
     val parsed = try {
       reader.read()
@@ -189,18 +180,11 @@ class Bank(
       throw CantMakeCard(e.toString())
     }
     return when (parsed) {
-      is IClauseActionYaml -> IClauseAction(
+      is IClauseYaml -> IClause(
         cardIdSequence.nextId(),
         parsed.agent?.let { npList.byEs(it) },
         vCloud.byEs(parsed.v ?: throw CantMakeCard("Missing v")),
         parsed.dObj?.let { npList.byEs(it) },
-        parsed._isQuestion ?: false
-      )
-      is IClauseLinkYaml -> IClauseLink(
-        cardIdSequence.nextId(),
-        parsed.subject?.let { npList.byEs(it) },
-        vCloud.byEs(parsed.v ?: throw CantMakeCard("Missing v")),
-        parsed.nomComp?.let { npList.byEs(it) },
         parsed.advComp?.let { advList.byEs(it) },
         parsed._isQuestion ?: false
       )
