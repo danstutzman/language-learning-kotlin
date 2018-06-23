@@ -2,7 +2,7 @@ package com.danstutzman
 
 import com.danstutzman.bank.Assertions
 import com.danstutzman.bank.Bank
-import com.danstutzman.bank.CantFindVocab
+import com.danstutzman.bank.CantMakeCard
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.IdSequence
 import com.danstutzman.bank.SkillsUpload
@@ -80,18 +80,19 @@ class Webapp(
     html.append("    <th>YAML parsed</td>\n")
     html.append("  </tr>\n")
     for (goal in db.selectAllGoals()) {
-      val iClauseHtml: String = try {
-        val maybeIClause = bank.parseIClauseYaml(goal.esYaml)
-        if (maybeIClause == null) "" else maybeIClause.getQuizQuestion()
-      } catch (e: CantFindVocab) {
-        "<div class='CantFindVocab'>${e.message}</div>"
-      }
+      val cardHtml: String =
+        if (goal.esYaml == "") "" else try {
+          val maybeCard = bank.parseEsYaml(goal.esYaml)
+          if (maybeCard == null) "" else maybeCard.getQuizQuestion()
+        } catch (e: CantMakeCard) {
+          "<div class='CantMakeCard'>${e.message}</div>"
+        }
 
       html.append("  <tr>\n")
       html.append("    <td>${goal.goalId}</td>\n")
       html.append("    <td>${goal.tags}</td>\n")
       html.append("    <td>${goal.enFreeText}</td>\n")
-      html.append("    <td>${iClauseHtml}</td>\n")
+      html.append("    <td>${cardHtml}</td>\n")
       html.append("    <td><a href='/goals/${goal.goalId}'>Edit</a></td>\n")
       html.append("  </tr>\n")
     }

@@ -1,7 +1,7 @@
 package com.danstutzman.bank.es
 
 import com.danstutzman.bank.Assertions
-import com.danstutzman.bank.CantFindVocab
+import com.danstutzman.bank.CantMakeCard
 import com.danstutzman.bank.IdSequence
 
 class VCloud(
@@ -55,6 +55,6 @@ class VCloud(
       }
     }
 
-    throw CantFindVocab("Couldn't find V for es=${conjugation}")
+    throw CantMakeCard("Couldn't find V for es=${conjugation}")
   }
 }

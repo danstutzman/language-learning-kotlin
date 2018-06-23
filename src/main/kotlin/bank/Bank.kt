@@ -4,7 +4,8 @@ import com.danstutzman.bank.Assertions
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.IdSequence
 import com.danstutzman.bank.es.DetList
-import com.danstutzman.bank.es.IClause
+import com.danstutzman.bank.es.IClauseAction
+import com.danstutzman.bank.es.IClauseLink
 import com.danstutzman.bank.es.InfList
 import com.danstutzman.bank.es.NList
 import com.danstutzman.bank.es.NPList
@@ -28,13 +29,16 @@ import java.io.File
 
 const val DELAY_THRESHOLD = 100000
 
-data class IClausesYaml (
-  val iClauses: List<IClauseYaml>? = null
+data class IClauseActionYaml (
+  var agent: String? = null,
+  var v: String? = null,
+  var dObj: String? = null
 ) {}
 
-data class IClauseYaml (
-  var agent: String? = null,
-  var v: String? = null
+data class IClauseLinkYaml (
+  var subject: String? = null,
+  var v: String? = null,
+  var predNomOrAdj: String? = null
 ) {}
 
 data class CardRow(
@@ -102,11 +106,15 @@ class Bank(
   val vCloud          = VCloud(cardIdSequence, infList, uniqVList,
                           regVPatternList, stemChangeList)
 
-  val iClauses = db.selectAllGoals().flatMap {
+  val iClauses: List<Card> = db.selectAllGoals().flatMap {
     if (it.esYaml == "") {
-      listOf<IClause>()
+      listOf<Card>()
     } else {
-      listOf(parseIClauseYaml(it.esYaml)!!)
+      try {
+        listOf(parseEsYaml(it.esYaml))
+      } catch (e: CantMakeCard) {
+        listOf<Card>()
+      }
     }
   }
   val iClauseByKey = iClauses.map { Pair(it.getKey(), it) }.toMap()
@@ -160,18 +168,31 @@ class Bank(
     )
   }
 
-  fun parseIClauseYaml(yaml: String): IClause? {
-    if (yaml == "") {
-      return null
-    }
+  fun parseEsYaml(yaml: String): Card {
     val reader = YamlReader(StringReader(yaml))
-    reader.getConfig().setClassTag("IClause", IClauseYaml::class.java)
-    val iClauseYaml = reader.read(IClauseYaml::class.java)
-    return IClause(
-      cardIdSequence.nextId(),
-      npList.byEs(iClauseYaml.agent!!),
-      vCloud.byEs(iClauseYaml.v!!)
-    )
+    reader.getConfig().setClassTag("IClauseAction", IClauseActionYaml::class.java)
+    reader.getConfig().setClassTag("IClauseLink", IClauseLinkYaml::class.java)
+    val parsed = try {
+      reader.read()
+    } catch (e: com.esotericsoftware.yamlbeans.YamlReader.YamlReaderException) {
+      throw CantMakeCard(e.toString())
+    }
+    return when (parsed) {
+      is IClauseActionYaml -> IClauseAction(
+        cardIdSequence.nextId(),
+        parsed.agent?.let { npList.byEs(it) },
+        vCloud.byEs(parsed.v ?: throw CantMakeCard("Missing v")),
+        parsed.dObj?.let { npList.byEs(it) }
+      )
+      is IClauseLinkYaml -> IClauseLink(
+        cardIdSequence.nextId(),
+        parsed.subject?.let { npList.byEs(it) },
+        vCloud.byEs(parsed.v ?: throw CantMakeCard("Missing v")),
+        parsed.predNomOrAdj?.let { npList.byEs(it) }
+          ?: throw CantMakeCard("Missing predNomOrAdj")
+      )
+      else -> throw CantMakeCard("Unexpected ${parsed}")
+    }
   }
 
   fun saveSkillsExport(skillsUpload: SkillsUpload) {

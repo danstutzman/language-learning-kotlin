@@ -1,11 +1,14 @@
 package com.danstutzman.bank.es
 
 import com.danstutzman.bank.Assertions
+import com.danstutzman.bank.CantMakeCard
 import com.danstutzman.bank.IdSequence
 
 val npsWithoutIds = listOf(
   NP(0, "yo", "I"),
-  NP(0, "tú", "you")
+  NP(0, "tú", "you"),
+  NP(0, "qué", "what"),
+  NP(0, "ingeniero de software", "software engineer")
 )
 val npByQuestion = Assertions.assertUniqKeys(
 	npsWithoutIds.map { Pair(it.getQuizQuestion(), it) })
@@ -18,5 +21,6 @@ class NPList {
     nps = npsWithoutIds.map { it.copy(cardId = cardIdSequence.nextId()) }
     npByEs = nps.map { Pair(it.es, it) }.toMap()
   }
-  fun byEs(es: String): NP = npByEs[es]!!
+  fun byEs(es: String): NP =
+    npByEs[es] ?: throw CantMakeCard("Can't find NP for es=${es}")
 }
