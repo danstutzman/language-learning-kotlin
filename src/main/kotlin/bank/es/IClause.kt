@@ -2,6 +2,7 @@ package com.danstutzman.bank.es
 
 import com.danstutzman.bank.Card
 import com.danstutzman.bank.GlossRow
+import com.danstutzman.bank.en.EnPronouns
 
 val noGlossRows = listOf<GlossRow>()
 val noWords = listOf<String>()
@@ -53,13 +54,16 @@ data class IClause(
     "advComp=${advComp?.getKey() ?: ""}," +
     "isQuestion=${isQuestion}"
   override fun getQuizQuestion(): String {
-    val subjectEn =
-      if (subject == null) "SUBJECT" else subject.getQuizQuestion()
+    val number = v.getNumber()
+    val person = v.getPerson()
+    val subjectEn = if (subject == null)
+      EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)]
+      else subject.getQuizQuestion()
     return capitalizeFirstLetter(
       (if (isQuestion) getEnAuxVerb() + " " else "") +
       subjectEn + " " +
       (if (isQuestion) v.getEnVerbFor(2, 3, Tense.PRES)
-        else v.getEnVerbFor(v.getNumber(), v.getPerson(), v.getTense())) +
+        else v.getEnVerbFor(number, person, v.getTense())) +
       (if (dObj != null) " " + dObj.getQuizQuestion() else "") +
       (if (advComp != null) " " + advComp.getQuizQuestion() else "")
     ) + (if (isQuestion) "?" else ".")
