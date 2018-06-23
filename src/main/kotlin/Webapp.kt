@@ -104,7 +104,7 @@ class Webapp(
     html.append("  <label for='tags'>English free text</label><br>\n")
     html.append("  <input type='text' name='en_free_text'><br>\n")
     html.append("  <label for='tags'>YAML</label><br>\n")
-    html.append("  <textarea name='es_yaml'></textarea><br>\n")
+    html.append("  <textarea name='es_yaml' rows='10' cols='80'></textarea><br>\n")
     html.append("  <input type='submit' name='submit' value='Add Goal'>\n")
     html.append("</form>\n")
 
