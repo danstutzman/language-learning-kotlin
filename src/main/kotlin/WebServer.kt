@@ -28,7 +28,7 @@ fun main(args: Array<String>) {
 
   val conn = DriverManager.getConnection(jdbcUrl, "postgres", "")
   val bank = Bank(File("skillsExport.json"), File("iClauses.yaml"))
-  val webapp = Webapp(bank)
+  val webapp = Webapp(bank, Db(conn))
 
   logger.info("Starting server port=${port}")
   val service = Service.ignite().port(port)
@@ -46,6 +46,10 @@ fun main(args: Array<String>) {
   }
 
   service.get("/", webapp.getRoot)
+  service.get("/goals", webapp.getGoals)
+  service.post("/goals", webapp.postGoals)
+  service.get("/goals/:goalId", webapp.getGoal)
+  service.post("/goals/:goalId", webapp.postGoal)
   service.get("/api", webapp.getApi)
   service.post("/api", webapp.postApi)
 
