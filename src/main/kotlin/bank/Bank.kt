@@ -34,14 +34,16 @@ const val DELAY_THRESHOLD = 100000
 data class IClauseActionYaml (
   var agent: String? = null,
   var v: String? = null,
-  var dObj: String? = null
+  var dObj: String? = null,
+  var _isQuestion: Boolean? = null
 ) {}
 
 data class IClauseLinkYaml (
   var subject: String? = null,
   var v: String? = null,
   var nomComp: String? = null,
-  var advComp: String? = null
+  var advComp: String? = null,
+  var _isQuestion: Boolean? = null
 ) {}
 
 data class NPYaml (
@@ -191,14 +193,16 @@ class Bank(
         cardIdSequence.nextId(),
         parsed.agent?.let { npList.byEs(it) },
         vCloud.byEs(parsed.v ?: throw CantMakeCard("Missing v")),
-        parsed.dObj?.let { npList.byEs(it) }
+        parsed.dObj?.let { npList.byEs(it) },
+        parsed._isQuestion ?: false
       )
       is IClauseLinkYaml -> IClauseLink(
         cardIdSequence.nextId(),
         parsed.subject?.let { npList.byEs(it) },
         vCloud.byEs(parsed.v ?: throw CantMakeCard("Missing v")),
         parsed.nomComp?.let { npList.byEs(it) },
-        parsed.advComp?.let { advList.byEs(it) }
+        parsed.advComp?.let { advList.byEs(it) },
+        parsed._isQuestion ?: false
       )
       is NPYaml -> npList.byEs(parsed.es ?: throw CantMakeCard("Missing es"))
       else -> throw CantMakeCard("Unexpected ${parsed}")
