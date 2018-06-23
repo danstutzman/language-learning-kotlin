@@ -7,6 +7,7 @@ import com.danstutzman.bank.IdSequence
 val npsWithoutIds = listOf(
   NP(0, "yo", "I"),
   NP(0, "tú", "you"),
+  NP(0, "él", "he"),
   NP(0, "qué", "what"),
   NP(0, "ingeniero de software", "software engineer"),
   NP(0, "hola", "hello"),

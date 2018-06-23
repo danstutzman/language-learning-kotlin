@@ -26,6 +26,12 @@ data class IClause(
 ): Card {
   override fun getChildrenCards(): List<Card> =
     listOf(subject, v, dObj, advComp).filterNotNull()
+  fun getEnAuxVerb(): String =
+    when (v.getTense()) {
+      Tense.PRES ->
+        if (v.getNumber() == 1 && v.getPerson() == 3) "does" else "do"
+      Tense.PRET -> "did"
+    }
   override fun getEsWords(): List<String> = capitalizeAndAddPunctuation(
     (if (subject != null && !isQuestion) subject.getEsWords() else noWords) +
     v.getEsWords() +
@@ -46,13 +52,16 @@ data class IClause(
     "dObj=${dObj?.getKey() ?: ""}," +
     "advComp=${advComp?.getKey() ?: ""}," +
     "isQuestion=${isQuestion}"
-  override fun getQuizQuestion(): String = capitalizeFirstLetter(
-    (if (subject != null && !isQuestion) subject.getQuizQuestion() + " "
-      else "") +
-    v.getEnVerb() +
-    (if (subject != null && isQuestion) " " + subject.getQuizQuestion()
-      else "") +
-    (if (dObj != null) " " + dObj.getQuizQuestion() else "") +
-    (if (advComp != null) " " + advComp.getQuizQuestion() else "")
-  ) + (if (isQuestion) "?" else ".")
+  override fun getQuizQuestion(): String {
+    val subjectEn =
+      if (subject == null) "SUBJECT" else subject.getQuizQuestion()
+    return capitalizeFirstLetter(
+      (if (isQuestion) getEnAuxVerb() + " " else "") +
+      subjectEn + " " +
+      (if (isQuestion) v.getEnVerbFor(2, 3, Tense.PRES)
+        else v.getEnVerbFor(v.getNumber(), v.getPerson(), v.getTense())) +
+      (if (dObj != null) " " + dObj.getQuizQuestion() else "") +
+      (if (advComp != null) " " + advComp.getQuizQuestion() else "")
+    ) + (if (isQuestion) "?" else ".")
+  }
 }
