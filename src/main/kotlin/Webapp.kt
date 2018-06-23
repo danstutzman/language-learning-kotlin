@@ -82,8 +82,8 @@ class Webapp(
       val cardHtml: String =
         if (goal.esYaml == "") "" else try {
           val maybeCard = bank.parseEsYaml(goal.esYaml)
-          if (maybeCard == null) ""
-            else maybeCard.getGlossRows().map { it.es }.joinToString(" ")
+          if (maybeCard == null) "" else maybeCard.getGlossRows().map {
+            it.es }.joinToString(" ").replace("- -", "")
         } catch (e: CantMakeCard) {
           "<div class='CantMakeCard'>${e.message}</div>"
         }
