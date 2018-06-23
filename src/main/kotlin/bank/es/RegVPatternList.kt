@@ -1,6 +1,5 @@
 package com.danstutzman.bank.es
 
-import com.danstutzman.bank.Assertions
 import com.danstutzman.bank.IdSequence
 
 val regVPatternsWithoutIds = listOf(
@@ -31,10 +30,6 @@ val regVPatternsWithoutIds = listOf(
   RegVPattern(0, InfCategory.STEMPRET, 2, 1, PRET, "-imos"),
   RegVPattern(0, InfCategory.STEMPRET, 2, 3, PRET, "-ieron")
 )
-val regVPatternByQuestion =
-  Assertions.assertUniqKeys(regVPatternsWithoutIds.map {
-    Pair(it.getQuizQuestion(), it)
-  })
 
 class RegVPatternList {
   val regVPatterns: List<RegVPattern>

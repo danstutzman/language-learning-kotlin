@@ -1,6 +1,5 @@
 package com.danstutzman.bank.es
 
-import com.danstutzman.bank.Assertions
 import com.danstutzman.bank.IdSequence
 
 private data class D2(
@@ -51,8 +50,6 @@ class StemChangeList {
       )
     }
     stemChangeByKey = stemChanges.map { Pair(it.getKey(), it) }.toMap()
-    Assertions.assertUniqKeys(stemChanges.map {
-      Pair(it.getQuizQuestion(), it) })
   }
   fun byKey(key: String): StemChange = stemChangeByKey[key]!!
 }

@@ -31,26 +31,4 @@ data class RegVPattern (
   override fun getEsWords(): List<String> = listOf(es)
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(cardId, "(${getEnPronoun()})", es))
-  override fun getQuizQuestion(): String {
-    val enPronoun =
-      EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)]!!
-    val enVerbSuffix =
-      EnVerbs.NUMBER_AND_PERSON_TO_EN_VERB_SUFFIX[Pair(number, person)]!!
-    return when (tense) {
-      Tense.PRES -> when (infCategory) {
-        InfCategory.AR   -> "(${enPronoun}) talk${enVerbSuffix}"
-        InfCategory.ER   -> "(${enPronoun}) eat${enVerbSuffix}"
-        InfCategory.ERIR -> "(${enPronoun}) eat${enVerbSuffix}"
-        InfCategory.IR   -> "(${enPronoun}) live${enVerbSuffix}"
-        InfCategory.STEMPRET -> throw RuntimeException("Shouldn't happen")
-      }
-      Tense.PRET -> when (infCategory) {
-        InfCategory.AR   -> "(${enPronoun}) talked"
-        InfCategory.ER   -> "(${enPronoun}) ate"
-        InfCategory.ERIR -> "(${enPronoun}) ate"
-        InfCategory.IR   -> "(${enPronoun}) lived"
-        InfCategory.STEMPRET -> "(${enPronoun}) had"
-      }
-    }
-  }
 }

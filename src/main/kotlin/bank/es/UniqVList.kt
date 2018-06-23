@@ -1,6 +1,5 @@
 package com.danstutzman.bank.es
 
-import com.danstutzman.bank.Assertions
 import com.danstutzman.bank.IdSequence
 
 private data class D(
@@ -86,8 +85,6 @@ class UniqVList {
         enDisambiguation = it.enDisambiguation
       )
     }
-    val uniqVByQuestion = Assertions.assertUniqKeys(
-      uniqVs.map { Pair(it.getQuizQuestion(), it) })
 
     uniqVsByEs = mutableMapOf<String, List<UniqV>>()
     for (uniqV in uniqVs) {

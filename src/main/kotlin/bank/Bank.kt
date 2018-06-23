@@ -1,19 +1,31 @@
 package com.danstutzman.bank
 
-import com.danstutzman.bank.Assertions
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.IdSequence
+import com.danstutzman.bank.en.EnPronouns
+import com.danstutzman.bank.en.EnVerbs
+import com.danstutzman.bank.es.Adv
 import com.danstutzman.bank.es.AdvList
+import com.danstutzman.bank.es.Det
 import com.danstutzman.bank.es.DetList
+import com.danstutzman.bank.es.GENDER_TO_DESCRIPTION
 import com.danstutzman.bank.es.IClause
+import com.danstutzman.bank.es.Inf
+import com.danstutzman.bank.es.InfCategory
 import com.danstutzman.bank.es.InfList
+import com.danstutzman.bank.es.N
+import com.danstutzman.bank.es.NClause
 import com.danstutzman.bank.es.NList
 import com.danstutzman.bank.es.NP
 import com.danstutzman.bank.es.NPList
 import com.danstutzman.bank.es.RegV
+import com.danstutzman.bank.es.RegVPattern
 import com.danstutzman.bank.es.RegVPatternList
 import com.danstutzman.bank.es.StemChange
 import com.danstutzman.bank.es.StemChangeList
+import com.danstutzman.bank.es.StemChangeV
+import com.danstutzman.bank.es.Tense
+import com.danstutzman.bank.es.UniqV
 import com.danstutzman.bank.es.UniqVList
 import com.danstutzman.bank.es.VCloud
 import com.danstutzman.db.Db
@@ -30,7 +42,16 @@ import java.io.File
 
 const val DELAY_THRESHOLD = 100000
 
+data class NClauseYaml (
+  var prompt: String? = null,
+  var headEn: String? = null,
+  var headEs: String? = null,
+  var iClause: IClauseYaml? = null,
+  var _isQuestion: Boolean? = null
+) {}
+
 data class IClauseYaml (
+  var prompt: String? = null,
   var agent: String? = null,
   var v: String? = null,
   var dObj: String? = null,
@@ -90,6 +111,7 @@ fun descendantsOf(cards: Iterable<Card>): Set<Card> {
 
 fun cardType(card: Card): String = card::class.java.name.split(".").last()
 
+
 class Bank(
   val skillsExportFile: File,
   val db: Db
@@ -115,13 +137,13 @@ class Bank(
       try {
         listOf(parseEsYaml(it.esYaml))
       } catch (e: CantMakeCard) {
+        System.err.println(e)
+        System.err.println(it)
         listOf<Card>()
       }
     }
   }
   val iClauseByKey = iClauses.map { Pair(it.getKey(), it) }.toMap()
-  val iClauseByQuestion =
-    Assertions.assertUniqKeys(iClauses.map { Pair(it.getQuizQuestion(), it) })
 
   val cards = iClauses.toSet() + descendantsOf(iClauses)
   val cardRows = cards.map {
@@ -133,9 +155,10 @@ class Bank(
       it.getChildrenCards().map { it.cardId },
       it.getGlossRows(),
       it.getEsWords(),
-      it.getQuizQuestion()
+      getPrompt(it)
     )
   }
+  val assertion = assertUniqPrompts(cardRows)
 
   val skillsExport: SkillsExport = Gson()
     .fromJson(skillsExportFile.readText(), SkillsExport::class.java)
@@ -170,8 +193,29 @@ class Bank(
     )
   }
 
+  fun nClauseFromYaml(parsed: NClauseYaml) = NClause(
+    cardIdSequence.nextId(),
+    parsed.prompt ?: throw CantMakeCard("Missing prompt"),
+    parsed.headEs ?: throw CantMakeCard("Missing headEs"),
+    parsed.headEn ?: throw CantMakeCard("Missing headEn"),
+    parsed.iClause?.let { iClauseFromYaml(it) } ?:
+      throw CantMakeCard("Missing iClause"),
+    parsed._isQuestion ?: false
+  )
+
+  fun iClauseFromYaml(parsed: IClauseYaml) = IClause(
+    cardIdSequence.nextId(),
+    parsed.prompt ?: throw CantMakeCard("Missing prompt"),
+    parsed.agent?.let { npList.byEs(it) },
+    vCloud.byEs(parsed.v ?: throw CantMakeCard("Missing v")),
+    parsed.dObj?.let { npList.byEs(it) },
+    parsed.advComp?.let { advList.byEs(it) },
+    parsed._isQuestion ?: false
+  )
+
   fun parseEsYaml(yaml: String): Card {
     val reader = YamlReader(StringReader(yaml))
+    reader.getConfig().setClassTag("NClause", NClauseYaml::class.java)
     reader.getConfig().setClassTag("IClause", IClauseYaml::class.java)
     reader.getConfig().setClassTag("NP", NPYaml::class.java)
     val parsed = try {
@@ -180,14 +224,8 @@ class Bank(
       throw CantMakeCard(e.toString())
     }
     return when (parsed) {
-      is IClauseYaml -> IClause(
-        cardIdSequence.nextId(),
-        parsed.agent?.let { npList.byEs(it) },
-        vCloud.byEs(parsed.v ?: throw CantMakeCard("Missing v")),
-        parsed.dObj?.let { npList.byEs(it) },
-        parsed.advComp?.let { advList.byEs(it) },
-        parsed._isQuestion ?: false
-      )
+      is NClauseYaml -> nClauseFromYaml(parsed)
+      is IClauseYaml -> iClauseFromYaml(parsed)
       is NPYaml -> npList.byEs(parsed.es ?: throw CantMakeCard("Missing es"))
       else -> throw CantMakeCard("Unexpected ${parsed}")
     }
@@ -197,5 +235,75 @@ class Bank(
     skillsExportFile.writeText(
       GsonBuilder().setPrettyPrinting().create().toJson(
         SkillsExport(skillsUpload.skillExports!!)))
+  }
+
+  fun getEnVerbFor(inf: Inf, number: Int, person: Int, tense: Tense): String =
+    when (tense) {
+      Tense.PRES ->
+        inf.enPresent +
+        EnVerbs.NUMBER_AND_PERSON_TO_EN_VERB_SUFFIX[Pair(number, person)]!!
+      Tense.PRET -> inf.enPast
+    } + if (inf.enDisambiguation != null) " (${inf.enDisambiguation})" else ""
+
+  fun getPrompt(card: Card): String = when (card) {
+    is Adv -> card.en
+    is Det ->
+      if (card.gender != null)
+        "${card.en} (${GENDER_TO_DESCRIPTION[card.gender]})"
+      else card.en
+    is IClause -> card.prompt
+    is Inf -> if (card.enDisambiguation != null)
+      "to ${card.enPresent} (${card.enDisambiguation})"
+      else "to ${card.enPresent}"
+    is N -> card.en
+    is NClause -> card.prompt
+    is NP -> card.en
+    is RegV ->
+      "(${card.pattern.getEnPronoun()}) " +
+      getEnVerbFor(card.inf,
+        card.pattern.number, card.pattern.person, card.pattern.tense)
+    is RegVPattern -> {
+      val enPronoun = "(" + EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[
+        Pair(card.number, card.person)]!! + ")"
+      val enVerbSuffix = EnVerbs.NUMBER_AND_PERSON_TO_EN_VERB_SUFFIX[
+        Pair(card.number, card.person)]!!
+      when (card.tense) {
+        Tense.PRES -> when (card.infCategory) {
+          InfCategory.AR   -> "${enPronoun} talk${enVerbSuffix}"
+          InfCategory.ER   -> "${enPronoun} eat${enVerbSuffix}"
+          InfCategory.ERIR -> "${enPronoun} eat${enVerbSuffix}"
+          InfCategory.IR   -> "${enPronoun} live${enVerbSuffix}"
+          InfCategory.STEMPRET -> throw RuntimeException("Shouldn't happen")
+        }
+        Tense.PRET -> when (card.infCategory) {
+          InfCategory.AR   -> "${enPronoun} talked"
+          InfCategory.ER   -> "${enPronoun} ate"
+          InfCategory.ERIR -> "${enPronoun} ate"
+          InfCategory.IR   -> "${enPronoun} lived"
+          InfCategory.STEMPRET -> "${enPronoun} had"
+        }
+      }
+    }
+    is UniqV -> "(" + EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[
+        Pair(card.number, card.person)] + ") " + getPrompt(card.inf)
+    is StemChangeV ->
+      "(${card.pattern.getEnPronoun()}) " + getEnVerbFor(
+        card.stemChange.inf,
+        card.pattern.number,
+        card.pattern.person,
+        card.pattern.tense)
+    else -> throw RuntimeException("Unexpected card type ${card::class}")
+  }
+
+  fun assertUniqPrompts(cardRows: List<CardRow>) {
+    val cardRowByPrompt = mutableMapOf<String, CardRow>()
+    for (cardRow in cardRows) {
+      val oldCard = cardRowByPrompt.get(cardRow.quizQuestion)
+      if (oldCard != null) {
+        throw RuntimeException("Key ${cardRow.quizQuestion} has two values: " +
+          "${oldCard} and ${cardRow}")
+      }
+      cardRowByPrompt.put(cardRow.quizQuestion, cardRow)
+    }
   }
 }

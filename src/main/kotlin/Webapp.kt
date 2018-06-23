@@ -1,6 +1,5 @@
 package com.danstutzman
 
-import com.danstutzman.bank.Assertions
 import com.danstutzman.bank.Bank
 import com.danstutzman.bank.CantMakeCard
 import com.danstutzman.bank.GlossRow
@@ -83,7 +82,8 @@ class Webapp(
       val cardHtml: String =
         if (goal.esYaml == "") "" else try {
           val maybeCard = bank.parseEsYaml(goal.esYaml)
-          if (maybeCard == null) "" else maybeCard.getQuizQuestion()
+          if (maybeCard == null) ""
+            else maybeCard.getEsWords().joinToString(" ")
         } catch (e: CantMakeCard) {
           "<div class='CantMakeCard'>${e.message}</div>"
         }

@@ -6,5 +6,4 @@ interface Card {
   fun getEsWords(): List<String>
   fun getKey(): String
   fun getGlossRows(): List<GlossRow>
-  fun getQuizQuestion(): String
 }

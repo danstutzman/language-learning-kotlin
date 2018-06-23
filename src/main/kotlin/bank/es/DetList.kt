@@ -1,6 +1,5 @@
 package com.danstutzman.bank.es
 
-import com.danstutzman.bank.Assertions
 import com.danstutzman.bank.IdSequence
 
 val detsWithoutIds = listOf(
@@ -13,8 +12,6 @@ val detsWithoutIds = listOf(
   Det(0, "esta", "this",  Gender.F),
   Det(0, "cada", "every", null)
 )
-val detByQuestion = Assertions.assertUniqKeys(
-	detsWithoutIds.map { Pair(it.getQuizQuestion(), it) })
 
 class DetList {
   val dets: List<Det>

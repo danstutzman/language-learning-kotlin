@@ -1,6 +1,5 @@
 package com.danstutzman.bank.es
 
-import com.danstutzman.bank.Assertions
 import com.danstutzman.bank.IdSequence
 
 val nsWithoutIds = listOf(
@@ -31,8 +30,6 @@ val nsWithoutIds = listOf(
   N(0, "lengua", "tongue", Gender.F),
   N(0, "garganta", "throat", Gender.F)
 )
-val nByQuestion = Assertions.assertUniqKeys(
-  nsWithoutIds.map { Pair(it.getQuizQuestion(), it) })
 
 class NList {
   val ns: List<N>

@@ -1,6 +1,5 @@
 package com.danstutzman.bank.es
 
-import com.danstutzman.bank.Assertions
 import com.danstutzman.bank.CantMakeCard
 import com.danstutzman.bank.IdSequence
 
@@ -16,8 +15,6 @@ val npsWithoutIds = listOf(
   NP(0, "español", "Spanish"),
   NP(0, "inglés", "English")
 )
-val npByQuestion = Assertions.assertUniqKeys(
-	npsWithoutIds.map { Pair(it.getQuizQuestion(), it) })
 
 class NPList {
   val nps: List<NP>

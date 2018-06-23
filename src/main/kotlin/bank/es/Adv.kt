@@ -12,5 +12,4 @@ data class Adv (
   override fun getEsWords(): List<String> = listOf(es)
   override fun getGlossRows(): List<GlossRow> = listOf(GlossRow(cardId, en, es))
   override fun getKey(): String = es
-  override fun getQuizQuestion(): String = en
 }

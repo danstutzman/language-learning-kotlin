@@ -1,6 +1,5 @@
 package com.danstutzman.bank.es
 
-import com.danstutzman.bank.Assertions
 import com.danstutzman.bank.CantMakeCard
 import com.danstutzman.bank.IdSequence
 
@@ -11,7 +10,14 @@ class VCloud(
   val regVPatternList: RegVPatternList,
   val stemChangeList: StemChangeList
 ) {
+  val createdCardsByConjugation = linkedMapOf<String, V>()
+
   fun byEs(conjugation: String): V {
+    val maybeExistingCard = createdCardsByConjugation[conjugation]
+    if (maybeExistingCard != null) {
+      return maybeExistingCard
+    }
+
     val maybeUniqV = uniqVList.byEs(conjugation)
     if (maybeUniqV != null) {
       return maybeUniqV
@@ -33,9 +39,11 @@ class VCloud(
     for (inf in possibleInfs) {
       for (pattern in possiblePatterns) {
         if (InfCategory.isInfCategory(inf.es, pattern.infCategory, false)) {
-          val newV = RegV(0, inf, pattern)
-          if (newV.getEs() == conjugation) {
-            return newV.copy(cardId = cardIdSequence.nextId())
+          val newVWithoutId = RegV(0, inf, pattern)
+          if (newVWithoutId.getEs() == conjugation) {
+            val newV = newVWithoutId.copy(cardId = cardIdSequence.nextId())
+            createdCardsByConjugation[conjugation] = newV
+            return newV
           }
         }
       }
