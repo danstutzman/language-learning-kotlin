@@ -31,6 +31,7 @@ private val infsWithoutIds = listOf(
   Inf(0, "sentir",    "feel",       "felt",       null),
   Inf(0, "ser",       "be",         "was",        "what"),
   Inf(0, "tener",     "have",       "had",        null),
+  Inf(0, "trabajar",  "work",       "worked",     null),
   Inf(0, "ver",       "see",        "saw",        null),
   Inf(0, "venir",     "come",       "came",       null),
   Inf(0, "volver",    "return",     "returned",   null)

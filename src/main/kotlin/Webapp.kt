@@ -2,6 +2,7 @@ package com.danstutzman
 
 import com.danstutzman.bank.Assertions
 import com.danstutzman.bank.Bank
+import com.danstutzman.bank.CantFindVocab
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.IdSequence
 import com.danstutzman.bank.SkillsUpload
@@ -75,15 +76,22 @@ class Webapp(
     html.append("  <tr>\n")
     html.append("    <th>ID</td>\n")
     html.append("    <th>Tags</td>\n")
-    html.append("    <th>English</td>\n")
-    html.append("    <th>YAML</td>\n")
+    html.append("    <th>Intended english</td>\n")
+    html.append("    <th>YAML parsed</td>\n")
     html.append("  </tr>\n")
     for (goal in db.selectAllGoals()) {
+      val iClauseHtml: String = try {
+        val maybeIClause = bank.parseIClauseYaml(goal.esYaml)
+        if (maybeIClause == null) "" else maybeIClause.getQuizQuestion()
+      } catch (e: CantFindVocab) {
+        "<div class='CantFindVocab'>${e.message}</div>"
+      }
+
       html.append("  <tr>\n")
       html.append("    <td>${goal.goalId}</td>\n")
       html.append("    <td>${goal.tags}</td>\n")
       html.append("    <td>${goal.enFreeText}</td>\n")
-      html.append("    <td>${goal.esYaml}</td>\n")
+      html.append("    <td>${iClauseHtml}</td>\n")
       html.append("    <td><a href='/goals/${goal.goalId}'>Edit</a></td>\n")
       html.append("  </tr>\n")
     }

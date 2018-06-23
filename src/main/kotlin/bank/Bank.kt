@@ -14,10 +14,12 @@ import com.danstutzman.bank.es.StemChange
 import com.danstutzman.bank.es.StemChangeList
 import com.danstutzman.bank.es.UniqVList
 import com.danstutzman.bank.es.VCloud
+import com.danstutzman.db.Db
 import com.esotericsoftware.yamlbeans.YamlReader
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import java.io.FileReader
+import java.io.StringReader
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spark.Request
@@ -85,7 +87,7 @@ fun cardType(card: Card): String = card::class.java.name.split(".").last()
 
 class Bank(
   val skillsExportFile: File,
-  val iClausesYamlFile: File
+  val db: Db
 ) {
   val logger: Logger = LoggerFactory.getLogger("Webapp.kt")
 
@@ -100,16 +102,12 @@ class Bank(
   val vCloud          = VCloud(cardIdSequence, infList, uniqVList,
                           regVPatternList, stemChangeList)
 
-  val reader = YamlReader(FileReader(iClausesYamlFile))
-  val ignored =
-    reader.getConfig().setClassTag("IClause", IClauseYaml::class.java)
-  val iClausesYaml = reader.read(List::class.java) as List<IClauseYaml>
-  val iClauses = iClausesYaml.map { yaml ->
-    IClause(
-      cardIdSequence.nextId(),
-      npList.byEs(yaml.agent!!),
-      vCloud.byEs(yaml.v!!)
-    )
+  val iClauses = db.selectAllGoals().flatMap {
+    if (it.esYaml == "") {
+      listOf<IClause>()
+    } else {
+      listOf(parseIClauseYaml(it.esYaml)!!)
+    }
   }
   val iClauseByKey = iClauses.map { Pair(it.getKey(), it) }.toMap()
   val iClauseByQuestion =
@@ -159,6 +157,20 @@ class Bank(
     return linkedMapOf(
       "cards" to cardRows,
       "skills" to skillRows
+    )
+  }
+
+  fun parseIClauseYaml(yaml: String): IClause? {
+    if (yaml == "") {
+      return null
+    }
+    val reader = YamlReader(StringReader(yaml))
+    reader.getConfig().setClassTag("IClause", IClauseYaml::class.java)
+    val iClauseYaml = reader.read(IClauseYaml::class.java)
+    return IClause(
+      cardIdSequence.nextId(),
+      npList.byEs(iClauseYaml.agent!!),
+      vCloud.byEs(iClauseYaml.v!!)
     )
   }
 

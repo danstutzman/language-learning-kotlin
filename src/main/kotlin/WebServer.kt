@@ -27,8 +27,9 @@ fun main(args: Array<String>) {
   val jdbcUrl = "jdbc:postgresql://localhost:5432/language_learning_kotlin"
 
   val conn = DriverManager.getConnection(jdbcUrl, "postgres", "")
-  val bank = Bank(File("skillsExport.json"), File("iClauses.yaml"))
-  val webapp = Webapp(bank, Db(conn))
+  val db = Db(conn)
+  val bank = Bank(File("skillsExport.json"), db)
+  val webapp = Webapp(bank, db)
 
   logger.info("Starting server port=${port}")
   val service = Service.ignite().port(port)
