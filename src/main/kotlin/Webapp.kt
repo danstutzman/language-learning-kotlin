@@ -48,7 +48,7 @@ class Webapp(val bank: Bank) {
     val response = bank.getCardsAndSkills()
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Content-Type", "application/json")
-    GsonBuilder().setPrettyPrinting().create().toJson(response)
+    GsonBuilder().create().toJson(response)
   }
 
   val postApi = { req: Request, res: Response ->
