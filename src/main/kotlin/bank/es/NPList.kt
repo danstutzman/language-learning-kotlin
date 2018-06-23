@@ -8,7 +8,10 @@ val npsWithoutIds = listOf(
   NP(0, "yo", "I"),
   NP(0, "tú", "you"),
   NP(0, "qué", "what"),
-  NP(0, "ingeniero de software", "software engineer")
+  NP(0, "ingeniero de software", "software engineer"),
+  NP(0, "hola", "hello"),
+  NP(0, "buenas días", "good morning"),
+  NP(0, "buenas tardes", "good afternoon")
 )
 val npByQuestion = Assertions.assertUniqKeys(
 	npsWithoutIds.map { Pair(it.getQuizQuestion(), it) })

@@ -9,6 +9,7 @@ import com.danstutzman.bank.es.IClauseAction
 import com.danstutzman.bank.es.IClauseLink
 import com.danstutzman.bank.es.InfList
 import com.danstutzman.bank.es.NList
+import com.danstutzman.bank.es.NP
 import com.danstutzman.bank.es.NPList
 import com.danstutzman.bank.es.RegV
 import com.danstutzman.bank.es.RegVPatternList
@@ -41,6 +42,10 @@ data class IClauseLinkYaml (
   var v: String? = null,
   var nomComp: String? = null,
   var advComp: String? = null
+) {}
+
+data class NPYaml (
+  var es: String? = null
 ) {}
 
 data class CardRow(
@@ -175,6 +180,7 @@ class Bank(
     val reader = YamlReader(StringReader(yaml))
     reader.getConfig().setClassTag("IClauseAction", IClauseActionYaml::class.java)
     reader.getConfig().setClassTag("IClauseLink", IClauseLinkYaml::class.java)
+    reader.getConfig().setClassTag("NP", NPYaml::class.java)
     val parsed = try {
       reader.read()
     } catch (e: com.esotericsoftware.yamlbeans.YamlReader.YamlReaderException) {
@@ -194,6 +200,7 @@ class Bank(
         parsed.nomComp?.let { npList.byEs(it) },
         parsed.advComp?.let { advList.byEs(it) }
       )
+      is NPYaml -> npList.byEs(parsed.es ?: throw CantMakeCard("Missing es"))
       else -> throw CantMakeCard("Unexpected ${parsed}")
     }
   }
