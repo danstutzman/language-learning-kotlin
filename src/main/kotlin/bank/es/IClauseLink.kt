@@ -7,28 +7,31 @@ data class IClauseLink(
   override val cardId: Int,
   val subject: NP?,
   val v: V,
-  val predNomOrAdj: Card
+  val nomComp: Card?,
+  val advComp: Adv?
 ): Card {
   override fun getChildrenCards(): List<Card> =
-    if (subject == null) listOf<Card>() else listOf(subject) +
-    listOf(v) +
-    listOf(predNomOrAdj)
+    listOf(subject, v, nomComp, advComp).filterNotNull()
   override fun getEsWords(): List<String> = capitalizeAndAddPunctuation(
-    if (subject == null) listOf<String>() else subject.getEsWords() +
+    (if (subject == null) listOf<String>() else subject.getEsWords()) +
     v.getEsWords() +
-    predNomOrAdj.getEsWords()
+    (if (nomComp == null) listOf<String>() else nomComp.getEsWords()) +
+    (if (advComp == null) listOf<String>() else advComp.getEsWords())
   )
   override fun getGlossRows(): List<GlossRow> =
-    if (subject == null) listOf<GlossRow>() else subject.getGlossRows() +
+    (if (subject == null) listOf<GlossRow>() else subject.getGlossRows()) +
     v.getGlossRows() +
-    predNomOrAdj.getGlossRows()
+    (if (nomComp == null) listOf<GlossRow>() else nomComp.getGlossRows()) +
+    (if (advComp == null) listOf<GlossRow>() else advComp.getGlossRows())
   override fun getKey(): String =
-    "subject=${subject?.getKey()} " +
-    "v=${v.getKey()} " +
-    "predNomOrAdj=${predNomOrAdj.getKey()}"
+    "subject=${subject?.getKey() ?: ""}," +
+    "v=${v.getKey()}," +
+    "nomComp=${nomComp?.getKey() ?: ""}," +
+    "advComp=${advComp?.getKey() ?: ""}"
   override fun getQuizQuestion(): String = capitalizeFirstLetter(
-    if (subject == null) "" else (subject.getQuizQuestion() + " " ) +
+    (if (subject == null) "" else (subject.getQuizQuestion() + " " )) +
     v.getEnVerb() +
-    " " + predNomOrAdj.getQuizQuestion()
+    (if (nomComp == null) "" else (" " + nomComp.getQuizQuestion())) +
+    (if (advComp == null) "" else (" " + advComp.getQuizQuestion()))
   ) + "."
 }

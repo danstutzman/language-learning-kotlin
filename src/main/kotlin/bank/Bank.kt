@@ -3,6 +3,7 @@ package com.danstutzman.bank
 import com.danstutzman.bank.Assertions
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.IdSequence
+import com.danstutzman.bank.es.AdvList
 import com.danstutzman.bank.es.DetList
 import com.danstutzman.bank.es.IClauseAction
 import com.danstutzman.bank.es.IClauseLink
@@ -38,7 +39,8 @@ data class IClauseActionYaml (
 data class IClauseLinkYaml (
   var subject: String? = null,
   var v: String? = null,
-  var predNomOrAdj: String? = null
+  var nomComp: String? = null,
+  var advComp: String? = null
 ) {}
 
 data class CardRow(
@@ -102,6 +104,7 @@ class Bank(
   val detList         = DetList(cardIdSequence)
   val uniqVList       = UniqVList(cardIdSequence, infList)
   val npList          = NPList(cardIdSequence)
+  val advList         = AdvList(cardIdSequence)
   val stemChangeList  = StemChangeList(cardIdSequence, infList)
   val vCloud          = VCloud(cardIdSequence, infList, uniqVList,
                           regVPatternList, stemChangeList)
@@ -188,8 +191,8 @@ class Bank(
         cardIdSequence.nextId(),
         parsed.subject?.let { npList.byEs(it) },
         vCloud.byEs(parsed.v ?: throw CantMakeCard("Missing v")),
-        parsed.predNomOrAdj?.let { npList.byEs(it) }
-          ?: throw CantMakeCard("Missing predNomOrAdj")
+        parsed.nomComp?.let { npList.byEs(it) },
+        parsed.advComp?.let { advList.byEs(it) }
       )
       else -> throw CantMakeCard("Unexpected ${parsed}")
     }
