@@ -12,7 +12,6 @@ data class StemChangeV (
   fun getEs(): String =
     stemChange.stem.substring(0, stemChange.stem.length - 1) +
     pattern.es.substring(1)
-  override fun getEsWords(): List<String> = listOf(getEs())
   override fun getGlossRows(): List<GlossRow> = 
     stemChange.getGlossRows() + pattern.getGlossRows()
   override fun getKey(): String = "${stemChange.getKey()}${pattern.getKey()}"

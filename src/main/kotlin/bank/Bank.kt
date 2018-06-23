@@ -69,7 +69,6 @@ data class CardRow(
   val key: String,
   val childrenCardIds: List<Int>,
   val glossRows: List<GlossRow>,
-  val esWords: List<String>,
   val quizQuestion: String
 ) {}
 
@@ -154,7 +153,6 @@ class Bank(
       it.getKey(),
       it.getChildrenCards().map { it.cardId },
       it.getGlossRows(),
-      it.getEsWords(),
       getPrompt(it)
     )
   }

@@ -5,7 +5,6 @@ import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.en.EnPronouns
 
 val noGlossRows = listOf<GlossRow>()
-val noWords = listOf<String>()
 
 data class IClause(
   override val cardId: Int,
@@ -18,12 +17,6 @@ data class IClause(
 ): Card {
   override fun getChildrenCards(): List<Card> =
     listOf(subject, v, dObj, advComp).filterNotNull()
-  override fun getEsWords(): List<String> =
-    (if (subject != null && !isQuestion) subject.getEsWords() else noWords) +
-    v.getEsWords() +
-    (if (dObj != null) dObj.getEsWords() else noWords) +
-    (if (advComp != null) advComp.getEsWords() else noWords) +
-    (if (subject != null && isQuestion) subject.getEsWords() else noWords)
   override fun getGlossRows(): List<GlossRow> =
     (if (subject != null && !isQuestion) subject.getGlossRows()
       else noGlossRows) +

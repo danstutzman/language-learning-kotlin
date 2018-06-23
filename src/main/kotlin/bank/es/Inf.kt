@@ -12,7 +12,6 @@ data class Inf (
   val enDisambiguation: String?
 ): Card, V {
   override fun getChildrenCards(): List<Card> = listOf()
-  override fun getEsWords(): List<String> = listOf(es)
   override fun getKey(): String = es
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(cardId, enPresent, es))

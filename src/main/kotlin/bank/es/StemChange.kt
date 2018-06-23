@@ -15,9 +15,6 @@ data class StemChange (
     Tense.PRET -> inf.enPast
   }
   override fun getChildrenCards(): List<Card> = listOf<Card>()
-  // override fun getEnQuizWords(isTop: Boolean): List<String> =
-  //   listOf("Stem", "change", "for", inf.es, "in", tense.toString())
-  override fun getEsWords(): List<String> = listOf(stem)
   override fun getGlossRows(): List<GlossRow> =
 		listOf(GlossRow(cardId, getEnVerb(), stem))
   override fun getKey(): String = stem

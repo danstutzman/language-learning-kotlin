@@ -28,7 +28,6 @@ data class RegVPattern (
     EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)]!!
   override fun getKey(): String = "${infCategory}${number}${person}${tense}"
   override fun getChildrenCards(): List<Card> = listOf<Card>()
-  override fun getEsWords(): List<String> = listOf(es)
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(cardId, "(${getEnPronoun()})", es))
 }

@@ -12,8 +12,6 @@ data class NClause(
   val isQuestion: Boolean
 ): Card {
   override fun getChildrenCards(): List<Card> = listOf(iClause)
-  override fun getEsWords(): List<String> =
-    listOf(headEs) + iClause.getEsWords()
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(0, headEn, headEs)) +
     iClause.getGlossRows()

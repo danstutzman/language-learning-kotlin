@@ -12,7 +12,6 @@ data class RegV (
   override fun getChildrenCards(): List<Card> = listOf(inf, pattern)
   fun getEs(): String =
     inf.es.substring(0, inf.es.length - 2) + pattern.es.substring(1)
-  override fun getEsWords(): List<String> = listOf(getEs())
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(inf.cardId,
       when (pattern.tense) {
