@@ -69,15 +69,21 @@ ALTER TABLE ONLY goals ALTER COLUMN goal_id SET DEFAULT nextval('goals_goal_id_s
 --
 
 COPY goals (goal_id, tags, en_free_text, es_yaml, created_at, updated_at) FROM stdin;
-9	greetings	Hello!		2018-06-23 09:00:55.660665-06	2018-06-23 09:05:27.903-06
-10	greetings	Good morning!		2018-06-23 09:01:01.56348-06	2018-06-23 09:05:32.664-06
-11	greetings	Good afternoon!		2018-06-23 09:01:05.641051-06	2018-06-23 09:05:37.723-06
-12	greetings	How are you?	!IClause\r\nagent: tú\r\nv: estás	2018-06-23 09:01:10.381372-06	2018-06-23 09:07:21.215-06
-17	get to know you, occupation	I work part-time for a client in Germany.	!IClause\r\nagent: yo\r\nv: trabajo	2018-06-23 09:05:11.545771-06	2018-06-23 09:07:44.236-06
-15	get to know you, occupation	What have you been working on?	!IClause\r\nagent: tú\r\nv: trabajas	2018-06-23 09:04:30.829722-06	2018-06-23 09:08:21.242-06
-14	get to know you, occupation	What do you do?	!IClause\r\nagent: tú\r\nv: haces	2018-06-23 09:04:11.131862-06	2018-06-23 09:08:35.257-06
-13	greetings	I'm doing well.	!IClause\r\nagent: yo\r\nv: estoy	2018-06-23 09:01:25.618678-06	2018-06-23 09:12:00.823-06
-16	get to know you, occupation	I'm a software developer.	!IClause\r\nagent: yo\r\nv: soy	2018-06-23 09:04:59.410926-06	2018-06-23 09:12:08.085-06
+16	get to know you, occupation	I'm a software engineer.	!IClause\r\nprompt: I'm a software engineer.\r\nv: soy\r\ndObj: ingeniero de software	2018-06-23 09:04:59.410926-06	2018-06-23 17:03:52.393-06
+17	get to know you, occupation	I work part-time for a client in Germany.	!IClause\r\nprompt: I work.\r\nv: trabajo	2018-06-23 09:05:11.545771-06	2018-06-23 17:04:07.921-06
+19	language learning	I speak Spanish.	!IClause\r\nprompt: I speak Spanish.\r\nv: hablo\r\ndObj: español	2018-06-23 11:50:32.308946-06	2018-06-23 17:04:16.298-06
+23	language learning	Did you speak Spanish?	!IClause\r\nprompt: Did you speak Spanish?\r\nv: hablaste\r\ndObj: español\r\n_isQuestion: true	2018-06-23 13:13:07.340568-06	2018-06-23 17:04:23.805-06
+21	language learning	I speak English.	!IClause\r\nprompt: I speak English.\r\nv: hablo\r\ndObj: inglés	2018-06-23 11:51:16.31606-06	2018-06-23 17:04:33.783-06
+12	greetings	How are you?	!NClause\r\nprompt: How are you?\r\nheadEs: cómo\r\nheadEn: how\r\niClause: !IClause\r\n  prompt: you are (how)\r\n  v: estás	2018-06-23 09:01:10.381372-06	2018-06-23 17:13:45.731-06
+14	get to know you, occupation	What do you do?	!NClause\r\nprompt: "What do you do?"\r\nheadEn: what\r\nheadEs: qué\r\niClause: !IClause\r\n  prompt: "you do"\r\n  v: haces	2018-06-23 09:04:11.131862-06	2018-06-23 17:38:33.356-06
+15	get to know you, occupation	What have you been working on?		2018-06-23 09:04:30.829722-06	2018-06-23 10:46:28.858-06
+22	language learning	Does he speak English?	!IClause\r\nprompt: Does he speak English?\r\nagent: él\r\nv: habla\r\ndObj: inglés\r\n_isQuestion: true	2018-06-23 12:48:48.844155-06	2018-06-23 17:03:01.429-06
+20	language learning	Do you speak English?	!IClause\r\nprompt: Do you speak English?\r\nv: hablas\r\ndObj: inglés\r\n_isQuestion: true	2018-06-23 11:51:01.738222-06	2018-06-23 17:03:21.063-06
+13	greetings	I'm doing well.	!IClause\r\nprompt: I'm doing well.\r\nv: estoy\r\nadvComp: bien	2018-06-23 09:01:25.618678-06	2018-06-23 17:03:30.08-06
+18	language learning	Do you speak Spanish?	!IClause\r\nprompt: Do you speak Spanish?\r\nv: hablas\r\ndObj: español\r\n_isQuestion: true	2018-06-23 11:48:16.493354-06	2018-06-23 17:03:37.932-06
+9	greetings	Hello!	!NP\r\nes: "hola"	2018-06-23 09:00:55.660665-06	2018-06-23 11:40:02.385-06
+10	greetings	Good morning!	!NP\r\nes: buenas días	2018-06-23 09:01:01.56348-06	2018-06-23 11:41:33.217-06
+11	greetings	Good afternoon!	!NP\r\nes: buenas tardes	2018-06-23 09:01:05.641051-06	2018-06-23 11:41:42.338-06
 \.
 
 
@@ -85,7 +91,7 @@ COPY goals (goal_id, tags, en_free_text, es_yaml, created_at, updated_at) FROM s
 -- Name: goals_goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('goals_goal_id_seq', 17, true);
+SELECT pg_catalog.setval('goals_goal_id_seq', 23, true);
 
 
 --
