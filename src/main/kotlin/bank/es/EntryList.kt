@@ -32,14 +32,18 @@ class EntryList {
       newEntries.add(Entry(
         cardId = cardIdSequence.nextId(),
         es = entryRow.es,
-        en = entryRow.en
+        en = entryRow.en,
+        enDisambiguation = if (entryRow.enDisambiguation != "")
+          entryRow.enDisambiguation else null
       ))
 
       if (entryRow.enPlural != null) {
         newEntries.add(Entry(
           cardId = cardIdSequence.nextId(),
           es = pluralizeEs(entryRow.es),
-          en = entryRow.enPlural
+          en = entryRow.enPlural,
+          enDisambiguation = if (entryRow.enDisambiguation != "")
+            entryRow.enDisambiguation else null
         ))
       }
 

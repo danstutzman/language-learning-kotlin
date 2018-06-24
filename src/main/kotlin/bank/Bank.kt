@@ -184,7 +184,9 @@ class Bank(
     } + if (inf.enDisambiguation != null) " (${inf.enDisambiguation})" else ""
 
   fun getPrompt(card: Card): String = when (card) {
-    is Entry -> card.en
+    is Entry -> if (card.enDisambiguation != null)
+      "${card.en} (${card.enDisambiguation})"
+      else card.en
     is Goal -> card.prompt
     is Inf -> if (card.enDisambiguation != null)
       "to ${card.enPresent} (${card.enDisambiguation})"

@@ -7,7 +7,8 @@ import com.danstutzman.bank.GlossRow
 data class Entry (
   override val cardId: Int,
   val es: String,
-  val en: String
+  val en: String,
+  val enDisambiguation: String?
 ): Card {
   override fun getChildrenCards(): List<Card> = listOf<Card>()
   override fun getGlossRows(): List<GlossRow> = listOf(GlossRow(cardId, en, es))
