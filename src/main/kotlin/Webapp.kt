@@ -187,7 +187,7 @@ class Webapp(
       html.append("    <td>${entryRow.en}</td>\n")
       html.append("    <td>${entryRow.enDisambiguation}</td>\n")
       html.append("    <td>${entryRow.enPlural ?: ""}</td>\n")
-      html.append("    <td><input type='submit' name='deleteEntry${entryRow.entryId}' value='Delete' onClick='return confirm(\"Delete item?\")'></td>\n")
+      html.append("    <td><input type='submit' name='deleteEntry${entryRow.entryId}' value='Delete' onClick='return confirm(\"Delete entry?\")'></td>\n")
       html.append("  </tr>\n")
     }
     html.append("  <tr>\n")
