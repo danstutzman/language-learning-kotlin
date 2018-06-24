@@ -39,5 +39,5 @@ class NList {
     ns = nsWithoutIds.map { it.copy(cardId = cardIdSequence.nextId()) }
     nByEs = ns.map { Pair(it.es, it) }.toMap()
   }
-  fun byEs(es: String): N = nByEs[es]!!
+  fun byEs(es: String): N? = nByEs[es]
 }

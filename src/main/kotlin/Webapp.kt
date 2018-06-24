@@ -6,7 +6,6 @@ import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.IdSequence
 import com.danstutzman.bank.SkillsUpload
 import com.danstutzman.bank.es.DetList
-import com.danstutzman.bank.es.IClause
 import com.danstutzman.bank.es.InfList
 import com.danstutzman.bank.es.NList
 import com.danstutzman.bank.es.NPList
@@ -75,15 +74,15 @@ class Webapp(
     html.append("  <tr>\n")
     html.append("    <th>ID</td>\n")
     html.append("    <th>Tags</td>\n")
-    html.append("    <th>Intended english</td>\n")
-    html.append("    <th>YAML parsed</td>\n")
+    html.append("    <th>English</td>\n")
+    html.append("    <th>Spanish</td>\n")
     html.append("  </tr>\n")
     for (goal in db.selectAllGoals()) {
       val cardHtml: String =
-        if (goal.esYaml == "") "" else try {
-          val maybeCard = bank.parseEsYaml(goal.esYaml)
-          if (maybeCard == null) "" else maybeCard.getGlossRows().map {
-            it.es }.joinToString(" ").replace("- -", "")
+        if (goal.es == "") "" else try {
+          val maybeCard = bank.parseEs(goal.es, goal.enFreeText)
+          maybeCard.getGlossRows().map { it.es
+            }.joinToString(" ").replace("- -", "")
         } catch (e: CantMakeCard) {
           "<div class='CantMakeCard'>${e.message}</div>"
         }
@@ -101,10 +100,10 @@ class Webapp(
     html.append("<form method='POST' action='/goals'>\n")
     html.append("  <label for='tags'>Tags</label><br>\n")
     html.append("  <input type='text' name='tags'><br>\n")
-    html.append("  <label for='tags'>English free text</label><br>\n")
+    html.append("  <label for='tags'>English</label><br>\n")
     html.append("  <input type='text' name='en_free_text'><br>\n")
-    html.append("  <label for='tags'>YAML</label><br>\n")
-    html.append("  <textarea name='es_yaml' rows='10' cols='80'></textarea><br>\n")
+    html.append("  <label for='tags'>Spanish</label><br>\n")
+    html.append("  <textarea name='es' rows='10' cols='80'></textarea><br>\n")
     html.append("  <input type='submit' name='submit' value='Add Goal'>\n")
     html.append("</form>\n")
 
@@ -122,10 +121,10 @@ class Webapp(
     html.append("<form method='POST' action='/goals/${goal.goalId}'>\n")
     html.append("  <label for='tags'>Tags</label><br>\n")
     html.append("  <input type='text' name='tags' value='${escapeHTML(goal.tags)}'><br>\n")
-    html.append("  <label for='tags'>English free text</label><br>\n")
+    html.append("  <label for='tags'>English</label><br>\n")
     html.append("  <input type='text' name='en_free_text' value='${escapeHTML(goal.enFreeText)}'><br>\n")
-    html.append("  <label for='tags'>YAML</label><br>\n")
-    html.append("  <textarea name='es_yaml' rows='10' cols='80'>${escapeHTML(goal.esYaml)}</textarea><br>\n")
+    html.append("  <label for='tags'>Spanish</label><br>\n")
+    html.append("  <input type='text' name='es' value='${escapeHTML(goal.es)}'><br>\n")
     html.append("  <input type='submit' name='submit' value='Edit Goal'>\n")
     html.append("  <input type='submit' name='submit' value='Delete Goal' onClick='return confirm(\"Delete goal?\")'>\n")
     html.append("</form>\n")
@@ -141,11 +140,11 @@ class Webapp(
         req.params("goalId").toInt(),
         req.queryParams("tags"),
         req.queryParams("en_free_text"),
-        req.queryParams("es_yaml")
+        req.queryParams("es")
       )
       db.updateGoal(goal)
     } else if (submit == "Delete Goal") {
-      db.deleteGoal(Goal(req.params("goalId").toInt()!!, "", "", ""))
+      db.deleteGoal(Goal(req.params("goalId").toInt(), "", "", ""))
     } else {
       throw RuntimeException("Unexpected submit value: ${submit}")
     }
@@ -158,7 +157,7 @@ class Webapp(
       0,
       req.queryParams("tags"),
       req.queryParams("en_free_text"),
-      req.queryParams("es_yaml")
+      req.queryParams("es")
     ))
     res.redirect("/goals")
   }

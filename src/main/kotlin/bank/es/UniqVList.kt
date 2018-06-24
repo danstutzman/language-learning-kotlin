@@ -104,5 +104,5 @@ class UniqVList {
       throw RuntimeException("Multiple uniqVs for es=${es}")
     }
   }
-  fun byKey(key: String): UniqV = uniqVByKey[key]!!
+  fun byKey(key: String): UniqV? = uniqVByKey[key]
 }

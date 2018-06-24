@@ -28,7 +28,7 @@ CREATE TABLE goals (
     goal_id integer NOT NULL,
     tags text NOT NULL,
     en_free_text text NOT NULL,
-    es_yaml text NOT NULL,
+    es text NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone NOT NULL
 );
@@ -68,22 +68,22 @@ ALTER TABLE ONLY goals ALTER COLUMN goal_id SET DEFAULT nextval('goals_goal_id_s
 -- Data for Name: goals; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY goals (goal_id, tags, en_free_text, es_yaml, created_at, updated_at) FROM stdin;
-16	get to know you, occupation	I'm a software engineer.	!IClause\r\nprompt: I'm a software engineer.\r\nv: soy\r\ndObj: ingeniero de software	2018-06-23 09:04:59.410926-06	2018-06-23 17:03:52.393-06
-17	get to know you, occupation	I work part-time for a client in Germany.	!IClause\r\nprompt: I work.\r\nv: trabajo	2018-06-23 09:05:11.545771-06	2018-06-23 17:04:07.921-06
-19	language learning	I speak Spanish.	!IClause\r\nprompt: I speak Spanish.\r\nv: hablo\r\ndObj: español	2018-06-23 11:50:32.308946-06	2018-06-23 17:04:16.298-06
-23	language learning	Did you speak Spanish?	!IClause\r\nprompt: Did you speak Spanish?\r\nv: hablaste\r\ndObj: español\r\n_isQuestion: true	2018-06-23 13:13:07.340568-06	2018-06-23 17:04:23.805-06
-21	language learning	I speak English.	!IClause\r\nprompt: I speak English.\r\nv: hablo\r\ndObj: inglés	2018-06-23 11:51:16.31606-06	2018-06-23 17:04:33.783-06
-12	greetings	How are you?	!NClause\r\nprompt: How are you?\r\nheadEs: cómo\r\nheadEn: how\r\niClause: !IClause\r\n  prompt: you are (how)\r\n  v: estás	2018-06-23 09:01:10.381372-06	2018-06-23 17:13:45.731-06
-14	get to know you, occupation	What do you do?	!NClause\r\nprompt: "What do you do?"\r\nheadEn: what\r\nheadEs: qué\r\niClause: !IClause\r\n  prompt: "you do"\r\n  v: haces	2018-06-23 09:04:11.131862-06	2018-06-23 17:38:33.356-06
+COPY goals (goal_id, tags, en_free_text, es, created_at, updated_at) FROM stdin;
+16	get to know you, occupation	I'm a software engineer.	soy ingeniero-de-software	2018-06-23 09:04:59.410926-06	2018-06-23 18:20:27.871-06
+17	get to know you, occupation	I work part-time for a client in Germany.	trabajo	2018-06-23 09:05:11.545771-06	2018-06-23 18:25:23.358-06
+19	language learning	I speak Spanish.	hablo español	2018-06-23 11:50:32.308946-06	2018-06-23 18:25:29.936-06
+23	language learning	Did you speak Spanish?	hablaste español	2018-06-23 13:13:07.340568-06	2018-06-23 18:25:38.9-06
+21	language learning	I speak English.	hablo inglés	2018-06-23 11:51:16.31606-06	2018-06-23 18:25:45.73-06
+12	greetings	How are you?	como estás	2018-06-23 09:01:10.381372-06	2018-06-23 18:25:51.526-06
+14	get to know you, occupation	What do you do?	qué haces	2018-06-23 09:04:11.131862-06	2018-06-23 18:25:57.398-06
+22	language learning	Does he speak English?	habla él inglés	2018-06-23 12:48:48.844155-06	2018-06-23 18:26:09.253-06
+20	language learning	Do you speak English?	hablas inglés	2018-06-23 11:51:01.738222-06	2018-06-23 18:26:15.736-06
+13	greetings	I'm doing well.	estoy bien	2018-06-23 09:01:25.618678-06	2018-06-23 18:26:20.552-06
 15	get to know you, occupation	What have you been working on?		2018-06-23 09:04:30.829722-06	2018-06-23 10:46:28.858-06
-22	language learning	Does he speak English?	!IClause\r\nprompt: Does he speak English?\r\nagent: él\r\nv: habla\r\ndObj: inglés\r\n_isQuestion: true	2018-06-23 12:48:48.844155-06	2018-06-23 17:03:01.429-06
-20	language learning	Do you speak English?	!IClause\r\nprompt: Do you speak English?\r\nv: hablas\r\ndObj: inglés\r\n_isQuestion: true	2018-06-23 11:51:01.738222-06	2018-06-23 17:03:21.063-06
-13	greetings	I'm doing well.	!IClause\r\nprompt: I'm doing well.\r\nv: estoy\r\nadvComp: bien	2018-06-23 09:01:25.618678-06	2018-06-23 17:03:30.08-06
-18	language learning	Do you speak Spanish?	!IClause\r\nprompt: Do you speak Spanish?\r\nv: hablas\r\ndObj: español\r\n_isQuestion: true	2018-06-23 11:48:16.493354-06	2018-06-23 17:03:37.932-06
-9	greetings	Hello!	!NP\r\nes: "hola"	2018-06-23 09:00:55.660665-06	2018-06-23 11:40:02.385-06
-10	greetings	Good morning!	!NP\r\nes: buenas días	2018-06-23 09:01:01.56348-06	2018-06-23 11:41:33.217-06
-11	greetings	Good afternoon!	!NP\r\nes: buenas tardes	2018-06-23 09:01:05.641051-06	2018-06-23 11:41:42.338-06
+18	language learning	Do you speak Spanish?	hablas español	2018-06-23 11:48:16.493354-06	2018-06-23 18:27:02.5-06
+9	greetings	Hello!	hola	2018-06-23 09:00:55.660665-06	2018-06-23 18:27:06.936-06
+10	greetings	Good morning!	buenas-días	2018-06-23 09:01:01.56348-06	2018-06-23 18:27:13.328-06
+11	greetings	Good afternoon!	buenas-tardes	2018-06-23 09:01:05.641051-06	2018-06-23 18:27:18.507-06
 \.
 
 

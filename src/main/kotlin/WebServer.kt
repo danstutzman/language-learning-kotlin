@@ -2,22 +2,12 @@ package com.danstutzman
 
 import com.danstutzman.bank.Bank
 import com.danstutzman.db.Db
-import com.esotericsoftware.yamlbeans.YamlReader
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spark.Service
 import java.io.File
 import java.io.FileReader
 import java.sql.DriverManager
-
-data class IClausesYaml (
-  val iClauses: List<IClauseYaml>? = null
-) {}
-
-data class IClauseYaml (
-  var agent: String? = null,
-  var v: String? = null
-) {}
 
 fun main(args: Array<String>) {
   System.setProperty("org.jooq.no-logo", "true")

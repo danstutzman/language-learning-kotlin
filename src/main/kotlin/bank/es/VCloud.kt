@@ -12,7 +12,7 @@ class VCloud(
 ) {
   val createdCardsByConjugation = linkedMapOf<String, V>()
 
-  fun byEs(conjugation: String): V {
+  fun byEs(conjugation: String): V? {
     val maybeExistingCard = createdCardsByConjugation[conjugation]
     if (maybeExistingCard != null) {
       return maybeExistingCard
@@ -63,6 +63,6 @@ class VCloud(
       }
     }
 
-    throw CantMakeCard("Couldn't find V for es=${conjugation}")
+    return null
   }
 }

@@ -13,7 +13,7 @@ data class Goal(
   val goalId: Int,
   val tags: String,
   val enFreeText: String,
-  val esYaml: String
+  val es: String
 )
 
 class Db(
@@ -33,17 +33,17 @@ class Db(
       .insertInto(GOALS,
           GOALS.TAGS,
           GOALS.EN_FREE_TEXT,
-          GOALS.ES_YAML,
+          GOALS.ES,
           GOALS.UPDATED_AT)
       .values(goal.tags,
           goal.enFreeText,
-          goal.esYaml,
+          goal.es,
           now())
       .returning(
           GOALS.GOAL_ID,
           GOALS.TAGS,
           GOALS.EN_FREE_TEXT,
-          GOALS.ES_YAML)
+          GOALS.ES)
       .fetchOne()
 
   fun selectGoalById(goalId: Int): Goal? {
@@ -52,7 +52,7 @@ class Db(
         GOALS.GOAL_ID,
         GOALS.TAGS,
         GOALS.EN_FREE_TEXT,
-        GOALS.ES_YAML)
+        GOALS.ES)
       .from(GOALS)
       .where(GOALS.GOAL_ID.eq(goalId))
       .fetchOne()
@@ -62,7 +62,7 @@ class Db(
         it.getValue(GOALS.GOAL_ID),
         it.getValue(GOALS.TAGS),
         it.getValue(GOALS.EN_FREE_TEXT),
-        it.getValue(GOALS.ES_YAML)
+        it.getValue(GOALS.ES)
       )
     }
   }
@@ -73,7 +73,7 @@ class Db(
         GOALS.GOAL_ID,
         GOALS.TAGS,
         GOALS.EN_FREE_TEXT,
-        GOALS.ES_YAML)
+        GOALS.ES)
       .from(GOALS)
       .fetch()
 
@@ -82,7 +82,7 @@ class Db(
         it.getValue(GOALS.GOAL_ID),
         it.getValue(GOALS.TAGS),
         it.getValue(GOALS.EN_FREE_TEXT),
-        it.getValue(GOALS.ES_YAML)
+        it.getValue(GOALS.ES)
       )
     }
   }
@@ -91,7 +91,7 @@ class Db(
     create.update(GOALS)
       .set(GOALS.TAGS, goal.tags)
       .set(GOALS.EN_FREE_TEXT, goal.enFreeText)
-      .set(GOALS.ES_YAML, goal.esYaml)
+      .set(GOALS.ES, goal.es)
       .set(GOALS.UPDATED_AT, now())
       .where(GOALS.GOAL_ID.eq(goal.goalId))
       .execute()

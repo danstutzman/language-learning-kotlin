@@ -16,6 +16,5 @@ class AdvList {
     advs = advsWithoutIds.map { it.copy(cardId = cardIdSequence.nextId()) }
     advByEs = advs.map { Pair(it.es, it) }.toMap()
   }
-  fun byEs(es: String): Adv =
-    advByEs[es] ?: throw CantMakeCard("Can't find Adv for es=${es}")
+  fun byEs(es: String): Adv? = advByEs[es]
 }

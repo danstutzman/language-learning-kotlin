@@ -9,12 +9,11 @@ import com.danstutzman.bank.es.AdvList
 import com.danstutzman.bank.es.Det
 import com.danstutzman.bank.es.DetList
 import com.danstutzman.bank.es.GENDER_TO_DESCRIPTION
-import com.danstutzman.bank.es.IClause
+import com.danstutzman.bank.es.Goal
 import com.danstutzman.bank.es.Inf
 import com.danstutzman.bank.es.InfCategory
 import com.danstutzman.bank.es.InfList
 import com.danstutzman.bank.es.N
-import com.danstutzman.bank.es.NClause
 import com.danstutzman.bank.es.NList
 import com.danstutzman.bank.es.NP
 import com.danstutzman.bank.es.NPList
@@ -29,7 +28,6 @@ import com.danstutzman.bank.es.UniqV
 import com.danstutzman.bank.es.UniqVList
 import com.danstutzman.bank.es.VCloud
 import com.danstutzman.db.Db
-import com.esotericsoftware.yamlbeans.YamlReader
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import java.io.FileReader
@@ -41,27 +39,6 @@ import spark.Response
 import java.io.File
 
 const val DELAY_THRESHOLD = 100000
-
-data class NClauseYaml (
-  var prompt: String? = null,
-  var headEn: String? = null,
-  var headEs: String? = null,
-  var iClause: IClauseYaml? = null,
-  var _isQuestion: Boolean? = null
-) {}
-
-data class IClauseYaml (
-  var prompt: String? = null,
-  var agent: String? = null,
-  var v: String? = null,
-  var dObj: String? = null,
-  var advComp: String? = null,
-  var _isQuestion: Boolean? = null
-) {}
-
-data class NPYaml (
-  var es: String? = null
-) {}
 
 data class CardRow(
   val cardId: Int,
@@ -130,11 +107,11 @@ class Bank(
                           regVPatternList, stemChangeList)
 
   val iClauses: List<Card> = db.selectAllGoals().flatMap {
-    if (it.esYaml == "") {
+    if (it.es == "") {
       listOf<Card>()
     } else {
       try {
-        listOf(parseEsYaml(it.esYaml))
+        listOf(parseEs(it.es, it.enFreeText))
       } catch (e: CantMakeCard) {
         System.err.println(e)
         System.err.println(it)
@@ -191,42 +168,18 @@ class Bank(
     )
   }
 
-  fun nClauseFromYaml(parsed: NClauseYaml) = NClause(
-    cardIdSequence.nextId(),
-    parsed.prompt ?: throw CantMakeCard("Missing prompt"),
-    parsed.headEs ?: throw CantMakeCard("Missing headEs"),
-    parsed.headEn ?: throw CantMakeCard("Missing headEn"),
-    parsed.iClause?.let { iClauseFromYaml(it) } ?:
-      throw CantMakeCard("Missing iClause"),
-    parsed._isQuestion ?: false
-  )
-
-  fun iClauseFromYaml(parsed: IClauseYaml) = IClause(
-    cardIdSequence.nextId(),
-    parsed.prompt ?: throw CantMakeCard("Missing prompt"),
-    parsed.agent?.let { npList.byEs(it) },
-    vCloud.byEs(parsed.v ?: throw CantMakeCard("Missing v")),
-    parsed.dObj?.let { npList.byEs(it) },
-    parsed.advComp?.let { advList.byEs(it) },
-    parsed._isQuestion ?: false
-  )
-
-  fun parseEsYaml(yaml: String): Card {
-    val reader = YamlReader(StringReader(yaml))
-    reader.getConfig().setClassTag("NClause", NClauseYaml::class.java)
-    reader.getConfig().setClassTag("IClause", IClauseYaml::class.java)
-    reader.getConfig().setClassTag("NP", NPYaml::class.java)
-    val parsed = try {
-      reader.read()
-    } catch (e: com.esotericsoftware.yamlbeans.YamlReader.YamlReaderException) {
-      throw CantMakeCard(e.toString())
+  fun parseEs(es: String, prompt: String): Card {
+    val cards = es.split(" ").map { word ->
+      advList.byEs(word) ?:
+      detList.byEs(word) ?:
+      infList.byEs(word) ?:
+      nList.byEs(word) ?:
+      npList.byEs(word) ?:
+      uniqVList.byEs(word) ?:
+      vCloud.byEs(word) ?:
+      throw CantMakeCard("Can't find card for es ${word}")
     }
-    return when (parsed) {
-      is NClauseYaml -> nClauseFromYaml(parsed)
-      is IClauseYaml -> iClauseFromYaml(parsed)
-      is NPYaml -> npList.byEs(parsed.es ?: throw CantMakeCard("Missing es"))
-      else -> throw CantMakeCard("Unexpected ${parsed}")
-    }
+    return Goal(cardIdSequence.nextId(), prompt, cards)
   }
 
   fun saveSkillsExport(skillsUpload: SkillsUpload) {
@@ -249,12 +202,11 @@ class Bank(
       if (card.gender != null)
         "${card.en} (${GENDER_TO_DESCRIPTION[card.gender]})"
       else card.en
-    is IClause -> card.prompt
+    is Goal -> card.prompt
     is Inf -> if (card.enDisambiguation != null)
       "to ${card.enPresent} (${card.enDisambiguation})"
       else "to ${card.enPresent}"
     is N -> card.en
-    is NClause -> card.prompt
     is NP -> card.en
     is RegV ->
       "(${card.pattern.getEnPronoun()}) " +
@@ -267,18 +219,18 @@ class Bank(
         Pair(card.number, card.person)]!!
       when (card.tense) {
         Tense.PRES -> when (card.infCategory) {
-          InfCategory.AR   -> "${enPronoun} talk${enVerbSuffix}"
-          InfCategory.ER   -> "${enPronoun} eat${enVerbSuffix}"
-          InfCategory.ERIR -> "${enPronoun} eat${enVerbSuffix}"
-          InfCategory.IR   -> "${enPronoun} live${enVerbSuffix}"
+          InfCategory.AR   -> "${enPronoun} talk${enVerbSuffix} (hablar)"
+          InfCategory.ER   -> "${enPronoun} eat${enVerbSuffix} (comer)"
+          InfCategory.ERIR -> "${enPronoun} eat${enVerbSuffix} (comer)"
+          InfCategory.IR   -> "${enPronoun} live${enVerbSuffix} (vivir)"
           InfCategory.STEMPRET -> throw RuntimeException("Shouldn't happen")
         }
         Tense.PRET -> when (card.infCategory) {
-          InfCategory.AR   -> "${enPronoun} talked"
-          InfCategory.ER   -> "${enPronoun} ate"
-          InfCategory.ERIR -> "${enPronoun} ate"
-          InfCategory.IR   -> "${enPronoun} lived"
-          InfCategory.STEMPRET -> "${enPronoun} had"
+          InfCategory.AR   -> "${enPronoun} talked (hablar)"
+          InfCategory.ER   -> "${enPronoun} ate (comer)"
+          InfCategory.ERIR -> "${enPronoun} ate (comer)"
+          InfCategory.IR   -> "${enPronoun} lived (vivir)"
+          InfCategory.STEMPRET -> "${enPronoun} had (tener)"
         }
       }
     }

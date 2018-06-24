@@ -21,5 +21,5 @@ class DetList {
     dets = detsWithoutIds.map { it.copy(cardId = cardIdSequence.nextId()) }
     detByEs = dets.map { Pair(it.es, it) }.toMap()
   }
-  fun byEs(es: String): Det = detByEs[es]!!
+  fun byEs(es: String): Det? = detByEs[es]
 }
