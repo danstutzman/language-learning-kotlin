@@ -4,6 +4,7 @@ import com.danstutzman.bank.IdSequence
 
 private val infsWithoutIds = listOf(
   Inf(0, "andar",     "walk",       "walked",     null),
+  Inf(0, "aprender",  "learn",      "learned",    null),
   Inf(0, "comer",     "eat",        "ate",        null),
   Inf(0, "conocer",   "know",       "knew",       "be able to"),
   Inf(0, "contar",    "tell",       "told",       null),
@@ -34,6 +35,7 @@ private val infsWithoutIds = listOf(
   Inf(0, "trabajar",  "work",       "worked",     null),
   Inf(0, "ver",       "see",        "saw",        null),
   Inf(0, "venir",     "come",       "came",       null),
+  Inf(0, "visitar",   "visit",      "visited",    null),
   Inf(0, "volver",    "return",     "returned",   null)
 )
 
