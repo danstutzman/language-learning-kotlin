@@ -160,7 +160,7 @@ class Bank(
   }
 
   fun parseEs(es: String, prompt: String): Card {
-    val cards = es.toLowerCase().split(" ").map { word ->
+    val cards = es.split(" ").map { word ->
       entryList.byEs(word) ?:
       uniqVList.byEs(word) ?:
       vCloud.byEs(word) ?:
