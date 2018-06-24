@@ -3,8 +3,8 @@ package com.danstutzman.bank.es
 import com.danstutzman.bank.Card
 import com.danstutzman.bank.GlossRow
 
-// A Fixed is defined as a word that can't add a prefix or suffix
-data class Fixed (
+// An Entry is a word that's not a verb
+data class Entry (
   override val cardId: Int,
   val es: String,
   val en: String

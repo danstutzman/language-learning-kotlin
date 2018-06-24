@@ -4,17 +4,13 @@ import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.IdSequence
 import com.danstutzman.bank.en.EnPronouns
 import com.danstutzman.bank.en.EnVerbs
-import com.danstutzman.bank.es.Fixed
-import com.danstutzman.bank.es.FixedList
-import com.danstutzman.bank.es.Flexible
-import com.danstutzman.bank.es.FlexibleList
+import com.danstutzman.bank.es.Entry
+import com.danstutzman.bank.es.EntryList
 import com.danstutzman.bank.es.GENDER_TO_DESCRIPTION
 import com.danstutzman.bank.es.Goal
 import com.danstutzman.bank.es.Inf
 import com.danstutzman.bank.es.InfCategory
 import com.danstutzman.bank.es.InfList
-import com.danstutzman.bank.es.N
-import com.danstutzman.bank.es.NList
 import com.danstutzman.bank.es.RegV
 import com.danstutzman.bank.es.RegVPattern
 import com.danstutzman.bank.es.RegVPatternList
@@ -95,8 +91,7 @@ class Bank(
   val cardIdSequence  = IdSequence()
   val infList         = InfList(cardIdSequence)
   val regVPatternList = RegVPatternList(cardIdSequence)
-  val flexibleList    = FlexibleList(cardIdSequence)
-  val fixedList       = FixedList(cardIdSequence)
+  val entryList       = EntryList(cardIdSequence, db)
   val uniqVList       = UniqVList(cardIdSequence, infList)
   val stemChangeList  = StemChangeList(cardIdSequence, infList)
   val vCloud          = VCloud(cardIdSequence, infList, uniqVList,
@@ -166,8 +161,7 @@ class Bank(
 
   fun parseEs(es: String, prompt: String): Card {
     val cards = es.toLowerCase().split(" ").map { word ->
-      fixedList.byEs(word) ?:
-      flexibleList.byEs(word) ?:
+      entryList.byEs(word) ?:
       uniqVList.byEs(word) ?:
       vCloud.byEs(word) ?:
       throw CantMakeCard("Can't find card for es ${word}")
@@ -190,13 +184,11 @@ class Bank(
     } + if (inf.enDisambiguation != null) " (${inf.enDisambiguation})" else ""
 
   fun getPrompt(card: Card): String = when (card) {
-    is Fixed -> card.en
-    is Flexible -> card.en
+    is Entry -> card.en
     is Goal -> card.prompt
     is Inf -> if (card.enDisambiguation != null)
       "to ${card.enPresent} (${card.enDisambiguation})"
       else "to ${card.enPresent}"
-    is N -> card.en
     is RegV ->
       "(${card.pattern.getEnPronoun()}) " +
       getEnVerbFor(card.inf,

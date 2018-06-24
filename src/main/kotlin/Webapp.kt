@@ -5,14 +5,12 @@ import com.danstutzman.bank.CantMakeCard
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.IdSequence
 import com.danstutzman.bank.SkillsUpload
-import com.danstutzman.bank.es.DetList
 import com.danstutzman.bank.es.InfList
-import com.danstutzman.bank.es.NList
-import com.danstutzman.bank.es.NPList
 import com.danstutzman.bank.es.RegV
 import com.danstutzman.bank.es.RegVPatternList
 import com.danstutzman.bank.es.UniqVList
 import com.danstutzman.db.Db
+import com.danstutzman.db.EntryRow
 import com.danstutzman.db.Goal
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -60,7 +58,8 @@ class Webapp(
   val getRoot = { _: Request, _: Response ->
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
-    html.append("<a href='/goals'>Goals</a>\n")
+    html.append("<li><a href='/goals'>Goals</a></li>\n")
+    html.append("<li><a href='/dictionary-entries'>Dictionary Entries</a></li>\n")
     html.append(CLOSE_BODY_TAG)
     html.toString()
   }
@@ -69,6 +68,7 @@ class Webapp(
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
 
+    html.append("<a href='/'>Back to home</a>\n")
     html.append("<h1>Goals</h1>\n")
     html.append("<table border='1'>\n")
     html.append("  <tr>\n")
@@ -160,6 +160,68 @@ class Webapp(
       req.queryParams("es")
     ))
     res.redirect("/goals")
+  }
+
+  val getDictionaryEntries = { _: Request, _: Response ->
+    val html = StringBuilder()
+    html.append(OPEN_BODY_TAG)
+
+    html.append("<a href='/'>Back to home</a>\n")
+    html.append("<h1>Dictionary Entries</h1>\n")
+    html.append("<form method='POST' action='/dictionary-entries'>\n")
+    html.append("<table border='1'>\n")
+    html.append("  <tr>\n")
+    html.append("    <th>ID</td>\n")
+    html.append("    <th>Spanish</td>\n")
+    html.append("    <th>English</td>\n")
+    html.append("    <th>English disambiguation</td>\n")
+    html.append("    <th>English plural</td>\n")
+    html.append("    <th></td>\n")
+    html.append("  </tr>\n")
+    for (entryRow in db.selectAllEntryRows()) {
+      html.append("  <tr>\n")
+      html.append("    <td>${entryRow.entryId}</td>\n")
+      html.append("    <td>${entryRow.es}</td>\n")
+      html.append("    <td>${entryRow.en}</td>\n")
+      html.append("    <td>${entryRow.enDisambiguation}</td>\n")
+      html.append("    <td>${entryRow.enPlural ?: ""}</td>\n")
+      html.append("    <td><input type='submit' name='deleteEntry${entryRow.entryId}' value='Delete' onClick='return confirm(\"Delete item?\")'></td>\n")
+      html.append("  </tr>\n")
+    }
+    html.append("  <tr>\n")
+    html.append("    <th></td>\n")
+    html.append("    <th><input type='text' name='es'></td>\n")
+    html.append("    <th><input type='text' name='en'></td>\n")
+    html.append("    <th><input type='text' name='en_disambiguation'></td>\n")
+    html.append("    <th><input type='text' name='en_plural'></td>\n")
+    html.append("    <th><input type='submit' name='newEntry' value='Insert'></td>\n")
+    html.append("  </tr>\n")
+    html.append("</table>\n")
+    html.append("</form>\n")
+  }
+
+  val postDictionaryEntries = { req: Request, res: Response ->
+    val regex = "deleteEntry([0-9]+)".toRegex()
+    val entryIdsToDelete = req.queryParams().map { paramName ->
+      val match = regex.find(paramName)
+      if (match != null) match.groupValues[1].toInt() else null
+    }.filterNotNull()
+    for (entryId in entryIdsToDelete) {
+      db.deleteEntryRow(EntryRow(entryId, "", "", null, ""))
+    }
+
+    if (req.queryParams("newEntry") != null) {
+      db.insertEntryRow(EntryRow(
+        0,
+        req.queryParams("en"),
+        req.queryParams("en_disambiguation"),
+        if (req.queryParams("en_plural") != "")
+          req.queryParams("en_plural") else null,
+        req.queryParams("es")
+      ))
+    }
+
+    res.redirect("/dictionary-entries")
   }
 
   val getApi = { req: Request, res: Response ->

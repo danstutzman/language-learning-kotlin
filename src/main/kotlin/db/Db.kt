@@ -5,6 +5,7 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.jooq.SQLDialect
 import org.jooq.generated.tables.Goals.GOALS
+import org.jooq.generated.tables.Entries.ENTRIES
 import org.jooq.impl.DSL
 import java.sql.Connection
 import java.sql.Timestamp
@@ -13,6 +14,14 @@ data class Goal(
   val goalId: Int,
   val tags: String,
   val enFreeText: String,
+  val es: String
+)
+
+data class EntryRow(
+  val entryId: Int,
+  val en: String,
+  val enDisambiguation: String, // "" if none
+  val enPlural: String?,
   val es: String
 )
 
@@ -102,4 +111,50 @@ class Db(
       .where(GOALS.GOAL_ID.eq(goal.goalId))
       .execute()
   }
+
+  fun selectAllEntryRows(): List<EntryRow> {
+    val rows = create
+      .select(
+        ENTRIES.ENTRY_ID,
+        ENTRIES.EN,
+        ENTRIES.EN_DISAMBIGUATION,
+        ENTRIES.EN_PLURAL,
+        ENTRIES.ES)
+      .from(ENTRIES)
+      .fetch()
+
+    return rows.map {
+      EntryRow(
+        it.getValue(ENTRIES.ENTRY_ID),
+        it.getValue(ENTRIES.EN),
+        it.getValue(ENTRIES.EN_DISAMBIGUATION),
+        it.getValue(ENTRIES.EN_PLURAL),
+        it.getValue(ENTRIES.ES)
+      )
+    }
+  }
+
+  fun insertEntryRow(entry: EntryRow) =
+    create
+      .insertInto(ENTRIES,
+          ENTRIES.EN,
+          ENTRIES.EN_DISAMBIGUATION,
+          ENTRIES.EN_PLURAL,
+          ENTRIES.ES)
+      .values(entry.en,
+          entry.enDisambiguation,
+          entry.enPlural,
+          entry.es)
+      .returning(
+          ENTRIES.ENTRY_ID,
+          ENTRIES.EN,
+          ENTRIES.EN_DISAMBIGUATION,
+          ENTRIES.EN_PLURAL,
+          ENTRIES.ES)
+      .fetchOne()
+
+  fun deleteEntryRow(entryRow: EntryRow) =
+    create.delete(ENTRIES)
+      .where(ENTRIES.ENTRY_ID.eq(entryRow.entryId))
+      .execute()
 }
