@@ -3,7 +3,9 @@ package com.danstutzman.bank.es
 import com.danstutzman.bank.Card
 import com.danstutzman.bank.GlossRow
 
-data class NP (
+// A flexible is a noun or adjective
+// Its ending can change to reflect gender or pluralization
+data class Flexible (
   override val cardId: Int,
   val es: String,
   val en: String
