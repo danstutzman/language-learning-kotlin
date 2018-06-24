@@ -7,6 +7,7 @@ import org.jooq.SQLDialect
 import org.jooq.generated.tables.Goals.GOALS
 import org.jooq.generated.tables.Entries.ENTRIES
 import org.jooq.generated.tables.Infinitives.INFINITIVES
+import org.jooq.generated.tables.StemChanges.STEM_CHANGES
 import org.jooq.generated.tables.UniqueConjugations.UNIQUE_CONJUGATIONS
 import org.jooq.impl.DSL
 import java.sql.Connection
@@ -42,6 +43,13 @@ data class UniqueConjugation(
   val infinitiveEs: String,
   val number: Int,
   val person: Int,
+  val tense: String
+)
+
+data class StemChangeRow(
+  val stemChangeId: Int,
+  val infinitiveEs: String,
+  val stem: String,
   val tense: String
 )
 
@@ -281,4 +289,45 @@ class Db(
         uniqueConjugation.uniqueConjugationId))
       .execute()
 
+  fun selectAllStemChangeRows(): List<StemChangeRow> {
+    val rows = create
+      .select(
+        STEM_CHANGES.STEM_CHANGE_ID,
+        STEM_CHANGES.INFINITIVE_ES,
+        STEM_CHANGES.STEM,
+        STEM_CHANGES.TENSE)
+      .from(STEM_CHANGES)
+      .fetch()
+
+    return rows.map {
+      StemChangeRow(
+        it.getValue(STEM_CHANGES.STEM_CHANGE_ID),
+        it.getValue(STEM_CHANGES.INFINITIVE_ES),
+        it.getValue(STEM_CHANGES.STEM),
+        it.getValue(STEM_CHANGES.TENSE)
+      )
+    }
+  }
+
+  fun insertStemChangeRow(row: StemChangeRow) =
+    create
+      .insertInto(STEM_CHANGES,
+          STEM_CHANGES.INFINITIVE_ES,
+          STEM_CHANGES.STEM,
+          STEM_CHANGES.TENSE)
+      .values(row.infinitiveEs,
+          row.stem,
+          row.tense)
+      .returning(
+          STEM_CHANGES.STEM_CHANGE_ID,
+          STEM_CHANGES.INFINITIVE_ES,
+          STEM_CHANGES.STEM,
+          STEM_CHANGES.TENSE)
+      .fetchOne()
+
+  fun deleteStemChangeRow(row: StemChangeRow) =
+    create.delete(STEM_CHANGES)
+      .where(STEM_CHANGES.STEM_CHANGE_ID.eq(
+        row.stemChangeId))
+      .execute()
 }

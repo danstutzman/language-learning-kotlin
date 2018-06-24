@@ -93,7 +93,7 @@ class Bank(
   val regVPatternList = RegVPatternList(cardIdSequence)
   val entryList       = EntryList(cardIdSequence, db)
   val uniqVList       = UniqVList(cardIdSequence, infList, db)
-  val stemChangeList  = StemChangeList(cardIdSequence, infList)
+  val stemChangeList  = StemChangeList(cardIdSequence, infList, db)
   val vCloud          = VCloud(cardIdSequence, infList, uniqVList,
                           regVPatternList, stemChangeList)
 

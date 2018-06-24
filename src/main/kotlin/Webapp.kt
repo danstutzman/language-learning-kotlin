@@ -14,6 +14,7 @@ import com.danstutzman.db.Db
 import com.danstutzman.db.EntryRow
 import com.danstutzman.db.Goal
 import com.danstutzman.db.Infinitive
+import com.danstutzman.db.StemChangeRow
 import com.danstutzman.db.UniqueConjugation
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -64,6 +65,7 @@ class Webapp(
     html.append("<li><a href='/dictionary-entries'>Dictionary Entries</a></li>\n")
     html.append("<li><a href='/goals'>Goals</a></li>\n")
     html.append("<li><a href='/infinitives'>Infinitives</a></li>\n")
+    html.append("<li><a href='/stem-changes'>Stem Changes</a></li>\n")
     html.append("<li><a href='/unique-conjugations'>Unique Conjugations</a></li>\n")
     html.append(CLOSE_BODY_TAG)
     html.toString()
@@ -359,6 +361,64 @@ class Webapp(
 
     res.redirect("/unique-conjugations")
   }
+
+  val getStemChanges = { _: Request, _: Response ->
+    val html = StringBuilder()
+    html.append(OPEN_BODY_TAG)
+
+    html.append("<a href='/'>Back to home</a>\n")
+    html.append("<h1>Stem Changes</h1>\n")
+    html.append("<form method='POST' action='/stem-changes'>\n")
+    html.append("<table border='1'>\n")
+    html.append("  <tr>\n")
+    html.append("    <th>ID</td>\n")
+    html.append("    <th>Infinitive</td>\n")
+    html.append("    <th>Stem</td>\n")
+    html.append("    <th>Tense</td>\n")
+    html.append("    <th></th>\n")
+    html.append("  </tr>\n")
+    for (row in db.selectAllStemChangeRows()) {
+      html.append("  <tr>\n")
+      html.append("    <td>${row.stemChangeId}</td>\n")
+      html.append("    <td>${row.infinitiveEs}</td>\n")
+      html.append("    <td>${row.stem}</td>\n")
+      html.append("    <td>${row.tense}</td>\n")
+      html.append("    <td><input type='submit' name='deleteStemChange${row.stemChangeId}' value='Delete' onClick='return confirm(\"Delete stem change?\")'></td>\n")
+      html.append("  </tr>\n")
+    }
+    html.append("  <tr>\n")
+    html.append("    <th></td>\n")
+    html.append("    <th><input type='text' name='infinitive_es'></td>\n")
+    html.append("    <th><input type='text' name='stem'></td>\n")
+    html.append("    <th><select name='tense'><option></option><option>PRES</option><option>PRET</option></select></td>\n")
+    html.append("    <th><input type='submit' name='newStemChange' value='Insert'></td>\n")
+    html.append("  </tr>\n")
+    html.append("</table>\n")
+    html.append("</form>\n")
+  }
+
+  val postStemChanges = { req: Request, res: Response ->
+    val regex = "deleteStemChange([0-9]+)".toRegex()
+    val stemChangeIdsToDelete = req.queryParams().map { paramName ->
+      val match = regex.find(paramName)
+      if (match != null) match.groupValues[1].toInt() else null
+    }.filterNotNull()
+    for (stemChangeId in stemChangeIdsToDelete) {
+      db.deleteStemChangeRow(StemChangeRow(stemChangeId, "", "", ""))
+    }
+
+    if (req.queryParams("newStemChange") != null) {
+      db.insertStemChangeRow(StemChangeRow(
+        0,
+        req.queryParams("infinitive_es"),
+        req.queryParams("stem"),
+        req.queryParams("tense")
+      ))
+    }
+
+    res.redirect("/stem-changes")
+  }
+
 
   val getApi = { req: Request, res: Response ->
     val response = bank.getCardsAndSkills()

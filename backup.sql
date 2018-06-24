@@ -17,8 +17,10 @@ SET row_security = off;
 SET search_path = public, pg_catalog;
 
 ALTER TABLE ONLY public.unique_conjugations DROP CONSTRAINT unique_conjugations_infinitive_es_fkey;
+ALTER TABLE ONLY public.stem_changes DROP CONSTRAINT stem_changes_infinitive_es_fkey;
 DROP INDEX public.schema_version_s_idx;
 DROP INDEX public.idx_unique_conjugations_es;
+DROP INDEX public.idx_stem_changes_stem;
 DROP INDEX public.idx_infinitives_es;
 DROP INDEX public.idx_infinitives_en_past_and_en_disambiguation;
 DROP INDEX public.idx_infinitives_en_and_en_disambiguation;
@@ -26,16 +28,20 @@ DROP INDEX public.idx_entries_es;
 DROP INDEX public.idx_entries_en_plural_and_en_disambiguation;
 DROP INDEX public.idx_entries_en_and_en_disambiguation;
 ALTER TABLE ONLY public.unique_conjugations DROP CONSTRAINT unique_conjugations_pkey;
+ALTER TABLE ONLY public.stem_changes DROP CONSTRAINT stem_changes_pkey;
 ALTER TABLE ONLY public.schema_version DROP CONSTRAINT schema_version_pk;
 ALTER TABLE ONLY public.infinitives DROP CONSTRAINT infinitives_pkey;
 ALTER TABLE ONLY public.goals DROP CONSTRAINT goals_pkey;
 ALTER TABLE ONLY public.entries DROP CONSTRAINT entries_pkey;
 ALTER TABLE public.unique_conjugations ALTER COLUMN unique_conjugation_id DROP DEFAULT;
+ALTER TABLE public.stem_changes ALTER COLUMN stem_change_id DROP DEFAULT;
 ALTER TABLE public.infinitives ALTER COLUMN infinitive_id DROP DEFAULT;
 ALTER TABLE public.goals ALTER COLUMN goal_id DROP DEFAULT;
 ALTER TABLE public.entries ALTER COLUMN entry_id DROP DEFAULT;
 DROP SEQUENCE public.unique_conjugations_unique_conjugation_id_seq;
 DROP TABLE public.unique_conjugations;
+DROP SEQUENCE public.stem_changes_stem_change_id_seq;
+DROP TABLE public.stem_changes;
 DROP TABLE public.schema_version;
 DROP SEQUENCE public.infinitives_infinitive_id_seq;
 DROP TABLE public.infinitives;
@@ -213,6 +219,42 @@ CREATE TABLE schema_version (
 ALTER TABLE schema_version OWNER TO postgres;
 
 --
+-- Name: stem_changes; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE stem_changes (
+    stem_change_id integer NOT NULL,
+    infinitive_es text NOT NULL,
+    stem text NOT NULL,
+    tense text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE stem_changes OWNER TO postgres;
+
+--
+-- Name: stem_changes_stem_change_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE stem_changes_stem_change_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE stem_changes_stem_change_id_seq OWNER TO postgres;
+
+--
+-- Name: stem_changes_stem_change_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE stem_changes_stem_change_id_seq OWNED BY stem_changes.stem_change_id;
+
+
+--
 -- Name: unique_conjugations; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -270,6 +312,13 @@ ALTER TABLE ONLY goals ALTER COLUMN goal_id SET DEFAULT nextval('goals_goal_id_s
 --
 
 ALTER TABLE ONLY infinitives ALTER COLUMN infinitive_id SET DEFAULT nextval('infinitives_infinitive_id_seq'::regclass);
+
+
+--
+-- Name: stem_changes stem_change_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY stem_changes ALTER COLUMN stem_change_id SET DEFAULT nextval('stem_changes_stem_change_id_seq'::regclass);
 
 
 --
@@ -472,7 +521,47 @@ COPY schema_version (installed_rank, version, description, type, script, checksu
 2	2	create entries	SQL	V2__create_entries.sql	1207714738	postgres	2018-06-24 09:38:11.893217	22	t
 3	3	create infinitives	SQL	V3__create_infinitives.sql	461677107	postgres	2018-06-24 09:55:40.838131	40	t
 4	4	create unique conjugations	SQL	V4__create_unique_conjugations.sql	-1531439812	postgres	2018-06-24 10:52:47.393522	27	t
+5	5	create stem changes	SQL	V5__create_stem_changes.sql	-498185464	postgres	2018-06-24 11:15:26.014979	46	t
 \.
+
+
+--
+-- Data for Name: stem_changes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY stem_changes (stem_change_id, infinitive_es, stem, tense, created_at) FROM stdin;
+1	poder	pued-	PRES	2018-06-24 11:26:43.651439-06
+2	tener	tien-	PRES	2018-06-24 11:26:43.803834-06
+3	querer	quier-	PRES	2018-06-24 11:26:43.804733-06
+4	seguir	sig-	PRES	2018-06-24 11:26:43.805456-06
+5	encontrar	encuentr-	PRES	2018-06-24 11:26:43.806086-06
+6	venir	vien-	PRES	2018-06-24 11:26:43.806698-06
+7	pensar	piens-	PRES	2018-06-24 11:26:43.807283-06
+8	volver	vuelv-	PRES	2018-06-24 11:26:43.807795-06
+9	sentir	sient-	PRES	2018-06-24 11:26:43.808329-06
+10	contar	cuent-	PRES	2018-06-24 11:26:43.808861-06
+11	empezar	empiez-	PRES	2018-06-24 11:26:43.809358-06
+12	decir	dic-	PRES	2018-06-24 11:26:43.809844-06
+13	recordar	recuerd-	PRES	2018-06-24 11:26:43.810424-06
+14	pedir	pid-	PRES	2018-06-24 11:26:43.81091-06
+15	entender	entiend-	PRES	2018-06-24 11:26:43.811642-06
+16	andar	anduv-	PRET	2018-06-24 11:26:43.812328-06
+17	saber	sup-	PRET	2018-06-24 11:26:43.812976-06
+18	querer	quis-	PRET	2018-06-24 11:26:43.81373-06
+19	poner	pus-	PRET	2018-06-24 11:26:43.814224-06
+20	venir	vin-	PRET	2018-06-24 11:26:43.814936-06
+21	decir	dij-	PRET	2018-06-24 11:26:43.815792-06
+22	tener	tuv-	PRET	2018-06-24 11:26:43.816356-06
+23	hacer	hic-	PRET	2018-06-24 11:26:43.816942-06
+24	poder	pud-	PRET	2018-06-24 11:26:43.817449-06
+\.
+
+
+--
+-- Name: stem_changes_stem_change_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('stem_changes_stem_change_id_seq', 26, true);
 
 
 --
@@ -567,6 +656,14 @@ ALTER TABLE ONLY schema_version
 
 
 --
+-- Name: stem_changes stem_changes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY stem_changes
+    ADD CONSTRAINT stem_changes_pkey PRIMARY KEY (stem_change_id);
+
+
+--
 -- Name: unique_conjugations unique_conjugations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -617,6 +714,13 @@ CREATE UNIQUE INDEX idx_infinitives_es ON infinitives USING btree (es);
 
 
 --
+-- Name: idx_stem_changes_stem; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX idx_stem_changes_stem ON stem_changes USING btree (stem);
+
+
+--
 -- Name: idx_unique_conjugations_es; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -628,6 +732,14 @@ CREATE UNIQUE INDEX idx_unique_conjugations_es ON unique_conjugations USING btre
 --
 
 CREATE INDEX schema_version_s_idx ON schema_version USING btree (success);
+
+
+--
+-- Name: stem_changes stem_changes_infinitive_es_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY stem_changes
+    ADD CONSTRAINT stem_changes_infinitive_es_fkey FOREIGN KEY (infinitive_es) REFERENCES infinitives(es);
 
 
 --
