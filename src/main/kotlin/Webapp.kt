@@ -12,6 +12,7 @@ import com.danstutzman.bank.es.UniqVList
 import com.danstutzman.db.Db
 import com.danstutzman.db.EntryRow
 import com.danstutzman.db.Goal
+import com.danstutzman.db.Infinitive
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import java.io.File
@@ -58,8 +59,9 @@ class Webapp(
   val getRoot = { _: Request, _: Response ->
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
-    html.append("<li><a href='/goals'>Goals</a></li>\n")
     html.append("<li><a href='/dictionary-entries'>Dictionary Entries</a></li>\n")
+    html.append("<li><a href='/goals'>Goals</a></li>\n")
+    html.append("<li><a href='/infinitives'>Infinitives</a></li>\n")
     html.append(CLOSE_BODY_TAG)
     html.toString()
   }
@@ -222,6 +224,67 @@ class Webapp(
     }
 
     res.redirect("/dictionary-entries")
+  }
+
+  val getInfinitives = { _: Request, _: Response ->
+    val html = StringBuilder()
+    html.append(OPEN_BODY_TAG)
+
+    html.append("<a href='/'>Back to home</a>\n")
+    html.append("<h1>Infinitives</h1>\n")
+    html.append("<form method='POST' action='/infinitives'>\n")
+    html.append("<table border='1'>\n")
+    html.append("  <tr>\n")
+    html.append("    <th>ID</td>\n")
+    html.append("    <th>Spanish</td>\n")
+    html.append("    <th>English</td>\n")
+    html.append("    <th>English disambiguation</td>\n")
+    html.append("    <th>English past</td>\n")
+    html.append("    <th></td>\n")
+    html.append("  </tr>\n")
+    for (infinitive in db.selectAllInfinitives()) {
+      html.append("  <tr>\n")
+      html.append("    <td>${infinitive.infinitiveId}</td>\n")
+      html.append("    <td>${infinitive.es}</td>\n")
+      html.append("    <td>${infinitive.en}</td>\n")
+      html.append("    <td>${infinitive.enDisambiguation}</td>\n")
+      html.append("    <td>${infinitive.enPast}</td>\n")
+      html.append("    <td><input type='submit' name='deleteInfinitive${infinitive.infinitiveId}' value='Delete' onClick='return confirm(\"Delete infinitive?\")'></td>\n")
+      html.append("  </tr>\n")
+    }
+    html.append("  <tr>\n")
+    html.append("    <th></td>\n")
+    html.append("    <th><input type='text' name='es'></td>\n")
+    html.append("    <th><input type='text' name='en'></td>\n")
+    html.append("    <th><input type='text' name='en_disambiguation'></td>\n")
+    html.append("    <th><input type='text' name='en_past'></td>\n")
+    html.append("    <th><input type='submit' name='newInfinitive' value='Insert'></td>\n")
+    html.append("  </tr>\n")
+    html.append("</table>\n")
+    html.append("</form>\n")
+  }
+
+  val postInfinitives = { req: Request, res: Response ->
+    val regex = "deleteInfinitive([0-9]+)".toRegex()
+    val infinitiveIdsToDelete = req.queryParams().map { paramName ->
+      val match = regex.find(paramName)
+      if (match != null) match.groupValues[1].toInt() else null
+    }.filterNotNull()
+    for (infinitiveId in infinitiveIdsToDelete) {
+      db.deleteInfinitive(Infinitive(infinitiveId, "", "", "", ""))
+    }
+
+    if (req.queryParams("newInfinitive") != null) {
+      db.insertInfinitive(Infinitive(
+        0,
+        req.queryParams("en"),
+        req.queryParams("en_disambiguation"),
+        req.queryParams("en_past"),
+        req.queryParams("es")
+      ))
+    }
+
+    res.redirect("/infinitives")
   }
 
   val getApi = { req: Request, res: Response ->

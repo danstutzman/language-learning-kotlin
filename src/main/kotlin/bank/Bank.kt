@@ -89,7 +89,7 @@ class Bank(
   val logger: Logger = LoggerFactory.getLogger("Webapp.kt")
 
   val cardIdSequence  = IdSequence()
-  val infList         = InfList(cardIdSequence)
+  val infList         = InfList(cardIdSequence, db)
   val regVPatternList = RegVPatternList(cardIdSequence)
   val entryList       = EntryList(cardIdSequence, db)
   val uniqVList       = UniqVList(cardIdSequence, infList)

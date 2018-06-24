@@ -6,6 +6,7 @@ import com.google.gson.JsonParser
 import org.jooq.SQLDialect
 import org.jooq.generated.tables.Goals.GOALS
 import org.jooq.generated.tables.Entries.ENTRIES
+import org.jooq.generated.tables.Infinitives.INFINITIVES
 import org.jooq.impl.DSL
 import java.sql.Connection
 import java.sql.Timestamp
@@ -22,6 +23,14 @@ data class EntryRow(
   val en: String,
   val enDisambiguation: String, // "" if none
   val enPlural: String?,
+  val es: String
+)
+
+data class Infinitive(
+  val infinitiveId: Int,
+  val en: String,
+  val enDisambiguation: String, // "" if none
+  val enPast: String,
   val es: String
 )
 
@@ -156,5 +165,51 @@ class Db(
   fun deleteEntryRow(entryRow: EntryRow) =
     create.delete(ENTRIES)
       .where(ENTRIES.ENTRY_ID.eq(entryRow.entryId))
+      .execute()
+
+  fun selectAllInfinitives(): List<Infinitive> {
+    val rows = create
+      .select(
+        INFINITIVES.INFINITIVE_ID,
+        INFINITIVES.EN,
+        INFINITIVES.EN_DISAMBIGUATION,
+        INFINITIVES.EN_PAST,
+        INFINITIVES.ES)
+      .from(INFINITIVES)
+      .fetch()
+
+    return rows.map {
+      Infinitive(
+        it.getValue(INFINITIVES.INFINITIVE_ID),
+        it.getValue(INFINITIVES.EN),
+        it.getValue(INFINITIVES.EN_DISAMBIGUATION),
+        it.getValue(INFINITIVES.EN_PAST),
+        it.getValue(INFINITIVES.ES)
+      )
+    }
+  }
+
+  fun insertInfinitive(infinitive: Infinitive) =
+    create
+      .insertInto(INFINITIVES,
+          INFINITIVES.EN,
+          INFINITIVES.EN_DISAMBIGUATION,
+          INFINITIVES.EN_PAST,
+          INFINITIVES.ES)
+      .values(infinitive.en,
+          infinitive.enDisambiguation,
+          infinitive.enPast,
+          infinitive.es)
+      .returning(
+          INFINITIVES.INFINITIVE_ID,
+          INFINITIVES.EN,
+          INFINITIVES.EN_DISAMBIGUATION,
+          INFINITIVES.EN_PAST,
+          INFINITIVES.ES)
+      .fetchOne()
+
+  fun deleteInfinitive(infinitive: Infinitive) =
+    create.delete(INFINITIVES)
+      .where(INFINITIVES.INFINITIVE_ID.eq(infinitive.infinitiveId))
       .execute()
 }

@@ -43,6 +43,8 @@ fun main(args: Array<String>) {
   service.post("/goals/:goalId", webapp.postGoal)
   service.get("/dictionary-entries", webapp.getDictionaryEntries)
   service.post("/dictionary-entries", webapp.postDictionaryEntries)
+  service.get("/infinitives", webapp.getInfinitives)
+  service.post("/infinitives", webapp.postInfinitives)
   service.get("/api", webapp.getApi)
   service.post("/api", webapp.postApi)
 
