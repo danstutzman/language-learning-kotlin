@@ -7,6 +7,7 @@ import org.jooq.SQLDialect
 import org.jooq.generated.tables.Goals.GOALS
 import org.jooq.generated.tables.Entries.ENTRIES
 import org.jooq.generated.tables.Infinitives.INFINITIVES
+import org.jooq.generated.tables.UniqueConjugations.UNIQUE_CONJUGATIONS
 import org.jooq.impl.DSL
 import java.sql.Connection
 import java.sql.Timestamp
@@ -32,6 +33,16 @@ data class Infinitive(
   val enDisambiguation: String, // "" if none
   val enPast: String,
   val es: String
+)
+
+data class UniqueConjugation(
+  val uniqueConjugationId: Int,
+  val es: String,
+  val en: String,
+  val infinitiveEs: String,
+  val number: Int,
+  val person: Int,
+  val tense: String
 )
 
 class Db(
@@ -212,4 +223,62 @@ class Db(
     create.delete(INFINITIVES)
       .where(INFINITIVES.INFINITIVE_ID.eq(infinitive.infinitiveId))
       .execute()
+
+  fun selectAllUniqueConjugations(): List<UniqueConjugation> {
+    val rows = create
+      .select(
+        UNIQUE_CONJUGATIONS.UNIQUE_CONJUGATION_ID,
+        UNIQUE_CONJUGATIONS.ES,
+        UNIQUE_CONJUGATIONS.EN,
+        UNIQUE_CONJUGATIONS.INFINITIVE_ES,
+        UNIQUE_CONJUGATIONS.NUMBER,
+        UNIQUE_CONJUGATIONS.PERSON,
+        UNIQUE_CONJUGATIONS.TENSE)
+      .from(UNIQUE_CONJUGATIONS)
+      .fetch()
+
+    return rows.map {
+      UniqueConjugation(
+        it.getValue(UNIQUE_CONJUGATIONS.UNIQUE_CONJUGATION_ID),
+        it.getValue(UNIQUE_CONJUGATIONS.ES),
+        it.getValue(UNIQUE_CONJUGATIONS.EN),
+        it.getValue(UNIQUE_CONJUGATIONS.INFINITIVE_ES),
+        it.getValue(UNIQUE_CONJUGATIONS.NUMBER),
+        it.getValue(UNIQUE_CONJUGATIONS.PERSON),
+        it.getValue(UNIQUE_CONJUGATIONS.TENSE)
+      )
+    }
+  }
+
+  fun insertUniqueConjugation(uniqueConjugation: UniqueConjugation) =
+    create
+      .insertInto(UNIQUE_CONJUGATIONS,
+          UNIQUE_CONJUGATIONS.ES,
+          UNIQUE_CONJUGATIONS.EN,
+          UNIQUE_CONJUGATIONS.INFINITIVE_ES,
+          UNIQUE_CONJUGATIONS.NUMBER,
+          UNIQUE_CONJUGATIONS.PERSON,
+          UNIQUE_CONJUGATIONS.TENSE)
+      .values(uniqueConjugation.es,
+          uniqueConjugation.en,
+          uniqueConjugation.infinitiveEs,
+          uniqueConjugation.number,
+          uniqueConjugation.person,
+          uniqueConjugation.tense)
+      .returning(
+          UNIQUE_CONJUGATIONS.UNIQUE_CONJUGATION_ID,
+          UNIQUE_CONJUGATIONS.ES,
+          UNIQUE_CONJUGATIONS.EN,
+          UNIQUE_CONJUGATIONS.INFINITIVE_ES,
+          UNIQUE_CONJUGATIONS.NUMBER,
+          UNIQUE_CONJUGATIONS.PERSON,
+          UNIQUE_CONJUGATIONS.TENSE)
+      .fetchOne()
+
+  fun deleteUniqueConjugation(uniqueConjugation: UniqueConjugation) =
+    create.delete(UNIQUE_CONJUGATIONS)
+      .where(UNIQUE_CONJUGATIONS.UNIQUE_CONJUGATION_ID.eq(
+        uniqueConjugation.uniqueConjugationId))
+      .execute()
+
 }

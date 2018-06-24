@@ -8,11 +8,13 @@ import com.danstutzman.bank.SkillsUpload
 import com.danstutzman.bank.es.InfList
 import com.danstutzman.bank.es.RegV
 import com.danstutzman.bank.es.RegVPatternList
+import com.danstutzman.bank.es.Tense
 import com.danstutzman.bank.es.UniqVList
 import com.danstutzman.db.Db
 import com.danstutzman.db.EntryRow
 import com.danstutzman.db.Goal
 import com.danstutzman.db.Infinitive
+import com.danstutzman.db.UniqueConjugation
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import java.io.File
@@ -62,6 +64,7 @@ class Webapp(
     html.append("<li><a href='/dictionary-entries'>Dictionary Entries</a></li>\n")
     html.append("<li><a href='/goals'>Goals</a></li>\n")
     html.append("<li><a href='/infinitives'>Infinitives</a></li>\n")
+    html.append("<li><a href='/unique-conjugations'>Unique Conjugations</a></li>\n")
     html.append(CLOSE_BODY_TAG)
     html.toString()
   }
@@ -285,6 +288,76 @@ class Webapp(
     }
 
     res.redirect("/infinitives")
+  }
+
+  val getUniqueConjugations = { _: Request, _: Response ->
+    val html = StringBuilder()
+    html.append(OPEN_BODY_TAG)
+
+    html.append("<a href='/'>Back to home</a>\n")
+    html.append("<h1>Unique Conjugations</h1>\n")
+    html.append("<form method='POST' action='/unique-conjugations'>\n")
+    html.append("<table border='1'>\n")
+    html.append("  <tr>\n")
+    html.append("    <th>ID</td>\n")
+    html.append("    <th>Spanish</td>\n")
+    html.append("    <th>English</td>\n")
+    html.append("    <th>Infinitive</td>\n")
+    html.append("    <th>Number</td>\n")
+    html.append("    <th>Person</td>\n")
+    html.append("    <th>Tense</td>\n")
+    html.append("    <th></td>\n")
+    html.append("  </tr>\n")
+    for (uniqueConjugation in db.selectAllUniqueConjugations()) {
+      html.append("  <tr>\n")
+      html.append("    <td>${uniqueConjugation.uniqueConjugationId}</td>\n")
+      html.append("    <td>${uniqueConjugation.es}</td>\n")
+      html.append("    <td>${uniqueConjugation.en}</td>\n")
+      html.append("    <td>${uniqueConjugation.infinitiveEs}</td>\n")
+      html.append("    <td>${uniqueConjugation.number}</td>\n")
+      html.append("    <td>${uniqueConjugation.person}</td>\n")
+      html.append("    <td>${uniqueConjugation.tense}</td>\n")
+      html.append("    <td><input type='submit' name='deleteUniqueConjugation${uniqueConjugation.uniqueConjugationId}' value='Delete' onClick='return confirm(\"Delete conjugation?\")'></td>\n")
+      html.append("  </tr>\n")
+    }
+    html.append("  <tr>\n")
+    html.append("    <th></td>\n")
+    html.append("    <th><input type='text' name='es'></td>\n")
+    html.append("    <th><input type='text' name='en'></td>\n")
+    html.append("    <th><input type='text' name='infinitive_es'></td>\n")
+    html.append("    <th><select name='number'><option></option><option>1</option><option>2</option></select>\n")
+    html.append("    <th><select name='person'><option></option><option>1</option><option>2</option><option>3</option></select></td>\n")
+    html.append("    <th><select name='tense'><option></option><option>PRES</option><option>PRET</option></select></td>\n")
+    html.append("    <th><input type='submit' name='newUniqueConjugation' value='Insert'></td>\n")
+    html.append("  </tr>\n")
+    html.append("</table>\n")
+    html.append("</form>\n")
+  }
+
+  val postUniqueConjugations = { req: Request, res: Response ->
+    val regex = "deleteUniqueConjugation([0-9]+)".toRegex()
+    val uniqueConjugationIdsToDelete = req.queryParams().map { paramName ->
+      val match = regex.find(paramName)
+      if (match != null) match.groupValues[1].toInt() else null
+    }.filterNotNull()
+    for (uniqueConjugationId in uniqueConjugationIdsToDelete) {
+      db.deleteUniqueConjugation(UniqueConjugation(
+        uniqueConjugationId, "", "", "", 0, 0, ""))
+    }
+
+    if (req.queryParams("newUniqueConjugation") != null) {
+      db.insertUniqueConjugation(UniqueConjugation(
+        0,
+        req.queryParams("es"),
+        req.queryParams("en"),
+        req.queryParams("infinitive_es"),
+        req.queryParams("number").toInt(),
+        req.queryParams("person").toInt(),
+        req.queryParams("tense")
+      ))
+    }
+
+    res.redirect("/unique-conjugations")
   }
 
   val getApi = { req: Request, res: Response ->

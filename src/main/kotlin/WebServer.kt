@@ -45,6 +45,8 @@ fun main(args: Array<String>) {
   service.post("/dictionary-entries", webapp.postDictionaryEntries)
   service.get("/infinitives", webapp.getInfinitives)
   service.post("/infinitives", webapp.postInfinitives)
+  service.get("/unique-conjugations", webapp.getUniqueConjugations)
+  service.post("/unique-conjugations", webapp.postUniqueConjugations)
   service.get("/api", webapp.getApi)
   service.post("/api", webapp.postApi)
 

@@ -16,20 +16,26 @@ SET row_security = off;
 
 SET search_path = public, pg_catalog;
 
+ALTER TABLE ONLY public.unique_conjugations DROP CONSTRAINT unique_conjugations_infinitive_es_fkey;
 DROP INDEX public.schema_version_s_idx;
+DROP INDEX public.idx_unique_conjugations_es;
 DROP INDEX public.idx_infinitives_es;
 DROP INDEX public.idx_infinitives_en_past_and_en_disambiguation;
 DROP INDEX public.idx_infinitives_en_and_en_disambiguation;
 DROP INDEX public.idx_entries_es;
 DROP INDEX public.idx_entries_en_plural_and_en_disambiguation;
 DROP INDEX public.idx_entries_en_and_en_disambiguation;
+ALTER TABLE ONLY public.unique_conjugations DROP CONSTRAINT unique_conjugations_pkey;
 ALTER TABLE ONLY public.schema_version DROP CONSTRAINT schema_version_pk;
 ALTER TABLE ONLY public.infinitives DROP CONSTRAINT infinitives_pkey;
 ALTER TABLE ONLY public.goals DROP CONSTRAINT goals_pkey;
 ALTER TABLE ONLY public.entries DROP CONSTRAINT entries_pkey;
+ALTER TABLE public.unique_conjugations ALTER COLUMN unique_conjugation_id DROP DEFAULT;
 ALTER TABLE public.infinitives ALTER COLUMN infinitive_id DROP DEFAULT;
 ALTER TABLE public.goals ALTER COLUMN goal_id DROP DEFAULT;
 ALTER TABLE public.entries ALTER COLUMN entry_id DROP DEFAULT;
+DROP SEQUENCE public.unique_conjugations_unique_conjugation_id_seq;
+DROP TABLE public.unique_conjugations;
 DROP TABLE public.schema_version;
 DROP SEQUENCE public.infinitives_infinitive_id_seq;
 DROP TABLE public.infinitives;
@@ -207,6 +213,45 @@ CREATE TABLE schema_version (
 ALTER TABLE schema_version OWNER TO postgres;
 
 --
+-- Name: unique_conjugations; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE unique_conjugations (
+    unique_conjugation_id integer NOT NULL,
+    es text NOT NULL,
+    en text NOT NULL,
+    infinitive_es text NOT NULL,
+    number integer NOT NULL,
+    person integer NOT NULL,
+    tense text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE unique_conjugations OWNER TO postgres;
+
+--
+-- Name: unique_conjugations_unique_conjugation_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE unique_conjugations_unique_conjugation_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE unique_conjugations_unique_conjugation_id_seq OWNER TO postgres;
+
+--
+-- Name: unique_conjugations_unique_conjugation_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE unique_conjugations_unique_conjugation_id_seq OWNED BY unique_conjugations.unique_conjugation_id;
+
+
+--
 -- Name: entries entry_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -225,6 +270,13 @@ ALTER TABLE ONLY goals ALTER COLUMN goal_id SET DEFAULT nextval('goals_goal_id_s
 --
 
 ALTER TABLE ONLY infinitives ALTER COLUMN infinitive_id SET DEFAULT nextval('infinitives_infinitive_id_seq'::regclass);
+
+
+--
+-- Name: unique_conjugations unique_conjugation_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY unique_conjugations ALTER COLUMN unique_conjugation_id SET DEFAULT nextval('unique_conjugations_unique_conjugation_id_seq'::regclass);
 
 
 --
@@ -419,7 +471,67 @@ COPY schema_version (installed_rank, version, description, type, script, checksu
 1	1	create goals	SQL	V1__create_goals.sql	-337851082	postgres	2018-06-23 07:47:24.603432	45	t
 2	2	create entries	SQL	V2__create_entries.sql	1207714738	postgres	2018-06-24 09:38:11.893217	22	t
 3	3	create infinitives	SQL	V3__create_infinitives.sql	461677107	postgres	2018-06-24 09:55:40.838131	40	t
+4	4	create unique conjugations	SQL	V4__create_unique_conjugations.sql	-1531439812	postgres	2018-06-24 10:52:47.393522	27	t
 \.
+
+
+--
+-- Data for Name: unique_conjugations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY unique_conjugations (unique_conjugation_id, es, en, infinitive_es, number, person, tense, created_at) FROM stdin;
+50	soy	am	ser	1	1	PRES	2018-06-24 10:53:11.331513-06
+51	eres	are	ser	1	2	PRES	2018-06-24 10:53:11.334102-06
+52	es	is	ser	1	3	PRES	2018-06-24 10:53:11.334799-06
+53	somos	are	ser	2	1	PRES	2018-06-24 10:53:11.335596-06
+54	son	are	ser	2	3	PRES	2018-06-24 10:53:11.336235-06
+55	fui	was	ser	1	1	PRET	2018-06-24 10:53:11.336833-06
+56	fuiste	were	ser	1	2	PRET	2018-06-24 10:53:11.337566-06
+57	fue	was	ser	1	3	PRET	2018-06-24 10:53:11.338114-06
+58	fuimos	were	ser	2	1	PRET	2018-06-24 10:53:11.338658-06
+59	fueron	were	ser	2	3	PRET	2018-06-24 10:53:11.339177-06
+60	estoy	am	estar	1	1	PRES	2018-06-24 10:53:11.339723-06
+61	estás	are	estar	1	2	PRES	2018-06-24 10:53:11.340233-06
+62	está	is	estar	1	3	PRES	2018-06-24 10:53:11.340796-06
+63	están	are	estar	2	3	PRES	2018-06-24 10:53:11.341339-06
+64	tengo	have	tener	1	1	PRES	2018-06-24 10:53:11.341841-06
+65	hago	do	hacer	1	1	PRES	2018-06-24 10:53:11.342385-06
+66	digo	say	decir	1	1	PRES	2018-06-24 10:53:11.34283-06
+67	dijeron	said	decir	2	3	PRET	2018-06-24 10:53:11.343357-06
+68	voy	go	ir	1	1	PRES	2018-06-24 10:53:11.343851-06
+69	vas	go	ir	1	2	PRES	2018-06-24 10:53:11.344385-06
+70	va	goes	ir	1	3	PRES	2018-06-24 10:53:11.34485-06
+71	vamos	go	ir	2	1	PRES	2018-06-24 10:53:11.345309-06
+72	van	go	ir	2	3	PRES	2018-06-24 10:53:11.345931-06
+73	veo	see	ver	1	1	PRES	2018-06-24 10:53:11.346443-06
+74	vi	saw	ver	1	1	PRET	2018-06-24 10:53:11.346938-06
+75	vio	saw	ver	1	3	PRET	2018-06-24 10:53:11.347455-06
+76	vimos	saw	ver	2	1	PRET	2018-06-24 10:53:11.347861-06
+77	doy	give	dar	1	1	PRES	2018-06-24 10:53:11.348332-06
+78	di	gave	dar	1	1	PRET	2018-06-24 10:53:11.348782-06
+79	diste	gave	dar	1	2	PRET	2018-06-24 10:53:11.349211-06
+80	dio	gave	dar	1	3	PRET	2018-06-24 10:53:11.349614-06
+81	dimos	gave	dar	2	1	PRET	2018-06-24 10:53:11.349999-06
+82	dieron	gave	dar	2	3	PRET	2018-06-24 10:53:11.350387-06
+83	sé	know	saber	1	1	PRES	2018-06-24 10:53:11.350775-06
+84	pongo	put	poner	1	1	PRES	2018-06-24 10:53:11.351199-06
+85	vengo	come	venir	1	1	PRES	2018-06-24 10:53:11.351597-06
+86	salgo	go out	salir	1	1	PRES	2018-06-24 10:53:11.351985-06
+87	parezco	look like	parecer	1	1	PRES	2018-06-24 10:53:11.352406-06
+88	conozco	know	conocer	1	1	PRES	2018-06-24 10:53:11.352811-06
+89	empecé	started	empezar	1	1	PRET	2018-06-24 10:53:11.353348-06
+90	envío	sent	enviar	1	1	PRES	2018-06-24 10:53:11.354736-06
+91	envías	sent	enviar	1	2	PRES	2018-06-24 10:53:11.355389-06
+92	envía	sent	enviar	1	3	PRES	2018-06-24 10:53:11.355845-06
+93	envían	sent	enviar	2	1	PRES	2018-06-24 10:53:11.356343-06
+\.
+
+
+--
+-- Name: unique_conjugations_unique_conjugation_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('unique_conjugations_unique_conjugation_id_seq', 95, true);
 
 
 --
@@ -452,6 +564,14 @@ ALTER TABLE ONLY infinitives
 
 ALTER TABLE ONLY schema_version
     ADD CONSTRAINT schema_version_pk PRIMARY KEY (installed_rank);
+
+
+--
+-- Name: unique_conjugations unique_conjugations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY unique_conjugations
+    ADD CONSTRAINT unique_conjugations_pkey PRIMARY KEY (unique_conjugation_id);
 
 
 --
@@ -497,10 +617,25 @@ CREATE UNIQUE INDEX idx_infinitives_es ON infinitives USING btree (es);
 
 
 --
+-- Name: idx_unique_conjugations_es; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX idx_unique_conjugations_es ON unique_conjugations USING btree (es);
+
+
+--
 -- Name: schema_version_s_idx; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX schema_version_s_idx ON schema_version USING btree (success);
+
+
+--
+-- Name: unique_conjugations unique_conjugations_infinitive_es_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY unique_conjugations
+    ADD CONSTRAINT unique_conjugations_infinitive_es_fkey FOREIGN KEY (infinitive_es) REFERENCES infinitives(es);
 
 
 --

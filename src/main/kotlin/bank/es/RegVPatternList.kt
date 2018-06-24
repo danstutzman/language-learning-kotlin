@@ -24,11 +24,11 @@ val regVPatternsWithoutIds = listOf(
   RegVPattern(0, InfCategory.ERIR,     2, 3, Tense.PRET, "-ieron"),
   RegVPattern(0, InfCategory.ER,       2, 1, Tense.PRES, "-emos"),
   RegVPattern(0, InfCategory.IR,       2, 1, Tense.PRES, "-imos"),
-  RegVPattern(0, InfCategory.STEMPRET, 1, 1, PRET, "-e"),
-  RegVPattern(0, InfCategory.STEMPRET, 1, 2, PRET, "-iste"),
-  RegVPattern(0, InfCategory.STEMPRET, 1, 3, PRET, "-o"),
-  RegVPattern(0, InfCategory.STEMPRET, 2, 1, PRET, "-imos"),
-  RegVPattern(0, InfCategory.STEMPRET, 2, 3, PRET, "-ieron")
+  RegVPattern(0, InfCategory.STEMPRET, 1, 1, Tense.PRET, "-e"),
+  RegVPattern(0, InfCategory.STEMPRET, 1, 2, Tense.PRET, "-iste"),
+  RegVPattern(0, InfCategory.STEMPRET, 1, 3, Tense.PRET, "-o"),
+  RegVPattern(0, InfCategory.STEMPRET, 2, 1, Tense.PRET, "-imos"),
+  RegVPattern(0, InfCategory.STEMPRET, 2, 3, Tense.PRET, "-ieron")
 )
 
 class RegVPatternList {
