@@ -5,8 +5,8 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.jooq.SQLDialect
 import org.jooq.generated.tables.Goals.GOALS
-import org.jooq.generated.tables.Entries.ENTRIES
 import org.jooq.generated.tables.Infinitives.INFINITIVES
+import org.jooq.generated.tables.Nonverbs.NONVERBS
 import org.jooq.generated.tables.StemChanges.STEM_CHANGES
 import org.jooq.generated.tables.UniqueConjugations.UNIQUE_CONJUGATIONS
 import org.jooq.impl.DSL
@@ -20,8 +20,8 @@ data class Goal(
   val es: String
 )
 
-data class EntryRow(
-  val entryId: Int,
+data class NonverbRow(
+  val nonverbId: Int,
   val en: String,
   val enDisambiguation: String, // "" if none
   val enPlural: String?,
@@ -140,50 +140,50 @@ class Db(
       .execute()
   }
 
-  fun selectAllEntryRows(): List<EntryRow> {
+  fun selectAllNonverbRows(): List<NonverbRow> {
     val rows = create
       .select(
-        ENTRIES.ENTRY_ID,
-        ENTRIES.EN,
-        ENTRIES.EN_DISAMBIGUATION,
-        ENTRIES.EN_PLURAL,
-        ENTRIES.ES)
-      .from(ENTRIES)
+        NONVERBS.NONVERB_ID,
+        NONVERBS.EN,
+        NONVERBS.EN_DISAMBIGUATION,
+        NONVERBS.EN_PLURAL,
+        NONVERBS.ES)
+      .from(NONVERBS)
       .fetch()
 
     return rows.map {
-      EntryRow(
-        it.getValue(ENTRIES.ENTRY_ID),
-        it.getValue(ENTRIES.EN),
-        it.getValue(ENTRIES.EN_DISAMBIGUATION),
-        it.getValue(ENTRIES.EN_PLURAL),
-        it.getValue(ENTRIES.ES)
+      NonverbRow(
+        it.getValue(NONVERBS.NONVERB_ID),
+        it.getValue(NONVERBS.EN),
+        it.getValue(NONVERBS.EN_DISAMBIGUATION),
+        it.getValue(NONVERBS.EN_PLURAL),
+        it.getValue(NONVERBS.ES)
       )
     }
   }
 
-  fun insertEntryRow(entry: EntryRow) =
+  fun insertNonverbRow(nonverb: NonverbRow) =
     create
-      .insertInto(ENTRIES,
-          ENTRIES.EN,
-          ENTRIES.EN_DISAMBIGUATION,
-          ENTRIES.EN_PLURAL,
-          ENTRIES.ES)
-      .values(entry.en,
-          entry.enDisambiguation,
-          entry.enPlural,
-          entry.es)
+      .insertInto(NONVERBS,
+          NONVERBS.EN,
+          NONVERBS.EN_DISAMBIGUATION,
+          NONVERBS.EN_PLURAL,
+          NONVERBS.ES)
+      .values(nonverb.en,
+          nonverb.enDisambiguation,
+          nonverb.enPlural,
+          nonverb.es)
       .returning(
-          ENTRIES.ENTRY_ID,
-          ENTRIES.EN,
-          ENTRIES.EN_DISAMBIGUATION,
-          ENTRIES.EN_PLURAL,
-          ENTRIES.ES)
+          NONVERBS.NONVERB_ID,
+          NONVERBS.EN,
+          NONVERBS.EN_DISAMBIGUATION,
+          NONVERBS.EN_PLURAL,
+          NONVERBS.ES)
       .fetchOne()
 
-  fun deleteEntryRow(entryRow: EntryRow) =
-    create.delete(ENTRIES)
-      .where(ENTRIES.ENTRY_ID.eq(entryRow.entryId))
+  fun deleteNonverbRow(nonverbRow: NonverbRow) =
+    create.delete(NONVERBS)
+      .where(NONVERBS.NONVERB_ID.eq(nonverbRow.nonverbId))
       .execute()
 
   fun selectAllInfinitives(): List<Infinitive> {

@@ -3,8 +3,7 @@ package com.danstutzman.bank.es
 import com.danstutzman.bank.Card
 import com.danstutzman.bank.GlossRow
 
-// An Entry is a word that's not a verb
-data class Entry (
+data class Nonverb (
   override val cardId: Int,
   val es: String,
   val en: String,

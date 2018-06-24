@@ -11,9 +11,9 @@ import com.danstutzman.bank.es.RegVPatternList
 import com.danstutzman.bank.es.Tense
 import com.danstutzman.bank.es.UniqVList
 import com.danstutzman.db.Db
-import com.danstutzman.db.EntryRow
 import com.danstutzman.db.Goal
 import com.danstutzman.db.Infinitive
+import com.danstutzman.db.NonverbRow
 import com.danstutzman.db.StemChangeRow
 import com.danstutzman.db.UniqueConjugation
 import com.google.gson.Gson
@@ -62,9 +62,9 @@ class Webapp(
   val getRoot = { _: Request, _: Response ->
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
-    html.append("<li><a href='/dictionary-entries'>Dictionary Entries</a></li>\n")
     html.append("<li><a href='/goals'>Goals</a></li>\n")
     html.append("<li><a href='/infinitives'>Infinitives</a></li>\n")
+    html.append("<li><a href='/nonverbs'>Nonverbs</a></li>\n")
     html.append("<li><a href='/stem-changes'>Stem Changes</a></li>\n")
     html.append("<li><a href='/unique-conjugations'>Unique Conjugations</a></li>\n")
     html.append(CLOSE_BODY_TAG)
@@ -169,13 +169,13 @@ class Webapp(
     res.redirect("/goals")
   }
 
-  val getDictionaryEntries = { _: Request, _: Response ->
+  val getNonverbs = { _: Request, _: Response ->
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
 
     html.append("<a href='/'>Back to home</a>\n")
-    html.append("<h1>Dictionary Entries</h1>\n")
-    html.append("<form method='POST' action='/dictionary-entries'>\n")
+    html.append("<h1>Nonverbs</h1>\n")
+    html.append("<form method='POST' action='/nonverbs'>\n")
     html.append("<table border='1'>\n")
     html.append("  <tr>\n")
     html.append("    <th>ID</td>\n")
@@ -185,14 +185,14 @@ class Webapp(
     html.append("    <th>English plural</td>\n")
     html.append("    <th></td>\n")
     html.append("  </tr>\n")
-    for (entryRow in db.selectAllEntryRows()) {
+    for (row in db.selectAllNonverbRows()) {
       html.append("  <tr>\n")
-      html.append("    <td>${entryRow.entryId}</td>\n")
-      html.append("    <td>${entryRow.es}</td>\n")
-      html.append("    <td>${entryRow.en}</td>\n")
-      html.append("    <td>${entryRow.enDisambiguation}</td>\n")
-      html.append("    <td>${entryRow.enPlural ?: ""}</td>\n")
-      html.append("    <td><input type='submit' name='deleteEntry${entryRow.entryId}' value='Delete' onClick='return confirm(\"Delete entry?\")'></td>\n")
+      html.append("    <td>${row.nonverbId}</td>\n")
+      html.append("    <td>${row.es}</td>\n")
+      html.append("    <td>${row.en}</td>\n")
+      html.append("    <td>${row.enDisambiguation}</td>\n")
+      html.append("    <td>${row.enPlural ?: ""}</td>\n")
+      html.append("    <td><input type='submit' name='deleteNonverb${row.nonverbId}' value='Delete' onClick='return confirm(\"Delete nonverb?\")'></td>\n")
       html.append("  </tr>\n")
     }
     html.append("  <tr>\n")
@@ -201,24 +201,24 @@ class Webapp(
     html.append("    <th><input type='text' name='en'></td>\n")
     html.append("    <th><input type='text' name='en_disambiguation'></td>\n")
     html.append("    <th><input type='text' name='en_plural'></td>\n")
-    html.append("    <th><input type='submit' name='newEntry' value='Insert'></td>\n")
+    html.append("    <th><input type='submit' name='newNonverb' value='Insert'></td>\n")
     html.append("  </tr>\n")
     html.append("</table>\n")
     html.append("</form>\n")
   }
 
-  val postDictionaryEntries = { req: Request, res: Response ->
-    val regex = "deleteEntry([0-9]+)".toRegex()
-    val entryIdsToDelete = req.queryParams().map { paramName ->
+  val postNonverbs = { req: Request, res: Response ->
+    val regex = "deleteNonverb([0-9]+)".toRegex()
+    val nonverbIdsToDelete = req.queryParams().map { paramName ->
       val match = regex.find(paramName)
       if (match != null) match.groupValues[1].toInt() else null
     }.filterNotNull()
-    for (entryId in entryIdsToDelete) {
-      db.deleteEntryRow(EntryRow(entryId, "", "", null, ""))
+    for (nonverbId in nonverbIdsToDelete) {
+      db.deleteNonverbRow(NonverbRow(nonverbId, "", "", null, ""))
     }
 
-    if (req.queryParams("newEntry") != null) {
-      db.insertEntryRow(EntryRow(
+    if (req.queryParams("newNonverb") != null) {
+      db.insertNonverbRow(NonverbRow(
         0,
         req.queryParams("en"),
         req.queryParams("en_disambiguation"),
@@ -228,7 +228,7 @@ class Webapp(
       ))
     }
 
-    res.redirect("/dictionary-entries")
+    res.redirect("/nonverbs")
   }
 
   val getInfinitives = { _: Request, _: Response ->

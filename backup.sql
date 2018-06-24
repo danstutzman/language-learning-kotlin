@@ -32,23 +32,23 @@ ALTER TABLE ONLY public.stem_changes DROP CONSTRAINT stem_changes_pkey;
 ALTER TABLE ONLY public.schema_version DROP CONSTRAINT schema_version_pk;
 ALTER TABLE ONLY public.infinitives DROP CONSTRAINT infinitives_pkey;
 ALTER TABLE ONLY public.goals DROP CONSTRAINT goals_pkey;
-ALTER TABLE ONLY public.entries DROP CONSTRAINT entries_pkey;
+ALTER TABLE ONLY public.nonverbs DROP CONSTRAINT entries_pkey;
 ALTER TABLE public.unique_conjugations ALTER COLUMN unique_conjugation_id DROP DEFAULT;
 ALTER TABLE public.stem_changes ALTER COLUMN stem_change_id DROP DEFAULT;
+ALTER TABLE public.nonverbs ALTER COLUMN nonverb_id DROP DEFAULT;
 ALTER TABLE public.infinitives ALTER COLUMN infinitive_id DROP DEFAULT;
 ALTER TABLE public.goals ALTER COLUMN goal_id DROP DEFAULT;
-ALTER TABLE public.entries ALTER COLUMN entry_id DROP DEFAULT;
 DROP SEQUENCE public.unique_conjugations_unique_conjugation_id_seq;
 DROP TABLE public.unique_conjugations;
 DROP SEQUENCE public.stem_changes_stem_change_id_seq;
 DROP TABLE public.stem_changes;
 DROP TABLE public.schema_version;
+DROP SEQUENCE public.nonverbs_nonverb_id_seq;
+DROP TABLE public.nonverbs;
 DROP SEQUENCE public.infinitives_infinitive_id_seq;
 DROP TABLE public.infinitives;
 DROP SEQUENCE public.goals_goal_id_seq;
 DROP TABLE public.goals;
-DROP SEQUENCE public.entries_entry_id_seq;
-DROP TABLE public.entries;
 DROP EXTENSION plpgsql;
 DROP SCHEMA public;
 --
@@ -86,43 +86,6 @@ SET search_path = public, pg_catalog;
 SET default_tablespace = '';
 
 SET default_with_oids = false;
-
---
--- Name: entries; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE entries (
-    entry_id integer NOT NULL,
-    es text NOT NULL,
-    en text NOT NULL,
-    en_disambiguation text NOT NULL,
-    en_plural text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
-ALTER TABLE entries OWNER TO postgres;
-
---
--- Name: entries_entry_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
---
-
-CREATE SEQUENCE entries_entry_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE entries_entry_id_seq OWNER TO postgres;
-
---
--- Name: entries_entry_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
---
-
-ALTER SEQUENCE entries_entry_id_seq OWNED BY entries.entry_id;
-
 
 --
 -- Name: goals; Type: TABLE; Schema: public; Owner: postgres
@@ -196,6 +159,43 @@ ALTER TABLE infinitives_infinitive_id_seq OWNER TO postgres;
 --
 
 ALTER SEQUENCE infinitives_infinitive_id_seq OWNED BY infinitives.infinitive_id;
+
+
+--
+-- Name: nonverbs; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE nonverbs (
+    nonverb_id integer NOT NULL,
+    es text NOT NULL,
+    en text NOT NULL,
+    en_disambiguation text NOT NULL,
+    en_plural text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE nonverbs OWNER TO postgres;
+
+--
+-- Name: nonverbs_nonverb_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE nonverbs_nonverb_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE nonverbs_nonverb_id_seq OWNER TO postgres;
+
+--
+-- Name: nonverbs_nonverb_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE nonverbs_nonverb_id_seq OWNED BY nonverbs.nonverb_id;
 
 
 --
@@ -294,13 +294,6 @@ ALTER SEQUENCE unique_conjugations_unique_conjugation_id_seq OWNED BY unique_con
 
 
 --
--- Name: entries entry_id; Type: DEFAULT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY entries ALTER COLUMN entry_id SET DEFAULT nextval('entries_entry_id_seq'::regclass);
-
-
---
 -- Name: goals goal_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -315,6 +308,13 @@ ALTER TABLE ONLY infinitives ALTER COLUMN infinitive_id SET DEFAULT nextval('inf
 
 
 --
+-- Name: nonverbs nonverb_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY nonverbs ALTER COLUMN nonverb_id SET DEFAULT nextval('nonverbs_nonverb_id_seq'::regclass);
+
+
+--
 -- Name: stem_changes stem_change_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -326,96 +326,6 @@ ALTER TABLE ONLY stem_changes ALTER COLUMN stem_change_id SET DEFAULT nextval('s
 --
 
 ALTER TABLE ONLY unique_conjugations ALTER COLUMN unique_conjugation_id SET DEFAULT nextval('unique_conjugations_unique_conjugation_id_seq'::regclass);
-
-
---
--- Data for Name: entries; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY entries (entry_id, es, en, en_disambiguation, en_plural, created_at) FROM stdin;
-62	brazo	arm		arms	2018-06-24 09:42:32.310062-06
-63	pierna	leg		legs	2018-06-24 09:42:32.31134-06
-64	corazón	heart		hearts	2018-06-24 09:42:32.311925-06
-65	estómago	stomach		stomachs	2018-06-24 09:42:32.312547-06
-66	ojo	eye		eyes	2018-06-24 09:42:32.313039-06
-67	nariz	nose		noses	2018-06-24 09:42:32.313538-06
-68	boca	mouth		mouths	2018-06-24 09:42:32.31404-06
-69	oreja	ear		ears	2018-06-24 09:42:32.314516-06
-70	cara	face		faces	2018-06-24 09:42:32.314983-06
-71	cuello	neck		necks	2018-06-24 09:42:32.315436-06
-72	dedo	finger		fingers	2018-06-24 09:42:32.315907-06
-73	pie	foot		feet	2018-06-24 09:42:32.316363-06
-74	muslo	thigh		thighs	2018-06-24 09:42:32.316797-06
-75	tobillo	ankle		ankles	2018-06-24 09:42:32.317247-06
-76	codo	elbow		elbows	2018-06-24 09:42:32.317698-06
-77	muñeca	wrist		wrists	2018-06-24 09:42:32.318139-06
-78	cuerpo	body		bodies	2018-06-24 09:42:32.318608-06
-79	diente	tooth		tooths	2018-06-24 09:42:32.319075-06
-80	mano	hand		hands	2018-06-24 09:42:32.319518-06
-81	espalda	back		backs	2018-06-24 09:42:32.31995-06
-82	cadera	hip		hips	2018-06-24 09:42:32.320412-06
-83	mandíbula	jaw		jaws	2018-06-24 09:42:32.320864-06
-84	hombro	shoulder		shoulders	2018-06-24 09:42:32.321315-06
-85	pulgar	thumb		thumbs	2018-06-24 09:42:32.321761-06
-86	lengua	tongue		tongues	2018-06-24 09:42:32.322202-06
-87	garganta	throat		throats	2018-06-24 09:42:32.322985-06
-88	español	Spanish		\N	2018-06-24 09:42:32.323407-06
-89	inglés	English		\N	2018-06-24 09:42:32.323906-06
-90	día	day		days	2018-06-24 09:42:32.324572-06
-91	tarde	afternoon		afternoon	2018-06-24 09:42:32.325038-06
-92	ingeniero	engineer		engineers	2018-06-24 09:42:32.325593-06
-93	lista	list		lists	2018-06-24 09:42:32.326072-06
-94	oración	sentence		sentences	2018-06-24 09:42:32.326465-06
-95	bueno	good	masc.	good	2018-06-24 09:42:32.326926-06
-96	buena	good	fem.	good	2018-06-24 09:42:32.327412-06
-97	el	the	masc.	\N	2018-06-24 09:42:32.327897-06
-98	la	the	fem.	\N	2018-06-24 09:42:32.32839-06
-99	un	a	masc.	\N	2018-06-24 09:42:32.328869-06
-100	una	a	fem.	\N	2018-06-24 09:42:32.329419-06
-101	mi	my		\N	2018-06-24 09:42:32.329823-06
-102	este	this	masc.	\N	2018-06-24 09:42:32.330276-06
-103	esta	this	fem.	\N	2018-06-24 09:42:32.33074-06
-104	cada	every		\N	2018-06-24 09:42:32.331212-06
-105	cómo	how		\N	2018-06-24 09:42:32.331646-06
-106	bien	well		\N	2018-06-24 09:42:32.332094-06
-107	yo	I		\N	2018-06-24 09:42:32.332558-06
-108	tú	you	pronoun	\N	2018-06-24 09:42:32.33304-06
-109	él	he		\N	2018-06-24 09:42:32.33464-06
-110	ella	she		\N	2018-06-24 09:42:32.335082-06
-111	nosotros	we	masc.	\N	2018-06-24 09:42:32.335483-06
-112	nosotras	we	fem.	\N	2018-06-24 09:42:32.335885-06
-113	ellos	they	masc.	\N	2018-06-24 09:42:32.33628-06
-114	ellas	they	fem.	\N	2018-06-24 09:42:32.336675-06
-115	qué	what		\N	2018-06-24 09:42:32.337066-06
-116	hola	hello		\N	2018-06-24 09:42:32.337468-06
-117	de	of		\N	2018-06-24 09:42:32.337867-06
-118	dónde	where	question	\N	2018-06-24 09:42:32.338256-06
-119	donde	where	relative	\N	2018-06-24 09:42:32.338645-06
-120	software	software		\N	2018-06-24 09:42:32.339084-06
-121	con	with		\N	2018-06-24 09:42:32.339496-06
-122	quién	who		\N	2018-06-24 09:42:32.339963-06
-123	me	me		\N	2018-06-24 09:42:32.340438-06
-124	te	you	direct/indirect object	\N	2018-06-24 09:42:32.340855-06
-125	Longmont	Longmont		\N	2018-06-24 10:12:57.81832-06
-126	Cuba	Cuba		\N	2018-06-24 10:14:14.159249-06
-127	a	to		\N	2018-06-24 10:16:56.797247-06
-128	por	for	on behalf of	\N	2018-06-24 10:18:21.748271-06
-129	para	for	in order to	\N	2018-06-24 10:18:37.720114-06
-130	clase	class		classes	2018-06-24 10:18:54.790579-06
-131	enero	January		\N	2018-06-24 10:19:36.45117-06
-132	aplicación	application		applications	2018-06-24 10:19:47.157449-06
-133	unos	some	masc.	\N	2018-06-24 10:20:00.535063-06
-134	unas	some	fem.	\N	2018-06-24 10:20:07.365061-06
-135	móvil	mobile phone		mobile phones	2018-06-24 10:20:48.975803-06
-136	semana	week		weeks	2018-06-24 10:21:05.140751-06
-\.
-
-
---
--- Name: entries_entry_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('entries_entry_id_seq', 136, true);
 
 
 --
@@ -513,15 +423,105 @@ SELECT pg_catalog.setval('infinitives_infinitive_id_seq', 69, true);
 
 
 --
+-- Data for Name: nonverbs; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY nonverbs (nonverb_id, es, en, en_disambiguation, en_plural, created_at) FROM stdin;
+62	brazo	arm		arms	2018-06-24 09:42:32.310062-06
+63	pierna	leg		legs	2018-06-24 09:42:32.31134-06
+64	corazón	heart		hearts	2018-06-24 09:42:32.311925-06
+65	estómago	stomach		stomachs	2018-06-24 09:42:32.312547-06
+66	ojo	eye		eyes	2018-06-24 09:42:32.313039-06
+67	nariz	nose		noses	2018-06-24 09:42:32.313538-06
+68	boca	mouth		mouths	2018-06-24 09:42:32.31404-06
+69	oreja	ear		ears	2018-06-24 09:42:32.314516-06
+70	cara	face		faces	2018-06-24 09:42:32.314983-06
+71	cuello	neck		necks	2018-06-24 09:42:32.315436-06
+72	dedo	finger		fingers	2018-06-24 09:42:32.315907-06
+73	pie	foot		feet	2018-06-24 09:42:32.316363-06
+74	muslo	thigh		thighs	2018-06-24 09:42:32.316797-06
+75	tobillo	ankle		ankles	2018-06-24 09:42:32.317247-06
+76	codo	elbow		elbows	2018-06-24 09:42:32.317698-06
+77	muñeca	wrist		wrists	2018-06-24 09:42:32.318139-06
+78	cuerpo	body		bodies	2018-06-24 09:42:32.318608-06
+79	diente	tooth		tooths	2018-06-24 09:42:32.319075-06
+80	mano	hand		hands	2018-06-24 09:42:32.319518-06
+81	espalda	back		backs	2018-06-24 09:42:32.31995-06
+82	cadera	hip		hips	2018-06-24 09:42:32.320412-06
+83	mandíbula	jaw		jaws	2018-06-24 09:42:32.320864-06
+84	hombro	shoulder		shoulders	2018-06-24 09:42:32.321315-06
+85	pulgar	thumb		thumbs	2018-06-24 09:42:32.321761-06
+86	lengua	tongue		tongues	2018-06-24 09:42:32.322202-06
+87	garganta	throat		throats	2018-06-24 09:42:32.322985-06
+88	español	Spanish		\N	2018-06-24 09:42:32.323407-06
+89	inglés	English		\N	2018-06-24 09:42:32.323906-06
+90	día	day		days	2018-06-24 09:42:32.324572-06
+91	tarde	afternoon		afternoon	2018-06-24 09:42:32.325038-06
+92	ingeniero	engineer		engineers	2018-06-24 09:42:32.325593-06
+93	lista	list		lists	2018-06-24 09:42:32.326072-06
+94	oración	sentence		sentences	2018-06-24 09:42:32.326465-06
+95	bueno	good	masc.	good	2018-06-24 09:42:32.326926-06
+96	buena	good	fem.	good	2018-06-24 09:42:32.327412-06
+97	el	the	masc.	\N	2018-06-24 09:42:32.327897-06
+98	la	the	fem.	\N	2018-06-24 09:42:32.32839-06
+99	un	a	masc.	\N	2018-06-24 09:42:32.328869-06
+100	una	a	fem.	\N	2018-06-24 09:42:32.329419-06
+101	mi	my		\N	2018-06-24 09:42:32.329823-06
+102	este	this	masc.	\N	2018-06-24 09:42:32.330276-06
+103	esta	this	fem.	\N	2018-06-24 09:42:32.33074-06
+104	cada	every		\N	2018-06-24 09:42:32.331212-06
+105	cómo	how		\N	2018-06-24 09:42:32.331646-06
+106	bien	well		\N	2018-06-24 09:42:32.332094-06
+107	yo	I		\N	2018-06-24 09:42:32.332558-06
+108	tú	you	pronoun	\N	2018-06-24 09:42:32.33304-06
+109	él	he		\N	2018-06-24 09:42:32.33464-06
+110	ella	she		\N	2018-06-24 09:42:32.335082-06
+111	nosotros	we	masc.	\N	2018-06-24 09:42:32.335483-06
+112	nosotras	we	fem.	\N	2018-06-24 09:42:32.335885-06
+113	ellos	they	masc.	\N	2018-06-24 09:42:32.33628-06
+114	ellas	they	fem.	\N	2018-06-24 09:42:32.336675-06
+115	qué	what		\N	2018-06-24 09:42:32.337066-06
+116	hola	hello		\N	2018-06-24 09:42:32.337468-06
+117	de	of		\N	2018-06-24 09:42:32.337867-06
+118	dónde	where	question	\N	2018-06-24 09:42:32.338256-06
+119	donde	where	relative	\N	2018-06-24 09:42:32.338645-06
+120	software	software		\N	2018-06-24 09:42:32.339084-06
+121	con	with		\N	2018-06-24 09:42:32.339496-06
+122	quién	who		\N	2018-06-24 09:42:32.339963-06
+123	me	me		\N	2018-06-24 09:42:32.340438-06
+124	te	you	direct/indirect object	\N	2018-06-24 09:42:32.340855-06
+125	Longmont	Longmont		\N	2018-06-24 10:12:57.81832-06
+126	Cuba	Cuba		\N	2018-06-24 10:14:14.159249-06
+127	a	to		\N	2018-06-24 10:16:56.797247-06
+128	por	for	on behalf of	\N	2018-06-24 10:18:21.748271-06
+129	para	for	in order to	\N	2018-06-24 10:18:37.720114-06
+130	clase	class		classes	2018-06-24 10:18:54.790579-06
+131	enero	January		\N	2018-06-24 10:19:36.45117-06
+132	aplicación	application		applications	2018-06-24 10:19:47.157449-06
+133	unos	some	masc.	\N	2018-06-24 10:20:00.535063-06
+134	unas	some	fem.	\N	2018-06-24 10:20:07.365061-06
+135	móvil	mobile phone		mobile phones	2018-06-24 10:20:48.975803-06
+136	semana	week		weeks	2018-06-24 10:21:05.140751-06
+\.
+
+
+--
+-- Name: nonverbs_nonverb_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('nonverbs_nonverb_id_seq', 137, true);
+
+
+--
 -- Data for Name: schema_version; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY schema_version (installed_rank, version, description, type, script, checksum, installed_by, installed_on, execution_time, success) FROM stdin;
 1	1	create goals	SQL	V1__create_goals.sql	-337851082	postgres	2018-06-23 07:47:24.603432	45	t
-2	2	create entries	SQL	V2__create_entries.sql	1207714738	postgres	2018-06-24 09:38:11.893217	22	t
 3	3	create infinitives	SQL	V3__create_infinitives.sql	461677107	postgres	2018-06-24 09:55:40.838131	40	t
 4	4	create unique conjugations	SQL	V4__create_unique_conjugations.sql	-1531439812	postgres	2018-06-24 10:52:47.393522	27	t
 5	5	create stem changes	SQL	V5__create_stem_changes.sql	-498185464	postgres	2018-06-24 11:15:26.014979	46	t
+2	2	create nonverbs	SQL	V2__create_nonverbs.sql	1917168459	postgres	2018-06-24 09:38:11.893217	22	t
 \.
 
 
@@ -624,11 +624,11 @@ SELECT pg_catalog.setval('unique_conjugations_unique_conjugation_id_seq', 95, tr
 
 
 --
--- Name: entries entries_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: nonverbs entries_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY entries
-    ADD CONSTRAINT entries_pkey PRIMARY KEY (entry_id);
+ALTER TABLE ONLY nonverbs
+    ADD CONSTRAINT entries_pkey PRIMARY KEY (nonverb_id);
 
 
 --
@@ -675,21 +675,21 @@ ALTER TABLE ONLY unique_conjugations
 -- Name: idx_entries_en_and_en_disambiguation; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE UNIQUE INDEX idx_entries_en_and_en_disambiguation ON entries USING btree (en, en_disambiguation);
+CREATE UNIQUE INDEX idx_entries_en_and_en_disambiguation ON nonverbs USING btree (en, en_disambiguation);
 
 
 --
 -- Name: idx_entries_en_plural_and_en_disambiguation; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE UNIQUE INDEX idx_entries_en_plural_and_en_disambiguation ON entries USING btree (en_plural, en_disambiguation);
+CREATE UNIQUE INDEX idx_entries_en_plural_and_en_disambiguation ON nonverbs USING btree (en_plural, en_disambiguation);
 
 
 --
 -- Name: idx_entries_es; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE UNIQUE INDEX idx_entries_es ON entries USING btree (es);
+CREATE UNIQUE INDEX idx_entries_es ON nonverbs USING btree (es);
 
 
 --

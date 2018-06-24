@@ -22,35 +22,35 @@ fun pluralizeEs(base: String): String {
   }
 }
 
-class EntryList {
-  val entries: List<Entry>
-  val entryByEs: Map<String, Entry>
+class NonverbList {
+  val nonverbs: List<Nonverb>
+  val nonverbByEs: Map<String, Nonverb>
 
   constructor(cardIdSequence: IdSequence, db: Db) {
-    entries = db.selectAllEntryRows().flatMap { entryRow ->
-      val newEntries = mutableListOf<Entry>()
+    nonverbs = db.selectAllNonverbRows().flatMap { nonverbRow ->
+      val newNonverbs = mutableListOf<Nonverb>()
 
-      newEntries.add(Entry(
+      newNonverbs.add(Nonverb(
         cardId = cardIdSequence.nextId(),
-        es = entryRow.es,
-        en = entryRow.en,
-        enDisambiguation = if (entryRow.enDisambiguation != "")
-          entryRow.enDisambiguation else null
+        es = nonverbRow.es,
+        en = nonverbRow.en,
+        enDisambiguation = if (nonverbRow.enDisambiguation != "")
+          nonverbRow.enDisambiguation else null
       ))
 
-      if (entryRow.enPlural != null) {
-        newEntries.add(Entry(
+      if (nonverbRow.enPlural != null) {
+        newNonverbs.add(Nonverb(
           cardId = cardIdSequence.nextId(),
-          es = pluralizeEs(entryRow.es),
-          en = entryRow.enPlural,
-          enDisambiguation = if (entryRow.enDisambiguation != "")
-            entryRow.enDisambiguation else null
+          es = pluralizeEs(nonverbRow.es),
+          en = nonverbRow.enPlural,
+          enDisambiguation = if (nonverbRow.enDisambiguation != "")
+            nonverbRow.enDisambiguation else null
         ))
       }
 
-      newEntries
+      newNonverbs
     }
-    entryByEs = entries.map { Pair(it.es, it) }.toMap()
+    nonverbByEs = nonverbs.map { Pair(it.es, it) }.toMap()
   }
-  fun byEs(es: String): Entry? = entryByEs[es]
+  fun byEs(es: String): Nonverb? = nonverbByEs[es]
 }
