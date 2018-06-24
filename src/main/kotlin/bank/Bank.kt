@@ -225,6 +225,7 @@ class Bank(
     }
     is UniqV -> "(" + EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[
         Pair(card.number, card.person)] + ") " + getPrompt(card.inf)
+    is StemChange -> "Stem change for ${card.inf.es} in ${card.tense}"
     is StemChangeV ->
       "(${card.pattern.getEnPronoun()}) " + getEnVerbFor(
         card.stemChange.inf,
