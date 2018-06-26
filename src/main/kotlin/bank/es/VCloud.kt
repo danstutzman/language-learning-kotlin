@@ -1,10 +1,8 @@
 package com.danstutzman.bank.es
 
 import com.danstutzman.bank.CantMakeCard
-import com.danstutzman.bank.IdSequence
 
 class VCloud(
-  val cardIdSequence: IdSequence,
   val infList: InfList,
   val uniqVList: UniqVList,
   val regVPatternList: RegVPatternList,
@@ -39,9 +37,8 @@ class VCloud(
     for (inf in possibleInfs) {
       for (pattern in possiblePatterns) {
         if (InfCategory.isInfCategory(inf.es, pattern.infCategory, false)) {
-          val newVWithoutId = RegV(0, inf, pattern)
-          if (newVWithoutId.getEs() == conjugation) {
-            val newV = newVWithoutId.copy(cardId = cardIdSequence.nextId())
+          val newV = RegV(inf, pattern)
+          if (newV.getEs() == conjugation) {
             createdCardsByConjugation[conjugation] = newV
             return newV
           }
@@ -57,7 +54,7 @@ class VCloud(
             stemChange.inf.es,
             pattern.infCategory,
             pattern.tense == Tense.PRET)) {
-            return StemChangeV(cardIdSequence.nextId(), stemChange, pattern)
+            return StemChangeV(stemChange, pattern)
           }
         }
       }

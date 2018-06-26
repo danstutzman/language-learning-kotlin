@@ -1,0 +1,21 @@
+CREATE TABLE goals (
+  goal_id           SERIAL PRIMARY KEY,
+  tags_csv          TEXT NOT NULL,
+  en                TEXT NOT NULL,
+  es                TEXT NOT NULL,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at        TIMESTAMPTZ NOT NULL
+);
+
+CREATE TABLE cards (
+  gloss_rows_json   TEXT NOT NULL,
+  last_seen_at      TIMESTAMPTZ,
+  leaf_ids_csv      TEXT NOT NULL,
+  prompt            TEXT NOT NULL,
+  stage             INTEGER NOT NULL,
+  mnemonic          TEXT NOT NULL,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at        TIMESTAMPTZ NOT NULL
+);
+
+CREATE UNIQUE INDEX idx_cards_leaf_ids_csv ON cards(leaf_ids_csv);

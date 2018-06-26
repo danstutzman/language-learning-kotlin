@@ -1,7 +1,6 @@
 package com.danstutzman.bank.es
 
 import com.danstutzman.bank.CantMakeCard
-import com.danstutzman.bank.IdSequence
 import com.danstutzman.db.Db
 
 fun pluralizeEs(base: String): String {
@@ -26,27 +25,27 @@ class NonverbList {
   val nonverbs: List<Nonverb>
   val nonverbByEs: Map<String, Nonverb>
 
-  constructor(cardIdSequence: IdSequence, db: Db) {
-    nonverbs = db.selectAllNonverbRows().flatMap { nonverbRow ->
+  constructor(db: Db) {
+    nonverbs = db.selectAllNonverbRows().flatMap { row ->
       val newNonverbs = mutableListOf<Nonverb>()
 
       newNonverbs.add(Nonverb(
-        cardId = cardIdSequence.nextId(),
-        es = nonverbRow.es,
-        en = nonverbRow.en,
-        enDisambiguation = if (nonverbRow.enDisambiguation != "")
-          nonverbRow.enDisambiguation else null
+        leafId = row.leafId,
+        es = row.es,
+        en = row.en,
+        enDisambiguation = if (row.enDisambiguation != "")
+          row.enDisambiguation else null
       ))
 
-      if (nonverbRow.enPlural != null) {
+     if (row.enPlural != null) {
         newNonverbs.add(Nonverb(
-          cardId = cardIdSequence.nextId(),
-          es = pluralizeEs(nonverbRow.es),
-          en = nonverbRow.enPlural,
-          enDisambiguation = if (nonverbRow.enDisambiguation != "")
-            nonverbRow.enDisambiguation else null
+          leafId = row.leafId,
+          es = pluralizeEs(row.es),
+          en = row.enPlural,
+          enDisambiguation = if (row.enDisambiguation != "")
+            row.enDisambiguation else null
         ))
-      }
+     }
 
       newNonverbs
     }

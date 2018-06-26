@@ -1,21 +1,19 @@
 package com.danstutzman.bank.es
 
-import com.danstutzman.bank.IdSequence
 import com.danstutzman.db.Db
 
 class InfList {
   val infs: List<Inf>
   val infByEs: Map<String, Inf>
 
-  constructor(cardIdSequence: IdSequence, db: Db) {
-    infs = db.selectAllInfinitives().map { infinitive ->
+  constructor(db: Db) {
+    infs = db.selectAllInfinitives().map {
       Inf(
-        cardIdSequence.nextId(),
-        infinitive.es,
-        infinitive.en,
-        infinitive.enPast,
-        if (infinitive.enDisambiguation == "") null
-          else infinitive.enDisambiguation)
+        it.leafId,
+        it.es,
+        it.en,
+        it.enPast,
+        if (it.enDisambiguation == "") null else it.enDisambiguation)
     }
     infByEs = infs.map { Pair(it.es, it) }.toMap()
   }

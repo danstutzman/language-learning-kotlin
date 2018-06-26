@@ -1,11 +1,9 @@
 package com.danstutzman.bank
 
 import com.danstutzman.bank.GlossRow
-import com.danstutzman.bank.IdSequence
 import com.danstutzman.bank.en.EnPronouns
 import com.danstutzman.bank.en.EnVerbs
 import com.danstutzman.bank.es.GENDER_TO_DESCRIPTION
-import com.danstutzman.bank.es.Goal
 import com.danstutzman.bank.es.Inf
 import com.danstutzman.bank.es.InfCategory
 import com.danstutzman.bank.es.InfList
@@ -26,6 +24,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import java.io.FileReader
 import java.io.StringReader
+import kotlin.collections.Map
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spark.Request
@@ -34,210 +33,79 @@ import java.io.File
 
 const val DELAY_THRESHOLD = 100000
 
-data class CardRow(
-  val cardId: Int,
-  val type: String,
-  val key: String,
-  val childrenCardIds: List<Int>,
+data class CardDownload(
   val glossRows: List<GlossRow>,
-  val quizQuestion: String
+  val lastSeenAt: Int?,
+  val leafIdsCsv: String,
+  val mnemonic: String,
+  val prompt: String,
+  val stage: Int
 ) {}
 
-data class SkillRow(
-  val cardId: Int,
-  val delay: Int,
-  val endurance: Int,
-  val lastSeenAt: Int,
-  val mnemonic: String
+data class CardsUpload(
+  val foo: Int
 ) {}
-
-data class SkillsUpload(
-  val skillExports: List<SkillExport>?
-) {}
-
-data class SkillExport(
-  val cardType: String,
-  val cardKey: String,
-  val delay: Int,
-  val endurance: Int,
-  val lastSeenAt: Int,
-  val mnemonic: String
-) {}
-
-data class SkillsExport(
-  val skillExports: List<SkillExport>
-) {}
-
-fun descendantsOf(cards: Iterable<Card>): Set<Card> {
-  val children = mutableSetOf<Card>()
-  for (card in cards) {
-    children.addAll(card.getChildrenCards())
-  }
-  if (children.size > 0) {
-    children.addAll(descendantsOf(children))
-  }
-  return children
-}
-
-fun cardType(card: Card): String = card::class.java.name.split(".").last()
-
 
 class Bank(
-  val skillsExportFile: File,
   val db: Db
 ) {
-  val logger: Logger = LoggerFactory.getLogger("Webapp.kt")
+  val logger: Logger = LoggerFactory.getLogger("Bank.kt")
 
-  val cardIdSequence  = IdSequence()
-  val infList         = InfList(cardIdSequence, db)
-  val regVPatternList = RegVPatternList(cardIdSequence)
-  val nonverbList     = NonverbList(cardIdSequence, db)
-  val uniqVList       = UniqVList(cardIdSequence, infList, db)
-  val stemChangeList  = StemChangeList(cardIdSequence, infList, db)
-  val vCloud          = VCloud(cardIdSequence, infList, uniqVList,
+  val infList         = InfList(db)
+  val regVPatternList = RegVPatternList()
+  val nonverbList     = NonverbList(db)
+  val uniqVList       = UniqVList(infList, db)
+  val stemChangeList  = StemChangeList(infList, db)
+  val vCloud          = VCloud(infList, uniqVList,
                           regVPatternList, stemChangeList)
 
-  val iClauses: List<Card> = db.selectAllGoals().flatMap {
-    if (it.es == "") {
-      listOf<Card>()
-    } else {
-      try {
-        listOf(parseEs(it.es, it.enFreeText))
-      } catch (e: CantMakeCard) {
-        System.err.println(e)
-        System.err.println(it)
-        listOf<Card>()
+  val cardDownloads = db.selectAllCardRows().map {
+    val glossRowsUntyped = try {
+      Gson().fromJson(it.glossRowsJson, List::class.java)
+    } catch (e: com.google.gson.JsonSyntaxException) {
+      throw CantMakeCard("Bad glossRowsJson: ${it.glossRowsJson}, ${e}")
+    }
+    val glossRows = glossRowsUntyped.map {
+      val map = it as Map<*, *>
+      GlossRow(
+        (map.get("leafId") as Double).toInt(),
+        map.get("en") as String,
+        map.get("es") as String
+      )
+    }
+    CardDownload(
+      glossRows = glossRows,
+      lastSeenAt = it.lastSeenAt,
+      leafIdsCsv = it.leafIdsCsv,
+      mnemonic = it.mnemonic,
+      prompt = it.prompt,
+      stage = it.stage)
+  }
+  val assertion = assertUniqPrompts(cardDownloads)
+
+  fun getCardDownloads(): Map<String, List<CardDownload>> {
+    return linkedMapOf("cardDownloads" to cardDownloads)
+  }
+
+  fun assertUniqPrompts(cardDownloads: List<CardDownload>) {
+    val cardDownloadByPrompt = mutableMapOf<String, CardDownload>()
+    for (cardDownload in cardDownloads) {
+      val oldCard = cardDownloadByPrompt.get(cardDownload.prompt)
+      if (oldCard != null) {
+        throw RuntimeException(
+          "Key ${cardDownload.prompt} has two values: " +
+          "${oldCard} and ${cardDownload}")
       }
+      cardDownloadByPrompt.put(cardDownload.prompt, cardDownload)
     }
   }
-  val iClauseByKey = iClauses.map { Pair(it.getKey(), it) }.toMap()
 
-  val cards = iClauses.toSet() + descendantsOf(iClauses)
-  val cardRows = cards.map {
-    val type = it.javaClass.name.split('.').last()
-    CardRow(
-      it.cardId,
-      type,
-      it.getKey(),
-      it.getChildrenCards().map { it.cardId },
-      it.getGlossRows(),
-      getPrompt(it)
-    )
-  }
-  val assertion = assertUniqPrompts(cardRows)
-
-  val skillsExport: SkillsExport = Gson()
-    .fromJson(skillsExportFile.readText(), SkillsExport::class.java)
-
-  fun getCardsAndSkills(): Map<String, Any> {
-    val skillExportByCardTypeAndKey = skillsExport.skillExports.map {
-      Pair(Pair(it.cardType, it.cardKey), it)
-    }.toMap()
-
-    val skillRows = cards.map {
-      val skillExport = 
-        skillExportByCardTypeAndKey[Pair(cardType(it), it.getKey())]
-      if (skillExport != null) {
-        SkillRow(it.cardId,
-          skillExport.delay,
-          skillExport.endurance,
-          skillExport.lastSeenAt,
-          skillExport.mnemonic)
-      } else {
-        SkillRow(it.cardId,
-          if (it.getChildrenCards().size == 0)
-            DELAY_THRESHOLD else DELAY_THRESHOLD * 2,
-          0,
-          0,
-          "")
-      }
-    }
-
-    return linkedMapOf(
-      "cards" to cardRows,
-      "skills" to skillRows
-    )
-  }
-
-  fun parseEs(es: String, prompt: String): Card {
-    val cards = es.split(" ").map { word ->
+  fun parseEsPhrase(esPhrase: String): List<CardCreator> =
+    esPhrase.split(" ").map { word ->
       nonverbList.byEs(word) ?:
       uniqVList.byEs(word) ?:
       vCloud.byEs(word) ?:
-      throw CantMakeCard("Can't find card for es ${word}")
+      throw CantMakeCard("Can't make card for es ${word}")
     }
-    return Goal(cardIdSequence.nextId(), prompt, cards)
-  }
 
-  fun saveSkillsExport(skillsUpload: SkillsUpload) {
-    skillsExportFile.writeText(
-      GsonBuilder().setPrettyPrinting().create().toJson(
-        SkillsExport(skillsUpload.skillExports!!)))
-  }
-
-  fun getEnVerbFor(inf: Inf, number: Int, person: Int, tense: Tense): String =
-    when (tense) {
-      Tense.PRES ->
-        inf.enPresent +
-        EnVerbs.NUMBER_AND_PERSON_TO_EN_VERB_SUFFIX[Pair(number, person)]!!
-      Tense.PRET -> inf.enPast
-    } + if (inf.enDisambiguation != null) " (${inf.enDisambiguation})" else ""
-
-  fun getPrompt(card: Card): String = when (card) {
-    is Goal -> card.prompt
-    is Inf -> if (card.enDisambiguation != null)
-      "to ${card.enPresent} (${card.enDisambiguation})"
-      else "to ${card.enPresent}"
-    is Nonverb -> if (card.enDisambiguation != null)
-      "${card.en} (${card.enDisambiguation})"
-      else card.en
-    is RegV ->
-      "(${card.pattern.getEnPronoun()}) " +
-      getEnVerbFor(card.inf,
-        card.pattern.number, card.pattern.person, card.pattern.tense)
-    is RegVPattern -> {
-      val enPronoun = "(" + EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[
-        Pair(card.number, card.person)]!! + ")"
-      val enVerbSuffix = EnVerbs.NUMBER_AND_PERSON_TO_EN_VERB_SUFFIX[
-        Pair(card.number, card.person)]!!
-      when (card.tense) {
-        Tense.PRES -> when (card.infCategory) {
-          InfCategory.AR   -> "${enPronoun} talk${enVerbSuffix} (hablar)"
-          InfCategory.ER   -> "${enPronoun} eat${enVerbSuffix} (comer)"
-          InfCategory.ERIR -> "${enPronoun} eat${enVerbSuffix} (comer)"
-          InfCategory.IR   -> "${enPronoun} live${enVerbSuffix} (vivir)"
-          InfCategory.STEMPRET -> throw RuntimeException("Shouldn't happen")
-        }
-        Tense.PRET -> when (card.infCategory) {
-          InfCategory.AR   -> "${enPronoun} talked (hablar)"
-          InfCategory.ER   -> "${enPronoun} ate (comer)"
-          InfCategory.ERIR -> "${enPronoun} ate (comer)"
-          InfCategory.IR   -> "${enPronoun} lived (vivir)"
-          InfCategory.STEMPRET -> "${enPronoun} had (tener)"
-        }
-      }
-    }
-    is UniqV -> "(" + EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[
-        Pair(card.number, card.person)] + ") " + getPrompt(card.inf)
-    is StemChange -> "Stem change for ${card.inf.es} in ${card.tense}"
-    is StemChangeV ->
-      "(${card.pattern.getEnPronoun()}) " + getEnVerbFor(
-        card.stemChange.inf,
-        card.pattern.number,
-        card.pattern.person,
-        card.pattern.tense)
-    else -> throw RuntimeException("Unexpected card type ${card::class}")
-  }
-
-  fun assertUniqPrompts(cardRows: List<CardRow>) {
-    val cardRowByPrompt = mutableMapOf<String, CardRow>()
-    for (cardRow in cardRows) {
-      val oldCard = cardRowByPrompt.get(cardRow.quizQuestion)
-      if (oldCard != null) {
-        throw RuntimeException("Key ${cardRow.quizQuestion} has two values: " +
-          "${oldCard} and ${cardRow}")
-      }
-      cardRowByPrompt.put(cardRow.quizQuestion, cardRow)
-    }
-  }
 }

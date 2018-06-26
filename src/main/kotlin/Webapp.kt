@@ -3,13 +3,12 @@ package com.danstutzman
 import com.danstutzman.bank.Bank
 import com.danstutzman.bank.CantMakeCard
 import com.danstutzman.bank.GlossRow
-import com.danstutzman.bank.IdSequence
-import com.danstutzman.bank.SkillsUpload
 import com.danstutzman.bank.es.InfList
 import com.danstutzman.bank.es.RegV
 import com.danstutzman.bank.es.RegVPatternList
 import com.danstutzman.bank.es.Tense
 import com.danstutzman.bank.es.UniqVList
+import com.danstutzman.db.CardRow
 import com.danstutzman.db.Db
 import com.danstutzman.db.Goal
 import com.danstutzman.db.Infinitive
@@ -23,6 +22,9 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spark.Request
 import spark.Response
+
+val STAGE1_READY_TO_TEST = 1
+val STAGE0_NOT_READY_TO_TEST = 0
 
 fun escapeHTML(s: String): String {
   val out = StringBuilder(Math.max(16, s.length))
@@ -44,7 +46,6 @@ fun escapeHTML(s: String): String {
 }
 
 class Webapp(
-  val bank: Bank,
   val db: Db
 ) {
   val logger: Logger = LoggerFactory.getLogger("Webapp.kt")
@@ -85,31 +86,22 @@ class Webapp(
     html.append("    <th>Spanish</td>\n")
     html.append("  </tr>\n")
     for (goal in db.selectAllGoals()) {
-      val cardHtml: String =
-        if (goal.es == "") "" else try {
-          val maybeCard = bank.parseEs(goal.es, goal.enFreeText)
-          maybeCard.getGlossRows().map { it.es
-            }.joinToString(" ").replace("- -", "")
-        } catch (e: CantMakeCard) {
-          "<div class='CantMakeCard'>${e.message}</div>"
-        }
-
       html.append("  <tr>\n")
       html.append("    <td>${goal.goalId}</td>\n")
-      html.append("    <td>${goal.tags}</td>\n")
-      html.append("    <td>${goal.enFreeText}</td>\n")
-      html.append("    <td>${cardHtml}</td>\n")
+      html.append("    <td>${goal.tagsCsv}</td>\n")
+      html.append("    <td>${goal.en}</td>\n")
+      html.append("    <td>${goal.es}</td>\n")
       html.append("    <td><a href='/goals/${goal.goalId}'>Edit</a></td>\n")
       html.append("  </tr>\n")
     }
     html.append("</table><br>\n")
 
     html.append("<form method='POST' action='/goals'>\n")
-    html.append("  <label for='tags'>Tags</label><br>\n")
-    html.append("  <input type='text' name='tags'><br>\n")
-    html.append("  <label for='tags'>English</label><br>\n")
-    html.append("  <input type='text' name='en_free_text'><br>\n")
-    html.append("  <label for='tags'>Spanish</label><br>\n")
+    html.append("  <label for='tags_csv'>Tags (comma-separated)</label><br>\n")
+    html.append("  <input type='text' name='tags_csv'><br>\n")
+    html.append("  <label for='en'>English</label><br>\n")
+    html.append("  <input type='text' name='en'><br>\n")
+    html.append("  <label for='es'>Spanish</label><br>\n")
     html.append("  <textarea name='es' rows='10' cols='80'></textarea><br>\n")
     html.append("  <input type='submit' name='submit' value='Add Goal'>\n")
     html.append("</form>\n")
@@ -126,11 +118,11 @@ class Webapp(
 
     html.append("<h1>Edit Goal ${goal.goalId}</h1>\n")
     html.append("<form method='POST' action='/goals/${goal.goalId}'>\n")
-    html.append("  <label for='tags'>Tags</label><br>\n")
-    html.append("  <input type='text' name='tags' value='${escapeHTML(goal.tags)}'><br>\n")
-    html.append("  <label for='tags'>English</label><br>\n")
-    html.append("  <input type='text' name='en_free_text' value='${escapeHTML(goal.enFreeText)}'><br>\n")
-    html.append("  <label for='tags'>Spanish</label><br>\n")
+    html.append("  <label for='en'>Tags (comma-separated)</label><br>\n")
+    html.append("  <input type='text' name='tags_csv' value='${escapeHTML(goal.tagsCsv)}'><br>\n")
+    html.append("  <label for='en'>English</label><br>\n")
+    html.append("  <input type='text' name='en' value='${escapeHTML(goal.en)}'><br>\n")
+    html.append("  <label for='es'>Spanish</label><br>\n")
     html.append("  <input type='text' name='es' value='${escapeHTML(goal.es)}'><br>\n")
     html.append("  <input type='submit' name='submit' value='Edit Goal'>\n")
     html.append("  <input type='submit' name='submit' value='Delete Goal' onClick='return confirm(\"Delete goal?\")'>\n")
@@ -145,8 +137,8 @@ class Webapp(
     if (submit == "Edit Goal") {
       val goal = Goal(
         req.params("goalId").toInt(),
-        req.queryParams("tags"),
-        req.queryParams("en_free_text"),
+        req.queryParams("tags_csv"),
+        req.queryParams("en"),
         req.queryParams("es")
       )
       db.updateGoal(goal)
@@ -160,12 +152,43 @@ class Webapp(
   }
 
   val postGoals = { req: Request, res: Response ->
-    db.insertGoal(Goal(
+    val goal = Goal(
       0,
-      req.queryParams("tags"),
-      req.queryParams("en_free_text"),
+      req.queryParams("tags_csv"),
+      req.queryParams("en"),
       req.queryParams("es")
-    ))
+    )
+    db.insertGoal(goal)
+
+    val bank = Bank(db)
+    val gsonBuilder = GsonBuilder().create()
+    val cardCreators = bank.parseEsPhrase(goal.es)
+    if (cardCreators.size > 0) {
+      val cardRowsForWords = cardCreators.map { cardCreator ->
+        val glossRows = cardCreator.getGlossRows()
+        CardRow(
+          glossRowsJson = gsonBuilder.toJson(glossRows),
+          lastSeenAt = null,
+          leafIdsCsv = glossRows.map { it.leafId }.joinToString(","),
+          mnemonic = "",
+          prompt = cardCreator.getPrompt(),
+          stage = if (glossRows.size == 1) STAGE1_READY_TO_TEST
+            else STAGE0_NOT_READY_TO_TEST
+        )
+      }
+      val allGlossRows = cardCreators.flatMap { it.getGlossRows() }
+      val cardRowForGoal = CardRow(
+        glossRowsJson = gsonBuilder.toJson(allGlossRows),
+        lastSeenAt = null,
+        leafIdsCsv = allGlossRows.map { it.leafId }.joinToString(","),
+        mnemonic = "",
+        prompt = goal.en,
+        stage = if (allGlossRows.size == 1) STAGE1_READY_TO_TEST
+          else STAGE0_NOT_READY_TO_TEST
+      )
+      db.insertCardRows(listOf(cardRowForGoal) + cardRowsForWords)
+    }
+
     res.redirect("/goals")
   }
 
@@ -178,7 +201,7 @@ class Webapp(
     html.append("<form method='POST' action='/nonverbs'>\n")
     html.append("<table border='1'>\n")
     html.append("  <tr>\n")
-    html.append("    <th>ID</td>\n")
+    html.append("    <th>LeafId</td>\n")
     html.append("    <th>Spanish</td>\n")
     html.append("    <th>English</td>\n")
     html.append("    <th>English disambiguation</td>\n")
@@ -187,12 +210,12 @@ class Webapp(
     html.append("  </tr>\n")
     for (row in db.selectAllNonverbRows()) {
       html.append("  <tr>\n")
-      html.append("    <td>${row.nonverbId}</td>\n")
+      html.append("    <td>${row.leafId}</td>\n")
       html.append("    <td>${row.es}</td>\n")
       html.append("    <td>${row.en}</td>\n")
       html.append("    <td>${row.enDisambiguation}</td>\n")
       html.append("    <td>${row.enPlural ?: ""}</td>\n")
-      html.append("    <td><input type='submit' name='deleteNonverb${row.nonverbId}' value='Delete' onClick='return confirm(\"Delete nonverb?\")'></td>\n")
+      html.append("    <td><input type='submit' name='deleteNonverb${row.leafId}' value='Delete' onClick='return confirm(\"Delete nonverb?\")'></td>\n")
       html.append("  </tr>\n")
     }
     html.append("  <tr>\n")
@@ -240,7 +263,7 @@ class Webapp(
     html.append("<form method='POST' action='/infinitives'>\n")
     html.append("<table border='1'>\n")
     html.append("  <tr>\n")
-    html.append("    <th>ID</td>\n")
+    html.append("    <th>LeafId</td>\n")
     html.append("    <th>Spanish</td>\n")
     html.append("    <th>English</td>\n")
     html.append("    <th>English disambiguation</td>\n")
@@ -249,12 +272,12 @@ class Webapp(
     html.append("  </tr>\n")
     for (infinitive in db.selectAllInfinitives()) {
       html.append("  <tr>\n")
-      html.append("    <td>${infinitive.infinitiveId}</td>\n")
+      html.append("    <td>${infinitive.leafId}</td>\n")
       html.append("    <td>${infinitive.es}</td>\n")
       html.append("    <td>${infinitive.en}</td>\n")
       html.append("    <td>${infinitive.enDisambiguation}</td>\n")
       html.append("    <td>${infinitive.enPast}</td>\n")
-      html.append("    <td><input type='submit' name='deleteInfinitive${infinitive.infinitiveId}' value='Delete' onClick='return confirm(\"Delete infinitive?\")'></td>\n")
+      html.append("    <td><input type='submit' name='deleteInfinitive${infinitive.leafId}' value='Delete' onClick='return confirm(\"Delete infinitive?\")'></td>\n")
       html.append("  </tr>\n")
     }
     html.append("  <tr>\n")
@@ -301,7 +324,7 @@ class Webapp(
     html.append("<form method='POST' action='/unique-conjugations'>\n")
     html.append("<table border='1'>\n")
     html.append("  <tr>\n")
-    html.append("    <th>ID</td>\n")
+    html.append("    <th>LeafId</td>\n")
     html.append("    <th>Spanish</td>\n")
     html.append("    <th>English</td>\n")
     html.append("    <th>Infinitive</td>\n")
@@ -312,14 +335,14 @@ class Webapp(
     html.append("  </tr>\n")
     for (uniqueConjugation in db.selectAllUniqueConjugations()) {
       html.append("  <tr>\n")
-      html.append("    <td>${uniqueConjugation.uniqueConjugationId}</td>\n")
+      html.append("    <td>${uniqueConjugation.leafId}</td>\n")
       html.append("    <td>${uniqueConjugation.es}</td>\n")
       html.append("    <td>${uniqueConjugation.en}</td>\n")
       html.append("    <td>${uniqueConjugation.infinitiveEs}</td>\n")
       html.append("    <td>${uniqueConjugation.number}</td>\n")
       html.append("    <td>${uniqueConjugation.person}</td>\n")
       html.append("    <td>${uniqueConjugation.tense}</td>\n")
-      html.append("    <td><input type='submit' name='deleteUniqueConjugation${uniqueConjugation.uniqueConjugationId}' value='Delete' onClick='return confirm(\"Delete conjugation?\")'></td>\n")
+      html.append("    <td><input type='submit' name='deleteUniqueConjugation${uniqueConjugation.leafId}' value='Delete' onClick='return confirm(\"Delete conjugation?\")'></td>\n")
       html.append("  </tr>\n")
     }
     html.append("  <tr>\n")
@@ -371,7 +394,7 @@ class Webapp(
     html.append("<form method='POST' action='/stem-changes'>\n")
     html.append("<table border='1'>\n")
     html.append("  <tr>\n")
-    html.append("    <th>ID</td>\n")
+    html.append("    <th>LeafId</td>\n")
     html.append("    <th>Infinitive</td>\n")
     html.append("    <th>Stem</td>\n")
     html.append("    <th>Tense</td>\n")
@@ -379,11 +402,11 @@ class Webapp(
     html.append("  </tr>\n")
     for (row in db.selectAllStemChangeRows()) {
       html.append("  <tr>\n")
-      html.append("    <td>${row.stemChangeId}</td>\n")
+      html.append("    <td>${row.leafId}</td>\n")
       html.append("    <td>${row.infinitiveEs}</td>\n")
       html.append("    <td>${row.stem}</td>\n")
       html.append("    <td>${row.tense}</td>\n")
-      html.append("    <td><input type='submit' name='deleteStemChange${row.stemChangeId}' value='Delete' onClick='return confirm(\"Delete stem change?\")'></td>\n")
+      html.append("    <td><input type='submit' name='deleteStemChange${row.leafId}' value='Delete' onClick='return confirm(\"Delete stem change?\")'></td>\n")
       html.append("  </tr>\n")
     }
     html.append("  <tr>\n")
@@ -420,18 +443,19 @@ class Webapp(
   }
 
 
-  val getApi = { req: Request, res: Response ->
-    val response = bank.getCardsAndSkills()
+  val getApi = { _: Request, res: Response ->
+    val bank = Bank(db)
+    val response = bank.getCardDownloads()
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Content-Type", "application/json")
-    GsonBuilder().create().toJson(response)
+    GsonBuilder().serializeNulls().create().toJson(response)
   }
 
-  val postApi = { req: Request, res: Response ->
-    val skillsUpload = Gson().fromJson(req.body(), SkillsUpload::class.java)
-    bank.saveSkillsExport(skillsUpload)
-    res.header("Access-Control-Allow-Origin", "*")
-    res.header("Content-Type", "application/json")
-    "{}"
-  }
+//   val postApi = { req: Request, res: Response ->
+//     val skillsUpload = Gson().fromJson(req.body(), SkillsUpload::class.java)
+//     // bank.saveSkillsExport(skillsUpload)
+//     res.header("Access-Control-Allow-Origin", "*")
+//     res.header("Content-Type", "application/json")
+//     "{}"
+//   }
 }

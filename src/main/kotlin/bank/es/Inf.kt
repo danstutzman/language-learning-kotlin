@@ -1,18 +1,19 @@
 package com.danstutzman.bank.es
 
-import com.danstutzman.bank.Card
+import com.danstutzman.bank.CardCreator
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.en.EnVerbs
 
 data class Inf (
-  override val cardId: Int,
+  val leafId: Int,
   val es: String,
   val enPresent: String,
   val enPast: String,
   val enDisambiguation: String?
-): Card, V {
-  override fun getChildrenCards(): List<Card> = listOf()
-  override fun getKey(): String = es
+): CardCreator, V {
   override fun getGlossRows(): List<GlossRow> =
-    listOf(GlossRow(cardId, enPresent, es))
+    listOf(GlossRow(leafId, enPresent, es))
+  override fun getPrompt(): String =
+    if (enDisambiguation != null) "to ${enPresent} (${enDisambiguation})"
+      else "to ${enPresent}"
 }

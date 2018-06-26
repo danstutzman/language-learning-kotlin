@@ -18,8 +18,7 @@ fun main(args: Array<String>) {
 
   val conn = DriverManager.getConnection(jdbcUrl, "postgres", "")
   val db = Db(conn)
-  val bank = Bank(File("skillsExport.json"), db)
-  val webapp = Webapp(bank, db)
+  val webapp = Webapp(db)
 
   logger.info("Starting server port=${port}")
   val service = Service.ignite().port(port)
@@ -50,7 +49,7 @@ fun main(args: Array<String>) {
   service.get("/unique-conjugations", webapp.getUniqueConjugations)
   service.post("/unique-conjugations", webapp.postUniqueConjugations)
   service.get("/api", webapp.getApi)
-  service.post("/api", webapp.postApi)
+  // service.post("/api", webapp.postApi)
 
   service.afterAfter { req, res ->
     logger.info("${req.requestMethod()} ${req.pathInfo()} ${res.status()}")

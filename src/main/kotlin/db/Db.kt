@@ -4,6 +4,8 @@ import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.jooq.SQLDialect
+import org.jooq.generated.Sequences.LEAF_IDS
+import org.jooq.generated.tables.Cards.CARDS
 import org.jooq.generated.tables.Goals.GOALS
 import org.jooq.generated.tables.Infinitives.INFINITIVES
 import org.jooq.generated.tables.Nonverbs.NONVERBS
@@ -15,13 +17,22 @@ import java.sql.Timestamp
 
 data class Goal(
   val goalId: Int,
-  val tags: String,
-  val enFreeText: String,
+  val tagsCsv: String,
+  val en: String,
   val es: String
 )
 
+data class CardRow(
+  val glossRowsJson: String,
+  val lastSeenAt: Int?,
+  val leafIdsCsv: String,
+  val mnemonic: String,
+  val prompt: String,
+  val stage: Int
+)
+
 data class NonverbRow(
-  val nonverbId: Int,
+  val leafId: Int,
   val en: String,
   val enDisambiguation: String, // "" if none
   val enPlural: String?,
@@ -29,7 +40,7 @@ data class NonverbRow(
 )
 
 data class Infinitive(
-  val infinitiveId: Int,
+  val leafId: Int,
   val en: String,
   val enDisambiguation: String, // "" if none
   val enPast: String,
@@ -37,7 +48,7 @@ data class Infinitive(
 )
 
 data class UniqueConjugation(
-  val uniqueConjugationId: Int,
+  val leafId: Int,
   val es: String,
   val en: String,
   val infinitiveEs: String,
@@ -47,7 +58,7 @@ data class UniqueConjugation(
 )
 
 data class StemChangeRow(
-  val stemChangeId: Int,
+  val leafId: Int,
   val infinitiveEs: String,
   val stem: String,
   val tense: String
@@ -68,18 +79,18 @@ class Db(
   fun insertGoal(goal: Goal) =
     create
       .insertInto(GOALS,
-          GOALS.TAGS,
-          GOALS.EN_FREE_TEXT,
+          GOALS.TAGS_CSV,
+          GOALS.EN,
           GOALS.ES,
           GOALS.UPDATED_AT)
-      .values(goal.tags,
-          goal.enFreeText,
+      .values(goal.tagsCsv,
+          goal.en,
           goal.es,
           now())
       .returning(
           GOALS.GOAL_ID,
-          GOALS.TAGS,
-          GOALS.EN_FREE_TEXT,
+          GOALS.TAGS_CSV,
+          GOALS.EN,
           GOALS.ES)
       .fetchOne()
 
@@ -87,8 +98,8 @@ class Db(
     val maybeRow = create
       .select(
         GOALS.GOAL_ID,
-        GOALS.TAGS,
-        GOALS.EN_FREE_TEXT,
+        GOALS.TAGS_CSV,
+        GOALS.EN,
         GOALS.ES)
       .from(GOALS)
       .where(GOALS.GOAL_ID.eq(goalId))
@@ -97,8 +108,8 @@ class Db(
     return maybeRow?.map {
       Goal(
         it.getValue(GOALS.GOAL_ID),
-        it.getValue(GOALS.TAGS),
-        it.getValue(GOALS.EN_FREE_TEXT),
+        it.getValue(GOALS.TAGS_CSV),
+        it.getValue(GOALS.EN),
         it.getValue(GOALS.ES)
       )
     }
@@ -108,8 +119,8 @@ class Db(
     val rows = create
       .select(
         GOALS.GOAL_ID,
-        GOALS.TAGS,
-        GOALS.EN_FREE_TEXT,
+        GOALS.TAGS_CSV,
+        GOALS.EN,
         GOALS.ES)
       .from(GOALS)
       .fetch()
@@ -117,8 +128,8 @@ class Db(
     return rows.map {
       Goal(
         it.getValue(GOALS.GOAL_ID),
-        it.getValue(GOALS.TAGS),
-        it.getValue(GOALS.EN_FREE_TEXT),
+        it.getValue(GOALS.TAGS_CSV),
+        it.getValue(GOALS.EN),
         it.getValue(GOALS.ES)
       )
     }
@@ -126,8 +137,8 @@ class Db(
 
   fun updateGoal(goal: Goal) {
     create.update(GOALS)
-      .set(GOALS.TAGS, goal.tags)
-      .set(GOALS.EN_FREE_TEXT, goal.enFreeText)
+      .set(GOALS.TAGS_CSV, goal.tagsCsv)
+      .set(GOALS.EN, goal.en)
       .set(GOALS.ES, goal.es)
       .set(GOALS.UPDATED_AT, now())
       .where(GOALS.GOAL_ID.eq(goal.goalId))
@@ -140,10 +151,58 @@ class Db(
       .execute()
   }
 
+  fun insertCardRows(cardRows: List<CardRow>) {
+    if (cardRows.size == 0) { return }
+    var statement = create
+      .insertInto(CARDS,
+          CARDS.GLOSS_ROWS_JSON,
+          CARDS.LAST_SEEN_AT,
+          CARDS.LEAF_IDS_CSV,
+          CARDS.MNEMONIC,
+          CARDS.PROMPT,
+          CARDS.STAGE,
+          CARDS.UPDATED_AT)
+    for (row in cardRows) {
+      statement = statement.values(
+        row.glossRowsJson,
+        row.lastSeenAt?.let { java.sql.Timestamp(it.toLong() * 1000) },
+        row.leafIdsCsv,
+        row.mnemonic,
+        row.prompt,
+        row.stage,
+        now())
+    }
+    statement.onDuplicateKeyIgnore().execute()
+  }
+
+  fun selectAllCardRows(): List<CardRow> {
+    val rows = create
+      .select(
+        CARDS.GLOSS_ROWS_JSON,
+        CARDS.LAST_SEEN_AT,
+        CARDS.LEAF_IDS_CSV,
+        CARDS.MNEMONIC,
+        CARDS.PROMPT,
+        CARDS.STAGE)
+      .from(CARDS)
+      .fetch()
+
+    return rows.map {
+      CardRow(
+        it.getValue(CARDS.GLOSS_ROWS_JSON),
+        it.getValue(CARDS.LAST_SEEN_AT)?.let { it.getTime() / 1000 }?.toInt(),
+        it.getValue(CARDS.LEAF_IDS_CSV),
+        it.getValue(CARDS.MNEMONIC),
+        it.getValue(CARDS.PROMPT),
+        it.getValue(CARDS.STAGE)
+      )
+    }
+  }
+
   fun selectAllNonverbRows(): List<NonverbRow> {
     val rows = create
       .select(
-        NONVERBS.NONVERB_ID,
+        NONVERBS.LEAF_ID,
         NONVERBS.EN,
         NONVERBS.EN_DISAMBIGUATION,
         NONVERBS.EN_PLURAL,
@@ -153,7 +212,7 @@ class Db(
 
     return rows.map {
       NonverbRow(
-        it.getValue(NONVERBS.NONVERB_ID),
+        it.getValue(NONVERBS.LEAF_ID),
         it.getValue(NONVERBS.EN),
         it.getValue(NONVERBS.EN_DISAMBIGUATION),
         it.getValue(NONVERBS.EN_PLURAL),
@@ -162,34 +221,39 @@ class Db(
     }
   }
 
-  fun insertNonverbRow(nonverb: NonverbRow) =
+  fun insertNonverbRow(nonverb: NonverbRow) {
+    val leafId = create.nextval(LEAF_IDS).toInt()
+
     create
       .insertInto(NONVERBS,
+          NONVERBS.LEAF_ID,
           NONVERBS.EN,
           NONVERBS.EN_DISAMBIGUATION,
           NONVERBS.EN_PLURAL,
           NONVERBS.ES)
-      .values(nonverb.en,
+      .values(leafId,
+          nonverb.en,
           nonverb.enDisambiguation,
           nonverb.enPlural,
           nonverb.es)
       .returning(
-          NONVERBS.NONVERB_ID,
+          NONVERBS.LEAF_ID,
           NONVERBS.EN,
           NONVERBS.EN_DISAMBIGUATION,
           NONVERBS.EN_PLURAL,
           NONVERBS.ES)
       .fetchOne()
+  }
 
   fun deleteNonverbRow(nonverbRow: NonverbRow) =
     create.delete(NONVERBS)
-      .where(NONVERBS.NONVERB_ID.eq(nonverbRow.nonverbId))
+      .where(NONVERBS.LEAF_ID.eq(nonverbRow.leafId))
       .execute()
 
   fun selectAllInfinitives(): List<Infinitive> {
     val rows = create
       .select(
-        INFINITIVES.INFINITIVE_ID,
+        INFINITIVES.LEAF_ID,
         INFINITIVES.EN,
         INFINITIVES.EN_DISAMBIGUATION,
         INFINITIVES.EN_PAST,
@@ -199,7 +263,7 @@ class Db(
 
     return rows.map {
       Infinitive(
-        it.getValue(INFINITIVES.INFINITIVE_ID),
+        it.getValue(INFINITIVES.LEAF_ID),
         it.getValue(INFINITIVES.EN),
         it.getValue(INFINITIVES.EN_DISAMBIGUATION),
         it.getValue(INFINITIVES.EN_PAST),
@@ -208,34 +272,39 @@ class Db(
     }
   }
 
-  fun insertInfinitive(infinitive: Infinitive) =
+  fun insertInfinitive(infinitive: Infinitive) {
+    val leafId = create.nextval(LEAF_IDS).toInt()
+
     create
       .insertInto(INFINITIVES,
+          INFINITIVES.LEAF_ID,
           INFINITIVES.EN,
           INFINITIVES.EN_DISAMBIGUATION,
           INFINITIVES.EN_PAST,
           INFINITIVES.ES)
-      .values(infinitive.en,
+      .values(leafId,
+          infinitive.en,
           infinitive.enDisambiguation,
           infinitive.enPast,
           infinitive.es)
       .returning(
-          INFINITIVES.INFINITIVE_ID,
+          INFINITIVES.LEAF_ID,
           INFINITIVES.EN,
           INFINITIVES.EN_DISAMBIGUATION,
           INFINITIVES.EN_PAST,
           INFINITIVES.ES)
       .fetchOne()
+  }
 
   fun deleteInfinitive(infinitive: Infinitive) =
     create.delete(INFINITIVES)
-      .where(INFINITIVES.INFINITIVE_ID.eq(infinitive.infinitiveId))
+      .where(INFINITIVES.LEAF_ID.eq(infinitive.leafId))
       .execute()
 
   fun selectAllUniqueConjugations(): List<UniqueConjugation> {
     val rows = create
       .select(
-        UNIQUE_CONJUGATIONS.UNIQUE_CONJUGATION_ID,
+        UNIQUE_CONJUGATIONS.LEAF_ID,
         UNIQUE_CONJUGATIONS.ES,
         UNIQUE_CONJUGATIONS.EN,
         UNIQUE_CONJUGATIONS.INFINITIVE_ES,
@@ -247,7 +316,7 @@ class Db(
 
     return rows.map {
       UniqueConjugation(
-        it.getValue(UNIQUE_CONJUGATIONS.UNIQUE_CONJUGATION_ID),
+        it.getValue(UNIQUE_CONJUGATIONS.LEAF_ID),
         it.getValue(UNIQUE_CONJUGATIONS.ES),
         it.getValue(UNIQUE_CONJUGATIONS.EN),
         it.getValue(UNIQUE_CONJUGATIONS.INFINITIVE_ES),
@@ -258,23 +327,27 @@ class Db(
     }
   }
 
-  fun insertUniqueConjugation(uniqueConjugation: UniqueConjugation) =
+  fun insertUniqueConjugation(uniqueConjugation: UniqueConjugation) {
+    val leafId = create.nextval(LEAF_IDS).toInt()
+
     create
       .insertInto(UNIQUE_CONJUGATIONS,
+          UNIQUE_CONJUGATIONS.LEAF_ID,
           UNIQUE_CONJUGATIONS.ES,
           UNIQUE_CONJUGATIONS.EN,
           UNIQUE_CONJUGATIONS.INFINITIVE_ES,
           UNIQUE_CONJUGATIONS.NUMBER,
           UNIQUE_CONJUGATIONS.PERSON,
           UNIQUE_CONJUGATIONS.TENSE)
-      .values(uniqueConjugation.es,
+      .values(leafId,
+          uniqueConjugation.es,
           uniqueConjugation.en,
           uniqueConjugation.infinitiveEs,
           uniqueConjugation.number,
           uniqueConjugation.person,
           uniqueConjugation.tense)
       .returning(
-          UNIQUE_CONJUGATIONS.UNIQUE_CONJUGATION_ID,
+          UNIQUE_CONJUGATIONS.LEAF_ID,
           UNIQUE_CONJUGATIONS.ES,
           UNIQUE_CONJUGATIONS.EN,
           UNIQUE_CONJUGATIONS.INFINITIVE_ES,
@@ -282,17 +355,17 @@ class Db(
           UNIQUE_CONJUGATIONS.PERSON,
           UNIQUE_CONJUGATIONS.TENSE)
       .fetchOne()
+  }
 
   fun deleteUniqueConjugation(uniqueConjugation: UniqueConjugation) =
     create.delete(UNIQUE_CONJUGATIONS)
-      .where(UNIQUE_CONJUGATIONS.UNIQUE_CONJUGATION_ID.eq(
-        uniqueConjugation.uniqueConjugationId))
+      .where(UNIQUE_CONJUGATIONS.LEAF_ID.eq(uniqueConjugation.leafId))
       .execute()
 
   fun selectAllStemChangeRows(): List<StemChangeRow> {
     val rows = create
       .select(
-        STEM_CHANGES.STEM_CHANGE_ID,
+        STEM_CHANGES.LEAF_ID,
         STEM_CHANGES.INFINITIVE_ES,
         STEM_CHANGES.STEM,
         STEM_CHANGES.TENSE)
@@ -301,7 +374,7 @@ class Db(
 
     return rows.map {
       StemChangeRow(
-        it.getValue(STEM_CHANGES.STEM_CHANGE_ID),
+        it.getValue(STEM_CHANGES.LEAF_ID),
         it.getValue(STEM_CHANGES.INFINITIVE_ES),
         it.getValue(STEM_CHANGES.STEM),
         it.getValue(STEM_CHANGES.TENSE)
@@ -309,25 +382,29 @@ class Db(
     }
   }
 
-  fun insertStemChangeRow(row: StemChangeRow) =
+  fun insertStemChangeRow(row: StemChangeRow) {
+    val leafId = create.nextval(LEAF_IDS).toInt()
+
     create
       .insertInto(STEM_CHANGES,
+          STEM_CHANGES.LEAF_ID,
           STEM_CHANGES.INFINITIVE_ES,
           STEM_CHANGES.STEM,
           STEM_CHANGES.TENSE)
-      .values(row.infinitiveEs,
+      .values(leafId,
+          row.infinitiveEs,
           row.stem,
           row.tense)
       .returning(
-          STEM_CHANGES.STEM_CHANGE_ID,
+          STEM_CHANGES.LEAF_ID,
           STEM_CHANGES.INFINITIVE_ES,
           STEM_CHANGES.STEM,
           STEM_CHANGES.TENSE)
       .fetchOne()
+  }
 
   fun deleteStemChangeRow(row: StemChangeRow) =
     create.delete(STEM_CHANGES)
-      .where(STEM_CHANGES.STEM_CHANGE_ID.eq(
-        row.stemChangeId))
+      .where(STEM_CHANGES.LEAF_ID.eq(row.leafId))
       .execute()
 }

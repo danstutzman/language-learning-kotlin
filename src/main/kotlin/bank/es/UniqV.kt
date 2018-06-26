@@ -1,18 +1,21 @@
 package com.danstutzman.bank.es
 
-import com.danstutzman.bank.Card
+import com.danstutzman.bank.CardCreator
 import com.danstutzman.bank.GlossRow
+import com.danstutzman.bank.en.EnPronouns
 
 data class UniqV (
-  override val cardId: Int,
+  val leafId: Int,
   val es: String,
   val en: String,
   val inf: Inf,
   val number: Int,
   val person: Int,
   val tense: Tense
-): Card, V {
-  override fun getChildrenCards(): List<Card> = listOf<Card>()
-  override fun getGlossRows(): List<GlossRow> = listOf(GlossRow(cardId, en, es))
-  override fun getKey(): String = es
+): CardCreator, V {
+  override fun getGlossRows(): List<GlossRow> = listOf(GlossRow(leafId, en, es))
+  override fun getPrompt(): String = "(" +
+    EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)] +
+    ") " +
+    inf.getPrompt()
 }

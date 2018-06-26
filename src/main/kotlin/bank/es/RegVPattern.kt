@@ -1,6 +1,6 @@
 package com.danstutzman.bank.es
 
-import com.danstutzman.bank.Card
+import com.danstutzman.bank.CardCreator
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.en.EnPronouns
 import com.danstutzman.bank.en.EnVerbs
@@ -17,17 +17,37 @@ val PERSON_TO_DESCRIPTION = linkedMapOf(
 )
 
 data class RegVPattern (
-  override val cardId: Int,
+  val leafId: Int,
   val infCategory: InfCategory,
   val number: Int,
   val person: Int,
   val tense: Tense,
   val es: String
-): Card {
+): CardCreator {
   fun getEnPronoun(): String =
     EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)]!!
-  override fun getKey(): String = "${infCategory}${number}${person}${tense}"
-  override fun getChildrenCards(): List<Card> = listOf<Card>()
   override fun getGlossRows(): List<GlossRow> =
-    listOf(GlossRow(cardId, "(${getEnPronoun()})", es))
+    listOf(GlossRow(leafId, "(${getEnPronoun()})", es))
+  override fun getPrompt(): String {
+    val enPronoun = "(" +
+      EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)]!! + ")"
+    val enVerbSuffix =
+      EnVerbs.NUMBER_AND_PERSON_TO_EN_VERB_SUFFIX[Pair(number, person)]!!
+    return when (tense) {
+      Tense.PRES -> when (infCategory) {
+        InfCategory.AR   -> "${enPronoun} talk${enVerbSuffix} (hablar)"
+        InfCategory.ER   -> "${enPronoun} eat${enVerbSuffix} (comer)"
+        InfCategory.ERIR -> "${enPronoun} eat${enVerbSuffix} (comer)"
+        InfCategory.IR   -> "${enPronoun} live${enVerbSuffix} (vivir)"
+        InfCategory.STEMPRET -> throw RuntimeException("Shouldn't happen")
+      }
+      Tense.PRET -> when (infCategory) {
+        InfCategory.AR   -> "${enPronoun} talked (hablar)"
+        InfCategory.ER   -> "${enPronoun} ate (comer)"
+        InfCategory.ERIR -> "${enPronoun} ate (comer)"
+        InfCategory.IR   -> "${enPronoun} lived (vivir)"
+        InfCategory.STEMPRET -> "${enPronoun} had (tener)"
+      }
+    }
+  }
 }
