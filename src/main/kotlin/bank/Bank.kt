@@ -34,6 +34,7 @@ import java.io.File
 const val DELAY_THRESHOLD = 100000
 
 data class CardDownload(
+  val cardId: Int,
   val glossRows: List<GlossRow>,
   val lastSeenAt: Int?,
   val leafIdsCsv: String,
@@ -74,6 +75,7 @@ class Bank(
       )
     }
     CardDownload(
+      cardId = it.cardId,
       glossRows = glossRows,
       lastSeenAt = it.lastSeenAt,
       leafIdsCsv = it.leafIdsCsv,

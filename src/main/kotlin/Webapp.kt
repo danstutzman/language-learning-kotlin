@@ -167,6 +167,7 @@ class Webapp(
       val cardRowsForWords = cardCreators.map { cardCreator ->
         val glossRows = cardCreator.getGlossRows()
         CardRow(
+          cardId = 0,
           glossRowsJson = gsonBuilder.toJson(glossRows),
           lastSeenAt = null,
           leafIdsCsv = glossRows.map { it.leafId }.joinToString(","),
@@ -178,6 +179,7 @@ class Webapp(
       }
       val allGlossRows = cardCreators.flatMap { it.getGlossRows() }
       val cardRowForGoal = CardRow(
+        cardId = 0,
         glossRowsJson = gsonBuilder.toJson(allGlossRows),
         lastSeenAt = null,
         leafIdsCsv = allGlossRows.map { it.leafId }.joinToString(","),

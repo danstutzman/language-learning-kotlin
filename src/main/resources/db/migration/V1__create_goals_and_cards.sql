@@ -8,6 +8,7 @@ CREATE TABLE goals (
 );
 
 CREATE TABLE cards (
+  card_id           SERIAL PRIMARY KEY,
   gloss_rows_json   TEXT NOT NULL,
   last_seen_at      TIMESTAMPTZ,
   leaf_ids_csv      TEXT NOT NULL,

@@ -23,6 +23,7 @@ data class Goal(
 )
 
 data class CardRow(
+  val cardId: Int,
   val glossRowsJson: String,
   val lastSeenAt: Int?,
   val leafIdsCsv: String,
@@ -178,6 +179,7 @@ class Db(
   fun selectAllCardRows(): List<CardRow> {
     val rows = create
       .select(
+        CARDS.CARD_ID,
         CARDS.GLOSS_ROWS_JSON,
         CARDS.LAST_SEEN_AT,
         CARDS.LEAF_IDS_CSV,
@@ -189,6 +191,7 @@ class Db(
 
     return rows.map {
       CardRow(
+        it.getValue(CARDS.CARD_ID),
         it.getValue(CARDS.GLOSS_ROWS_JSON),
         it.getValue(CARDS.LAST_SEEN_AT)?.let { it.getTime() / 1000 }?.toInt(),
         it.getValue(CARDS.LEAF_IDS_CSV),

@@ -34,7 +34,9 @@ ALTER TABLE ONLY public.schema_version DROP CONSTRAINT schema_version_pk;
 ALTER TABLE ONLY public.nonverbs DROP CONSTRAINT nonverbs_pkey;
 ALTER TABLE ONLY public.infinitives DROP CONSTRAINT infinitives_pkey;
 ALTER TABLE ONLY public.goals DROP CONSTRAINT goals_pkey;
+ALTER TABLE ONLY public.cards DROP CONSTRAINT cards_pkey;
 ALTER TABLE public.goals ALTER COLUMN goal_id DROP DEFAULT;
+ALTER TABLE public.cards ALTER COLUMN card_id DROP DEFAULT;
 DROP TABLE public.unique_conjugations;
 DROP TABLE public.stem_changes;
 DROP TABLE public.schema_version;
@@ -43,6 +45,7 @@ DROP SEQUENCE public.leaf_ids;
 DROP TABLE public.infinitives;
 DROP SEQUENCE public.goals_goal_id_seq;
 DROP TABLE public.goals;
+DROP SEQUENCE public.cards_card_id_seq;
 DROP TABLE public.cards;
 DROP EXTENSION plpgsql;
 DROP SCHEMA public;
@@ -87,18 +90,40 @@ SET default_with_oids = false;
 --
 
 CREATE TABLE cards (
-    leaf_ids_csv text NOT NULL,
+    card_id integer NOT NULL,
     gloss_rows_json text NOT NULL,
+    last_seen_at timestamp with time zone,
+    leaf_ids_csv text NOT NULL,
     prompt text NOT NULL,
     stage integer NOT NULL,
     mnemonic text NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone NOT NULL,
-    last_seen_at timestamp with time zone
+    updated_at timestamp with time zone NOT NULL
 );
 
 
 ALTER TABLE cards OWNER TO postgres;
+
+--
+-- Name: cards_card_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE cards_card_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE cards_card_id_seq OWNER TO postgres;
+
+--
+-- Name: cards_card_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE cards_card_id_seq OWNED BY cards.card_id;
+
 
 --
 -- Name: goals; Type: TABLE; Schema: public; Owner: postgres
@@ -237,6 +262,13 @@ CREATE TABLE unique_conjugations (
 ALTER TABLE unique_conjugations OWNER TO postgres;
 
 --
+-- Name: cards card_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY cards ALTER COLUMN card_id SET DEFAULT nextval('cards_card_id_seq'::regclass);
+
+
+--
 -- Name: goals goal_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -247,11 +279,18 @@ ALTER TABLE ONLY goals ALTER COLUMN goal_id SET DEFAULT nextval('goals_goal_id_s
 -- Data for Name: cards; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY cards (leaf_ids_csv, gloss_rows_json, prompt, stage, mnemonic, created_at, updated_at, last_seen_at) FROM stdin;
-388,383	[{"leafId":388,"en":"good","es":"buenas"},{"leafId":383,"en":"afternoons","es":"tardes"}]	Good afternoon!	0		2018-06-26 14:05:11.086805-06	2018-06-26 14:05:11.084-06	\N
-388	[{"leafId":388,"en":"good","es":"buenas"}]	good (fem.)	1		2018-06-26 14:05:11.086805-06	2018-06-26 14:05:11.084-06	\N
-383	[{"leafId":383,"en":"afternoons","es":"tardes"}]	afternoons	1		2018-06-26 14:05:11.086805-06	2018-06-26 14:05:11.084-06	\N
+COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage, mnemonic, created_at, updated_at) FROM stdin;
+1	[{"leafId":388,"en":"good","es":"buenas"},{"leafId":383,"en":"afternoons","es":"tardes"}]	\N	388,383	Good afternoon!	0		2018-06-26 17:26:04.984444-06	2018-06-26 17:26:04.981-06
+2	[{"leafId":388,"en":"good","es":"buenas"}]	\N	388	good (fem.)	1		2018-06-26 17:26:04.984444-06	2018-06-26 17:26:04.981-06
+3	[{"leafId":383,"en":"afternoons","es":"tardes"}]	\N	383	afternoons	1		2018-06-26 17:26:04.984444-06	2018-06-26 17:26:04.981-06
 \.
+
+
+--
+-- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('cards_card_id_seq', 3, true);
 
 
 --
@@ -259,7 +298,7 @@ COPY cards (leaf_ids_csv, gloss_rows_json, prompt, stage, mnemonic, created_at, 
 --
 
 COPY goals (goal_id, tags_csv, en, es, created_at, updated_at) FROM stdin;
-12		Good afternoon!	buenas tardes	2018-06-26 14:05:10.869142-06	2018-06-26 14:05:10.864-06
+1		Good afternoon!	buenas tardes	2018-06-26 17:26:04.873884-06	2018-06-26 17:26:04.866-06
 \.
 
 
@@ -267,7 +306,7 @@ COPY goals (goal_id, tags_csv, en, es, created_at, updated_at) FROM stdin;
 -- Name: goals_goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('goals_goal_id_seq', 12, true);
+SELECT pg_catalog.setval('goals_goal_id_seq', 1, true);
 
 
 --
@@ -413,7 +452,7 @@ COPY nonverbs (leaf_id, es, en, en_disambiguation, en_plural, created_at) FROM s
 
 COPY schema_version (installed_rank, version, description, type, script, checksum, installed_by, installed_on, execution_time, success) FROM stdin;
 2	2	create leaf tables	SQL	V2__create_leaf_tables.sql	1065897597	postgres	2018-06-26 13:37:25.326783	51	t
-1	1	create goals and cards	SQL	V1__create_goals_and_cards.sql	-1128154711	postgres	2018-06-26 13:37:25.271006	29	t
+1	1	create goals and cards	SQL	V1__create_goals_and_cards.sql	-1940653025	postgres	2018-06-26 13:37:25.271006	29	t
 \.
 
 
@@ -499,6 +538,14 @@ COPY unique_conjugations (leaf_id, es, en, infinitive_es, number, person, tense,
 495	envía	sent	enviar	1	3	PRES	2018-06-24 10:53:11.355845-06
 496	envían	sent	enviar	2	1	PRES	2018-06-24 10:53:11.356343-06
 \.
+
+
+--
+-- Name: cards cards_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY cards
+    ADD CONSTRAINT cards_pkey PRIMARY KEY (card_id);
 
 
 --
