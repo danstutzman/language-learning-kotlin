@@ -40,8 +40,11 @@ class VCloud(
         if (InfCategory.isInfCategory(infEsLower, pattern.infCategory, false)) {
           val newV = RegV(inf, pattern)
           if (newV.getEsMixed().toLowerCase() == esLower) {
-            createdCardsByEsLower[esLower] = newV
-            return newV
+            if (uniqVList.byInfNumberPersonTense(inf, pattern.number,
+              pattern.person, pattern.tense) == null) {
+              createdCardsByEsLower[esLower] = newV
+              return newV
+            }
           }
         }
       }

@@ -25,4 +25,16 @@ class UniqVList {
     uniqVByEsLower = uniqVs.map { Pair(it.esMixed.toLowerCase(), it) }.toMap()
   }
   fun byEsLower(esLower: String): UniqV? = uniqVByEsLower[esLower]
+  fun byInfNumberPersonTense(inf: Inf, number: Int, person: Int, tense: Tense):
+    UniqV? {
+    for (uniqV in uniqVs) {
+      if (uniqV.inf.esMixed == inf.esMixed &&
+        uniqV.number == number &&
+        uniqV.person == person &&
+        uniqV.tense == tense) {
+        return uniqV
+      }
+    }
+    return null
+  }
 }
