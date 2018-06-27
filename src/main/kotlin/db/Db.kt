@@ -5,13 +5,9 @@ import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.jooq.DSLContext
 import org.jooq.SQLDialect
-import org.jooq.generated.Sequences.LEAF_IDS
 import org.jooq.generated.tables.Cards.CARDS
 import org.jooq.generated.tables.Goals.GOALS
-import org.jooq.generated.tables.Infinitives.INFINITIVES
-import org.jooq.generated.tables.Nonverbs.NONVERBS
-import org.jooq.generated.tables.StemChanges.STEM_CHANGES
-import org.jooq.generated.tables.UniqueConjugations.UNIQUE_CONJUGATIONS
+import org.jooq.generated.tables.Leafs.LEAFS
 import org.jooq.impl.DSL
 import java.sql.Connection
 import java.sql.Timestamp
@@ -70,8 +66,11 @@ data class UniqueConjugation(
 data class StemChangeRow(
   val leafId: Int,
   val infinitiveEsMixed: String,
-  val stemMixed: String,
-  val tense: String
+  val esMixed: String,
+  val tense: String,
+  val en: String,
+  val enPast: String,
+  val enDisambiguation: String // "" if none
 )
 
 class Db(
@@ -231,144 +230,136 @@ class Db(
   fun selectAllNonverbRows(): List<NonverbRow> {
     val rows = create
       .select(
-        NONVERBS.LEAF_ID,
-        NONVERBS.EN,
-        NONVERBS.EN_DISAMBIGUATION,
-        NONVERBS.EN_PLURAL,
-        NONVERBS.ES_MIXED)
-      .from(NONVERBS)
+        LEAFS.LEAF_ID,
+        LEAFS.EN,
+        LEAFS.EN_DISAMBIGUATION,
+        LEAFS.EN_PLURAL,
+        LEAFS.ES_MIXED)
+      .from(LEAFS)
+      .where(LEAFS.LEAF_TYPE.eq("Nonverb"))
       .fetch()
 
     return rows.map {
       NonverbRow(
-        it.getValue(NONVERBS.LEAF_ID),
-        it.getValue(NONVERBS.EN),
-        it.getValue(NONVERBS.EN_DISAMBIGUATION),
-        it.getValue(NONVERBS.EN_PLURAL),
-        it.getValue(NONVERBS.ES_MIXED)
+        it.getValue(LEAFS.LEAF_ID),
+        it.getValue(LEAFS.EN),
+        it.getValue(LEAFS.EN_DISAMBIGUATION),
+        it.getValue(LEAFS.EN_PLURAL),
+        it.getValue(LEAFS.ES_MIXED)
       )
     }
   }
 
   fun insertNonverbRow(nonverb: NonverbRow) {
-    val leafId = create.nextval(LEAF_IDS).toInt()
-
     create
-      .insertInto(NONVERBS,
-          NONVERBS.LEAF_ID,
-          NONVERBS.EN,
-          NONVERBS.EN_DISAMBIGUATION,
-          NONVERBS.EN_PLURAL,
-          NONVERBS.ES_MIXED)
-      .values(leafId,
+      .insertInto(LEAFS,
+          LEAFS.LEAF_TYPE,
+          LEAFS.EN,
+          LEAFS.EN_DISAMBIGUATION,
+          LEAFS.EN_PLURAL,
+          LEAFS.ES_MIXED)
+      .values("Nonverb",
           nonverb.en,
           nonverb.enDisambiguation,
           nonverb.enPlural,
           nonverb.esMixed)
       .returning(
-          NONVERBS.LEAF_ID,
-          NONVERBS.EN,
-          NONVERBS.EN_DISAMBIGUATION,
-          NONVERBS.EN_PLURAL,
-          NONVERBS.ES_MIXED)
+          LEAFS.LEAF_ID,
+          LEAFS.EN,
+          LEAFS.EN_DISAMBIGUATION,
+          LEAFS.EN_PLURAL,
+          LEAFS.ES_MIXED)
       .fetchOne()
   }
 
-  fun deleteNonverbRow(nonverbRow: NonverbRow) =
-    create.delete(NONVERBS)
-      .where(NONVERBS.LEAF_ID.eq(nonverbRow.leafId))
+  fun deleteLeaf(leafId: Int) =
+    create.delete(LEAFS)
+      .where(LEAFS.LEAF_ID.eq(leafId))
       .execute()
 
   fun selectAllInfinitives(): List<Infinitive> {
     val rows = create
       .select(
-        INFINITIVES.LEAF_ID,
-        INFINITIVES.EN,
-        INFINITIVES.EN_DISAMBIGUATION,
-        INFINITIVES.EN_PAST,
-        INFINITIVES.ES_MIXED)
-      .from(INFINITIVES)
+        LEAFS.LEAF_ID,
+        LEAFS.EN,
+        LEAFS.EN_DISAMBIGUATION,
+        LEAFS.EN_PAST,
+        LEAFS.ES_MIXED)
+      .from(LEAFS)
+      .where(LEAFS.LEAF_TYPE.eq("Inf"))
       .fetch()
 
     return rows.map {
       Infinitive(
-        it.getValue(INFINITIVES.LEAF_ID),
-        it.getValue(INFINITIVES.EN),
-        it.getValue(INFINITIVES.EN_DISAMBIGUATION),
-        it.getValue(INFINITIVES.EN_PAST),
-        it.getValue(INFINITIVES.ES_MIXED)
+        it.getValue(LEAFS.LEAF_ID),
+        it.getValue(LEAFS.EN),
+        it.getValue(LEAFS.EN_DISAMBIGUATION),
+        it.getValue(LEAFS.EN_PAST),
+        it.getValue(LEAFS.ES_MIXED)
       )
     }
   }
 
   fun insertInfinitive(infinitive: Infinitive) {
-    val leafId = create.nextval(LEAF_IDS).toInt()
-
     create
-      .insertInto(INFINITIVES,
-          INFINITIVES.LEAF_ID,
-          INFINITIVES.EN,
-          INFINITIVES.EN_DISAMBIGUATION,
-          INFINITIVES.EN_PAST,
-          INFINITIVES.ES_MIXED)
-      .values(leafId,
+      .insertInto(LEAFS,
+          LEAFS.LEAF_TYPE,
+          LEAFS.EN,
+          LEAFS.EN_DISAMBIGUATION,
+          LEAFS.EN_PAST,
+          LEAFS.ES_MIXED)
+      .values("Inf",
           infinitive.en,
           infinitive.enDisambiguation,
           infinitive.enPast,
           infinitive.esMixed)
       .returning(
-          INFINITIVES.LEAF_ID,
-          INFINITIVES.EN,
-          INFINITIVES.EN_DISAMBIGUATION,
-          INFINITIVES.EN_PAST,
-          INFINITIVES.ES_MIXED)
+          LEAFS.LEAF_ID,
+          LEAFS.EN,
+          LEAFS.EN_DISAMBIGUATION,
+          LEAFS.EN_PAST,
+          LEAFS.ES_MIXED)
       .fetchOne()
   }
-
-  fun deleteInfinitive(infinitive: Infinitive) =
-    create.delete(INFINITIVES)
-      .where(INFINITIVES.LEAF_ID.eq(infinitive.leafId))
-      .execute()
 
   fun selectAllUniqueConjugations(): List<UniqueConjugation> {
     val rows = create
       .select(
-        UNIQUE_CONJUGATIONS.LEAF_ID,
-        UNIQUE_CONJUGATIONS.ES_MIXED,
-        UNIQUE_CONJUGATIONS.EN,
-        UNIQUE_CONJUGATIONS.INFINITIVE_ES_MIXED,
-        UNIQUE_CONJUGATIONS.NUMBER,
-        UNIQUE_CONJUGATIONS.PERSON,
-        UNIQUE_CONJUGATIONS.TENSE)
-      .from(UNIQUE_CONJUGATIONS)
+        LEAFS.LEAF_ID,
+        LEAFS.ES_MIXED,
+        LEAFS.EN,
+        LEAFS.INFINITIVE_ES_MIXED,
+        LEAFS.NUMBER,
+        LEAFS.PERSON,
+        LEAFS.TENSE)
+      .from(LEAFS)
+      .where(LEAFS.LEAF_TYPE.eq("UniqV"))
       .fetch()
 
     return rows.map {
       UniqueConjugation(
-        it.getValue(UNIQUE_CONJUGATIONS.LEAF_ID),
-        it.getValue(UNIQUE_CONJUGATIONS.ES_MIXED),
-        it.getValue(UNIQUE_CONJUGATIONS.EN),
-        it.getValue(UNIQUE_CONJUGATIONS.INFINITIVE_ES_MIXED),
-        it.getValue(UNIQUE_CONJUGATIONS.NUMBER),
-        it.getValue(UNIQUE_CONJUGATIONS.PERSON),
-        it.getValue(UNIQUE_CONJUGATIONS.TENSE)
+        it.getValue(LEAFS.LEAF_ID),
+        it.getValue(LEAFS.ES_MIXED),
+        it.getValue(LEAFS.EN),
+        it.getValue(LEAFS.INFINITIVE_ES_MIXED),
+        it.getValue(LEAFS.NUMBER),
+        it.getValue(LEAFS.PERSON),
+        it.getValue(LEAFS.TENSE)
       )
     }
   }
 
   fun insertUniqueConjugation(uniqueConjugation: UniqueConjugation) {
-    val leafId = create.nextval(LEAF_IDS).toInt()
-
     create
-      .insertInto(UNIQUE_CONJUGATIONS,
-          UNIQUE_CONJUGATIONS.LEAF_ID,
-          UNIQUE_CONJUGATIONS.ES_MIXED,
-          UNIQUE_CONJUGATIONS.EN,
-          UNIQUE_CONJUGATIONS.INFINITIVE_ES_MIXED,
-          UNIQUE_CONJUGATIONS.NUMBER,
-          UNIQUE_CONJUGATIONS.PERSON,
-          UNIQUE_CONJUGATIONS.TENSE)
-      .values(leafId,
+      .insertInto(LEAFS,
+          LEAFS.LEAF_TYPE,
+          LEAFS.ES_MIXED,
+          LEAFS.EN,
+          LEAFS.INFINITIVE_ES_MIXED,
+          LEAFS.NUMBER,
+          LEAFS.PERSON,
+          LEAFS.TENSE)
+      .values("UniqV",
           uniqueConjugation.esMixed,
           uniqueConjugation.en,
           uniqueConjugation.infinitiveEsMixed,
@@ -376,66 +367,61 @@ class Db(
           uniqueConjugation.person,
           uniqueConjugation.tense)
       .returning(
-          UNIQUE_CONJUGATIONS.LEAF_ID,
-          UNIQUE_CONJUGATIONS.ES_MIXED,
-          UNIQUE_CONJUGATIONS.EN,
-          UNIQUE_CONJUGATIONS.INFINITIVE_ES_MIXED,
-          UNIQUE_CONJUGATIONS.NUMBER,
-          UNIQUE_CONJUGATIONS.PERSON,
-          UNIQUE_CONJUGATIONS.TENSE)
+          LEAFS.LEAF_ID,
+          LEAFS.ES_MIXED,
+          LEAFS.EN,
+          LEAFS.INFINITIVE_ES_MIXED,
+          LEAFS.NUMBER,
+          LEAFS.PERSON,
+          LEAFS.TENSE)
       .fetchOne()
   }
-
-  fun deleteUniqueConjugation(uniqueConjugation: UniqueConjugation) =
-    create.delete(UNIQUE_CONJUGATIONS)
-      .where(UNIQUE_CONJUGATIONS.LEAF_ID.eq(uniqueConjugation.leafId))
-      .execute()
 
   fun selectAllStemChangeRows(): List<StemChangeRow> {
     val rows = create
       .select(
-        STEM_CHANGES.LEAF_ID,
-        STEM_CHANGES.INFINITIVE_ES_MIXED,
-        STEM_CHANGES.STEM_MIXED,
-        STEM_CHANGES.TENSE)
-      .from(STEM_CHANGES)
+        LEAFS.LEAF_ID,
+        LEAFS.INFINITIVE_ES_MIXED,
+        LEAFS.ES_MIXED,
+        LEAFS.TENSE,
+        LEAFS.EN,
+        LEAFS.EN_PAST,
+        LEAFS.EN_DISAMBIGUATION)
+      .from(LEAFS)
+      .where(LEAFS.LEAF_TYPE.eq("StemChange"))
       .fetch()
 
     return rows.map {
       StemChangeRow(
-        it.getValue(STEM_CHANGES.LEAF_ID),
-        it.getValue(STEM_CHANGES.INFINITIVE_ES_MIXED),
-        it.getValue(STEM_CHANGES.STEM_MIXED),
-        it.getValue(STEM_CHANGES.TENSE)
+        it.getValue(LEAFS.LEAF_ID),
+        it.getValue(LEAFS.INFINITIVE_ES_MIXED),
+        it.getValue(LEAFS.ES_MIXED),
+        it.getValue(LEAFS.TENSE),
+        it.getValue(LEAFS.EN),
+        it.getValue(LEAFS.EN_PAST),
+        it.getValue(LEAFS.EN_DISAMBIGUATION)
       )
     }
   }
 
   fun insertStemChangeRow(row: StemChangeRow) {
-    val leafId = create.nextval(LEAF_IDS).toInt()
-
     create
-      .insertInto(STEM_CHANGES,
-          STEM_CHANGES.LEAF_ID,
-          STEM_CHANGES.INFINITIVE_ES_MIXED,
-          STEM_CHANGES.STEM_MIXED,
-          STEM_CHANGES.TENSE)
-      .values(leafId,
+      .insertInto(LEAFS,
+          LEAFS.LEAF_TYPE,
+          LEAFS.INFINITIVE_ES_MIXED,
+          LEAFS.ES_MIXED,
+          LEAFS.TENSE)
+      .values("StemChange",
           row.infinitiveEsMixed,
-          row.stemMixed,
+          row.esMixed,
           row.tense)
       .returning(
-          STEM_CHANGES.LEAF_ID,
-          STEM_CHANGES.INFINITIVE_ES_MIXED,
-          STEM_CHANGES.STEM_MIXED,
-          STEM_CHANGES.TENSE)
+          LEAFS.LEAF_ID,
+          LEAFS.INFINITIVE_ES_MIXED,
+          LEAFS.ES_MIXED,
+          LEAFS.TENSE)
       .fetchOne()
   }
-
-  fun deleteStemChangeRow(row: StemChangeRow) =
-    create.delete(STEM_CHANGES)
-      .where(STEM_CHANGES.LEAF_ID.eq(row.leafId))
-      .execute()
 
   fun insertGoalAndCardRows(goal: Goal, cardRows: List<CardRow>) {
     create.transaction { config ->

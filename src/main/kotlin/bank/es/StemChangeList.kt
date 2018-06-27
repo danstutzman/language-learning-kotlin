@@ -5,7 +5,7 @@ import com.danstutzman.db.Db
 
 class StemChangeList {
   val stemChanges: List<StemChange>
-  val stemChangeByStemLower: Map<String, StemChange>
+  val stemChangeByEsLower: Map<String, StemChange>
 
   constructor(infList: InfList, db: Db) {
     stemChanges = db.selectAllStemChangeRows().map {
@@ -14,12 +14,14 @@ class StemChangeList {
         Tense.valueOf(it.tense),
         infList.byEsLower(it.infinitiveEsMixed.toLowerCase()) ?:
           throw CantMakeCard("No inf for ${it.infinitiveEsMixed}"),
-        it.stemMixed
+        it.esMixed,
+        it.en,
+        it.enPast,
+        it.enDisambiguation
       )
     }
-    stemChangeByStemLower =
-      stemChanges.map { Pair(it.stemMixed.toLowerCase(), it) }.toMap()
+    stemChangeByEsLower =
+      stemChanges.map { Pair(it.esMixed.toLowerCase(), it) }.toMap()
   }
-  fun byStemLower(stemLower: String): StemChange =
-    stemChangeByStemLower[stemLower]!!
+  fun byEsLower(esLower: String): StemChange = stemChangeByEsLower[esLower]!!
 }

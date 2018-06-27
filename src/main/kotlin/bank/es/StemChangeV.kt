@@ -13,7 +13,7 @@ data class StemChangeV (
     stemChange.getChildCardCreators() +
     pattern.getChildCardCreators()
   fun getEsMixed(): String =
-    stemChange.stemMixed.substring(0, stemChange.stemMixed.length - 1) +
+    stemChange.esMixed.substring(0, stemChange.esMixed.length - 1) +
     pattern.esLower.substring(1)
   override fun getGlossRows(): List<GlossRow> = 
     stemChange.getGlossRows() + pattern.getGlossRows()

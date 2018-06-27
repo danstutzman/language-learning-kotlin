@@ -303,7 +303,7 @@ class Webapp(
       html.append("    <td>${row.en}</td>\n")
       html.append("    <td>${row.enDisambiguation}</td>\n")
       html.append("    <td>${row.enPlural ?: ""}</td>\n")
-      html.append("    <td><input type='submit' name='deleteNonverb${row.leafId}' value='Delete' onClick='return confirm(\"Delete nonverb?\")'></td>\n")
+      html.append("    <td><input type='submit' name='deleteLeaf${row.leafId}' value='Delete' onClick='return confirm(\"Delete nonverb?\")'></td>\n")
       html.append("  </tr>\n")
     }
     html.append("  <tr>\n")
@@ -319,13 +319,13 @@ class Webapp(
   }
 
   val postNonverbs = { req: Request, res: Response ->
-    val regex = "deleteNonverb([0-9]+)".toRegex()
-    val nonverbIdsToDelete = req.queryParams().map { paramName ->
+    val regex = "deleteLeaf([0-9]+)".toRegex()
+    val leafIdsToDelete = req.queryParams().map { paramName ->
       val match = regex.find(paramName)
       if (match != null) match.groupValues[1].toInt() else null
     }.filterNotNull()
-    for (nonverbId in nonverbIdsToDelete) {
-      db.deleteNonverbRow(NonverbRow(nonverbId, "", "", null, ""))
+    for (leafId in leafIdsToDelete) {
+      db.deleteLeaf(leafId)
     }
 
     if (req.queryParams("newNonverb") != null) {
@@ -365,7 +365,7 @@ class Webapp(
       html.append("    <td>${infinitive.en}</td>\n")
       html.append("    <td>${infinitive.enDisambiguation}</td>\n")
       html.append("    <td>${infinitive.enPast}</td>\n")
-      html.append("    <td><input type='submit' name='deleteInfinitive${infinitive.leafId}' value='Delete' onClick='return confirm(\"Delete infinitive?\")'></td>\n")
+      html.append("    <td><input type='submit' name='deleteLeaf${infinitive.leafId}' value='Delete' onClick='return confirm(\"Delete infinitive?\")'></td>\n")
       html.append("  </tr>\n")
     }
     html.append("  <tr>\n")
@@ -381,13 +381,13 @@ class Webapp(
   }
 
   val postInfinitives = { req: Request, res: Response ->
-    val regex = "deleteInfinitive([0-9]+)".toRegex()
-    val infinitiveIdsToDelete = req.queryParams().map { paramName ->
+    val regex = "deleteLeaf([0-9]+)".toRegex()
+    val leafIdsToDelete = req.queryParams().map { paramName ->
       val match = regex.find(paramName)
       if (match != null) match.groupValues[1].toInt() else null
     }.filterNotNull()
-    for (infinitiveId in infinitiveIdsToDelete) {
-      db.deleteInfinitive(Infinitive(infinitiveId, "", "", "", ""))
+    for (leafId in leafIdsToDelete) {
+      db.deleteLeaf(leafId)
     }
 
     if (req.queryParams("newInfinitive") != null) {
@@ -430,7 +430,7 @@ class Webapp(
       html.append("    <td>${uniqueConjugation.number}</td>\n")
       html.append("    <td>${uniqueConjugation.person}</td>\n")
       html.append("    <td>${uniqueConjugation.tense}</td>\n")
-      html.append("    <td><input type='submit' name='deleteUniqueConjugation${uniqueConjugation.leafId}' value='Delete' onClick='return confirm(\"Delete conjugation?\")'></td>\n")
+      html.append("    <td><input type='submit' name='deleteLeaf${uniqueConjugation.leafId}' value='Delete' onClick='return confirm(\"Delete conjugation?\")'></td>\n")
       html.append("  </tr>\n")
     }
     html.append("  <tr>\n")
@@ -448,14 +448,13 @@ class Webapp(
   }
 
   val postUniqueConjugations = { req: Request, res: Response ->
-    val regex = "deleteUniqueConjugation([0-9]+)".toRegex()
-    val uniqueConjugationIdsToDelete = req.queryParams().map { paramName ->
+    val regex = "deleteLeaf([0-9]+)".toRegex()
+    val leafIdsToDelete = req.queryParams().map { paramName ->
       val match = regex.find(paramName)
       if (match != null) match.groupValues[1].toInt() else null
     }.filterNotNull()
-    for (uniqueConjugationId in uniqueConjugationIdsToDelete) {
-      db.deleteUniqueConjugation(UniqueConjugation(
-        uniqueConjugationId, "", "", "", 0, 0, ""))
+    for (leafId in leafIdsToDelete) {
+      db.deleteLeaf(leafId)
     }
 
     if (req.queryParams("newUniqueConjugation") != null) {
@@ -486,22 +485,31 @@ class Webapp(
     html.append("    <th>Infinitive</td>\n")
     html.append("    <th>Stem</td>\n")
     html.append("    <th>Tense</td>\n")
+    html.append("    <th>English</td>\n")
+    html.append("    <th>English past</td>\n")
+    html.append("    <th>English disambiguation</td>\n")
     html.append("    <th></th>\n")
     html.append("  </tr>\n")
     for (row in db.selectAllStemChangeRows()) {
       html.append("  <tr>\n")
       html.append("    <td>${row.leafId}</td>\n")
       html.append("    <td>${row.infinitiveEsMixed}</td>\n")
-      html.append("    <td>${row.stemMixed}</td>\n")
+      html.append("    <td>${row.esMixed}</td>\n")
       html.append("    <td>${row.tense}</td>\n")
-      html.append("    <td><input type='submit' name='deleteStemChange${row.leafId}' value='Delete' onClick='return confirm(\"Delete stem change?\")'></td>\n")
+      html.append("    <td>${row.en}</td>\n")
+      html.append("    <td>${row.enPast}</td>\n")
+      html.append("    <td>${row.enDisambiguation}</td>\n")
+      html.append("    <td><input type='submit' name='deleteLeaf${row.leafId}' value='Delete' onClick='return confirm(\"Delete stem change?\")'></td>\n")
       html.append("  </tr>\n")
     }
     html.append("  <tr>\n")
     html.append("    <th></td>\n")
     html.append("    <th><input type='text' name='infinitive_es_mixed'></td>\n")
-    html.append("    <th><input type='text' name='stem_mixed'></td>\n")
+    html.append("    <th><input type='text' name='es_mixed'></td>\n")
     html.append("    <th><select name='tense'><option></option><option>PRES</option><option>PRET</option></select></td>\n")
+    html.append("    <th><input type='text' name='en'></td>\n")
+    html.append("    <th><input type='text' name='en_past'></td>\n")
+    html.append("    <th><input type='text' name='en_disambiguation'></td>\n")
     html.append("    <th><input type='submit' name='newStemChange' value='Insert'></td>\n")
     html.append("  </tr>\n")
     html.append("</table>\n")
@@ -509,21 +517,24 @@ class Webapp(
   }
 
   val postStemChanges = { req: Request, res: Response ->
-    val regex = "deleteStemChange([0-9]+)".toRegex()
-    val stemChangeIdsToDelete = req.queryParams().map { paramName ->
+    val regex = "deleteLeaf([0-9]+)".toRegex()
+    val leafIdsToDelete = req.queryParams().map { paramName ->
       val match = regex.find(paramName)
       if (match != null) match.groupValues[1].toInt() else null
     }.filterNotNull()
-    for (stemChangeId in stemChangeIdsToDelete) {
-      db.deleteStemChangeRow(StemChangeRow(stemChangeId, "", "", ""))
+    for (leafId in leafIdsToDelete) {
+      db.deleteLeaf(leafId)
     }
 
     if (req.queryParams("newStemChange") != null) {
       db.insertStemChangeRow(StemChangeRow(
         0,
         req.queryParams("infinitive_es_mixed"),
-        req.queryParams("stem_mixed"),
-        req.queryParams("tense")
+        req.queryParams("es_mixed"),
+        req.queryParams("tense"),
+        req.queryParams("en"),
+        req.queryParams("en_past"),
+        req.queryParams("en_disambiguation")
       ))
     }
 

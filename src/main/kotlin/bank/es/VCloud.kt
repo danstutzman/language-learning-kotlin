@@ -48,8 +48,8 @@ class VCloud(
     }
 
     for (stemChange in stemChangeList.stemChanges) {
-      val base = stemChange.stemMixed.substring(0,
-        stemChange.stemMixed.length - 1).toLowerCase()
+      val base = stemChange.esMixed.substring(0,
+        stemChange.esMixed.length - 1).toLowerCase()
       if (esLower.startsWith(base)) {
         for (pattern in possiblePatterns) {
           if (pattern.tense == stemChange.tense && InfCategory.isInfCategory(

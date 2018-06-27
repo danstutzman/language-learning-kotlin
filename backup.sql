@@ -16,34 +16,25 @@ SET row_security = off;
 
 SET search_path = public, pg_catalog;
 
-ALTER TABLE ONLY public.unique_conjugations DROP CONSTRAINT unique_conjugations_infinitive_es_fkey;
-ALTER TABLE ONLY public.stem_changes DROP CONSTRAINT stem_changes_infinitive_es_fkey;
+ALTER TABLE ONLY public.leafs DROP CONSTRAINT fk_leafs_leafs_es_mixed;
 DROP INDEX public.schema_version_s_idx;
-DROP INDEX public.idx_unique_conjugations_es_mixed;
-DROP INDEX public.idx_stem_changes_stem_lower;
-DROP INDEX public.idx_nonverbs_es_lower;
-DROP INDEX public.idx_nonverbs_en_plural_and_en_disambiguation;
-DROP INDEX public.idx_nonverbs_en_and_en_disambiguation;
-DROP INDEX public.idx_infinitives_es_mixed;
-DROP INDEX public.idx_infinitives_es_lower;
-DROP INDEX public.idx_infinitives_en_past_and_en_disambiguation;
-DROP INDEX public.idx_infinitives_en_and_en_disambiguation;
+DROP INDEX public.idx_leafs_nonverbs_en_plural_and_en_disambiguation;
+DROP INDEX public.idx_leafs_nonverbs_en_and_en_disambiguation;
+DROP INDEX public.idx_leafs_infinitives_en_past_and_en_disambiguation;
+DROP INDEX public.idx_leafs_infinitives_en_and_en_disambiguation;
+DROP INDEX public.idx_leafs_es_mixed;
+DROP INDEX public.idx_leafs_es_lower;
 DROP INDEX public.idx_cards_leaf_ids_csv;
-ALTER TABLE ONLY public.unique_conjugations DROP CONSTRAINT unique_conjugations_pkey;
-ALTER TABLE ONLY public.stem_changes DROP CONSTRAINT stem_changes_pkey;
 ALTER TABLE ONLY public.schema_version DROP CONSTRAINT schema_version_pk;
-ALTER TABLE ONLY public.nonverbs DROP CONSTRAINT nonverbs_pkey;
-ALTER TABLE ONLY public.infinitives DROP CONSTRAINT infinitives_pkey;
+ALTER TABLE ONLY public.leafs DROP CONSTRAINT leafs_pkey;
 ALTER TABLE ONLY public.goals DROP CONSTRAINT goals_pkey;
 ALTER TABLE ONLY public.cards DROP CONSTRAINT cards_pkey;
+ALTER TABLE public.leafs ALTER COLUMN leaf_id DROP DEFAULT;
 ALTER TABLE public.goals ALTER COLUMN goal_id DROP DEFAULT;
 ALTER TABLE public.cards ALTER COLUMN card_id DROP DEFAULT;
-DROP TABLE public.unique_conjugations;
-DROP TABLE public.stem_changes;
 DROP TABLE public.schema_version;
-DROP TABLE public.nonverbs;
-DROP SEQUENCE public.leaf_ids;
-DROP TABLE public.infinitives;
+DROP SEQUENCE public.leafs_leaf_id_seq;
+DROP TABLE public.leafs;
 DROP SEQUENCE public.goals_goal_id_seq;
 DROP TABLE public.goals;
 DROP SEQUENCE public.cards_card_id_seq;
@@ -135,9 +126,9 @@ CREATE TABLE goals (
     tags_csv text NOT NULL,
     en text NOT NULL,
     es text NOT NULL,
+    leaf_ids_csv text NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    updated_at timestamp with time zone NOT NULL,
-    leaf_ids_csv text NOT NULL
+    updated_at timestamp with time zone NOT NULL
 );
 
 
@@ -165,26 +156,38 @@ ALTER SEQUENCE goals_goal_id_seq OWNED BY goals.goal_id;
 
 
 --
--- Name: infinitives; Type: TABLE; Schema: public; Owner: postgres
+-- Name: leafs; Type: TABLE; Schema: public; Owner: postgres
 --
 
-CREATE TABLE infinitives (
+CREATE TABLE leafs (
     leaf_id integer NOT NULL,
+    leaf_type text NOT NULL,
     es_mixed text NOT NULL,
     en text NOT NULL,
-    en_past text NOT NULL,
     en_disambiguation text NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
+    en_plural text,
+    en_past text,
+    infinitive_es_mixed text,
+    number integer,
+    person integer,
+    tense text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL,
+    CONSTRAINT leafs_check CHECK ((NOT ((leaf_type = 'Inf'::text) AND (en_past IS NULL)))),
+    CONSTRAINT leafs_check1 CHECK ((NOT ((leaf_type = ANY (ARRAY['StemChange'::text, 'UniqV'::text])) AND (infinitive_es_mixed IS NULL)))),
+    CONSTRAINT leafs_check2 CHECK ((NOT ((leaf_type = 'UniqV'::text) AND (number IS NULL)))),
+    CONSTRAINT leafs_check3 CHECK ((NOT ((leaf_type = 'UniqV'::text) AND (person IS NULL)))),
+    CONSTRAINT leafs_check4 CHECK ((NOT ((leaf_type = ANY (ARRAY['StemChange'::text, 'UniqV'::text])) AND (tense <> ALL (ARRAY['PRES'::text, 'PRET'::text]))))),
+    CONSTRAINT leafs_leaf_type_check CHECK ((leaf_type = ANY (ARRAY['Inf'::text, 'Nonverb'::text, 'StemChange'::text, 'UniqV'::text])))
 );
 
 
-ALTER TABLE infinitives OWNER TO postgres;
+ALTER TABLE leafs OWNER TO postgres;
 
 --
--- Name: leaf_ids; Type: SEQUENCE; Schema: public; Owner: postgres
+-- Name: leafs_leaf_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
-CREATE SEQUENCE leaf_ids
+CREATE SEQUENCE leafs_leaf_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -192,23 +195,14 @@ CREATE SEQUENCE leaf_ids
     CACHE 1;
 
 
-ALTER TABLE leaf_ids OWNER TO postgres;
+ALTER TABLE leafs_leaf_id_seq OWNER TO postgres;
 
 --
--- Name: nonverbs; Type: TABLE; Schema: public; Owner: postgres
+-- Name: leafs_leaf_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
-CREATE TABLE nonverbs (
-    leaf_id integer NOT NULL,
-    es_mixed text NOT NULL,
-    en text NOT NULL,
-    en_disambiguation text NOT NULL,
-    en_plural text,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
-);
+ALTER SEQUENCE leafs_leaf_id_seq OWNED BY leafs.leaf_id;
 
-
-ALTER TABLE nonverbs OWNER TO postgres;
 
 --
 -- Name: schema_version; Type: TABLE; Schema: public; Owner: postgres
@@ -231,39 +225,6 @@ CREATE TABLE schema_version (
 ALTER TABLE schema_version OWNER TO postgres;
 
 --
--- Name: stem_changes; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE stem_changes (
-    leaf_id integer NOT NULL,
-    infinitive_es_mixed text NOT NULL,
-    stem_mixed text NOT NULL,
-    tense text NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
-ALTER TABLE stem_changes OWNER TO postgres;
-
---
--- Name: unique_conjugations; Type: TABLE; Schema: public; Owner: postgres
---
-
-CREATE TABLE unique_conjugations (
-    leaf_id integer NOT NULL,
-    es_mixed text NOT NULL,
-    en text NOT NULL,
-    infinitive_es_mixed text NOT NULL,
-    number integer NOT NULL,
-    person integer NOT NULL,
-    tense text NOT NULL,
-    created_at timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
-ALTER TABLE unique_conjugations OWNER TO postgres;
-
---
 -- Name: cards card_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -275,6 +236,13 @@ ALTER TABLE ONLY cards ALTER COLUMN card_id SET DEFAULT nextval('cards_card_id_s
 --
 
 ALTER TABLE ONLY goals ALTER COLUMN goal_id SET DEFAULT nextval('goals_goal_id_seq'::regclass);
+
+
+--
+-- Name: leafs leaf_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY leafs ALTER COLUMN leaf_id SET DEFAULT nextval('leafs_leaf_id_seq'::regclass);
 
 
 --
@@ -383,25 +351,25 @@ SELECT pg_catalog.setval('cards_card_id_seq', 241, true);
 -- Data for Name: goals; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY goals (goal_id, tags_csv, en, es, created_at, updated_at, leaf_ids_csv) FROM stdin;
-27		Good morning!	buenos días	2018-06-26 21:22:40.515651-06	2018-06-26 21:22:40.514-06	387,382
-28		Good afternoon!	buenas tardes	2018-06-26 21:22:50.192679-06	2018-06-26 21:22:50.192-06	388,383
-29		I'm a software engineer.	soy ingeniero de software	2018-06-26 21:22:57.329518-06	2018-06-26 21:22:57.328-06	453,384,409,412
-30		Where do you live?	dónde vives	2018-06-26 21:23:03.214123-06	2018-06-26 21:23:03.213-06	410,349,-12
-31		I speak Spanish.	hablo español	2018-06-26 21:23:11.350261-06	2018-06-26 21:23:11.349-06	327,-1,380
-32		I speak English.	hablo inglés	2018-06-26 21:23:18.507478-06	2018-06-26 21:23:18.506-06	327,-1,381
-34		What are you doing?	qué haces	2018-06-26 21:23:38.528733-06	2018-06-26 21:23:38.527-06	407,328,-12
-35		I'm doing well.	estoy bien	2018-06-26 21:23:47.703565-06	2018-06-26 21:23:47.702-06	463,398
-36		Hello!	hola	2018-06-26 21:23:53.901388-06	2018-06-26 21:23:53.9-06	408
-37		I live in Longmont.	vivo en Longmont	2018-06-26 21:24:01.726953-06	2018-06-26 21:24:01.726-06	349,-11,329,-14,417
-38		I moved to Longmont in January.	me mudé a Longmont en enero	2018-06-26 21:24:09.59708-06	2018-06-26 21:24:09.596-06	415,351,-6,419,417,329,-14,423
-39		I made a list of sentences to learn.	hice una lista de oraciones para aprender	2018-06-26 21:24:23.11975-06	2018-06-26 21:24:23.119-06	451,-22,392,385,409,386,421,316
-40		I visited Cuba for a few weeks.	visité Cuba por unas semanas	2018-06-26 21:24:31.951121-06	2018-06-26 21:24:31.95-06	347,-6,418,420,426,428
-41		Who do you want to speak Spanish with?	con quién quieres hablar español	2018-06-26 21:24:42.761378-06	2018-06-26 21:24:42.76-06	413,414,431,-12,327,380
-42		Where did you learn Spanish?	dónde aprendiste español	2018-06-26 21:24:51.422015-06	2018-06-26 21:24:51.421-06	410,316,-16,380
-43		I created a mobile app to study Spanish.	creé una aplicación móvil para estudiar español	2018-06-26 21:25:00.156027-06	2018-06-26 21:25:00.155-06	352,-6,392,424,427,421,353,380
-44		I took a class in Spanish.	asistí una clase de español	2018-06-26 21:25:14.854279-06	2018-06-26 21:25:14.851-06	350,-15,392,422,409,380
-45		I study Spanish.	estudio español	2018-06-27 08:50:29.172548-06	2018-06-27 08:50:29.163-06	353,-1,380
+COPY goals (goal_id, tags_csv, en, es, leaf_ids_csv, created_at, updated_at) FROM stdin;
+27		Good morning!	buenos días	387,382	2018-06-26 21:22:40.515651-06	2018-06-26 21:22:40.514-06
+28		Good afternoon!	buenas tardes	388,383	2018-06-26 21:22:50.192679-06	2018-06-26 21:22:50.192-06
+29		I'm a software engineer.	soy ingeniero de software	453,384,409,412	2018-06-26 21:22:57.329518-06	2018-06-26 21:22:57.328-06
+30		Where do you live?	dónde vives	410,349,-12	2018-06-26 21:23:03.214123-06	2018-06-26 21:23:03.213-06
+31		I speak Spanish.	hablo español	327,-1,380	2018-06-26 21:23:11.350261-06	2018-06-26 21:23:11.349-06
+32		I speak English.	hablo inglés	327,-1,381	2018-06-26 21:23:18.507478-06	2018-06-26 21:23:18.506-06
+34		What are you doing?	qué haces	407,328,-12	2018-06-26 21:23:38.528733-06	2018-06-26 21:23:38.527-06
+35		I'm doing well.	estoy bien	463,398	2018-06-26 21:23:47.703565-06	2018-06-26 21:23:47.702-06
+36		Hello!	hola	408	2018-06-26 21:23:53.901388-06	2018-06-26 21:23:53.9-06
+37		I live in Longmont.	vivo en Longmont	349,-11,329,-14,417	2018-06-26 21:24:01.726953-06	2018-06-26 21:24:01.726-06
+38		I moved to Longmont in January.	me mudé a Longmont en enero	415,351,-6,419,417,329,-14,423	2018-06-26 21:24:09.59708-06	2018-06-26 21:24:09.596-06
+39		I made a list of sentences to learn.	hice una lista de oraciones para aprender	451,-22,392,385,409,386,421,316	2018-06-26 21:24:23.11975-06	2018-06-26 21:24:23.119-06
+40		I visited Cuba for a few weeks.	visité Cuba por unas semanas	347,-6,418,420,426,428	2018-06-26 21:24:31.951121-06	2018-06-26 21:24:31.95-06
+41		Who do you want to speak Spanish with?	con quién quieres hablar español	413,414,431,-12,327,380	2018-06-26 21:24:42.761378-06	2018-06-26 21:24:42.76-06
+42		Where did you learn Spanish?	dónde aprendiste español	410,316,-16,380	2018-06-26 21:24:51.422015-06	2018-06-26 21:24:51.421-06
+43		I created a mobile app to study Spanish.	creé una aplicación móvil para estudiar español	352,-6,392,424,427,421,353,380	2018-06-26 21:25:00.156027-06	2018-06-26 21:25:00.155-06
+44		I took a class in Spanish.	asistí una clase de español	350,-15,392,422,409,380	2018-06-26 21:25:14.854279-06	2018-06-26 21:25:14.851-06
+45		I study Spanish.	estudio español	353,-1,380	2018-06-27 08:50:29.172548-06	2018-06-27 08:50:29.163-06
 \.
 
 
@@ -413,141 +381,201 @@ SELECT pg_catalog.setval('goals_goal_id_seq', 45, true);
 
 
 --
--- Data for Name: infinitives; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: leafs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY infinitives (leaf_id, es_mixed, en, en_past, en_disambiguation, created_at) FROM stdin;
-315	andar	walk	walked		2018-06-24 09:57:33.983446-06
-316	aprender	learn	learned		2018-06-24 09:57:33.984734-06
-317	comer	eat	ate		2018-06-24 09:57:33.985347-06
-318	conocer	know	knew	be able to	2018-06-24 09:57:33.986019-06
-319	contar	tell	told		2018-06-24 09:57:33.98678-06
-320	dar	give	gave		2018-06-24 09:57:33.987309-06
-321	decir	say	said		2018-06-24 09:57:33.987899-06
-322	empezar	start	started		2018-06-24 09:57:33.988574-06
-323	encontrar	find	found		2018-06-24 09:57:33.994568-06
-324	entender	understand	understood		2018-06-24 09:57:34.000548-06
-325	enviar	send	sent		2018-06-24 09:57:34.006513-06
-326	estar	be	was	be (how)	2018-06-24 09:57:34.012434-06
-327	hablar	speak	spoke		2018-06-24 09:57:34.017548-06
-328	hacer	do	did		2018-06-24 09:57:34.018056-06
-329	ir	go	went		2018-06-24 09:57:34.018688-06
-330	parecer	seem	seemed		2018-06-24 09:57:34.019227-06
-331	pedir	request	requested		2018-06-24 09:57:34.019677-06
-332	pensar	think	thought		2018-06-24 09:57:34.020182-06
-333	poder	can	could		2018-06-24 09:57:34.020785-06
-334	poner	put	put		2018-06-24 09:57:34.021223-06
-335	preguntar	ask	asked		2018-06-24 09:57:34.021846-06
-336	querer	want	wanted		2018-06-24 09:57:34.022716-06
-337	recordar	remember	remembered		2018-06-24 09:57:34.023446-06
-338	saber	know	knew	know (thing)	2018-06-24 09:57:34.024181-06
-339	salir	go out	went out		2018-06-24 09:57:34.02479-06
-340	seguir	follow	followed		2018-06-24 09:57:34.025256-06
-341	sentir	feel	felt		2018-06-24 09:57:34.026079-06
-342	ser	be	was	be (what)	2018-06-24 09:57:34.026682-06
-343	tener	have	had		2018-06-24 09:57:34.027222-06
-344	trabajar	work	worked		2018-06-24 09:57:34.027967-06
-345	ver	see	saw		2018-06-24 09:57:34.028806-06
-346	venir	come	came		2018-06-24 09:57:34.029696-06
-347	visitar	visit	visited		2018-06-24 09:57:34.030334-06
-348	volver	return	returned		2018-06-24 09:57:34.031357-06
-349	vivir	live	lived		2018-06-24 10:12:18.679112-06
-350	asistir	attend	attended		2018-06-24 10:15:03.427516-06
-351	mudar	move	moved		2018-06-24 10:16:29.743042-06
-352	crear	create	created		2018-06-24 10:17:19.293622-06
-353	estudiar	study	studied		2018-06-24 10:21:48.839702-06
+COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_past, infinitive_es_mixed, number, person, tense, created_at) FROM stdin;
+315	Inf	andar	walk		\N	walked	\N	\N	\N	\N	2018-06-24 09:57:33.983446-06
+316	Inf	aprender	learn		\N	learned	\N	\N	\N	\N	2018-06-24 09:57:33.984734-06
+317	Inf	comer	eat		\N	ate	\N	\N	\N	\N	2018-06-24 09:57:33.985347-06
+318	Inf	conocer	know	be able to	\N	knew	\N	\N	\N	\N	2018-06-24 09:57:33.986019-06
+319	Inf	contar	tell		\N	told	\N	\N	\N	\N	2018-06-24 09:57:33.98678-06
+320	Inf	dar	give		\N	gave	\N	\N	\N	\N	2018-06-24 09:57:33.987309-06
+321	Inf	decir	say		\N	said	\N	\N	\N	\N	2018-06-24 09:57:33.987899-06
+322	Inf	empezar	start		\N	started	\N	\N	\N	\N	2018-06-24 09:57:33.988574-06
+323	Inf	encontrar	find		\N	found	\N	\N	\N	\N	2018-06-24 09:57:33.994568-06
+324	Inf	entender	understand		\N	understood	\N	\N	\N	\N	2018-06-24 09:57:34.000548-06
+325	Inf	enviar	send		\N	sent	\N	\N	\N	\N	2018-06-24 09:57:34.006513-06
+326	Inf	estar	be	be (how)	\N	was	\N	\N	\N	\N	2018-06-24 09:57:34.012434-06
+327	Inf	hablar	speak		\N	spoke	\N	\N	\N	\N	2018-06-24 09:57:34.017548-06
+328	Inf	hacer	do		\N	did	\N	\N	\N	\N	2018-06-24 09:57:34.018056-06
+329	Inf	ir	go		\N	went	\N	\N	\N	\N	2018-06-24 09:57:34.018688-06
+330	Inf	parecer	seem		\N	seemed	\N	\N	\N	\N	2018-06-24 09:57:34.019227-06
+331	Inf	pedir	request		\N	requested	\N	\N	\N	\N	2018-06-24 09:57:34.019677-06
+332	Inf	pensar	think		\N	thought	\N	\N	\N	\N	2018-06-24 09:57:34.020182-06
+333	Inf	poder	can		\N	could	\N	\N	\N	\N	2018-06-24 09:57:34.020785-06
+334	Inf	poner	put		\N	put	\N	\N	\N	\N	2018-06-24 09:57:34.021223-06
+335	Inf	preguntar	ask		\N	asked	\N	\N	\N	\N	2018-06-24 09:57:34.021846-06
+336	Inf	querer	want		\N	wanted	\N	\N	\N	\N	2018-06-24 09:57:34.022716-06
+337	Inf	recordar	remember		\N	remembered	\N	\N	\N	\N	2018-06-24 09:57:34.023446-06
+338	Inf	saber	know	know (thing)	\N	knew	\N	\N	\N	\N	2018-06-24 09:57:34.024181-06
+339	Inf	salir	go out		\N	went out	\N	\N	\N	\N	2018-06-24 09:57:34.02479-06
+340	Inf	seguir	follow		\N	followed	\N	\N	\N	\N	2018-06-24 09:57:34.025256-06
+341	Inf	sentir	feel		\N	felt	\N	\N	\N	\N	2018-06-24 09:57:34.026079-06
+342	Inf	ser	be	be (what)	\N	was	\N	\N	\N	\N	2018-06-24 09:57:34.026682-06
+343	Inf	tener	have		\N	had	\N	\N	\N	\N	2018-06-24 09:57:34.027222-06
+344	Inf	trabajar	work		\N	worked	\N	\N	\N	\N	2018-06-24 09:57:34.027967-06
+345	Inf	ver	see		\N	saw	\N	\N	\N	\N	2018-06-24 09:57:34.028806-06
+346	Inf	venir	come		\N	came	\N	\N	\N	\N	2018-06-24 09:57:34.029696-06
+347	Inf	visitar	visit		\N	visited	\N	\N	\N	\N	2018-06-24 09:57:34.030334-06
+348	Inf	volver	return		\N	returned	\N	\N	\N	\N	2018-06-24 09:57:34.031357-06
+349	Inf	vivir	live		\N	lived	\N	\N	\N	\N	2018-06-24 10:12:18.679112-06
+350	Inf	asistir	attend		\N	attended	\N	\N	\N	\N	2018-06-24 10:15:03.427516-06
+351	Inf	mudar	move		\N	moved	\N	\N	\N	\N	2018-06-24 10:16:29.743042-06
+352	Inf	crear	create		\N	created	\N	\N	\N	\N	2018-06-24 10:17:19.293622-06
+353	Inf	estudiar	study		\N	studied	\N	\N	\N	\N	2018-06-24 10:21:48.839702-06
+383	Nonverb	tarde	afternoon		afternoons	\N	\N	\N	\N	\N	2018-06-24 09:42:32.325038-06
+354	Nonverb	brazo	arm		arms	\N	\N	\N	\N	\N	2018-06-24 09:42:32.310062-06
+355	Nonverb	pierna	leg		legs	\N	\N	\N	\N	\N	2018-06-24 09:42:32.31134-06
+356	Nonverb	corazón	heart		hearts	\N	\N	\N	\N	\N	2018-06-24 09:42:32.311925-06
+357	Nonverb	estómago	stomach		stomachs	\N	\N	\N	\N	\N	2018-06-24 09:42:32.312547-06
+358	Nonverb	ojo	eye		eyes	\N	\N	\N	\N	\N	2018-06-24 09:42:32.313039-06
+359	Nonverb	nariz	nose		noses	\N	\N	\N	\N	\N	2018-06-24 09:42:32.313538-06
+360	Nonverb	boca	mouth		mouths	\N	\N	\N	\N	\N	2018-06-24 09:42:32.31404-06
+361	Nonverb	oreja	ear		ears	\N	\N	\N	\N	\N	2018-06-24 09:42:32.314516-06
+362	Nonverb	cara	face		faces	\N	\N	\N	\N	\N	2018-06-24 09:42:32.314983-06
+363	Nonverb	cuello	neck		necks	\N	\N	\N	\N	\N	2018-06-24 09:42:32.315436-06
+364	Nonverb	dedo	finger		fingers	\N	\N	\N	\N	\N	2018-06-24 09:42:32.315907-06
+365	Nonverb	pie	foot		feet	\N	\N	\N	\N	\N	2018-06-24 09:42:32.316363-06
+366	Nonverb	muslo	thigh		thighs	\N	\N	\N	\N	\N	2018-06-24 09:42:32.316797-06
+367	Nonverb	tobillo	ankle		ankles	\N	\N	\N	\N	\N	2018-06-24 09:42:32.317247-06
+368	Nonverb	codo	elbow		elbows	\N	\N	\N	\N	\N	2018-06-24 09:42:32.317698-06
+369	Nonverb	muñeca	wrist		wrists	\N	\N	\N	\N	\N	2018-06-24 09:42:32.318139-06
+370	Nonverb	cuerpo	body		bodies	\N	\N	\N	\N	\N	2018-06-24 09:42:32.318608-06
+371	Nonverb	diente	tooth		tooths	\N	\N	\N	\N	\N	2018-06-24 09:42:32.319075-06
+372	Nonverb	mano	hand		hands	\N	\N	\N	\N	\N	2018-06-24 09:42:32.319518-06
+373	Nonverb	espalda	back		backs	\N	\N	\N	\N	\N	2018-06-24 09:42:32.31995-06
+374	Nonverb	cadera	hip		hips	\N	\N	\N	\N	\N	2018-06-24 09:42:32.320412-06
+375	Nonverb	mandíbula	jaw		jaws	\N	\N	\N	\N	\N	2018-06-24 09:42:32.320864-06
+376	Nonverb	hombro	shoulder		shoulders	\N	\N	\N	\N	\N	2018-06-24 09:42:32.321315-06
+377	Nonverb	pulgar	thumb		thumbs	\N	\N	\N	\N	\N	2018-06-24 09:42:32.321761-06
+378	Nonverb	lengua	tongue		tongues	\N	\N	\N	\N	\N	2018-06-24 09:42:32.322202-06
+379	Nonverb	garganta	throat		throats	\N	\N	\N	\N	\N	2018-06-24 09:42:32.322985-06
+380	Nonverb	español	Spanish		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.323407-06
+381	Nonverb	inglés	English		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.323906-06
+382	Nonverb	día	day		days	\N	\N	\N	\N	\N	2018-06-24 09:42:32.324572-06
+384	Nonverb	ingeniero	engineer		engineers	\N	\N	\N	\N	\N	2018-06-24 09:42:32.325593-06
+385	Nonverb	lista	list		lists	\N	\N	\N	\N	\N	2018-06-24 09:42:32.326072-06
+386	Nonverb	oración	sentence		sentences	\N	\N	\N	\N	\N	2018-06-24 09:42:32.326465-06
+387	Nonverb	bueno	good	masc.	good	\N	\N	\N	\N	\N	2018-06-24 09:42:32.326926-06
+388	Nonverb	buena	good	fem.	good	\N	\N	\N	\N	\N	2018-06-24 09:42:32.327412-06
+389	Nonverb	el	the	masc.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.327897-06
+390	Nonverb	la	the	fem.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.32839-06
+391	Nonverb	un	a	masc.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.328869-06
+392	Nonverb	una	a	fem.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.329419-06
+393	Nonverb	mi	my		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.329823-06
+394	Nonverb	este	this	masc.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.330276-06
+395	Nonverb	esta	this	fem.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33074-06
+396	Nonverb	cada	every		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.331212-06
+397	Nonverb	cómo	how		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.331646-06
+398	Nonverb	bien	well		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.332094-06
+399	Nonverb	yo	I		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.332558-06
+400	Nonverb	tú	you	pronoun	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33304-06
+401	Nonverb	él	he		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33464-06
+402	Nonverb	ella	she		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.335082-06
+403	Nonverb	nosotros	we	masc.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.335483-06
+404	Nonverb	nosotras	we	fem.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.335885-06
+405	Nonverb	ellos	they	masc.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33628-06
+406	Nonverb	ellas	they	fem.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.336675-06
+407	Nonverb	qué	what		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.337066-06
+408	Nonverb	hola	hello		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.337468-06
+409	Nonverb	de	of		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.337867-06
+410	Nonverb	dónde	where	question	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.338256-06
+411	Nonverb	donde	where	relative	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.338645-06
+412	Nonverb	software	software		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.339084-06
+413	Nonverb	con	with		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.339496-06
+414	Nonverb	quién	who		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.339963-06
+416	Nonverb	te	you	direct/indirect object	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.340855-06
+417	Nonverb	Longmont	Longmont		\N	\N	\N	\N	\N	\N	2018-06-24 10:12:57.81832-06
+418	Nonverb	Cuba	Cuba		\N	\N	\N	\N	\N	\N	2018-06-24 10:14:14.159249-06
+420	Nonverb	por	for	on behalf of	\N	\N	\N	\N	\N	\N	2018-06-24 10:18:21.748271-06
+421	Nonverb	para	for	in order to	\N	\N	\N	\N	\N	\N	2018-06-24 10:18:37.720114-06
+422	Nonverb	clase	class		classes	\N	\N	\N	\N	\N	2018-06-24 10:18:54.790579-06
+423	Nonverb	enero	January		\N	\N	\N	\N	\N	\N	2018-06-24 10:19:36.45117-06
+424	Nonverb	aplicación	application		applications	\N	\N	\N	\N	\N	2018-06-24 10:19:47.157449-06
+425	Nonverb	unos	some	masc.	\N	\N	\N	\N	\N	\N	2018-06-24 10:20:00.535063-06
+426	Nonverb	unas	some	fem.	\N	\N	\N	\N	\N	\N	2018-06-24 10:20:07.365061-06
+427	Nonverb	móvil	mobile phone		mobile phones	\N	\N	\N	\N	\N	2018-06-24 10:20:48.975803-06
+428	Nonverb	semana	week		weeks	\N	\N	\N	\N	\N	2018-06-24 10:21:05.140751-06
+497	Nonverb	piel	skin		\N	\N	\N	\N	\N	\N	2018-06-26 20:37:34.949585-06
+419	Nonverb	a	to	toward	\N	\N	\N	\N	\N	\N	2018-06-24 10:16:56.797247-06
+415	Nonverb	me	me	to me	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.340438-06
+429	StemChange	pued-	can		\N	could	poder	\N	\N	PRES	2018-06-24 11:26:43.651439-06
+430	StemChange	tien-	have		\N	had	tener	\N	\N	PRES	2018-06-24 11:26:43.803834-06
+431	StemChange	quier-	want		\N	wanted	querer	\N	\N	PRES	2018-06-24 11:26:43.804733-06
+432	StemChange	sig-	follow		\N	followed	seguir	\N	\N	PRES	2018-06-24 11:26:43.805456-06
+433	StemChange	encuentr-	find		\N	found	encontrar	\N	\N	PRES	2018-06-24 11:26:43.806086-06
+434	StemChange	vien-	come		\N	came	venir	\N	\N	PRES	2018-06-24 11:26:43.806698-06
+435	StemChange	piens-	think		\N	thought	pensar	\N	\N	PRES	2018-06-24 11:26:43.807283-06
+436	StemChange	vuelv-	return		\N	returned	volver	\N	\N	PRES	2018-06-24 11:26:43.807795-06
+437	StemChange	sient-	feel		\N	felt	sentir	\N	\N	PRES	2018-06-24 11:26:43.808329-06
+438	StemChange	cuent-	tell		\N	told	contar	\N	\N	PRES	2018-06-24 11:26:43.808861-06
+439	StemChange	empiez-	start		\N	started	empezar	\N	\N	PRES	2018-06-24 11:26:43.809358-06
+440	StemChange	dic-	say		\N	said	decir	\N	\N	PRES	2018-06-24 11:26:43.809844-06
+441	StemChange	recuerd-	remember		\N	remembered	recordar	\N	\N	PRES	2018-06-24 11:26:43.810424-06
+442	StemChange	pid-	request		\N	requested	pedir	\N	\N	PRES	2018-06-24 11:26:43.81091-06
+443	StemChange	entiend-	understand		\N	understood	entender	\N	\N	PRES	2018-06-24 11:26:43.811642-06
+444	StemChange	anduv-	walk		\N	walked	andar	\N	\N	PRET	2018-06-24 11:26:43.812328-06
+445	StemChange	sup-	know		\N	knew	saber	\N	\N	PRET	2018-06-24 11:26:43.812976-06
+446	StemChange	quis-	want		\N	wanted	querer	\N	\N	PRET	2018-06-24 11:26:43.81373-06
+447	StemChange	pus-	put		\N	put	poner	\N	\N	PRET	2018-06-24 11:26:43.814224-06
+448	StemChange	vin-	come		\N	came	venir	\N	\N	PRET	2018-06-24 11:26:43.814936-06
+449	StemChange	dij-	say		\N	said	decir	\N	\N	PRET	2018-06-24 11:26:43.815792-06
+450	StemChange	tuv-	have		\N	had	tener	\N	\N	PRET	2018-06-24 11:26:43.816356-06
+451	StemChange	hic-	do		\N	did	hacer	\N	\N	PRET	2018-06-24 11:26:43.816942-06
+452	StemChange	pud-	can		\N	could	poder	\N	\N	PRET	2018-06-24 11:26:43.817449-06
+453	UniqV	soy	am		\N	\N	ser	1	1	PRES	2018-06-24 10:53:11.331513-06
+454	UniqV	eres	are		\N	\N	ser	1	2	PRES	2018-06-24 10:53:11.334102-06
+455	UniqV	es	is		\N	\N	ser	1	3	PRES	2018-06-24 10:53:11.334799-06
+456	UniqV	somos	are		\N	\N	ser	2	1	PRES	2018-06-24 10:53:11.335596-06
+457	UniqV	son	are		\N	\N	ser	2	3	PRES	2018-06-24 10:53:11.336235-06
+458	UniqV	fui	was		\N	\N	ser	1	1	PRET	2018-06-24 10:53:11.336833-06
+459	UniqV	fuiste	were		\N	\N	ser	1	2	PRET	2018-06-24 10:53:11.337566-06
+460	UniqV	fue	was		\N	\N	ser	1	3	PRET	2018-06-24 10:53:11.338114-06
+461	UniqV	fuimos	were		\N	\N	ser	2	1	PRET	2018-06-24 10:53:11.338658-06
+462	UniqV	fueron	were		\N	\N	ser	2	3	PRET	2018-06-24 10:53:11.339177-06
+463	UniqV	estoy	am		\N	\N	estar	1	1	PRES	2018-06-24 10:53:11.339723-06
+464	UniqV	estás	are		\N	\N	estar	1	2	PRES	2018-06-24 10:53:11.340233-06
+465	UniqV	está	is		\N	\N	estar	1	3	PRES	2018-06-24 10:53:11.340796-06
+466	UniqV	están	are		\N	\N	estar	2	3	PRES	2018-06-24 10:53:11.341339-06
+467	UniqV	tengo	have		\N	\N	tener	1	1	PRES	2018-06-24 10:53:11.341841-06
+468	UniqV	hago	do		\N	\N	hacer	1	1	PRES	2018-06-24 10:53:11.342385-06
+469	UniqV	digo	say		\N	\N	decir	1	1	PRES	2018-06-24 10:53:11.34283-06
+470	UniqV	dijeron	said		\N	\N	decir	2	3	PRET	2018-06-24 10:53:11.343357-06
+471	UniqV	voy	go		\N	\N	ir	1	1	PRES	2018-06-24 10:53:11.343851-06
+472	UniqV	vas	go		\N	\N	ir	1	2	PRES	2018-06-24 10:53:11.344385-06
+473	UniqV	va	goes		\N	\N	ir	1	3	PRES	2018-06-24 10:53:11.34485-06
+474	UniqV	vamos	go		\N	\N	ir	2	1	PRES	2018-06-24 10:53:11.345309-06
+475	UniqV	van	go		\N	\N	ir	2	3	PRES	2018-06-24 10:53:11.345931-06
+476	UniqV	veo	see		\N	\N	ver	1	1	PRES	2018-06-24 10:53:11.346443-06
+477	UniqV	vi	saw		\N	\N	ver	1	1	PRET	2018-06-24 10:53:11.346938-06
+478	UniqV	vio	saw		\N	\N	ver	1	3	PRET	2018-06-24 10:53:11.347455-06
+479	UniqV	vimos	saw		\N	\N	ver	2	1	PRET	2018-06-24 10:53:11.347861-06
+480	UniqV	doy	give		\N	\N	dar	1	1	PRES	2018-06-24 10:53:11.348332-06
+481	UniqV	di	gave		\N	\N	dar	1	1	PRET	2018-06-24 10:53:11.348782-06
+482	UniqV	diste	gave		\N	\N	dar	1	2	PRET	2018-06-24 10:53:11.349211-06
+483	UniqV	dio	gave		\N	\N	dar	1	3	PRET	2018-06-24 10:53:11.349614-06
+484	UniqV	dimos	gave		\N	\N	dar	2	1	PRET	2018-06-24 10:53:11.349999-06
+485	UniqV	dieron	gave		\N	\N	dar	2	3	PRET	2018-06-24 10:53:11.350387-06
+486	UniqV	sé	know		\N	\N	saber	1	1	PRES	2018-06-24 10:53:11.350775-06
+487	UniqV	pongo	put		\N	\N	poner	1	1	PRES	2018-06-24 10:53:11.351199-06
+488	UniqV	vengo	come		\N	\N	venir	1	1	PRES	2018-06-24 10:53:11.351597-06
+489	UniqV	salgo	go out		\N	\N	salir	1	1	PRES	2018-06-24 10:53:11.351985-06
+490	UniqV	parezco	look like		\N	\N	parecer	1	1	PRES	2018-06-24 10:53:11.352406-06
+491	UniqV	conozco	know		\N	\N	conocer	1	1	PRES	2018-06-24 10:53:11.352811-06
+492	UniqV	empecé	started		\N	\N	empezar	1	1	PRET	2018-06-24 10:53:11.353348-06
+493	UniqV	envío	sent		\N	\N	enviar	1	1	PRES	2018-06-24 10:53:11.354736-06
+494	UniqV	envías	sent		\N	\N	enviar	1	2	PRES	2018-06-24 10:53:11.355389-06
+495	UniqV	envía	sent		\N	\N	enviar	1	3	PRES	2018-06-24 10:53:11.355845-06
+496	UniqV	envían	sent		\N	\N	enviar	2	1	PRES	2018-06-24 10:53:11.356343-06
 \.
 
 
 --
--- Name: leaf_ids; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leaf_ids', 497, true);
-
-
---
--- Data for Name: nonverbs; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY nonverbs (leaf_id, es_mixed, en, en_disambiguation, en_plural, created_at) FROM stdin;
-383	tarde	afternoon		afternoons	2018-06-24 09:42:32.325038-06
-354	brazo	arm		arms	2018-06-24 09:42:32.310062-06
-355	pierna	leg		legs	2018-06-24 09:42:32.31134-06
-356	corazón	heart		hearts	2018-06-24 09:42:32.311925-06
-357	estómago	stomach		stomachs	2018-06-24 09:42:32.312547-06
-358	ojo	eye		eyes	2018-06-24 09:42:32.313039-06
-359	nariz	nose		noses	2018-06-24 09:42:32.313538-06
-360	boca	mouth		mouths	2018-06-24 09:42:32.31404-06
-361	oreja	ear		ears	2018-06-24 09:42:32.314516-06
-362	cara	face		faces	2018-06-24 09:42:32.314983-06
-363	cuello	neck		necks	2018-06-24 09:42:32.315436-06
-364	dedo	finger		fingers	2018-06-24 09:42:32.315907-06
-365	pie	foot		feet	2018-06-24 09:42:32.316363-06
-366	muslo	thigh		thighs	2018-06-24 09:42:32.316797-06
-367	tobillo	ankle		ankles	2018-06-24 09:42:32.317247-06
-368	codo	elbow		elbows	2018-06-24 09:42:32.317698-06
-369	muñeca	wrist		wrists	2018-06-24 09:42:32.318139-06
-370	cuerpo	body		bodies	2018-06-24 09:42:32.318608-06
-371	diente	tooth		tooths	2018-06-24 09:42:32.319075-06
-372	mano	hand		hands	2018-06-24 09:42:32.319518-06
-373	espalda	back		backs	2018-06-24 09:42:32.31995-06
-374	cadera	hip		hips	2018-06-24 09:42:32.320412-06
-375	mandíbula	jaw		jaws	2018-06-24 09:42:32.320864-06
-376	hombro	shoulder		shoulders	2018-06-24 09:42:32.321315-06
-377	pulgar	thumb		thumbs	2018-06-24 09:42:32.321761-06
-378	lengua	tongue		tongues	2018-06-24 09:42:32.322202-06
-379	garganta	throat		throats	2018-06-24 09:42:32.322985-06
-380	español	Spanish		\N	2018-06-24 09:42:32.323407-06
-381	inglés	English		\N	2018-06-24 09:42:32.323906-06
-382	día	day		days	2018-06-24 09:42:32.324572-06
-384	ingeniero	engineer		engineers	2018-06-24 09:42:32.325593-06
-385	lista	list		lists	2018-06-24 09:42:32.326072-06
-386	oración	sentence		sentences	2018-06-24 09:42:32.326465-06
-387	bueno	good	masc.	good	2018-06-24 09:42:32.326926-06
-388	buena	good	fem.	good	2018-06-24 09:42:32.327412-06
-389	el	the	masc.	\N	2018-06-24 09:42:32.327897-06
-390	la	the	fem.	\N	2018-06-24 09:42:32.32839-06
-391	un	a	masc.	\N	2018-06-24 09:42:32.328869-06
-392	una	a	fem.	\N	2018-06-24 09:42:32.329419-06
-393	mi	my		\N	2018-06-24 09:42:32.329823-06
-394	este	this	masc.	\N	2018-06-24 09:42:32.330276-06
-395	esta	this	fem.	\N	2018-06-24 09:42:32.33074-06
-396	cada	every		\N	2018-06-24 09:42:32.331212-06
-397	cómo	how		\N	2018-06-24 09:42:32.331646-06
-398	bien	well		\N	2018-06-24 09:42:32.332094-06
-399	yo	I		\N	2018-06-24 09:42:32.332558-06
-400	tú	you	pronoun	\N	2018-06-24 09:42:32.33304-06
-401	él	he		\N	2018-06-24 09:42:32.33464-06
-402	ella	she		\N	2018-06-24 09:42:32.335082-06
-403	nosotros	we	masc.	\N	2018-06-24 09:42:32.335483-06
-404	nosotras	we	fem.	\N	2018-06-24 09:42:32.335885-06
-405	ellos	they	masc.	\N	2018-06-24 09:42:32.33628-06
-406	ellas	they	fem.	\N	2018-06-24 09:42:32.336675-06
-407	qué	what		\N	2018-06-24 09:42:32.337066-06
-408	hola	hello		\N	2018-06-24 09:42:32.337468-06
-409	de	of		\N	2018-06-24 09:42:32.337867-06
-410	dónde	where	question	\N	2018-06-24 09:42:32.338256-06
-411	donde	where	relative	\N	2018-06-24 09:42:32.338645-06
-412	software	software		\N	2018-06-24 09:42:32.339084-06
-413	con	with		\N	2018-06-24 09:42:32.339496-06
-414	quién	who		\N	2018-06-24 09:42:32.339963-06
-416	te	you	direct/indirect object	\N	2018-06-24 09:42:32.340855-06
-417	Longmont	Longmont		\N	2018-06-24 10:12:57.81832-06
-418	Cuba	Cuba		\N	2018-06-24 10:14:14.159249-06
-420	por	for	on behalf of	\N	2018-06-24 10:18:21.748271-06
-421	para	for	in order to	\N	2018-06-24 10:18:37.720114-06
-422	clase	class		classes	2018-06-24 10:18:54.790579-06
-423	enero	January		\N	2018-06-24 10:19:36.45117-06
-424	aplicación	application		applications	2018-06-24 10:19:47.157449-06
-425	unos	some	masc.	\N	2018-06-24 10:20:00.535063-06
-426	unas	some	fem.	\N	2018-06-24 10:20:07.365061-06
-427	móvil	mobile phone		mobile phones	2018-06-24 10:20:48.975803-06
-428	semana	week		weeks	2018-06-24 10:21:05.140751-06
-497	piel	skin		\N	2018-06-26 20:37:34.949585-06
-419	a	to	toward	\N	2018-06-24 10:16:56.797247-06
-415	me	me	to me	\N	2018-06-24 09:42:32.340438-06
-\.
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 497, true);
 
 
 --
@@ -555,92 +583,8 @@ COPY nonverbs (leaf_id, es_mixed, en, en_disambiguation, en_plural, created_at) 
 --
 
 COPY schema_version (installed_rank, version, description, type, script, checksum, installed_by, installed_on, execution_time, success) FROM stdin;
-2	2	create leaf tables	SQL	V2__create_leaf_tables.sql	988272324	postgres	2018-06-26 13:37:25.326783	51	t
-1	1	create goals and cards	SQL	V1__create_goals_and_cards.sql	-13256656	postgres	2018-06-26 13:37:25.271006	29	t
-\.
-
-
---
--- Data for Name: stem_changes; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY stem_changes (leaf_id, infinitive_es_mixed, stem_mixed, tense, created_at) FROM stdin;
-429	poder	pued-	PRES	2018-06-24 11:26:43.651439-06
-430	tener	tien-	PRES	2018-06-24 11:26:43.803834-06
-431	querer	quier-	PRES	2018-06-24 11:26:43.804733-06
-432	seguir	sig-	PRES	2018-06-24 11:26:43.805456-06
-433	encontrar	encuentr-	PRES	2018-06-24 11:26:43.806086-06
-434	venir	vien-	PRES	2018-06-24 11:26:43.806698-06
-435	pensar	piens-	PRES	2018-06-24 11:26:43.807283-06
-436	volver	vuelv-	PRES	2018-06-24 11:26:43.807795-06
-437	sentir	sient-	PRES	2018-06-24 11:26:43.808329-06
-438	contar	cuent-	PRES	2018-06-24 11:26:43.808861-06
-439	empezar	empiez-	PRES	2018-06-24 11:26:43.809358-06
-440	decir	dic-	PRES	2018-06-24 11:26:43.809844-06
-441	recordar	recuerd-	PRES	2018-06-24 11:26:43.810424-06
-442	pedir	pid-	PRES	2018-06-24 11:26:43.81091-06
-443	entender	entiend-	PRES	2018-06-24 11:26:43.811642-06
-444	andar	anduv-	PRET	2018-06-24 11:26:43.812328-06
-445	saber	sup-	PRET	2018-06-24 11:26:43.812976-06
-446	querer	quis-	PRET	2018-06-24 11:26:43.81373-06
-447	poner	pus-	PRET	2018-06-24 11:26:43.814224-06
-448	venir	vin-	PRET	2018-06-24 11:26:43.814936-06
-449	decir	dij-	PRET	2018-06-24 11:26:43.815792-06
-450	tener	tuv-	PRET	2018-06-24 11:26:43.816356-06
-451	hacer	hic-	PRET	2018-06-24 11:26:43.816942-06
-452	poder	pud-	PRET	2018-06-24 11:26:43.817449-06
-\.
-
-
---
--- Data for Name: unique_conjugations; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-COPY unique_conjugations (leaf_id, es_mixed, en, infinitive_es_mixed, number, person, tense, created_at) FROM stdin;
-453	soy	am	ser	1	1	PRES	2018-06-24 10:53:11.331513-06
-454	eres	are	ser	1	2	PRES	2018-06-24 10:53:11.334102-06
-455	es	is	ser	1	3	PRES	2018-06-24 10:53:11.334799-06
-456	somos	are	ser	2	1	PRES	2018-06-24 10:53:11.335596-06
-457	son	are	ser	2	3	PRES	2018-06-24 10:53:11.336235-06
-458	fui	was	ser	1	1	PRET	2018-06-24 10:53:11.336833-06
-459	fuiste	were	ser	1	2	PRET	2018-06-24 10:53:11.337566-06
-460	fue	was	ser	1	3	PRET	2018-06-24 10:53:11.338114-06
-461	fuimos	were	ser	2	1	PRET	2018-06-24 10:53:11.338658-06
-462	fueron	were	ser	2	3	PRET	2018-06-24 10:53:11.339177-06
-463	estoy	am	estar	1	1	PRES	2018-06-24 10:53:11.339723-06
-464	estás	are	estar	1	2	PRES	2018-06-24 10:53:11.340233-06
-465	está	is	estar	1	3	PRES	2018-06-24 10:53:11.340796-06
-466	están	are	estar	2	3	PRES	2018-06-24 10:53:11.341339-06
-467	tengo	have	tener	1	1	PRES	2018-06-24 10:53:11.341841-06
-468	hago	do	hacer	1	1	PRES	2018-06-24 10:53:11.342385-06
-469	digo	say	decir	1	1	PRES	2018-06-24 10:53:11.34283-06
-470	dijeron	said	decir	2	3	PRET	2018-06-24 10:53:11.343357-06
-471	voy	go	ir	1	1	PRES	2018-06-24 10:53:11.343851-06
-472	vas	go	ir	1	2	PRES	2018-06-24 10:53:11.344385-06
-473	va	goes	ir	1	3	PRES	2018-06-24 10:53:11.34485-06
-474	vamos	go	ir	2	1	PRES	2018-06-24 10:53:11.345309-06
-475	van	go	ir	2	3	PRES	2018-06-24 10:53:11.345931-06
-476	veo	see	ver	1	1	PRES	2018-06-24 10:53:11.346443-06
-477	vi	saw	ver	1	1	PRET	2018-06-24 10:53:11.346938-06
-478	vio	saw	ver	1	3	PRET	2018-06-24 10:53:11.347455-06
-479	vimos	saw	ver	2	1	PRET	2018-06-24 10:53:11.347861-06
-480	doy	give	dar	1	1	PRES	2018-06-24 10:53:11.348332-06
-481	di	gave	dar	1	1	PRET	2018-06-24 10:53:11.348782-06
-482	diste	gave	dar	1	2	PRET	2018-06-24 10:53:11.349211-06
-483	dio	gave	dar	1	3	PRET	2018-06-24 10:53:11.349614-06
-484	dimos	gave	dar	2	1	PRET	2018-06-24 10:53:11.349999-06
-485	dieron	gave	dar	2	3	PRET	2018-06-24 10:53:11.350387-06
-486	sé	know	saber	1	1	PRES	2018-06-24 10:53:11.350775-06
-487	pongo	put	poner	1	1	PRES	2018-06-24 10:53:11.351199-06
-488	vengo	come	venir	1	1	PRES	2018-06-24 10:53:11.351597-06
-489	salgo	go out	salir	1	1	PRES	2018-06-24 10:53:11.351985-06
-490	parezco	look like	parecer	1	1	PRES	2018-06-24 10:53:11.352406-06
-491	conozco	know	conocer	1	1	PRES	2018-06-24 10:53:11.352811-06
-492	empecé	started	empezar	1	1	PRET	2018-06-24 10:53:11.353348-06
-493	envío	sent	enviar	1	1	PRES	2018-06-24 10:53:11.354736-06
-494	envías	sent	enviar	1	2	PRES	2018-06-24 10:53:11.355389-06
-495	envía	sent	enviar	1	3	PRES	2018-06-24 10:53:11.355845-06
-496	envían	sent	enviar	2	1	PRES	2018-06-24 10:53:11.356343-06
+1	1	create goals and cards	SQL	V1__create_goals_and_cards.sql	-13256656	postgres	2018-06-27 09:31:17.379663	46	t
+2	2	create leaf tables	SQL	V2__create_leaf_tables.sql	779524700	postgres	2018-06-27 09:31:17.474367	34	t
 \.
 
 
@@ -661,19 +605,11 @@ ALTER TABLE ONLY goals
 
 
 --
--- Name: infinitives infinitives_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+-- Name: leafs leafs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY infinitives
-    ADD CONSTRAINT infinitives_pkey PRIMARY KEY (leaf_id);
-
-
---
--- Name: nonverbs nonverbs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY nonverbs
-    ADD CONSTRAINT nonverbs_pkey PRIMARY KEY (leaf_id);
+ALTER TABLE ONLY leafs
+    ADD CONSTRAINT leafs_pkey PRIMARY KEY (leaf_id);
 
 
 --
@@ -685,22 +621,6 @@ ALTER TABLE ONLY schema_version
 
 
 --
--- Name: stem_changes stem_changes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY stem_changes
-    ADD CONSTRAINT stem_changes_pkey PRIMARY KEY (leaf_id);
-
-
---
--- Name: unique_conjugations unique_conjugations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY unique_conjugations
-    ADD CONSTRAINT unique_conjugations_pkey PRIMARY KEY (leaf_id);
-
-
---
 -- Name: idx_cards_leaf_ids_csv; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -708,66 +628,45 @@ CREATE UNIQUE INDEX idx_cards_leaf_ids_csv ON cards USING btree (leaf_ids_csv);
 
 
 --
--- Name: idx_infinitives_en_and_en_disambiguation; Type: INDEX; Schema: public; Owner: postgres
+-- Name: idx_leafs_es_lower; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE UNIQUE INDEX idx_infinitives_en_and_en_disambiguation ON infinitives USING btree (en, en_disambiguation);
-
-
---
--- Name: idx_infinitives_en_past_and_en_disambiguation; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE UNIQUE INDEX idx_infinitives_en_past_and_en_disambiguation ON infinitives USING btree (en_past, en_disambiguation);
+CREATE UNIQUE INDEX idx_leafs_es_lower ON leafs USING btree (lower(es_mixed));
 
 
 --
--- Name: idx_infinitives_es_lower; Type: INDEX; Schema: public; Owner: postgres
+-- Name: idx_leafs_es_mixed; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE UNIQUE INDEX idx_infinitives_es_lower ON infinitives USING btree (lower(es_mixed));
-
-
---
--- Name: idx_infinitives_es_mixed; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE UNIQUE INDEX idx_infinitives_es_mixed ON infinitives USING btree (es_mixed);
+CREATE UNIQUE INDEX idx_leafs_es_mixed ON leafs USING btree (es_mixed);
 
 
 --
--- Name: idx_nonverbs_en_and_en_disambiguation; Type: INDEX; Schema: public; Owner: postgres
+-- Name: idx_leafs_infinitives_en_and_en_disambiguation; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE UNIQUE INDEX idx_nonverbs_en_and_en_disambiguation ON nonverbs USING btree (en, en_disambiguation);
-
-
---
--- Name: idx_nonverbs_en_plural_and_en_disambiguation; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE UNIQUE INDEX idx_nonverbs_en_plural_and_en_disambiguation ON nonverbs USING btree (en_plural, en_disambiguation);
+CREATE UNIQUE INDEX idx_leafs_infinitives_en_and_en_disambiguation ON leafs USING btree (en, en_disambiguation) WHERE (leaf_type = 'Inf'::text);
 
 
 --
--- Name: idx_nonverbs_es_lower; Type: INDEX; Schema: public; Owner: postgres
+-- Name: idx_leafs_infinitives_en_past_and_en_disambiguation; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE UNIQUE INDEX idx_nonverbs_es_lower ON nonverbs USING btree (lower(es_mixed));
-
-
---
--- Name: idx_stem_changes_stem_lower; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE UNIQUE INDEX idx_stem_changes_stem_lower ON stem_changes USING btree (lower(stem_mixed));
+CREATE UNIQUE INDEX idx_leafs_infinitives_en_past_and_en_disambiguation ON leafs USING btree (en_past, en_disambiguation) WHERE (leaf_type = 'Inf'::text);
 
 
 --
--- Name: idx_unique_conjugations_es_mixed; Type: INDEX; Schema: public; Owner: postgres
+-- Name: idx_leafs_nonverbs_en_and_en_disambiguation; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE UNIQUE INDEX idx_unique_conjugations_es_mixed ON unique_conjugations USING btree (lower(es_mixed));
+CREATE UNIQUE INDEX idx_leafs_nonverbs_en_and_en_disambiguation ON leafs USING btree (en, en_disambiguation) WHERE (leaf_type = 'Nonverb'::text);
+
+
+--
+-- Name: idx_leafs_nonverbs_en_plural_and_en_disambiguation; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX idx_leafs_nonverbs_en_plural_and_en_disambiguation ON leafs USING btree (en_plural, en_disambiguation) WHERE (leaf_type = 'Nonverb'::text);
 
 
 --
@@ -778,19 +677,11 @@ CREATE INDEX schema_version_s_idx ON schema_version USING btree (success);
 
 
 --
--- Name: stem_changes stem_changes_infinitive_es_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: leafs fk_leafs_leafs_es_mixed; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
-ALTER TABLE ONLY stem_changes
-    ADD CONSTRAINT stem_changes_infinitive_es_fkey FOREIGN KEY (infinitive_es_mixed) REFERENCES infinitives(es_mixed);
-
-
---
--- Name: unique_conjugations unique_conjugations_infinitive_es_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
---
-
-ALTER TABLE ONLY unique_conjugations
-    ADD CONSTRAINT unique_conjugations_infinitive_es_fkey FOREIGN KEY (infinitive_es_mixed) REFERENCES infinitives(es_mixed);
+ALTER TABLE ONLY leafs
+    ADD CONSTRAINT fk_leafs_leafs_es_mixed FOREIGN KEY (infinitive_es_mixed) REFERENCES leafs(es_mixed);
 
 
 --
