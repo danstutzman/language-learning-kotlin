@@ -25,8 +25,14 @@ th {
 .stage2 { /* wrong */
   color: red;
 }
-.stage3 { /* passed */
+.stage3 { /* slow */
+  color: #990;
 }
 .goal-es-multiple-words.stage3 {
+  border-bottom: #440 solid 2px;
+}
+.stage4 { /* passed */
+}
+.goal-es-multiple-words.stage4 {
   border-bottom: #080 solid 2px;
 }
