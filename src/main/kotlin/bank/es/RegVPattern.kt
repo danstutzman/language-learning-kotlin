@@ -30,24 +30,24 @@ data class RegVPattern (
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(leafId, "(${getEnPronoun()})", esLower))
   override fun getPrompt(): String {
-    val enPronoun = "(" +
-      EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)]!! + ")"
+    val enPronoun = 
+      EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)]!!
     val enVerbSuffix =
       EnVerbs.NUMBER_AND_PERSON_TO_EN_VERB_SUFFIX[Pair(number, person)]!!
     return when (tense) {
       Tense.PRES -> when (infCategory) {
-        InfCategory.AR   -> "${enPronoun} talk${enVerbSuffix} (hablar)"
-        InfCategory.ER   -> "${enPronoun} eat${enVerbSuffix} (comer)"
-        InfCategory.ERIR -> "${enPronoun} eat${enVerbSuffix} (comer)"
-        InfCategory.IR   -> "${enPronoun} live${enVerbSuffix} (vivir)"
+        InfCategory.AR   -> "(${enPronoun} work${enVerbSuffix})"
+        InfCategory.ER   -> "(${enPronoun} learn${enVerbSuffix})"
+        InfCategory.ERIR -> "(${enPronoun} learn${enVerbSuffix})"
+        InfCategory.IR   -> "(${enPronoun} live${enVerbSuffix})"
         InfCategory.STEMPRET -> throw RuntimeException("Shouldn't happen")
       }
       Tense.PRET -> when (infCategory) {
-        InfCategory.AR   -> "${enPronoun} talked (hablar)"
-        InfCategory.ER   -> "${enPronoun} ate (comer)"
-        InfCategory.ERIR -> "${enPronoun} ate (comer)"
-        InfCategory.IR   -> "${enPronoun} lived (vivir)"
-        InfCategory.STEMPRET -> "${enPronoun} had (tener)"
+        InfCategory.AR   -> "(${enPronoun} worked)"
+        InfCategory.ER   -> "(${enPronoun} learned)"
+        InfCategory.ERIR -> "(${enPronoun} learned)"
+        InfCategory.IR   -> "(${enPronoun} lived)"
+        InfCategory.STEMPRET -> "(${enPronoun} had)"
       }
     }
   }
