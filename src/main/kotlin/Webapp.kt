@@ -26,8 +26,9 @@ import org.slf4j.LoggerFactory
 import spark.Request
 import spark.Response
 
-val STAGE1_READY_TO_TEST = 1
 val STAGE0_NOT_READY_TO_TEST = 0
+val STAGE1_READY_TO_TEST = 1
+val STAGE5_SAME_AS_ENGLISH = 5
 
 fun escapeHTML(s: String): String {
   val out = StringBuilder(Math.max(16, s.length))
@@ -275,7 +276,10 @@ class Webapp(
           leafIdsCsv = glossRows.map { it.leafId }.joinToString(","),
           mnemonic = "",
           prompt = cardCreator.getPrompt(),
-          stage = if (glossRows.size == 1) STAGE1_READY_TO_TEST
+          stage = if (glossRows.size == 1) {
+              if (glossRows[0].es == glossRows[0].en) STAGE5_SAME_AS_ENGLISH
+              else STAGE1_READY_TO_TEST
+            }
             else STAGE0_NOT_READY_TO_TEST
         )
       }

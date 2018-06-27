@@ -262,7 +262,6 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 421	[{"leafId":499,"en":"test","es":"prueba"}]	2018-06-27 15:41:54-06	499	test	4		2018-06-27 15:36:09.510179-06	2018-06-27 16:43:32.731-06
 122	[{"leafId":387,"en":"good","es":"buenos"},{"leafId":382,"en":"days","es":"días"}]	2018-06-27 14:00:39-06	387,382	Good morning!	4		2018-06-26 21:22:40.532507-06	2018-06-27 16:43:32.639-06
 131	[{"leafId":409,"en":"of","es":"de"}]	2018-06-27 13:59:49-06	409	of	4		2018-06-26 21:22:57.352948-06	2018-06-27 16:43:32.666-06
-132	[{"leafId":412,"en":"software","es":"software"}]	2018-06-27 13:59:47-06	412	software	4		2018-06-26 21:22:57.352948-06	2018-06-27 16:43:32.667-06
 134	[{"leafId":410,"en":"where","es":"dónde"},{"leafId":349,"en":"live","es":"viv-"},{"leafId":-12,"en":"(you)","es":"-es"}]	2018-06-26 21:29:32-06	410,349,-12	Where do you live?	0		2018-06-26 21:23:03.228956-06	2018-06-27 16:43:32.668-06
 409	[{"leafId":453,"en":"am","es":"soy"}]	2018-06-27 15:24:07-06	453	I am (what)	3		2018-06-27 15:22:50.588203-06	2018-06-27 16:43:32.727-06
 413	[{"leafId":342,"en":"be","es":"ser"}]	2018-06-27 15:23:55-06	342	to be (what)	3		2018-06-27 15:22:50.588203-06	2018-06-27 16:43:32.728-06
@@ -297,7 +296,6 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 462	[{"leafId":509,"en":"ran","es":"corr-"},{"leafId":-16,"en":"(you)","es":"-iste"}]	\N	509,-16	(you) ran	0		2018-06-27 16:14:35.029309-06	2018-06-27 16:43:32.756-06
 465	[{"leafId":513,"en":"grew up","es":"crec-"},{"leafId":-15,"en":"(I)","es":"-í"},{"leafId":498,"en":"in/on","es":"en"},{"leafId":512,"en":"Pennsylvania","es":"Pennsylvania"}]	\N	513,-15,498,512	I grew up in Pennsylvania.	0		2018-06-27 16:16:17.029139-06	2018-06-27 16:43:32.757-06
 466	[{"leafId":513,"en":"grew up","es":"crec-"},{"leafId":-15,"en":"(I)","es":"-í"}]	\N	513,-15	(I) grew up	0		2018-06-27 16:16:17.029139-06	2018-06-27 16:43:32.758-06
-468	[{"leafId":512,"en":"Pennsylvania","es":"Pennsylvania"}]	2018-06-27 16:31:12-06	512	Pennsylvania	4		2018-06-27 16:16:17.029139-06	2018-06-27 16:43:32.759-06
 469	[{"leafId":513,"en":"grow up","es":"crecer"}]	2018-06-27 16:31:10-06	513	to grow up	4		2018-06-27 16:16:17.029139-06	2018-06-27 16:43:32.76-06
 471	[{"leafId":513,"en":"grew up","es":"crec-"},{"leafId":-16,"en":"(you)","es":"-iste"},{"leafId":514,"en":"here","es":"aquí"}]	\N	513,-16,514	Did you grow up here?	0		2018-06-27 16:17:49.570515-06	2018-06-27 16:43:32.761-06
 472	[{"leafId":513,"en":"grew up","es":"crec-"},{"leafId":-16,"en":"(you)","es":"-iste"}]	\N	513,-16	(you) grew up	0		2018-06-27 16:17:49.570515-06	2018-06-27 16:43:32.762-06
@@ -306,6 +304,8 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 477	[{"leafId":515,"en":"him","es":"lo"}]	2018-06-27 16:31:05-06	515	him	4		2018-06-27 16:21:20.049983-06	2018-06-27 16:43:32.764-06
 478	[{"leafId":318,"en":"knew","es":"conoc-"},{"leafId":-15,"en":"(I)","es":"-í"}]	\N	318,-15	(I) knew (be able to)	0		2018-06-27 16:21:20.049983-06	2018-06-27 16:43:32.765-06
 480	[{"leafId":318,"en":"know","es":"conocer"}]	2018-06-27 16:28:42-06	318	to know (someone)	3		2018-06-27 16:21:20.049983-06	2018-06-27 16:43:32.766-06
+132	[{"leafId":412,"en":"software","es":"software"}]	2018-06-27 13:59:47-06	412	software	5		2018-06-26 21:22:57.352948-06	2018-06-27 16:43:32.667-06
+544	[{"leafId":512,"en":"Pennsylvania","es":"Pennsylvania"}]	\N	512	Pennsylvania	5		2018-06-27 17:08:39.845218-06	2018-06-27 17:08:39.842-06
 142	[{"leafId":327,"en":"speak","es":"hablar"}]	2018-06-27 13:59:36-06	327	to speak	3		2018-06-26 21:23:11.364754-06	2018-06-27 16:43:32.675-06
 143	[{"leafId":-1,"en":"(I)","es":"-o"}]	2018-06-27 13:59:33-06	-1	(I work)	3		2018-06-26 21:23:11.364754-06	2018-06-27 16:43:32.676-06
 144	[{"leafId":327,"en":"speak","es":"habl-"},{"leafId":-1,"en":"(I)","es":"-o"},{"leafId":381,"en":"English","es":"inglés"}]	2018-06-26 21:29:07-06	327,-1,381	I speak English.	0		2018-06-26 21:23:18.524111-06	2018-06-27 16:43:32.677-06
@@ -316,7 +316,6 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 164	[{"leafId":408,"en":"hello","es":"hola"}]	2018-06-27 13:58:56-06	408	Hello!	4		2018-06-26 21:23:53.914204-06	2018-06-27 16:43:32.685-06
 158	[{"leafId":328,"en":"do","es":"hacer"}]	2018-06-27 15:42:38-06	328	to do	4		2018-06-26 21:23:38.542987-06	2018-06-27 16:43:32.683-06
 167	[{"leafId":349,"en":"live","es":"viv-"},{"leafId":-11,"en":"(I)","es":"-o"}]	2018-06-26 21:29:25-06	349,-11	(I) live	0		2018-06-26 21:24:01.746243-06	2018-06-27 16:43:32.686-06
-169	[{"leafId":417,"en":"Longmont","es":"Longmont"}]	2018-06-27 13:58:54-06	417	Longmont	4		2018-06-26 21:24:01.746243-06	2018-06-27 16:43:32.688-06
 176	[{"leafId":351,"en":"moved","es":"mud-"},{"leafId":-6,"en":"(I)","es":"-é"}]	2018-06-27 13:58:50-06	351,-6	(I) moved	4		2018-06-26 21:24:09.613753-06	2018-06-27 16:43:32.69-06
 177	[{"leafId":419,"en":"to","es":"a"}]	2018-06-27 13:58:48-06	419	to (toward)	4		2018-06-26 21:24:09.613753-06	2018-06-27 16:43:32.691-06
 201	[{"leafId":428,"en":"weeks","es":"semanas"}]	2018-06-27 13:57:43-06	428	weeks	4		2018-06-26 21:24:31.970408-06	2018-06-27 16:43:32.707-06
@@ -334,7 +333,6 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 194	[{"leafId":-22,"en":"(I)","es":"-e"}]	2018-06-27 15:42:30-06	-22	(I had)	4		2018-06-26 21:24:23.139561-06	2018-06-27 16:43:32.702-06
 196	[{"leafId":347,"en":"visited","es":"visit-"},{"leafId":-6,"en":"(I)","es":"-é"},{"leafId":418,"en":"Cuba","es":"Cuba"},{"leafId":420,"en":"for","es":"por"},{"leafId":426,"en":"some","es":"unas"},{"leafId":428,"en":"weeks","es":"semanas"}]	2018-06-26 21:27:10-06	347,-6,418,420,426,428	I visited Cuba for a few weeks.	0		2018-06-26 21:24:31.970408-06	2018-06-27 16:43:32.703-06
 197	[{"leafId":347,"en":"visited","es":"visit-"},{"leafId":-6,"en":"(I)","es":"-é"}]	2018-06-27 13:58:40-06	347,-6	(I) visited	4		2018-06-26 21:24:31.970408-06	2018-06-27 16:43:32.704-06
-198	[{"leafId":418,"en":"Cuba","es":"Cuba"}]	2018-06-27 13:57:50-06	418	Cuba	4		2018-06-26 21:24:31.970408-06	2018-06-27 16:43:32.705-06
 199	[{"leafId":420,"en":"for","es":"por"}]	2018-06-27 15:42:56-06	420	for (on behalf of)	3		2018-06-26 21:24:31.970408-06	2018-06-27 16:43:32.706-06
 200	[{"leafId":426,"en":"some","es":"unas"}]	2018-06-27 13:57:45-06	426	some (fem.)	4		2018-06-26 21:24:31.970408-06	2018-06-27 16:43:32.707-06
 202	[{"leafId":347,"en":"visit","es":"visitar"}]	2018-06-27 13:57:41-06	347	to visit	4		2018-06-26 21:24:31.970408-06	2018-06-27 16:43:32.708-06
@@ -345,7 +343,6 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 138	[{"leafId":-12,"en":"(you)","es":"-es"}]	2018-06-27 14:07:42-06	-12	(you learn)	3		2018-06-26 21:23:03.228956-06	2018-06-27 16:43:32.671-06
 140	[{"leafId":327,"en":"speak","es":"habl-"},{"leafId":-1,"en":"(I)","es":"-o"}]	2018-06-26 21:29:05-06	327,-1	(I) speak	0		2018-06-26 21:23:11.364754-06	2018-06-27 16:43:32.673-06
 141	[{"leafId":380,"en":"Spanish","es":"español"}]	2018-06-27 13:59:41-06	380	Spanish	4		2018-06-26 21:23:11.364754-06	2018-06-27 16:43:32.674-06
-175	[{"leafId":415,"en":"me","es":"me"}]	2018-06-27 13:58:52-06	415	me (to me)	4		2018-06-26 21:24:09.613753-06	2018-06-27 16:43:32.689-06
 146	[{"leafId":381,"en":"English","es":"inglés"}]	2018-06-27 13:59:31-06	381	English	4		2018-06-26 21:23:18.524111-06	2018-06-27 16:43:32.678-06
 156	[{"leafId":407,"en":"what","es":"qué"}]	2018-06-27 13:59:14-06	407	what	4		2018-06-26 21:23:38.542987-06	2018-06-27 16:43:32.681-06
 188	[{"leafId":385,"en":"list","es":"lista"}]	2018-06-27 13:58:34-06	385	list	4		2018-06-26 21:24:23.139561-06	2018-06-27 16:43:32.698-06
@@ -354,6 +351,9 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 486	[{"leafId":517,"en":"account","es":"cuenta"}]	2018-06-27 16:43:21-06	517	account	4		2018-06-27 16:35:37.766885-06	2018-06-27 16:43:32.769-06
 489	[{"leafId":455,"en":"is","es":"es"},{"leafId":391,"en":"a","es":"un"},{"leafId":519,"en":"game","es":"juego"},{"leafId":520,"en":"that","es":"que"},{"leafId":399,"en":"I","es":"yo"},{"leafId":352,"en":"created","es":"cre-"},{"leafId":-6,"en":"(I)","es":"-é"}]	\N	455,391,519,520,399,352,-6	It's a game that I made	0		2018-06-27 16:36:57.797061-06	2018-06-27 16:43:32.769-06
 490	[{"leafId":455,"en":"is","es":"es"}]	2018-06-27 16:43:18-06	455	he/she is (what)	4		2018-06-27 16:36:57.797061-06	2018-06-27 16:43:32.77-06
+169	[{"leafId":417,"en":"Longmont","es":"Longmont"}]	2018-06-27 13:58:54-06	417	Longmont	5		2018-06-26 21:24:01.746243-06	2018-06-27 16:43:32.688-06
+198	[{"leafId":418,"en":"Cuba","es":"Cuba"}]	2018-06-27 13:57:50-06	418	Cuba	5		2018-06-26 21:24:31.970408-06	2018-06-27 16:43:32.705-06
+175	[{"leafId":415,"en":"me","es":"me"}]	2018-06-27 13:58:52-06	415	me (to me)	5		2018-06-26 21:24:09.613753-06	2018-06-27 16:43:32.689-06
 225	[{"leafId":353,"en":"study","es":"estudiar"}]	2018-06-27 15:42:26-06	353	to study	4		2018-06-26 21:25:00.173425-06	2018-06-27 16:43:32.718-06
 227	[{"leafId":352,"en":"create","es":"crear"}]	2018-06-27 14:22:34-06	352	to create	3		2018-06-26 21:25:00.173425-06	2018-06-27 16:43:32.719-06
 229	[{"leafId":350,"en":"attended","es":"asist-"},{"leafId":-15,"en":"(I)","es":"-í"},{"leafId":392,"en":"a","es":"una"},{"leafId":422,"en":"class","es":"clase"},{"leafId":409,"en":"of","es":"de"},{"leafId":380,"en":"Spanish","es":"español"}]	2018-06-26 21:29:47-06	350,-15,392,422,409,380	I took a class in Spanish.	0		2018-06-26 21:25:14.87594-06	2018-06-27 16:43:32.72-06
@@ -399,7 +399,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 -- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('cards_card_id_seq', 516, true);
+SELECT pg_catalog.setval('cards_card_id_seq', 546, true);
 
 
 --
@@ -435,12 +435,12 @@ COPY goals (goal_id, tags_csv, en, es, leaf_ids_csv, created_at, updated_at, goa
 82		I ate too much.	comí demasiado	317,-15,508	2018-06-27 16:11:55.919313-06	2018-06-27 16:11:55.918-06	[{"cardId":450,"glossRowStart":0,"glossRowEnd":2},{"cardId":451,"glossRowStart":0,"glossRowEnd":1},{"cardId":152,"glossRowStart":0,"glossRowEnd":0},{"cardId":236,"glossRowStart":1,"glossRowEnd":1},{"cardId":452,"glossRowStart":2,"glossRowEnd":2}]	[{"leafId":317,"en":"ate","es":"com-"},{"leafId":-15,"en":"(I)","es":"-í"},{"leafId":508,"en":"too much","es":"demasiado"}]
 83		I ran outside.	corrí afuera	509,-15,510	2018-06-27 16:13:49.833986-06	2018-06-27 16:13:49.833-06	[{"cardId":455,"glossRowStart":0,"glossRowEnd":2},{"cardId":456,"glossRowStart":0,"glossRowEnd":1},{"cardId":458,"glossRowStart":0,"glossRowEnd":0},{"cardId":236,"glossRowStart":1,"glossRowEnd":1},{"cardId":457,"glossRowStart":2,"glossRowEnd":2}]	[{"leafId":509,"en":"ran","es":"corr-"},{"leafId":-15,"en":"(I)","es":"-í"},{"leafId":510,"en":"outside","es":"afuera"}]
 84		Why did you run?	porqué corriste	511,509,-16	2018-06-27 16:14:35.038984-06	2018-06-27 16:14:35.038-06	[{"cardId":460,"glossRowStart":0,"glossRowEnd":2},{"cardId":461,"glossRowStart":0,"glossRowEnd":0},{"cardId":462,"glossRowStart":1,"glossRowEnd":2},{"cardId":458,"glossRowStart":1,"glossRowEnd":1},{"cardId":218,"glossRowStart":2,"glossRowEnd":2}]	[{"leafId":511,"en":"why","es":"porqué"},{"leafId":509,"en":"ran","es":"corr-"},{"leafId":-16,"en":"(you)","es":"-iste"}]
-85		I grew up in Pennsylvania.	crecí en Pennsylvania	513,-15,498,512	2018-06-27 16:16:17.039126-06	2018-06-27 16:16:17.038-06	[{"cardId":465,"glossRowStart":0,"glossRowEnd":3},{"cardId":466,"glossRowStart":0,"glossRowEnd":1},{"cardId":469,"glossRowStart":0,"glossRowEnd":0},{"cardId":236,"glossRowStart":1,"glossRowEnd":1},{"cardId":371,"glossRowStart":2,"glossRowEnd":2},{"cardId":468,"glossRowStart":3,"glossRowEnd":3}]	[{"leafId":513,"en":"grew up","es":"crec-"},{"leafId":-15,"en":"(I)","es":"-í"},{"leafId":498,"en":"in/on","es":"en"},{"leafId":512,"en":"Pennsylvania","es":"Pennsylvania"}]
 88		I didn't create that account	no creé esa cuenta	518,352,-6,516,517	2018-06-27 16:35:37.782737-06	2018-06-27 16:35:37.781-06	[{"cardId":482,"glossRowStart":0,"glossRowEnd":4},{"cardId":483,"glossRowStart":0,"glossRowEnd":0},{"cardId":220,"glossRowStart":1,"glossRowEnd":2},{"cardId":227,"glossRowStart":1,"glossRowEnd":1},{"cardId":182,"glossRowStart":2,"glossRowEnd":2},{"cardId":485,"glossRowStart":3,"glossRowEnd":3},{"cardId":486,"glossRowStart":4,"glossRowEnd":4}]	[{"leafId":518,"en":"not","es":"no"},{"leafId":352,"en":"created","es":"cre-"},{"leafId":-6,"en":"(I)","es":"-é"},{"leafId":516,"en":"that","es":"esa"},{"leafId":517,"en":"account","es":"cuenta"}]
 89		It's a game that I made	es un juego que yo creé	455,391,519,520,399,352,-6	2018-06-27 16:36:57.80771-06	2018-06-27 16:36:57.806-06	[{"cardId":489,"glossRowStart":0,"glossRowEnd":6},{"cardId":490,"glossRowStart":0,"glossRowEnd":0},{"cardId":491,"glossRowStart":1,"glossRowEnd":1},{"cardId":492,"glossRowStart":2,"glossRowEnd":2},{"cardId":493,"glossRowStart":3,"glossRowEnd":3},{"cardId":494,"glossRowStart":4,"glossRowEnd":4},{"cardId":220,"glossRowStart":5,"glossRowEnd":6},{"cardId":227,"glossRowStart":5,"glossRowEnd":5},{"cardId":182,"glossRowStart":6,"glossRowEnd":6}]	[{"leafId":455,"en":"is","es":"es"},{"leafId":391,"en":"a","es":"un"},{"leafId":519,"en":"game","es":"juego"},{"leafId":520,"en":"that","es":"que"},{"leafId":399,"en":"I","es":"yo"},{"leafId":352,"en":"created","es":"cre-"},{"leafId":-6,"en":"(I)","es":"-é"}]
 90		I created a profile.	creé un perfil	352,-6,391,521	2018-06-27 16:38:29.530083-06	2018-06-27 16:38:29.529-06	[{"cardId":499,"glossRowStart":0,"glossRowEnd":3},{"cardId":220,"glossRowStart":0,"glossRowEnd":1},{"cardId":227,"glossRowStart":0,"glossRowEnd":0},{"cardId":182,"glossRowStart":1,"glossRowEnd":1},{"cardId":491,"glossRowStart":2,"glossRowEnd":2},{"cardId":502,"glossRowStart":3,"glossRowEnd":3}]	[{"leafId":352,"en":"created","es":"cre-"},{"leafId":-6,"en":"(I)","es":"-é"},{"leafId":391,"en":"a","es":"un"},{"leafId":521,"en":"profile","es":"perfil"}]
 91		Did you create an account?	creaste una cuenta	352,-7,392,517	2018-06-27 16:40:23.232433-06	2018-06-27 16:40:23.231-06	[{"cardId":505,"glossRowStart":0,"glossRowEnd":3},{"cardId":506,"glossRowStart":0,"glossRowEnd":1},{"cardId":227,"glossRowStart":0,"glossRowEnd":0},{"cardId":510,"glossRowStart":1,"glossRowEnd":1},{"cardId":187,"glossRowStart":2,"glossRowEnd":2},{"cardId":486,"glossRowStart":3,"glossRowEnd":3}]	[{"leafId":352,"en":"created","es":"cre-"},{"leafId":-7,"en":"(you)","es":"-aste"},{"leafId":392,"en":"a","es":"una"},{"leafId":517,"en":"account","es":"cuenta"}]
 92		I moved three times.	mudé tres veces	351,-6,522,523	2018-06-27 16:42:16.920114-06	2018-06-27 16:42:16.918-06	[{"cardId":511,"glossRowStart":0,"glossRowEnd":3},{"cardId":176,"glossRowStart":0,"glossRowEnd":1},{"cardId":181,"glossRowStart":0,"glossRowEnd":0},{"cardId":182,"glossRowStart":1,"glossRowEnd":1},{"cardId":513,"glossRowStart":2,"glossRowEnd":2},{"cardId":514,"glossRowStart":3,"glossRowEnd":3}]	[{"leafId":351,"en":"moved","es":"mud-"},{"leafId":-6,"en":"(I)","es":"-é"},{"leafId":522,"en":"three","es":"tres"},{"leafId":523,"en":"times","es":"veces"}]
+97		I grew up in Pennsylvania.	crecí en Pennsylvania	513,-15,498,512	2018-06-27 17:08:39.852694-06	2018-06-27 17:08:39.851-06	[{"cardId":465,"glossRowStart":0,"glossRowEnd":3},{"cardId":466,"glossRowStart":0,"glossRowEnd":1},{"cardId":469,"glossRowStart":0,"glossRowEnd":0},{"cardId":236,"glossRowStart":1,"glossRowEnd":1},{"cardId":371,"glossRowStart":2,"glossRowEnd":2},{"cardId":544,"glossRowStart":3,"glossRowEnd":3}]	[{"leafId":513,"en":"grew up","es":"crec-"},{"leafId":-15,"en":"(I)","es":"-í"},{"leafId":498,"en":"in/on","es":"en"},{"leafId":512,"en":"Pennsylvania","es":"Pennsylvania"}]
 \.
 
 
@@ -448,7 +448,7 @@ COPY goals (goal_id, tags_csv, en, es, leaf_ids_csv, created_at, updated_at, goa
 -- Name: goals_goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('goals_goal_id_seq', 92, true);
+SELECT pg_catalog.setval('goals_goal_id_seq', 97, true);
 
 
 --
