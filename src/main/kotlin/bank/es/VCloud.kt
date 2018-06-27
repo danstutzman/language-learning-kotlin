@@ -8,38 +8,39 @@ class VCloud(
   val regVPatternList: RegVPatternList,
   val stemChangeList: StemChangeList
 ) {
-  val createdCardsByConjugation = linkedMapOf<String, V>()
+  val createdCardsByEsLower = linkedMapOf<String, V>()
 
-  fun byEs(conjugation: String): V? {
-    val maybeExistingCard = createdCardsByConjugation[conjugation]
+  fun byEsLower(esLower: String): V? {
+    val maybeExistingCard = createdCardsByEsLower[esLower]
     if (maybeExistingCard != null) {
       return maybeExistingCard
     }
 
-    val maybeUniqV = uniqVList.byEs(conjugation)
+    val maybeUniqV = uniqVList.byEsLower(esLower)
     if (maybeUniqV != null) {
       return maybeUniqV
     }
 
-    val maybeInf = infList.byEs(conjugation)
+    val maybeInf = infList.byEsLower(esLower)
     if (maybeInf != null) {
       return maybeInf
     }
 
     val possibleInfs = infList.infs.filter { inf ->
-      val base = inf.es.substring(0, inf.es.length - 2)
-      conjugation.startsWith(base)
+      val base = inf.esMixed.substring(0, inf.esMixed.length - 2).toLowerCase()
+      esLower.startsWith(base)
     }
     val possiblePatterns = regVPatternList.regVPatterns.filter { pattern ->
-      val ending = pattern.es.substring(1)
-      conjugation.endsWith(ending)
+      val ending = pattern.esLower.substring(1)
+      esLower.endsWith(ending)
     }
     for (inf in possibleInfs) {
+      val infEsLower = inf.esMixed.toLowerCase()
       for (pattern in possiblePatterns) {
-        if (InfCategory.isInfCategory(inf.es, pattern.infCategory, false)) {
+        if (InfCategory.isInfCategory(infEsLower, pattern.infCategory, false)) {
           val newV = RegV(inf, pattern)
-          if (newV.getEs() == conjugation) {
-            createdCardsByConjugation[conjugation] = newV
+          if (newV.getEsMixed().toLowerCase() == esLower) {
+            createdCardsByEsLower[esLower] = newV
             return newV
           }
         }
@@ -47,11 +48,12 @@ class VCloud(
     }
 
     for (stemChange in stemChangeList.stemChanges) {
-      val base = stemChange.stem.substring(0, stemChange.stem.length - 1)
-      if (conjugation.startsWith(base)) {
+      val base = stemChange.stemMixed.substring(0,
+        stemChange.stemMixed.length - 1).toLowerCase()
+      if (esLower.startsWith(base)) {
         for (pattern in possiblePatterns) {
           if (pattern.tense == stemChange.tense && InfCategory.isInfCategory(
-            stemChange.inf.es,
+            stemChange.inf.esMixed.toLowerCase(),
             pattern.infCategory,
             pattern.tense == Tense.PRET)) {
             return StemChangeV(stemChange, pattern)

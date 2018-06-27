@@ -9,7 +9,7 @@ enum class InfCategory {
 
   companion object {
     fun isInfCategory(
-      infEs: String,
+      infEsLower: String,
       infCategory: InfCategory,
       isStemChangePret: Boolean
     ): Boolean =
@@ -17,10 +17,10 @@ enum class InfCategory {
         (infCategory == STEMPRET)
       else
         when (infCategory) {
-          AR -> infEs.endsWith("ar")
-          ER -> infEs.endsWith("er")
-          IR -> infEs.endsWith("ir")
-          ERIR -> infEs.endsWith("er") || infEs.endsWith("ir")
+          AR -> infEsLower.endsWith("ar")
+          ER -> infEsLower.endsWith("er")
+          IR -> infEsLower.endsWith("ir")
+          ERIR -> infEsLower.endsWith("er") || infEsLower.endsWith("ir")
           STEMPRET -> false
         }
   }

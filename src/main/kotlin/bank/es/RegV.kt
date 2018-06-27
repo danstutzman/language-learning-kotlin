@@ -8,9 +8,11 @@ data class RegV (
   val inf: Inf,
   val pattern: RegVPattern
 ): CardCreator, V {
-  fun getEsVerbPrefix(): String = inf.es.substring(0, inf.es.length - 2) + "-"
-  fun getEs(): String =
-    inf.es.substring(0, inf.es.length - 2) + pattern.es.substring(1)
+  fun getEsVerbPrefix(): String =
+    inf.esMixed.substring(0, inf.esMixed.length - 2) + "-"
+  fun getEsMixed(): String =
+    inf.esMixed.substring(0, inf.esMixed.length - 2) +
+    pattern.esLower.substring(1)
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(inf.leafId,
       when (pattern.tense) {

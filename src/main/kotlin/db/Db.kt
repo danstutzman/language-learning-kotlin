@@ -37,7 +37,7 @@ data class NonverbRow(
   val en: String,
   val enDisambiguation: String, // "" if none
   val enPlural: String?,
-  val es: String
+  val esMixed: String
 )
 
 data class Infinitive(
@@ -45,14 +45,14 @@ data class Infinitive(
   val en: String,
   val enDisambiguation: String, // "" if none
   val enPast: String,
-  val es: String
+  val esMixed: String
 )
 
 data class UniqueConjugation(
   val leafId: Int,
-  val es: String,
+  val esMixed: String,
   val en: String,
-  val infinitiveEs: String,
+  val infinitiveEsMixed: String,
   val number: Int,
   val person: Int,
   val tense: String
@@ -60,8 +60,8 @@ data class UniqueConjugation(
 
 data class StemChangeRow(
   val leafId: Int,
-  val infinitiveEs: String,
-  val stem: String,
+  val infinitiveEsMixed: String,
+  val stemMixed: String,
   val tense: String
 )
 
@@ -209,7 +209,7 @@ class Db(
         NONVERBS.EN,
         NONVERBS.EN_DISAMBIGUATION,
         NONVERBS.EN_PLURAL,
-        NONVERBS.ES)
+        NONVERBS.ES_MIXED)
       .from(NONVERBS)
       .fetch()
 
@@ -219,7 +219,7 @@ class Db(
         it.getValue(NONVERBS.EN),
         it.getValue(NONVERBS.EN_DISAMBIGUATION),
         it.getValue(NONVERBS.EN_PLURAL),
-        it.getValue(NONVERBS.ES)
+        it.getValue(NONVERBS.ES_MIXED)
       )
     }
   }
@@ -233,18 +233,18 @@ class Db(
           NONVERBS.EN,
           NONVERBS.EN_DISAMBIGUATION,
           NONVERBS.EN_PLURAL,
-          NONVERBS.ES)
+          NONVERBS.ES_MIXED)
       .values(leafId,
           nonverb.en,
           nonverb.enDisambiguation,
           nonverb.enPlural,
-          nonverb.es)
+          nonverb.esMixed)
       .returning(
           NONVERBS.LEAF_ID,
           NONVERBS.EN,
           NONVERBS.EN_DISAMBIGUATION,
           NONVERBS.EN_PLURAL,
-          NONVERBS.ES)
+          NONVERBS.ES_MIXED)
       .fetchOne()
   }
 
@@ -260,7 +260,7 @@ class Db(
         INFINITIVES.EN,
         INFINITIVES.EN_DISAMBIGUATION,
         INFINITIVES.EN_PAST,
-        INFINITIVES.ES)
+        INFINITIVES.ES_MIXED)
       .from(INFINITIVES)
       .fetch()
 
@@ -270,7 +270,7 @@ class Db(
         it.getValue(INFINITIVES.EN),
         it.getValue(INFINITIVES.EN_DISAMBIGUATION),
         it.getValue(INFINITIVES.EN_PAST),
-        it.getValue(INFINITIVES.ES)
+        it.getValue(INFINITIVES.ES_MIXED)
       )
     }
   }
@@ -284,18 +284,18 @@ class Db(
           INFINITIVES.EN,
           INFINITIVES.EN_DISAMBIGUATION,
           INFINITIVES.EN_PAST,
-          INFINITIVES.ES)
+          INFINITIVES.ES_MIXED)
       .values(leafId,
           infinitive.en,
           infinitive.enDisambiguation,
           infinitive.enPast,
-          infinitive.es)
+          infinitive.esMixed)
       .returning(
           INFINITIVES.LEAF_ID,
           INFINITIVES.EN,
           INFINITIVES.EN_DISAMBIGUATION,
           INFINITIVES.EN_PAST,
-          INFINITIVES.ES)
+          INFINITIVES.ES_MIXED)
       .fetchOne()
   }
 
@@ -308,9 +308,9 @@ class Db(
     val rows = create
       .select(
         UNIQUE_CONJUGATIONS.LEAF_ID,
-        UNIQUE_CONJUGATIONS.ES,
+        UNIQUE_CONJUGATIONS.ES_MIXED,
         UNIQUE_CONJUGATIONS.EN,
-        UNIQUE_CONJUGATIONS.INFINITIVE_ES,
+        UNIQUE_CONJUGATIONS.INFINITIVE_ES_MIXED,
         UNIQUE_CONJUGATIONS.NUMBER,
         UNIQUE_CONJUGATIONS.PERSON,
         UNIQUE_CONJUGATIONS.TENSE)
@@ -320,9 +320,9 @@ class Db(
     return rows.map {
       UniqueConjugation(
         it.getValue(UNIQUE_CONJUGATIONS.LEAF_ID),
-        it.getValue(UNIQUE_CONJUGATIONS.ES),
+        it.getValue(UNIQUE_CONJUGATIONS.ES_MIXED),
         it.getValue(UNIQUE_CONJUGATIONS.EN),
-        it.getValue(UNIQUE_CONJUGATIONS.INFINITIVE_ES),
+        it.getValue(UNIQUE_CONJUGATIONS.INFINITIVE_ES_MIXED),
         it.getValue(UNIQUE_CONJUGATIONS.NUMBER),
         it.getValue(UNIQUE_CONJUGATIONS.PERSON),
         it.getValue(UNIQUE_CONJUGATIONS.TENSE)
@@ -336,24 +336,24 @@ class Db(
     create
       .insertInto(UNIQUE_CONJUGATIONS,
           UNIQUE_CONJUGATIONS.LEAF_ID,
-          UNIQUE_CONJUGATIONS.ES,
+          UNIQUE_CONJUGATIONS.ES_MIXED,
           UNIQUE_CONJUGATIONS.EN,
-          UNIQUE_CONJUGATIONS.INFINITIVE_ES,
+          UNIQUE_CONJUGATIONS.INFINITIVE_ES_MIXED,
           UNIQUE_CONJUGATIONS.NUMBER,
           UNIQUE_CONJUGATIONS.PERSON,
           UNIQUE_CONJUGATIONS.TENSE)
       .values(leafId,
-          uniqueConjugation.es,
+          uniqueConjugation.esMixed,
           uniqueConjugation.en,
-          uniqueConjugation.infinitiveEs,
+          uniqueConjugation.infinitiveEsMixed,
           uniqueConjugation.number,
           uniqueConjugation.person,
           uniqueConjugation.tense)
       .returning(
           UNIQUE_CONJUGATIONS.LEAF_ID,
-          UNIQUE_CONJUGATIONS.ES,
+          UNIQUE_CONJUGATIONS.ES_MIXED,
           UNIQUE_CONJUGATIONS.EN,
-          UNIQUE_CONJUGATIONS.INFINITIVE_ES,
+          UNIQUE_CONJUGATIONS.INFINITIVE_ES_MIXED,
           UNIQUE_CONJUGATIONS.NUMBER,
           UNIQUE_CONJUGATIONS.PERSON,
           UNIQUE_CONJUGATIONS.TENSE)
@@ -369,8 +369,8 @@ class Db(
     val rows = create
       .select(
         STEM_CHANGES.LEAF_ID,
-        STEM_CHANGES.INFINITIVE_ES,
-        STEM_CHANGES.STEM,
+        STEM_CHANGES.INFINITIVE_ES_MIXED,
+        STEM_CHANGES.STEM_MIXED,
         STEM_CHANGES.TENSE)
       .from(STEM_CHANGES)
       .fetch()
@@ -378,8 +378,8 @@ class Db(
     return rows.map {
       StemChangeRow(
         it.getValue(STEM_CHANGES.LEAF_ID),
-        it.getValue(STEM_CHANGES.INFINITIVE_ES),
-        it.getValue(STEM_CHANGES.STEM),
+        it.getValue(STEM_CHANGES.INFINITIVE_ES_MIXED),
+        it.getValue(STEM_CHANGES.STEM_MIXED),
         it.getValue(STEM_CHANGES.TENSE)
       )
     }
@@ -391,17 +391,17 @@ class Db(
     create
       .insertInto(STEM_CHANGES,
           STEM_CHANGES.LEAF_ID,
-          STEM_CHANGES.INFINITIVE_ES,
-          STEM_CHANGES.STEM,
+          STEM_CHANGES.INFINITIVE_ES_MIXED,
+          STEM_CHANGES.STEM_MIXED,
           STEM_CHANGES.TENSE)
       .values(leafId,
-          row.infinitiveEs,
-          row.stem,
+          row.infinitiveEsMixed,
+          row.stemMixed,
           row.tense)
       .returning(
           STEM_CHANGES.LEAF_ID,
-          STEM_CHANGES.INFINITIVE_ES,
-          STEM_CHANGES.STEM,
+          STEM_CHANGES.INFINITIVE_ES_MIXED,
+          STEM_CHANGES.STEM_MIXED,
           STEM_CHANGES.TENSE)
       .fetchOne()
   }

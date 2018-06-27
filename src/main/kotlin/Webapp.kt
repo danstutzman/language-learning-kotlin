@@ -266,7 +266,7 @@ class Webapp(
     for (row in db.selectAllNonverbRows()) {
       html.append("  <tr>\n")
       html.append("    <td>${row.leafId}</td>\n")
-      html.append("    <td>${row.es}</td>\n")
+      html.append("    <td>${row.esMixed}</td>\n")
       html.append("    <td>${row.en}</td>\n")
       html.append("    <td>${row.enDisambiguation}</td>\n")
       html.append("    <td>${row.enPlural ?: ""}</td>\n")
@@ -275,7 +275,7 @@ class Webapp(
     }
     html.append("  <tr>\n")
     html.append("    <th></td>\n")
-    html.append("    <th><input type='text' name='es'></td>\n")
+    html.append("    <th><input type='text' name='es_mixed'></td>\n")
     html.append("    <th><input type='text' name='en'></td>\n")
     html.append("    <th><input type='text' name='en_disambiguation'></td>\n")
     html.append("    <th><input type='text' name='en_plural'></td>\n")
@@ -302,7 +302,7 @@ class Webapp(
         req.queryParams("en_disambiguation"),
         if (req.queryParams("en_plural") != "")
           req.queryParams("en_plural") else null,
-        req.queryParams("es")
+        req.queryParams("es_mixed")
       ))
     }
 
@@ -328,7 +328,7 @@ class Webapp(
     for (infinitive in db.selectAllInfinitives()) {
       html.append("  <tr>\n")
       html.append("    <td>${infinitive.leafId}</td>\n")
-      html.append("    <td>${infinitive.es}</td>\n")
+      html.append("    <td>${infinitive.esMixed}</td>\n")
       html.append("    <td>${infinitive.en}</td>\n")
       html.append("    <td>${infinitive.enDisambiguation}</td>\n")
       html.append("    <td>${infinitive.enPast}</td>\n")
@@ -337,7 +337,7 @@ class Webapp(
     }
     html.append("  <tr>\n")
     html.append("    <th></td>\n")
-    html.append("    <th><input type='text' name='es'></td>\n")
+    html.append("    <th><input type='text' name='es_mixed'></td>\n")
     html.append("    <th><input type='text' name='en'></td>\n")
     html.append("    <th><input type='text' name='en_disambiguation'></td>\n")
     html.append("    <th><input type='text' name='en_past'></td>\n")
@@ -363,7 +363,7 @@ class Webapp(
         req.queryParams("en"),
         req.queryParams("en_disambiguation"),
         req.queryParams("en_past"),
-        req.queryParams("es")
+        req.queryParams("es_mixed")
       ))
     }
 
@@ -391,9 +391,9 @@ class Webapp(
     for (uniqueConjugation in db.selectAllUniqueConjugations()) {
       html.append("  <tr>\n")
       html.append("    <td>${uniqueConjugation.leafId}</td>\n")
-      html.append("    <td>${uniqueConjugation.es}</td>\n")
+      html.append("    <td>${uniqueConjugation.esMixed}</td>\n")
       html.append("    <td>${uniqueConjugation.en}</td>\n")
-      html.append("    <td>${uniqueConjugation.infinitiveEs}</td>\n")
+      html.append("    <td>${uniqueConjugation.infinitiveEsMixed}</td>\n")
       html.append("    <td>${uniqueConjugation.number}</td>\n")
       html.append("    <td>${uniqueConjugation.person}</td>\n")
       html.append("    <td>${uniqueConjugation.tense}</td>\n")
@@ -402,9 +402,9 @@ class Webapp(
     }
     html.append("  <tr>\n")
     html.append("    <th></td>\n")
-    html.append("    <th><input type='text' name='es'></td>\n")
+    html.append("    <th><input type='text' name='es_mixed'></td>\n")
     html.append("    <th><input type='text' name='en'></td>\n")
-    html.append("    <th><input type='text' name='infinitive_es'></td>\n")
+    html.append("    <th><input type='text' name='infinitive_es_mixed'></td>\n")
     html.append("    <th><select name='number'><option></option><option>1</option><option>2</option></select>\n")
     html.append("    <th><select name='person'><option></option><option>1</option><option>2</option><option>3</option></select></td>\n")
     html.append("    <th><select name='tense'><option></option><option>PRES</option><option>PRET</option></select></td>\n")
@@ -428,9 +428,9 @@ class Webapp(
     if (req.queryParams("newUniqueConjugation") != null) {
       db.insertUniqueConjugation(UniqueConjugation(
         0,
-        req.queryParams("es"),
+        req.queryParams("es_mixed"),
         req.queryParams("en"),
-        req.queryParams("infinitive_es"),
+        req.queryParams("infinitive_es_mixed"),
         req.queryParams("number").toInt(),
         req.queryParams("person").toInt(),
         req.queryParams("tense")
@@ -458,16 +458,16 @@ class Webapp(
     for (row in db.selectAllStemChangeRows()) {
       html.append("  <tr>\n")
       html.append("    <td>${row.leafId}</td>\n")
-      html.append("    <td>${row.infinitiveEs}</td>\n")
-      html.append("    <td>${row.stem}</td>\n")
+      html.append("    <td>${row.infinitiveEsMixed}</td>\n")
+      html.append("    <td>${row.stemMixed}</td>\n")
       html.append("    <td>${row.tense}</td>\n")
       html.append("    <td><input type='submit' name='deleteStemChange${row.leafId}' value='Delete' onClick='return confirm(\"Delete stem change?\")'></td>\n")
       html.append("  </tr>\n")
     }
     html.append("  <tr>\n")
     html.append("    <th></td>\n")
-    html.append("    <th><input type='text' name='infinitive_es'></td>\n")
-    html.append("    <th><input type='text' name='stem'></td>\n")
+    html.append("    <th><input type='text' name='infinitive_es_mixed'></td>\n")
+    html.append("    <th><input type='text' name='stem_mixed'></td>\n")
     html.append("    <th><select name='tense'><option></option><option>PRES</option><option>PRET</option></select></td>\n")
     html.append("    <th><input type='submit' name='newStemChange' value='Insert'></td>\n")
     html.append("  </tr>\n")
@@ -488,8 +488,8 @@ class Webapp(
     if (req.queryParams("newStemChange") != null) {
       db.insertStemChangeRow(StemChangeRow(
         0,
-        req.queryParams("infinitive_es"),
-        req.queryParams("stem"),
+        req.queryParams("infinitive_es_mixed"),
+        req.queryParams("stem_mixed"),
         req.queryParams("tense")
       ))
     }

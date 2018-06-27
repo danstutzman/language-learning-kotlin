@@ -19,12 +19,13 @@ SET search_path = public, pg_catalog;
 ALTER TABLE ONLY public.unique_conjugations DROP CONSTRAINT unique_conjugations_infinitive_es_fkey;
 ALTER TABLE ONLY public.stem_changes DROP CONSTRAINT stem_changes_infinitive_es_fkey;
 DROP INDEX public.schema_version_s_idx;
-DROP INDEX public.idx_unique_conjugations_es;
-DROP INDEX public.idx_stem_changes_stem;
-DROP INDEX public.idx_nonverbs_es;
+DROP INDEX public.idx_unique_conjugations_es_mixed;
+DROP INDEX public.idx_stem_changes_stem_lower;
+DROP INDEX public.idx_nonverbs_es_lower;
 DROP INDEX public.idx_nonverbs_en_plural_and_en_disambiguation;
 DROP INDEX public.idx_nonverbs_en_and_en_disambiguation;
-DROP INDEX public.idx_infinitives_es;
+DROP INDEX public.idx_infinitives_es_mixed;
+DROP INDEX public.idx_infinitives_es_lower;
 DROP INDEX public.idx_infinitives_en_past_and_en_disambiguation;
 DROP INDEX public.idx_infinitives_en_and_en_disambiguation;
 DROP INDEX public.idx_cards_leaf_ids_csv;
@@ -168,7 +169,7 @@ ALTER SEQUENCE goals_goal_id_seq OWNED BY goals.goal_id;
 
 CREATE TABLE infinitives (
     leaf_id integer NOT NULL,
-    es text NOT NULL,
+    es_mixed text NOT NULL,
     en text NOT NULL,
     en_past text NOT NULL,
     en_disambiguation text NOT NULL,
@@ -198,7 +199,7 @@ ALTER TABLE leaf_ids OWNER TO postgres;
 
 CREATE TABLE nonverbs (
     leaf_id integer NOT NULL,
-    es text NOT NULL,
+    es_mixed text NOT NULL,
     en text NOT NULL,
     en_disambiguation text NOT NULL,
     en_plural text,
@@ -234,8 +235,8 @@ ALTER TABLE schema_version OWNER TO postgres;
 
 CREATE TABLE stem_changes (
     leaf_id integer NOT NULL,
-    infinitive_es text NOT NULL,
-    stem text NOT NULL,
+    infinitive_es_mixed text NOT NULL,
+    stem_mixed text NOT NULL,
     tense text NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL
 );
@@ -249,9 +250,9 @@ ALTER TABLE stem_changes OWNER TO postgres;
 
 CREATE TABLE unique_conjugations (
     leaf_id integer NOT NULL,
-    es text NOT NULL,
+    es_mixed text NOT NULL,
     en text NOT NULL,
-    infinitive_es text NOT NULL,
+    infinitive_es_mixed text NOT NULL,
     number integer NOT NULL,
     person integer NOT NULL,
     tense text NOT NULL,
@@ -283,6 +284,8 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 1	[{"leafId":388,"en":"good","es":"buenas"},{"leafId":383,"en":"afternoons","es":"tardes"}]	\N	388,383	Good afternoon!	0		2018-06-26 17:26:04.984444-06	2018-06-26 17:26:04.981-06
 2	[{"leafId":388,"en":"good","es":"buenas"}]	\N	388	good (fem.)	1		2018-06-26 17:26:04.984444-06	2018-06-26 17:26:04.981-06
 3	[{"leafId":383,"en":"afternoons","es":"tardes"}]	\N	383	afternoons	1		2018-06-26 17:26:04.984444-06	2018-06-26 17:26:04.981-06
+4	[{"leafId":388,"en":"good","es":"buenas"},{"leafId":382,"en":"days","es":"días"}]	\N	388,382	Good morning!	0		2018-06-26 19:18:16.741739-06	2018-06-26 19:18:16.737-06
+6	[{"leafId":382,"en":"days","es":"días"}]	\N	382	days	1		2018-06-26 19:18:16.741739-06	2018-06-26 19:18:16.737-06
 \.
 
 
@@ -290,7 +293,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 -- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('cards_card_id_seq', 3, true);
+SELECT pg_catalog.setval('cards_card_id_seq', 6, true);
 
 
 --
@@ -299,6 +302,7 @@ SELECT pg_catalog.setval('cards_card_id_seq', 3, true);
 
 COPY goals (goal_id, tags_csv, en, es, created_at, updated_at) FROM stdin;
 1		Good afternoon!	buenas tardes	2018-06-26 17:26:04.873884-06	2018-06-26 17:26:04.866-06
+2		Good morning!	Buenas días	2018-06-26 19:18:16.574612-06	2018-06-26 19:18:16.566-06
 \.
 
 
@@ -306,14 +310,14 @@ COPY goals (goal_id, tags_csv, en, es, created_at, updated_at) FROM stdin;
 -- Name: goals_goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('goals_goal_id_seq', 1, true);
+SELECT pg_catalog.setval('goals_goal_id_seq', 2, true);
 
 
 --
 -- Data for Name: infinitives; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY infinitives (leaf_id, es, en, en_past, en_disambiguation, created_at) FROM stdin;
+COPY infinitives (leaf_id, es_mixed, en, en_past, en_disambiguation, created_at) FROM stdin;
 315	andar	walk	walked		2018-06-24 09:57:33.983446-06
 316	aprender	learn	learned		2018-06-24 09:57:33.984734-06
 317	comer	eat	ate		2018-06-24 09:57:33.985347-06
@@ -367,7 +371,7 @@ SELECT pg_catalog.setval('leaf_ids', 496, true);
 -- Data for Name: nonverbs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY nonverbs (leaf_id, es, en, en_disambiguation, en_plural, created_at) FROM stdin;
+COPY nonverbs (leaf_id, es_mixed, en, en_disambiguation, en_plural, created_at) FROM stdin;
 383	tarde	afternoon		afternoons	2018-06-24 09:42:32.325038-06
 354	brazo	arm		arms	2018-06-24 09:42:32.310062-06
 355	pierna	leg		legs	2018-06-24 09:42:32.31134-06
@@ -451,8 +455,8 @@ COPY nonverbs (leaf_id, es, en, en_disambiguation, en_plural, created_at) FROM s
 --
 
 COPY schema_version (installed_rank, version, description, type, script, checksum, installed_by, installed_on, execution_time, success) FROM stdin;
-2	2	create leaf tables	SQL	V2__create_leaf_tables.sql	1065897597	postgres	2018-06-26 13:37:25.326783	51	t
 1	1	create goals and cards	SQL	V1__create_goals_and_cards.sql	-1940653025	postgres	2018-06-26 13:37:25.271006	29	t
+2	2	create leaf tables	SQL	V2__create_leaf_tables.sql	988272324	postgres	2018-06-26 13:37:25.326783	51	t
 \.
 
 
@@ -460,7 +464,7 @@ COPY schema_version (installed_rank, version, description, type, script, checksu
 -- Data for Name: stem_changes; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY stem_changes (leaf_id, infinitive_es, stem, tense, created_at) FROM stdin;
+COPY stem_changes (leaf_id, infinitive_es_mixed, stem_mixed, tense, created_at) FROM stdin;
 429	poder	pued-	PRES	2018-06-24 11:26:43.651439-06
 430	tener	tien-	PRES	2018-06-24 11:26:43.803834-06
 431	querer	quier-	PRES	2018-06-24 11:26:43.804733-06
@@ -492,7 +496,7 @@ COPY stem_changes (leaf_id, infinitive_es, stem, tense, created_at) FROM stdin;
 -- Data for Name: unique_conjugations; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY unique_conjugations (leaf_id, es, en, infinitive_es, number, person, tense, created_at) FROM stdin;
+COPY unique_conjugations (leaf_id, es_mixed, en, infinitive_es_mixed, number, person, tense, created_at) FROM stdin;
 453	soy	am	ser	1	1	PRES	2018-06-24 10:53:11.331513-06
 454	eres	are	ser	1	2	PRES	2018-06-24 10:53:11.334102-06
 455	es	is	ser	1	3	PRES	2018-06-24 10:53:11.334799-06
@@ -618,10 +622,17 @@ CREATE UNIQUE INDEX idx_infinitives_en_past_and_en_disambiguation ON infinitives
 
 
 --
--- Name: idx_infinitives_es; Type: INDEX; Schema: public; Owner: postgres
+-- Name: idx_infinitives_es_lower; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE UNIQUE INDEX idx_infinitives_es ON infinitives USING btree (es);
+CREATE UNIQUE INDEX idx_infinitives_es_lower ON infinitives USING btree (lower(es_mixed));
+
+
+--
+-- Name: idx_infinitives_es_mixed; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX idx_infinitives_es_mixed ON infinitives USING btree (es_mixed);
 
 
 --
@@ -639,24 +650,24 @@ CREATE UNIQUE INDEX idx_nonverbs_en_plural_and_en_disambiguation ON nonverbs USI
 
 
 --
--- Name: idx_nonverbs_es; Type: INDEX; Schema: public; Owner: postgres
+-- Name: idx_nonverbs_es_lower; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE UNIQUE INDEX idx_nonverbs_es ON nonverbs USING btree (es);
-
-
---
--- Name: idx_stem_changes_stem; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE UNIQUE INDEX idx_stem_changes_stem ON stem_changes USING btree (stem);
+CREATE UNIQUE INDEX idx_nonverbs_es_lower ON nonverbs USING btree (lower(es_mixed));
 
 
 --
--- Name: idx_unique_conjugations_es; Type: INDEX; Schema: public; Owner: postgres
+-- Name: idx_stem_changes_stem_lower; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE UNIQUE INDEX idx_unique_conjugations_es ON unique_conjugations USING btree (es);
+CREATE UNIQUE INDEX idx_stem_changes_stem_lower ON stem_changes USING btree (lower(stem_mixed));
+
+
+--
+-- Name: idx_unique_conjugations_es_mixed; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX idx_unique_conjugations_es_mixed ON unique_conjugations USING btree (lower(es_mixed));
 
 
 --
@@ -671,7 +682,7 @@ CREATE INDEX schema_version_s_idx ON schema_version USING btree (success);
 --
 
 ALTER TABLE ONLY stem_changes
-    ADD CONSTRAINT stem_changes_infinitive_es_fkey FOREIGN KEY (infinitive_es) REFERENCES infinitives(es);
+    ADD CONSTRAINT stem_changes_infinitive_es_fkey FOREIGN KEY (infinitive_es_mixed) REFERENCES infinitives(es_mixed);
 
 
 --
@@ -679,7 +690,7 @@ ALTER TABLE ONLY stem_changes
 --
 
 ALTER TABLE ONLY unique_conjugations
-    ADD CONSTRAINT unique_conjugations_infinitive_es_fkey FOREIGN KEY (infinitive_es) REFERENCES infinitives(es);
+    ADD CONSTRAINT unique_conjugations_infinitive_es_fkey FOREIGN KEY (infinitive_es_mixed) REFERENCES infinitives(es_mixed);
 
 
 --

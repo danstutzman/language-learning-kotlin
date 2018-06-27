@@ -23,7 +23,7 @@ fun pluralizeEs(base: String): String {
 
 class NonverbList {
   val nonverbs: List<Nonverb>
-  val nonverbByEs: Map<String, Nonverb>
+  val nonverbByEsLower: Map<String, Nonverb>
 
   constructor(db: Db) {
     nonverbs = db.selectAllNonverbRows().flatMap { row ->
@@ -31,7 +31,7 @@ class NonverbList {
 
       newNonverbs.add(Nonverb(
         leafId = row.leafId,
-        es = row.es,
+        esMixed = row.esMixed,
         en = row.en,
         enDisambiguation = if (row.enDisambiguation != "")
           row.enDisambiguation else null
@@ -40,7 +40,7 @@ class NonverbList {
      if (row.enPlural != null) {
         newNonverbs.add(Nonverb(
           leafId = row.leafId,
-          es = pluralizeEs(row.es),
+          esMixed = pluralizeEs(row.esMixed),
           en = row.enPlural,
           enDisambiguation = if (row.enDisambiguation != "")
             row.enDisambiguation else null
@@ -49,7 +49,8 @@ class NonverbList {
 
       newNonverbs
     }
-    nonverbByEs = nonverbs.map { Pair(it.es, it) }.toMap()
+    nonverbByEsLower =
+      nonverbs.map { Pair(it.esMixed.toLowerCase(), it) }.toMap()
   }
-  fun byEs(es: String): Nonverb? = nonverbByEs[es]
+  fun byEsLower(esLower: String): Nonverb? = nonverbByEsLower[esLower]
 }

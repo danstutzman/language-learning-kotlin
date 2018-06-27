@@ -8,9 +8,9 @@ data class StemChangeV (
   val stemChange: StemChange,
   val pattern: RegVPattern
 ): CardCreator, V {
-  fun getEs(): String =
-    stemChange.stem.substring(0, stemChange.stem.length - 1) +
-    pattern.es.substring(1)
+  fun getEsMixed(): String =
+    stemChange.stemMixed.substring(0, stemChange.stemMixed.length - 1) +
+    pattern.esLower.substring(1)
   override fun getGlossRows(): List<GlossRow> = 
     stemChange.getGlossRows() + pattern.getGlossRows()
   override fun getPrompt(): String =

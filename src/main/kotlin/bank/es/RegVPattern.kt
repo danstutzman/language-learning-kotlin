@@ -22,12 +22,12 @@ data class RegVPattern (
   val number: Int,
   val person: Int,
   val tense: Tense,
-  val es: String
+  val esLower: String
 ): CardCreator {
   fun getEnPronoun(): String =
     EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)]!!
   override fun getGlossRows(): List<GlossRow> =
-    listOf(GlossRow(leafId, "(${getEnPronoun()})", es))
+    listOf(GlossRow(leafId, "(${getEnPronoun()})", esLower))
   override fun getPrompt(): String {
     val enPronoun = "(" +
       EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)]!! + ")"

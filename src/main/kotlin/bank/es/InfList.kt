@@ -4,18 +4,18 @@ import com.danstutzman.db.Db
 
 class InfList {
   val infs: List<Inf>
-  val infByEs: Map<String, Inf>
+  val infByEsLower: Map<String, Inf>
 
   constructor(db: Db) {
     infs = db.selectAllInfinitives().map {
       Inf(
         it.leafId,
-        it.es,
+        it.esMixed,
         it.en,
         it.enPast,
         if (it.enDisambiguation == "") null else it.enDisambiguation)
     }
-    infByEs = infs.map { Pair(it.es, it) }.toMap()
+    infByEsLower = infs.map { Pair(it.esMixed.toLowerCase(), it) }.toMap()
   }
-  fun byEs(es: String): Inf? = infByEs[es]
+  fun byEsLower(esLower: String): Inf? = infByEsLower[esLower]
 }

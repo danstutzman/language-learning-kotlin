@@ -6,13 +6,13 @@ import com.danstutzman.bank.en.EnVerbs
 
 data class Inf (
   val leafId: Int,
-  val es: String,
+  val esMixed: String,
   val enPresent: String,
   val enPast: String,
   val enDisambiguation: String?
 ): CardCreator, V {
   override fun getGlossRows(): List<GlossRow> =
-    listOf(GlossRow(leafId, enPresent, es))
+    listOf(GlossRow(leafId, enPresent, esMixed))
   override fun getPrompt(): String =
     if (enDisambiguation != null) "to ${enPresent} (${enDisambiguation})"
       else "to ${enPresent}"

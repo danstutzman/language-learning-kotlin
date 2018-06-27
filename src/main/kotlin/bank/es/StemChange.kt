@@ -8,13 +8,14 @@ data class StemChange (
   val leafId: Int,
 	val tense: Tense,
 	val inf:   Inf,
-	val stem:  String
+	val stemMixed:  String
 ): CardCreator {
   fun getEnVerb(): String = when (tense) {
     Tense.PRES -> inf.enPresent
     Tense.PRET -> inf.enPast
   }
   override fun getGlossRows(): List<GlossRow> =
-		listOf(GlossRow(leafId, getEnVerb(), stem))
-  override fun getPrompt(): String = "Stem change for ${inf.es} in ${tense}"
+		listOf(GlossRow(leafId, getEnVerb(), stemMixed))
+  override fun getPrompt(): String =
+    "Stem change for ${inf.esMixed} in ${tense}"
 }

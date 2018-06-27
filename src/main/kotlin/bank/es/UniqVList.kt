@@ -5,23 +5,24 @@ import com.danstutzman.db.Db
 
 class UniqVList {
   val uniqVs: List<UniqV>
-  val uniqVByEs: Map<String, UniqV>
+  val uniqVByEsLower: Map<String, UniqV>
 
   constructor(infList: InfList, db: Db) {
     uniqVs = db.selectAllUniqueConjugations().map {
       UniqV(
         leafId = it.leafId,
-        es = it.es,
+        esMixed = it.esMixed,
         en = it.en,
-        inf = infList.byEs(it.infinitiveEs) ?:
-          throw CantMakeCard("Can't find infinitive for es=${it.infinitiveEs}"),
+        inf = infList.byEsLower(it.infinitiveEsMixed.toLowerCase()) ?:
+          throw CantMakeCard(
+            "Can't find infinitive for es=${it.infinitiveEsMixed}"),
         number = it.number,
         person = it.person,
         tense = Tense.valueOf(it.tense)
       )
     }
 
-    uniqVByEs = uniqVs.map { Pair(it.es, it) }.toMap()
+    uniqVByEsLower = uniqVs.map { Pair(it.esMixed.toLowerCase(), it) }.toMap()
   }
-  fun byEs(es: String): UniqV? = uniqVByEs[es]
+  fun byEsLower(esLower: String): UniqV? = uniqVByEsLower[esLower]
 }

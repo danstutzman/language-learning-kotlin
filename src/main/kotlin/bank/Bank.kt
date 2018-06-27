@@ -92,10 +92,11 @@ class Bank(
 
   fun parseEsPhrase(esPhrase: String): List<CardCreator> =
     esPhrase.split(" ").map { word ->
-      nonverbList.byEs(word) ?:
-      uniqVList.byEs(word) ?:
-      vCloud.byEs(word) ?:
-      throw CantMakeCard("Can't make card for es ${word}")
+      val wordLower = word.toLowerCase()
+      nonverbList.byEsLower(wordLower) ?:
+        uniqVList.byEsLower(wordLower) ?:
+        vCloud.byEsLower(wordLower) ?:
+        throw CantMakeCard("Can't make card for es ${wordLower}")
     }
 
 }
