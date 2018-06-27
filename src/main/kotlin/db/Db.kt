@@ -3,6 +3,7 @@ package com.danstutzman.db
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import org.jooq.DSLContext
 import org.jooq.SQLDialect
 import org.jooq.generated.Sequences.LEAF_IDS
 import org.jooq.generated.tables.Cards.CARDS
@@ -19,7 +20,8 @@ data class Goal(
   val goalId: Int,
   val tagsCsv: String,
   val en: String,
-  val es: String
+  val es: String,
+  val leafIdsCsv: String
 )
 
 data class CardRow(
@@ -84,22 +86,24 @@ class Db(
       throw RuntimeException("numRowsAffected ${numRowsAffected} != 1")
     } else {}
 
-  fun insertGoal(goal: Goal) =
-    create
-      .insertInto(GOALS,
+  private fun insertGoal(txn: DSLContext, goal: Goal) =
+    txn.insertInto(GOALS,
           GOALS.TAGS_CSV,
           GOALS.EN,
           GOALS.ES,
+          GOALS.LEAF_IDS_CSV,
           GOALS.UPDATED_AT)
       .values(goal.tagsCsv,
           goal.en,
           goal.es,
+          goal.leafIdsCsv,
           now())
       .returning(
           GOALS.GOAL_ID,
           GOALS.TAGS_CSV,
           GOALS.EN,
-          GOALS.ES)
+          GOALS.ES,
+          GOALS.LEAF_IDS_CSV)
       .fetchOne()
 
   fun selectGoalById(goalId: Int): Goal? {
@@ -108,17 +112,19 @@ class Db(
         GOALS.GOAL_ID,
         GOALS.TAGS_CSV,
         GOALS.EN,
-        GOALS.ES)
+        GOALS.ES,
+        GOALS.LEAF_IDS_CSV)
       .from(GOALS)
       .where(GOALS.GOAL_ID.eq(goalId))
       .fetchOne()
 
-    return maybeRow?.map {
+    return maybeRow?.let {
       Goal(
         it.getValue(GOALS.GOAL_ID),
         it.getValue(GOALS.TAGS_CSV),
         it.getValue(GOALS.EN),
-        it.getValue(GOALS.ES)
+        it.getValue(GOALS.ES),
+        it.getValue(GOALS.LEAF_IDS_CSV)
       )
     }
   }
@@ -129,7 +135,8 @@ class Db(
         GOALS.GOAL_ID,
         GOALS.TAGS_CSV,
         GOALS.EN,
-        GOALS.ES)
+        GOALS.ES,
+        GOALS.LEAF_IDS_CSV)
       .from(GOALS)
       .fetch()
 
@@ -138,7 +145,8 @@ class Db(
         it.getValue(GOALS.GOAL_ID),
         it.getValue(GOALS.TAGS_CSV),
         it.getValue(GOALS.EN),
-        it.getValue(GOALS.ES)
+        it.getValue(GOALS.ES),
+        it.getValue(GOALS.LEAF_IDS_CSV)
       )
     }
   }
@@ -153,23 +161,23 @@ class Db(
       .execute()
   }
 
-  fun deleteGoal(goal: Goal) {
+  fun deleteGoal(goalId: Int) {
     create.delete(GOALS)
-      .where(GOALS.GOAL_ID.eq(goal.goalId))
+      .where(GOALS.GOAL_ID.eq(goalId))
       .execute()
   }
 
-  fun insertCardRows(cardRows: List<CardRow>) {
+  private fun insertCardRows(txn: DSLContext, cardRows: List<CardRow>) {
     if (cardRows.size == 0) { return }
-    var statement = create
-      .insertInto(CARDS,
-          CARDS.GLOSS_ROWS_JSON,
-          CARDS.LAST_SEEN_AT,
-          CARDS.LEAF_IDS_CSV,
-          CARDS.MNEMONIC,
-          CARDS.PROMPT,
-          CARDS.STAGE,
-          CARDS.UPDATED_AT)
+    var statement = txn.insertInto(
+      CARDS,
+      CARDS.GLOSS_ROWS_JSON,
+      CARDS.LAST_SEEN_AT,
+      CARDS.LEAF_IDS_CSV,
+      CARDS.MNEMONIC,
+      CARDS.PROMPT,
+      CARDS.STAGE,
+      CARDS.UPDATED_AT)
     for (row in cardRows) {
       statement = statement.values(
         row.glossRowsJson,
@@ -428,4 +436,12 @@ class Db(
     create.delete(STEM_CHANGES)
       .where(STEM_CHANGES.LEAF_ID.eq(row.leafId))
       .execute()
+
+  fun insertGoalAndCardRows(goal: Goal, cardRows: List<CardRow>) {
+    create.transaction { config ->
+      val txn = DSL.using(config)
+      insertGoal(txn, goal)
+      insertCardRows(txn, cardRows)
+    }
+  }
 }

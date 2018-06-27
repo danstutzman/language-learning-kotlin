@@ -3,6 +3,7 @@ CREATE TABLE goals (
   tags_csv          TEXT NOT NULL,
   en                TEXT NOT NULL,
   es                TEXT NOT NULL,
+  leaf_ids_csv      TEXT NOT NULL,
   created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at        TIMESTAMPTZ NOT NULL
 );

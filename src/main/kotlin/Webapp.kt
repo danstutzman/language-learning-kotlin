@@ -203,11 +203,12 @@ class Webapp(
         req.params("goalId").toInt(),
         req.queryParams("tags_csv"),
         req.queryParams("en"),
-        req.queryParams("es")
+        req.queryParams("es"),
+        ""
       )
       db.updateGoal(goal)
     } else if (submit == "Delete Goal") {
-      db.deleteGoal(Goal(req.params("goalId").toInt(), "", "", ""))
+      db.deleteGoal(req.params("goalId").toInt())
     } else {
       throw RuntimeException("Unexpected submit value: ${submit}")
     }
@@ -216,17 +217,13 @@ class Webapp(
   }
 
   val postGoals = { req: Request, res: Response ->
-    val goal = Goal(
-      0,
-      req.queryParams("tags_csv"),
-      req.queryParams("en"),
-      req.queryParams("es")
-    )
-    db.insertGoal(goal)
+    val goalTagsCsv = req.queryParams("tags_csv")
+    val goalEs = req.queryParams("es")
+    val goalEn = req.queryParams("en")
 
     val bank = Bank(db)
     val gsonBuilder = GsonBuilder().create()
-    val cardCreators = bank.parseEsPhrase(goal.es)
+    val cardCreators = bank.parseEsPhrase(goalEs)
     if (cardCreators.size > 0) {
       val cardRowsForWords = cardCreators.map { cardCreator ->
         val glossRows = cardCreator.getGlossRows()
@@ -262,12 +259,22 @@ class Webapp(
         lastSeenAt = null,
         leafIdsCsv = glossRows.map { it.leafId }.joinToString(","),
         mnemonic = "",
-        prompt = goal.en,
+        prompt = goalEn,
         stage = if (glossRows.size == 1) STAGE1_READY_TO_TEST
           else STAGE0_NOT_READY_TO_TEST
       )
-      db.insertCardRows(listOf(cardRowForGoal) + cardRowsForWords +
-        cardRowsForWordsChildren)
+
+      val goal = Goal(
+        0,
+        goalTagsCsv,
+        goalEn,
+        goalEs,
+        glossRows.map { it.leafId }.joinToString(",")
+      )
+
+
+      db.insertGoalAndCardRows(goal,
+        listOf(cardRowForGoal) + cardRowsForWords + cardRowsForWordsChildren)
     }
 
     res.redirect("/goals")
