@@ -281,11 +281,72 @@ ALTER TABLE ONLY goals ALTER COLUMN goal_id SET DEFAULT nextval('goals_goal_id_s
 --
 
 COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage, mnemonic, created_at, updated_at) FROM stdin;
-1	[{"leafId":388,"en":"good","es":"buenas"},{"leafId":383,"en":"afternoons","es":"tardes"}]	\N	388,383	Good afternoon!	0		2018-06-26 17:26:04.984444-06	2018-06-26 17:26:04.981-06
-2	[{"leafId":388,"en":"good","es":"buenas"}]	\N	388	good (fem.)	1		2018-06-26 17:26:04.984444-06	2018-06-26 17:26:04.981-06
-3	[{"leafId":383,"en":"afternoons","es":"tardes"}]	\N	383	afternoons	1		2018-06-26 17:26:04.984444-06	2018-06-26 17:26:04.981-06
-4	[{"leafId":388,"en":"good","es":"buenas"},{"leafId":382,"en":"days","es":"días"}]	\N	388,382	Good morning!	0		2018-06-26 19:18:16.741739-06	2018-06-26 19:18:16.737-06
 6	[{"leafId":382,"en":"days","es":"días"}]	\N	382	days	1		2018-06-26 19:18:16.741739-06	2018-06-26 19:18:16.737-06
+1	[{"leafId":388,"en":"good","es":"buenas"},{"leafId":383,"en":"afternoons","es":"tardes"}]	2018-06-26 17:45:10-06	388,383	Good afternoon!	3		2018-06-26 17:26:04.984444-06	2018-06-26 19:50:58.893-06
+2	[{"leafId":388,"en":"good","es":"buenas"}]	2018-06-26 17:45:05-06	388	good (fem.)	3		2018-06-26 17:26:04.984444-06	2018-06-26 19:50:59.019-06
+3	[{"leafId":383,"en":"afternoons","es":"tardes"}]	2018-06-26 17:44:51-06	383	afternoons	3		2018-06-26 17:26:04.984444-06	2018-06-26 19:50:59.02-06
+7	[{"leafId":387,"en":"good","es":"buenos"},{"leafId":382,"en":"days","es":"días"}]	\N	387,382	Good morning!	0		2018-06-26 19:56:45.429788-06	2018-06-26 19:56:45.426-06
+8	[{"leafId":387,"en":"good","es":"buenos"}]	\N	387	good (masc.)	1		2018-06-26 19:56:45.429788-06	2018-06-26 19:56:45.426-06
+10	[{"leafId":453,"en":"am","es":"soy"},{"leafId":384,"en":"engineer","es":"ingeniero"},{"leafId":409,"en":"of","es":"de"},{"leafId":412,"en":"software","es":"software"}]	\N	453,384,409,412	I'm a software engineer.	0		2018-06-26 20:39:35.595353-06	2018-06-26 20:39:35.59-06
+11	[{"leafId":453,"en":"am","es":"soy"}]	\N	453	(I) to be (be (what))	1		2018-06-26 20:39:35.595353-06	2018-06-26 20:39:35.59-06
+12	[{"leafId":384,"en":"engineer","es":"ingeniero"}]	\N	384	engineer	1		2018-06-26 20:39:35.595353-06	2018-06-26 20:39:35.59-06
+13	[{"leafId":409,"en":"of","es":"de"}]	\N	409	of	1		2018-06-26 20:39:35.595353-06	2018-06-26 20:39:35.59-06
+14	[{"leafId":412,"en":"software","es":"software"}]	\N	412	software	1		2018-06-26 20:39:35.595353-06	2018-06-26 20:39:35.59-06
+15	[{"leafId":410,"en":"where","es":"dónde"},{"leafId":349,"en":"live","es":"viv-"},{"leafId":-12,"en":"(you)","es":"-es"}]	\N	410,349,-12	Where do you live?	0		2018-06-26 20:39:55.002017-06	2018-06-26 20:39:54.999-06
+16	[{"leafId":410,"en":"where","es":"dónde"}]	\N	410	where (question)	1		2018-06-26 20:39:55.002017-06	2018-06-26 20:39:54.999-06
+17	[{"leafId":349,"en":"live","es":"viv-"},{"leafId":-12,"en":"(you)","es":"-es"}]	\N	349,-12	(you) live	0		2018-06-26 20:39:55.002017-06	2018-06-26 20:39:55-06
+18	[{"leafId":327,"en":"speak","es":"habl-"},{"leafId":-1,"en":"(I)","es":"-o"},{"leafId":380,"en":"Spanish","es":"español"}]	\N	327,-1,380	I speak Spanish.	0		2018-06-26 20:40:06.327063-06	2018-06-26 20:40:06.325-06
+19	[{"leafId":327,"en":"speak","es":"habl-"},{"leafId":-1,"en":"(I)","es":"-o"}]	\N	327,-1	(I) speak	0		2018-06-26 20:40:06.327063-06	2018-06-26 20:40:06.325-06
+20	[{"leafId":380,"en":"Spanish","es":"español"}]	\N	380	Spanish	1		2018-06-26 20:40:06.327063-06	2018-06-26 20:40:06.325-06
+21	[{"leafId":327,"en":"speak","es":"habl-"},{"leafId":-1,"en":"(I)","es":"-o"},{"leafId":381,"en":"English","es":"inglés"}]	\N	327,-1,381	I speak English.	0		2018-06-26 20:40:18.47619-06	2018-06-26 20:40:18.474-06
+23	[{"leafId":381,"en":"English","es":"inglés"}]	\N	381	English	1		2018-06-26 20:40:18.47619-06	2018-06-26 20:40:18.474-06
+24	[{"leafId":317,"en":"eat","es":"com-"},{"leafId":-11,"en":"(I)","es":"-o"},{"leafId":464,"en":"are","es":"estás"}]	\N	317,-11,464	How are you?	0		2018-06-26 20:40:26.286113-06	2018-06-26 20:40:26.283-06
+25	[{"leafId":317,"en":"eat","es":"com-"},{"leafId":-11,"en":"(I)","es":"-o"}]	\N	317,-11	(I) eat	0		2018-06-26 20:40:26.286113-06	2018-06-26 20:40:26.283-06
+26	[{"leafId":464,"en":"are","es":"estás"}]	\N	464	(you) to be (be (how))	1		2018-06-26 20:40:26.286113-06	2018-06-26 20:40:26.284-06
+27	[{"leafId":407,"en":"what","es":"qué"},{"leafId":328,"en":"do","es":"hac-"},{"leafId":-12,"en":"(you)","es":"-es"}]	\N	407,328,-12	What do you do?	0		2018-06-26 20:40:35.609432-06	2018-06-26 20:40:35.607-06
+28	[{"leafId":407,"en":"what","es":"qué"}]	\N	407	what	1		2018-06-26 20:40:35.609432-06	2018-06-26 20:40:35.607-06
+29	[{"leafId":328,"en":"do","es":"hac-"},{"leafId":-12,"en":"(you)","es":"-es"}]	\N	328,-12	(you) do	0		2018-06-26 20:40:35.609432-06	2018-06-26 20:40:35.607-06
+30	[{"leafId":463,"en":"am","es":"estoy"},{"leafId":398,"en":"well","es":"bien"}]	\N	463,398	I'm doing well.	0		2018-06-26 20:40:50.275643-06	2018-06-26 20:40:50.273-06
+31	[{"leafId":463,"en":"am","es":"estoy"}]	\N	463	(I) to be (be (how))	1		2018-06-26 20:40:50.275643-06	2018-06-26 20:40:50.273-06
+32	[{"leafId":398,"en":"well","es":"bien"}]	\N	398	well	1		2018-06-26 20:40:50.275643-06	2018-06-26 20:40:50.274-06
+33	[{"leafId":408,"en":"hello","es":"hola"}]	\N	408	Hello!	1		2018-06-26 20:41:09.50277-06	2018-06-26 20:41:09.501-06
+35	[{"leafId":349,"en":"live","es":"viv-"},{"leafId":-11,"en":"(I)","es":"-o"},{"leafId":329,"en":"go","es":"-"},{"leafId":-14,"en":"(they)","es":"-en"},{"leafId":417,"en":"Longmont","es":"Longmont"}]	\N	349,-11,329,-14,417	I live here in Longmont.	0		2018-06-26 20:41:20.074141-06	2018-06-26 20:41:20.07-06
+36	[{"leafId":349,"en":"live","es":"viv-"},{"leafId":-11,"en":"(I)","es":"-o"}]	\N	349,-11	(I) live	0		2018-06-26 20:41:20.074141-06	2018-06-26 20:41:20.071-06
+37	[{"leafId":329,"en":"go","es":"-"},{"leafId":-14,"en":"(they)","es":"-en"}]	\N	329,-14	(they) go	0		2018-06-26 20:41:20.074141-06	2018-06-26 20:41:20.071-06
+38	[{"leafId":417,"en":"Longmont","es":"Longmont"}]	\N	417	Longmont	1		2018-06-26 20:41:20.074141-06	2018-06-26 20:41:20.071-06
+39	[{"leafId":415,"en":"me","es":"me"},{"leafId":351,"en":"moved","es":"mud-"},{"leafId":-6,"en":"(I)","es":"-é"},{"leafId":419,"en":"to","es":"a"},{"leafId":417,"en":"Longmont","es":"Longmont"},{"leafId":329,"en":"go","es":"-"},{"leafId":-14,"en":"(they)","es":"-en"},{"leafId":423,"en":"January","es":"enero"}]	\N	415,351,-6,419,417,329,-14,423	I moved to Longmont in January.	0		2018-06-26 20:41:35.706712-06	2018-06-26 20:41:35.702-06
+40	[{"leafId":415,"en":"me","es":"me"}]	\N	415	me	1		2018-06-26 20:41:35.706712-06	2018-06-26 20:41:35.702-06
+41	[{"leafId":351,"en":"moved","es":"mud-"},{"leafId":-6,"en":"(I)","es":"-é"}]	\N	351,-6	(I) moved	0		2018-06-26 20:41:35.706712-06	2018-06-26 20:41:35.703-06
+42	[{"leafId":419,"en":"to","es":"a"}]	\N	419	to	1		2018-06-26 20:41:35.706712-06	2018-06-26 20:41:35.703-06
+45	[{"leafId":423,"en":"January","es":"enero"}]	\N	423	January	1		2018-06-26 20:41:35.706712-06	2018-06-26 20:41:35.703-06
+46	[{"leafId":451,"en":"did","es":"hic-"},{"leafId":-22,"en":"(I)","es":"-e"},{"leafId":392,"en":"a","es":"una"},{"leafId":385,"en":"list","es":"lista"},{"leafId":409,"en":"of","es":"de"},{"leafId":386,"en":"sentences","es":"oraciones"},{"leafId":421,"en":"for","es":"para"},{"leafId":316,"en":"learn","es":"aprender"}]	\N	451,-22,392,385,409,386,421,316	I made a list of sentences to learn.	0		2018-06-26 20:41:50.898792-06	2018-06-26 20:41:50.894-06
+47	[{"leafId":451,"en":"did","es":"hic-"},{"leafId":-22,"en":"(I)","es":"-e"}]	\N	451,-22	(I) did	0		2018-06-26 20:41:50.898792-06	2018-06-26 20:41:50.894-06
+48	[{"leafId":392,"en":"a","es":"una"}]	\N	392	a (fem.)	1		2018-06-26 20:41:50.898792-06	2018-06-26 20:41:50.895-06
+49	[{"leafId":385,"en":"list","es":"lista"}]	\N	385	list	1		2018-06-26 20:41:50.898792-06	2018-06-26 20:41:50.895-06
+51	[{"leafId":386,"en":"sentences","es":"oraciones"}]	\N	386	sentences	1		2018-06-26 20:41:50.898792-06	2018-06-26 20:41:50.895-06
+52	[{"leafId":421,"en":"for","es":"para"}]	\N	421	for (in order to)	1		2018-06-26 20:41:50.898792-06	2018-06-26 20:41:50.895-06
+53	[{"leafId":316,"en":"learn","es":"aprender"}]	\N	316	to learn	1		2018-06-26 20:41:50.898792-06	2018-06-26 20:41:50.895-06
+54	[{"leafId":410,"en":"where","es":"dónde"},{"leafId":316,"en":"learned","es":"aprend-"},{"leafId":-16,"en":"(you)","es":"-iste"},{"leafId":380,"en":"Spanish","es":"español"}]	\N	410,316,-16,380	Where did you learn Spanish?	0		2018-06-26 20:42:03.499529-06	2018-06-26 20:42:03.497-06
+56	[{"leafId":316,"en":"learned","es":"aprend-"},{"leafId":-16,"en":"(you)","es":"-iste"}]	\N	316,-16	(you) learned	0		2018-06-26 20:42:03.499529-06	2018-06-26 20:42:03.497-06
+58	[{"leafId":347,"en":"visited","es":"visit-"},{"leafId":-6,"en":"(I)","es":"-é"},{"leafId":418,"en":"Cuba","es":"Cuba"},{"leafId":420,"en":"for","es":"por"},{"leafId":426,"en":"some","es":"unas"},{"leafId":428,"en":"weeks","es":"semanas"}]	\N	347,-6,418,420,426,428	I visited Cuba for a few weeks.	0		2018-06-26 20:42:15.719557-06	2018-06-26 20:42:15.713-06
+59	[{"leafId":347,"en":"visited","es":"visit-"},{"leafId":-6,"en":"(I)","es":"-é"}]	\N	347,-6	(I) visited	0		2018-06-26 20:42:15.719557-06	2018-06-26 20:42:15.713-06
+60	[{"leafId":418,"en":"Cuba","es":"Cuba"}]	\N	418	Cuba	1		2018-06-26 20:42:15.719557-06	2018-06-26 20:42:15.713-06
+61	[{"leafId":420,"en":"for","es":"por"}]	\N	420	for (on behalf of)	1		2018-06-26 20:42:15.719557-06	2018-06-26 20:42:15.713-06
+62	[{"leafId":426,"en":"some","es":"unas"}]	\N	426	some (fem.)	1		2018-06-26 20:42:15.719557-06	2018-06-26 20:42:15.713-06
+63	[{"leafId":428,"en":"weeks","es":"semanas"}]	\N	428	weeks	1		2018-06-26 20:42:15.719557-06	2018-06-26 20:42:15.713-06
+64	[{"leafId":413,"en":"with","es":"con"},{"leafId":414,"en":"who","es":"quién"},{"leafId":431,"en":"want","es":"quier-"},{"leafId":-12,"en":"(you)","es":"-es"},{"leafId":327,"en":"speak","es":"hablar"},{"leafId":380,"en":"Spanish","es":"español"}]	\N	413,414,431,-12,327,380	Who do you want to speak Spanish with?	0		2018-06-26 20:42:32.223154-06	2018-06-26 20:42:32.221-06
+65	[{"leafId":413,"en":"with","es":"con"}]	\N	413	with	1		2018-06-26 20:42:32.223154-06	2018-06-26 20:42:32.221-06
+66	[{"leafId":414,"en":"who","es":"quién"}]	\N	414	who	1		2018-06-26 20:42:32.223154-06	2018-06-26 20:42:32.221-06
+67	[{"leafId":431,"en":"want","es":"quier-"},{"leafId":-12,"en":"(you)","es":"-es"}]	\N	431,-12	(you) want	0		2018-06-26 20:42:32.223154-06	2018-06-26 20:42:32.221-06
+68	[{"leafId":327,"en":"speak","es":"hablar"}]	\N	327	to speak	1		2018-06-26 20:42:32.223154-06	2018-06-26 20:42:32.221-06
+70	[{"leafId":350,"en":"attended","es":"asist-"},{"leafId":-15,"en":"(I)","es":"-í"},{"leafId":392,"en":"a","es":"una"},{"leafId":422,"en":"class","es":"clase"},{"leafId":409,"en":"of","es":"de"},{"leafId":380,"en":"Spanish","es":"español"}]	\N	350,-15,392,422,409,380	 took a class in Spanish.	0		2018-06-26 20:42:44.869959-06	2018-06-26 20:42:44.859-06
+71	[{"leafId":350,"en":"attended","es":"asist-"},{"leafId":-15,"en":"(I)","es":"-í"}]	\N	350,-15	(I) attended	0		2018-06-26 20:42:44.869959-06	2018-06-26 20:42:44.859-06
+73	[{"leafId":422,"en":"class","es":"clase"}]	\N	422	class	1		2018-06-26 20:42:44.869959-06	2018-06-26 20:42:44.859-06
+76	[{"leafId":352,"en":"created","es":"cre-"},{"leafId":-6,"en":"(I)","es":"-é"},{"leafId":392,"en":"a","es":"una"},{"leafId":424,"en":"application","es":"aplicación"},{"leafId":427,"en":"mobile phone","es":"móvil"},{"leafId":421,"en":"for","es":"para"},{"leafId":353,"en":"study","es":"estudiar"},{"leafId":380,"en":"Spanish","es":"español"}]	\N	352,-6,392,424,427,421,353,380	I created a mobile app to study Spanish.	0		2018-06-26 20:43:00.606534-06	2018-06-26 20:43:00.601-06
+77	[{"leafId":352,"en":"created","es":"cre-"},{"leafId":-6,"en":"(I)","es":"-é"}]	\N	352,-6	(I) created	0		2018-06-26 20:43:00.606534-06	2018-06-26 20:43:00.601-06
+79	[{"leafId":424,"en":"application","es":"aplicación"}]	\N	424	application	1		2018-06-26 20:43:00.606534-06	2018-06-26 20:43:00.601-06
+80	[{"leafId":427,"en":"mobile phone","es":"móvil"}]	\N	427	mobile phone	1		2018-06-26 20:43:00.606534-06	2018-06-26 20:43:00.601-06
+82	[{"leafId":353,"en":"study","es":"estudiar"}]	\N	353	to study	1		2018-06-26 20:43:00.606534-06	2018-06-26 20:43:00.601-06
 \.
 
 
@@ -293,7 +354,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 -- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('cards_card_id_seq', 6, true);
+SELECT pg_catalog.setval('cards_card_id_seq', 83, true);
 
 
 --
@@ -302,7 +363,24 @@ SELECT pg_catalog.setval('cards_card_id_seq', 6, true);
 
 COPY goals (goal_id, tags_csv, en, es, created_at, updated_at) FROM stdin;
 1		Good afternoon!	buenas tardes	2018-06-26 17:26:04.873884-06	2018-06-26 17:26:04.866-06
-2		Good morning!	Buenas días	2018-06-26 19:18:16.574612-06	2018-06-26 19:18:16.566-06
+3		Good morning!	buenos días	2018-06-26 19:56:02.500663-06	2018-06-26 19:56:02.491-06
+4		Good morning!	buenos días	2018-06-26 19:56:44.921752-06	2018-06-26 19:56:44.877-06
+5		I'm a software engineer.	soy ingeniero de software	2018-06-26 20:39:35.338216-06	2018-06-26 20:39:35.331-06
+6		Where do you live?	dónde vives	2018-06-26 20:39:54.9681-06	2018-06-26 20:39:54.966-06
+7		I speak Spanish.	hablo español	2018-06-26 20:40:06.301163-06	2018-06-26 20:40:06.299-06
+8		I speak English.	hablo inglés	2018-06-26 20:40:18.450858-06	2018-06-26 20:40:18.449-06
+9		How are you?	como estás	2018-06-26 20:40:26.261565-06	2018-06-26 20:40:26.26-06
+10		What do you do?	qué haces	2018-06-26 20:40:35.575903-06	2018-06-26 20:40:35.574-06
+11		I'm doing well.	estoy bien	2018-06-26 20:40:50.251059-06	2018-06-26 20:40:50.249-06
+12		Hello!	hola	2018-06-26 20:41:09.481319-06	2018-06-26 20:41:09.479-06
+13		I live here in Longmont.	vivo en Longmont	2018-06-26 20:41:20.048749-06	2018-06-26 20:41:20.047-06
+14		I moved to Longmont in January.	me mudé a Longmont en enero	2018-06-26 20:41:35.689042-06	2018-06-26 20:41:35.687-06
+15		I made a list of sentences to learn.	hice una lista de oraciones para aprender	2018-06-26 20:41:50.877562-06	2018-06-26 20:41:50.876-06
+16		Where did you learn Spanish?	dónde aprendiste español	2018-06-26 20:42:03.479536-06	2018-06-26 20:42:03.478-06
+17		I visited Cuba for a few weeks.	visité Cuba por unas semanas	2018-06-26 20:42:15.690644-06	2018-06-26 20:42:15.689-06
+18		Who do you want to speak Spanish with?	con quién quieres hablar español	2018-06-26 20:42:32.202747-06	2018-06-26 20:42:32.2-06
+19		 took a class in Spanish.	asistí una clase de español	2018-06-26 20:42:44.831389-06	2018-06-26 20:42:44.828-06
+20		I created a mobile app to study Spanish.	creé una aplicación móvil para estudiar español	2018-06-26 20:43:00.582786-06	2018-06-26 20:43:00.581-06
 \.
 
 
@@ -310,7 +388,7 @@ COPY goals (goal_id, tags_csv, en, es, created_at, updated_at) FROM stdin;
 -- Name: goals_goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('goals_goal_id_seq', 2, true);
+SELECT pg_catalog.setval('goals_goal_id_seq', 20, true);
 
 
 --
@@ -364,7 +442,7 @@ COPY infinitives (leaf_id, es_mixed, en, en_past, en_disambiguation, created_at)
 -- Name: leaf_ids; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leaf_ids', 496, true);
+SELECT pg_catalog.setval('leaf_ids', 497, true);
 
 
 --
@@ -447,6 +525,7 @@ COPY nonverbs (leaf_id, es_mixed, en, en_disambiguation, en_plural, created_at) 
 426	unas	some	fem.	\N	2018-06-24 10:20:07.365061-06
 427	móvil	mobile phone		mobile phones	2018-06-24 10:20:48.975803-06
 428	semana	week		weeks	2018-06-24 10:21:05.140751-06
+497	piel	skin		\N	2018-06-26 20:37:34.949585-06
 \.
 
 
