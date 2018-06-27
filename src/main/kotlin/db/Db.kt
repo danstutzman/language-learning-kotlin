@@ -17,7 +17,9 @@ data class Goal(
   val tagsCsv: String,
   val en: String,
   val es: String,
-  val leafIdsCsv: String
+  val leafIdsCsv: String,
+  val goalCardIdsJson: String,
+  val glossRowsJson: String
 )
 
 data class CardRow(
@@ -73,6 +75,12 @@ data class StemChangeRow(
   val enDisambiguation: String // "" if none
 )
 
+data class GoalCardId(
+  val cardId: Int,
+  val glossRowStart: Int,
+  val glossRowEnd: Int
+)
+
 class Db(
   private val conn: Connection
 ) {
@@ -85,24 +93,30 @@ class Db(
       throw RuntimeException("numRowsAffected ${numRowsAffected} != 1")
     } else {}
 
-  private fun insertGoal(txn: DSLContext, goal: Goal) =
-    txn.insertInto(GOALS,
+  fun insertGoal(goal: Goal) =
+    create.insertInto(GOALS,
           GOALS.TAGS_CSV,
           GOALS.EN,
           GOALS.ES,
           GOALS.LEAF_IDS_CSV,
+          GOALS.GOAL_CARD_IDS_JSON,
+          GOALS.GLOSS_ROWS_JSON,
           GOALS.UPDATED_AT)
       .values(goal.tagsCsv,
           goal.en,
           goal.es,
           goal.leafIdsCsv,
+          goal.goalCardIdsJson,
+          goal.glossRowsJson,
           now())
       .returning(
           GOALS.GOAL_ID,
           GOALS.TAGS_CSV,
           GOALS.EN,
           GOALS.ES,
-          GOALS.LEAF_IDS_CSV)
+          GOALS.LEAF_IDS_CSV,
+          GOALS.GLOSS_ROWS_JSON,
+          GOALS.GOAL_CARD_IDS_JSON)
       .fetchOne()
 
   fun selectGoalById(goalId: Int): Goal? {
@@ -112,7 +126,9 @@ class Db(
         GOALS.TAGS_CSV,
         GOALS.EN,
         GOALS.ES,
-        GOALS.LEAF_IDS_CSV)
+        GOALS.LEAF_IDS_CSV,
+        GOALS.GOAL_CARD_IDS_JSON,
+        GOALS.GLOSS_ROWS_JSON)
       .from(GOALS)
       .where(GOALS.GOAL_ID.eq(goalId))
       .fetchOne()
@@ -123,7 +139,9 @@ class Db(
         it.getValue(GOALS.TAGS_CSV),
         it.getValue(GOALS.EN),
         it.getValue(GOALS.ES),
-        it.getValue(GOALS.LEAF_IDS_CSV)
+        it.getValue(GOALS.LEAF_IDS_CSV),
+        it.getValue(GOALS.GOAL_CARD_IDS_JSON),
+        it.getValue(GOALS.GLOSS_ROWS_JSON)
       )
     }
   }
@@ -135,7 +153,9 @@ class Db(
         GOALS.TAGS_CSV,
         GOALS.EN,
         GOALS.ES,
-        GOALS.LEAF_IDS_CSV)
+        GOALS.LEAF_IDS_CSV,
+        GOALS.GOAL_CARD_IDS_JSON,
+        GOALS.GLOSS_ROWS_JSON)
       .from(GOALS)
       .fetch()
 
@@ -145,7 +165,9 @@ class Db(
         it.getValue(GOALS.TAGS_CSV),
         it.getValue(GOALS.EN),
         it.getValue(GOALS.ES),
-        it.getValue(GOALS.LEAF_IDS_CSV)
+        it.getValue(GOALS.LEAF_IDS_CSV),
+        it.getValue(GOALS.GOAL_CARD_IDS_JSON),
+        it.getValue(GOALS.GLOSS_ROWS_JSON)
       )
     }
   }
@@ -166,9 +188,9 @@ class Db(
       .execute()
   }
 
-  private fun insertCardRows(txn: DSLContext, cardRows: List<CardRow>) {
+  fun insertCardRows(cardRows: List<CardRow>) {
     if (cardRows.size == 0) { return }
-    var statement = txn.insertInto(
+    var statement = create.insertInto(
       CARDS,
       CARDS.GLOSS_ROWS_JSON,
       CARDS.LAST_SEEN_AT,
@@ -191,8 +213,7 @@ class Db(
   }
 
   fun selectAllCardRows(): List<CardRow> {
-    val rows = create
-      .select(
+    val rows = create.select(
         CARDS.CARD_ID,
         CARDS.GLOSS_ROWS_JSON,
         CARDS.LAST_SEEN_AT,
@@ -215,6 +236,15 @@ class Db(
       )
     }
   }
+
+  fun lookupCardLeafIdsCsvToCardId(leafIdsCsvs: List<String>):
+    Map<String, Int> =
+    create.select(CARDS.LEAF_IDS_CSV, CARDS.CARD_ID)
+      .from(CARDS)
+      .where(CARDS.LEAF_IDS_CSV.`in`(leafIdsCsvs))
+      .fetch()
+      .map { Pair(it.getValue(CARDS.LEAF_IDS_CSV), it.getValue(CARDS.CARD_ID)) }
+      .toMap()
 
   fun updateCard(cardUpdate: CardUpdate) {
     create.update(CARDS)
@@ -421,13 +451,5 @@ class Db(
           LEAFS.ES_MIXED,
           LEAFS.TENSE)
       .fetchOne()
-  }
-
-  fun insertGoalAndCardRows(goal: Goal, cardRows: List<CardRow>) {
-    create.transaction { config ->
-      val txn = DSL.using(config)
-      insertGoal(txn, goal)
-      insertCardRows(txn, cardRows)
-    }
   }
 }

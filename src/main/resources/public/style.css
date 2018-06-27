@@ -10,3 +10,23 @@ th {
 .CantMakeCard {
   color: red;
 }
+.goal-es-multiple-words {
+  display: inline-block;
+}
+.stage0 { /* not ready to test */
+  border-bottom: #ccc solid 2px;
+}
+.stage1 { /* ready to test */
+  color: #888;
+}
+.goal-es-multiple-words.stage1 { /* ready to test */
+  border-bottom: #888 solid 2px;
+}
+.stage2 { /* wrong */
+  color: red;
+}
+.stage3 { /* passed */
+}
+.goal-es-multiple-words.stage3 {
+  border-bottom: #080 solid 2px;
+}

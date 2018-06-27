@@ -13,6 +13,7 @@ import com.danstutzman.db.CardRow
 import com.danstutzman.db.CardUpdate
 import com.danstutzman.db.Db
 import com.danstutzman.db.Goal
+import com.danstutzman.db.GoalCardId
 import com.danstutzman.db.Infinitive
 import com.danstutzman.db.NonverbRow
 import com.danstutzman.db.StemChangeRow
@@ -137,6 +138,10 @@ class Webapp(
   }
 
   val getGoals = { _: Request, _: Response ->
+    val goals = db.selectAllGoals()
+    val cardByCardId =
+      db.selectAllCardRows().map { Pair(it.cardId, it) }.toMap()
+
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
 
@@ -149,13 +154,47 @@ class Webapp(
     html.append("    <th>English</td>\n")
     html.append("    <th>Spanish</td>\n")
     html.append("  </tr>\n")
-    for (goal in db.selectAllGoals()) {
+    for (goal in goals) {
+      val goalCardIdsUntyped =
+        Gson().fromJson(goal.goalCardIdsJson, List::class.java)
+      val goalCardIds = goalCardIdsUntyped.map {
+        val map = it as Map<String, Int>
+        GoalCardId(
+          map["cardId"]!!,
+          map["glossRowStart"]!!,
+          map["glossRowEnd"]!!)
+      }
+
+      val glossRows = GlossRows.expandGlossRows(goal.glossRowsJson)
+      val openTagsByGlossRowIndex = glossRows.map { mutableListOf<String>() }
+      val closeTagsByGlossRowIndex = glossRows.map { mutableListOf<String>() }
+      for (goalCardId in goalCardIds) {
+        val stage = cardByCardId[goalCardId.cardId]!!.stage
+        val maybeMultipleWords =
+          if (goalCardId.glossRowStart == goalCardId.glossRowEnd) ""
+          else "goal-es-multiple-words"
+        openTagsByGlossRowIndex[goalCardId.glossRowStart].add(
+          "<span class='${maybeMultipleWords} stage${stage}'>")
+        closeTagsByGlossRowIndex[goalCardId.glossRowEnd].add("</span>")
+      }
+
+      val glossRowsHtml = StringBuilder()
+      for (i in 0..glossRows.size - 1) {
+        val es = glossRows[i].es
+        glossRowsHtml.append(openTagsByGlossRowIndex[i].joinToString(""))
+        glossRowsHtml.append(es.replace("-", ""))
+        glossRowsHtml.append(closeTagsByGlossRowIndex[i].joinToString(""))
+        if (!es.endsWith("-")) {
+          glossRowsHtml.append(" ")
+        }
+      }
+
       html.append("  <tr>\n")
       html.append("    <td>${goal.goalId}</td>\n")
       html.append("    <td>${goal.tagsCsv}</td>\n")
       html.append("    <td>${goal.en}</td>\n")
-      html.append("    <td>${goal.es}</td>\n")
-      html.append("    <td><a href='/goals/${goal.goalId}'>Edit</a></td>\n")
+      html.append("    <td>${glossRowsHtml}</td>\n")
+      // html.append("    <td><a href='/goals/${goal.goalId}'>Edit</a></td>\n")
       html.append("  </tr>\n")
     }
     html.append("</table><br>\n")
@@ -174,47 +213,47 @@ class Webapp(
     html.toString()
   }
 
-  val getGoal = { req: Request, _: Response ->
-    val goal = db.selectGoalById(req.params("goalId")!!.toInt())!!
+  // val getGoal = { req: Request, _: Response ->
+  //   val goal = db.selectGoalById(req.params("goalId")!!.toInt())!!
 
-    val html = StringBuilder()
-    html.append(OPEN_BODY_TAG)
+  //   val html = StringBuilder()
+  //   html.append(OPEN_BODY_TAG)
 
-    html.append("<h1>Edit Goal ${goal.goalId}</h1>\n")
-    html.append("<form method='POST' action='/goals/${goal.goalId}'>\n")
-    html.append("  <label for='en'>Tags (comma-separated)</label><br>\n")
-    html.append("  <input type='text' name='tags_csv' value='${escapeHTML(goal.tagsCsv)}'><br>\n")
-    html.append("  <label for='en'>English</label><br>\n")
-    html.append("  <input type='text' name='en' value='${escapeHTML(goal.en)}'><br>\n")
-    html.append("  <label for='es'>Spanish</label><br>\n")
-    html.append("  <input type='text' name='es' value='${escapeHTML(goal.es)}'><br>\n")
-    html.append("  <input type='submit' name='submit' value='Edit Goal'>\n")
-    html.append("  <input type='submit' name='submit' value='Delete Goal' onClick='return confirm(\"Delete goal?\")'>\n")
-    html.append("</form>\n")
+  //   html.append("<h1>Edit Goal ${goal.goalId}</h1>\n")
+  //   html.append("<form method='POST' action='/goals/${goal.goalId}'>\n")
+  //   html.append("  <label for='en'>Tags (comma-separated)</label><br>\n")
+  //   html.append("  <input type='text' name='tags_csv' value='${escapeHTML(goal.tagsCsv)}'><br>\n")
+  //   html.append("  <label for='en'>English</label><br>\n")
+  //   html.append("  <input type='text' name='en' value='${escapeHTML(goal.en)}'><br>\n")
+  //   html.append("  <label for='es'>Spanish</label><br>\n")
+  //   html.append("  <input type='text' name='es' value='${escapeHTML(goal.es)}'><br>\n")
+  //   html.append("  <input type='submit' name='submit' value='Edit Goal'>\n")
+  //   html.append("  <input type='submit' name='submit' value='Delete Goal' onClick='return confirm(\"Delete goal?\")'>\n")
+  //   html.append("</form>\n")
 
-    html.append(CLOSE_BODY_TAG)
-    html.toString()
-  }
+  //   html.append(CLOSE_BODY_TAG)
+  //   html.toString()
+  // }
 
-  val postGoal = { req: Request, res: Response ->
-    val submit = req.queryParams("submit")
-    if (submit == "Edit Goal") {
-      val goal = Goal(
-        req.params("goalId").toInt(),
-        req.queryParams("tags_csv"),
-        req.queryParams("en"),
-        req.queryParams("es"),
-        ""
-      )
-      db.updateGoal(goal)
-    } else if (submit == "Delete Goal") {
-      db.deleteGoal(req.params("goalId").toInt())
-    } else {
-      throw RuntimeException("Unexpected submit value: ${submit}")
-    }
+  // val postGoal = { req: Request, res: Response ->
+  //   val submit = req.queryParams("submit")
+  //   if (submit == "Edit Goal") {
+  //     val goal = Goal(
+  //       req.params("goalId").toInt(),
+  //       req.queryParams("tags_csv"),
+  //       req.queryParams("en"),
+  //       req.queryParams("es"),
+  //       ""
+  //     )
+  //     db.updateGoal(goal)
+  //   } else if (submit == "Delete Goal") {
+  //     db.deleteGoal(req.params("goalId").toInt())
+  //   } else {
+  //     throw RuntimeException("Unexpected submit value: ${submit}")
+  //   }
 
-    res.redirect("/goals")
-  }
+  //   res.redirect("/goals")
+  // }
 
   val postGoals = { req: Request, res: Response ->
     val goalTagsCsv = req.queryParams("tags_csv")
@@ -263,18 +302,47 @@ class Webapp(
         stage = if (glossRows.size == 1) STAGE1_READY_TO_TEST
           else STAGE0_NOT_READY_TO_TEST
       )
+      val allCardRows =
+        listOf(cardRowForGoal) + cardRowsForWords + cardRowsForWordsChildren
+      db.insertCardRows(allCardRows)
 
-      val goal = Goal(
+      val leafIdsCsvs = allCardRows.map { it.leafIdsCsv }
+      val leafIdCsvToCardId = db.lookupCardLeafIdsCsvToCardId(leafIdsCsvs)
+
+      val goalCardIds = mutableListOf<GoalCardId>()
+      val goalLeafIds = cardRowForGoal.leafIdsCsv.split(",").map { it.toInt() }
+      for (glossStartIndex in 0..goalLeafIds.size - 1) {
+        for (cardRow in allCardRows) {
+          val cardLeafIds = cardRow.leafIdsCsv.split(",").map { it.toInt() }
+          val glossEndIndex = glossStartIndex + cardLeafIds.size - 1
+          if (glossEndIndex < goalLeafIds.size) {
+            var leafIdsMatch = true
+            for (i in glossStartIndex..glossEndIndex) {
+              if (cardLeafIds[i - glossStartIndex] != goalLeafIds[i]) {
+                leafIdsMatch = false
+                break
+              }
+            }
+
+            if (leafIdsMatch) {
+              goalCardIds.add(GoalCardId(
+                leafIdCsvToCardId[cardRow.leafIdsCsv]!!,
+                glossStartIndex,
+                glossEndIndex))
+            }
+          }
+        }
+      }
+
+      db.insertGoal(Goal(
         0,
         goalTagsCsv,
         goalEn,
         goalEs,
-        glossRows.map { it.leafId }.joinToString(",")
-      )
-
-
-      db.insertGoalAndCardRows(goal,
-        listOf(cardRowForGoal) + cardRowsForWords + cardRowsForWordsChildren)
+        glossRows.map { it.leafId }.joinToString(","),
+        gsonBuilder.toJson(goalCardIds),
+        cardRowForGoal.glossRowsJson
+      ))
     }
 
     res.redirect("/goals")
