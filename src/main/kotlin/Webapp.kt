@@ -10,6 +10,7 @@ import com.danstutzman.bank.es.RegVPatternList
 import com.danstutzman.bank.es.Tense
 import com.danstutzman.bank.es.UniqVList
 import com.danstutzman.db.CardRow
+import com.danstutzman.db.CardUpdate
 import com.danstutzman.db.Db
 import com.danstutzman.db.Goal
 import com.danstutzman.db.Infinitive
@@ -65,6 +66,16 @@ fun htmlForGlossRowsTable(json: String): String {
   html.append("</table>")
   return html.toString()
 }
+
+data class CardsUpload(val cards: List<CardUpload>)
+
+data class CardUpload (
+  val cardId: Int,
+  val glossRows: List<GlossRow>,
+  val mnemonic: String,
+  val lastSeenAt: Int?,
+  val stage: Int
+)
 
 class Webapp(
   val db: Db
@@ -506,11 +517,18 @@ class Webapp(
     GsonBuilder().serializeNulls().create().toJson(response)
   }
 
-//   val postApi = { req: Request, res: Response ->
-//     val skillsUpload = Gson().fromJson(req.body(), SkillsUpload::class.java)
-//     // bank.saveSkillsExport(skillsUpload)
-//     res.header("Access-Control-Allow-Origin", "*")
-//     res.header("Content-Type", "application/json")
-//     "{}"
-//   }
+  val postApi = { req: Request, res: Response ->
+    val cardsUpload = Gson().fromJson(req.body(), CardsUpload::class.java)
+    val bank = Bank(db)
+    bank.saveCardUpdates(cardsUpload.cards.map {
+      CardUpdate(
+        cardId = it.cardId,
+        lastSeenAt = it.lastSeenAt,
+        mnemonic = it.mnemonic,
+        stage = it.stage)
+    })
+    res.header("Access-Control-Allow-Origin", "*")
+    res.header("Content-Type", "application/json")
+    "{}"
+  }
 }

@@ -20,6 +20,7 @@ import com.danstutzman.bank.es.Tense
 import com.danstutzman.bank.es.UniqV
 import com.danstutzman.bank.es.UniqVList
 import com.danstutzman.bank.es.VCloud
+import com.danstutzman.db.CardUpdate
 import com.danstutzman.db.Db
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -42,10 +43,6 @@ data class CardDownload(
   val mnemonic: String,
   val prompt: String,
   val stage: Int
-) {}
-
-data class CardsUpload(
-  val foo: Int
 ) {}
 
 class Bank(
@@ -99,4 +96,9 @@ class Bank(
         throw CantMakeCard("Can't make card for es ${wordLower}")
     }
 
+  fun saveCardUpdates(cardUpdates: List<CardUpdate>) {
+    for (cardUpdate in cardUpdates) {
+      db.updateCard(cardUpdate)
+    }
+  }
 }

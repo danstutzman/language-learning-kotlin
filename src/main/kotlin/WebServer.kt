@@ -50,7 +50,7 @@ fun main(args: Array<String>) {
   service.get("/unique-conjugations", webapp.getUniqueConjugations)
   service.post("/unique-conjugations", webapp.postUniqueConjugations)
   service.get("/api", webapp.getApi)
-  // service.post("/api", webapp.postApi)
+  service.post("/api", webapp.postApi)
 
   service.afterAfter { req, res ->
     logger.info("${req.requestMethod()} ${req.pathInfo()} ${res.status()}")

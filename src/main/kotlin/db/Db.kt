@@ -32,6 +32,13 @@ data class CardRow(
   val stage: Int
 )
 
+data class CardUpdate(
+  val cardId: Int,
+  val lastSeenAt: Int?,
+  val mnemonic: String,
+  val stage: Int
+)
+
 data class NonverbRow(
   val leafId: Int,
   val en: String,
@@ -166,7 +173,7 @@ class Db(
     for (row in cardRows) {
       statement = statement.values(
         row.glossRowsJson,
-        row.lastSeenAt?.let { java.sql.Timestamp(it.toLong() * 1000) },
+        row.lastSeenAt?.let { Timestamp(it.toLong() * 1000) },
         row.leafIdsCsv,
         row.mnemonic,
         row.prompt,
@@ -200,6 +207,17 @@ class Db(
         it.getValue(CARDS.STAGE)
       )
     }
+  }
+
+  fun updateCard(cardUpdate: CardUpdate) {
+    create.update(CARDS)
+      .set(CARDS.LAST_SEEN_AT,
+        cardUpdate.lastSeenAt?.let { Timestamp(it.toLong() * 1000) })
+      .set(CARDS.MNEMONIC, cardUpdate.mnemonic)
+      .set(CARDS.STAGE, cardUpdate.stage)
+      .set(CARDS.UPDATED_AT, now())
+      .where(CARDS.CARD_ID.eq(cardUpdate.cardId))
+      .execute()
   }
 
   fun selectAllNonverbRows(): List<NonverbRow> {
