@@ -485,6 +485,7 @@ class Webapp(
     html.append("    <th>LeafId</td>\n")
     html.append("    <th>Spanish</td>\n")
     html.append("    <th>English</td>\n")
+    html.append("    <th>English disambiguation</td>\n")
     html.append("    <th>Infinitive</td>\n")
     html.append("    <th>Number</td>\n")
     html.append("    <th>Person</td>\n")
@@ -496,6 +497,7 @@ class Webapp(
       html.append("    <td>${uniqueConjugation.leafId}</td>\n")
       html.append("    <td>${uniqueConjugation.esMixed}</td>\n")
       html.append("    <td>${uniqueConjugation.en}</td>\n")
+      html.append("    <td>${uniqueConjugation.enDisambiguation}</td>\n")
       html.append("    <td>${uniqueConjugation.infinitiveEsMixed}</td>\n")
       html.append("    <td>${uniqueConjugation.number}</td>\n")
       html.append("    <td>${uniqueConjugation.person}</td>\n")
@@ -507,6 +509,7 @@ class Webapp(
     html.append("    <th></td>\n")
     html.append("    <th><input type='text' name='es_mixed'></td>\n")
     html.append("    <th><input type='text' name='en'></td>\n")
+    html.append("    <th><input type='text' name='en_disambiguation'></td>\n")
     html.append("    <th><input type='text' name='infinitive_es_mixed'></td>\n")
     html.append("    <th><select name='number'><option></option><option>1</option><option>2</option></select>\n")
     html.append("    <th><select name='person'><option></option><option>1</option><option>2</option><option>3</option></select></td>\n")
@@ -535,7 +538,8 @@ class Webapp(
         req.queryParams("infinitive_es_mixed"),
         req.queryParams("number").toInt(),
         req.queryParams("person").toInt(),
-        req.queryParams("tense")
+        req.queryParams("tense"),
+        req.queryParams("en_disambiguation")
       ))
     }
 

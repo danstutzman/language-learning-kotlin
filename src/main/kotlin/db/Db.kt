@@ -62,7 +62,8 @@ data class UniqueConjugation(
   val infinitiveEsMixed: String,
   val number: Int,
   val person: Int,
-  val tense: String
+  val tense: String,
+  val enDisambiguation: String // "" if none
 )
 
 data class StemChangeRow(
@@ -361,7 +362,8 @@ class Db(
         LEAFS.INFINITIVE_ES_MIXED,
         LEAFS.NUMBER,
         LEAFS.PERSON,
-        LEAFS.TENSE)
+        LEAFS.TENSE,
+        LEAFS.EN_DISAMBIGUATION)
       .from(LEAFS)
       .where(LEAFS.LEAF_TYPE.eq("UniqV"))
       .fetch()
@@ -374,7 +376,8 @@ class Db(
         it.getValue(LEAFS.INFINITIVE_ES_MIXED),
         it.getValue(LEAFS.NUMBER),
         it.getValue(LEAFS.PERSON),
-        it.getValue(LEAFS.TENSE)
+        it.getValue(LEAFS.TENSE),
+        it.getValue(LEAFS.EN_DISAMBIGUATION)
       )
     }
   }
@@ -388,14 +391,16 @@ class Db(
           LEAFS.INFINITIVE_ES_MIXED,
           LEAFS.NUMBER,
           LEAFS.PERSON,
-          LEAFS.TENSE)
+          LEAFS.TENSE,
+          LEAFS.EN_DISAMBIGUATION)
       .values("UniqV",
           uniqueConjugation.esMixed,
           uniqueConjugation.en,
           uniqueConjugation.infinitiveEsMixed,
           uniqueConjugation.number,
           uniqueConjugation.person,
-          uniqueConjugation.tense)
+          uniqueConjugation.tense,
+          uniqueConjugation.enDisambiguation)
       .returning(
           LEAFS.LEAF_ID,
           LEAFS.ES_MIXED,
@@ -403,7 +408,8 @@ class Db(
           LEAFS.INFINITIVE_ES_MIXED,
           LEAFS.NUMBER,
           LEAFS.PERSON,
-          LEAFS.TENSE)
+          LEAFS.TENSE,
+          LEAFS.EN_DISAMBIGUATION)
       .fetchOne()
   }
 

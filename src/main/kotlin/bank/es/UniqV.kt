@@ -11,14 +11,15 @@ data class UniqV (
   val inf: Inf,
   val number: Int,
   val person: Int,
-  val tense: Tense
+  val tense: Tense,
+  val enDisambiguation: String?
 ): CardCreator, V {
   override fun getChildCardCreators(): List<CardCreator> =
     listOf(inf) + inf.getChildCardCreators()
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(leafId, en, esMixed))
-  override fun getPrompt(): String = "(" +
-    EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)] +
-    ") " +
-    inf.getPrompt()
+  override fun getPrompt(): String =
+    EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)] + " " +
+      en +
+      (if (enDisambiguation != "") " (${enDisambiguation})" else "")
 }

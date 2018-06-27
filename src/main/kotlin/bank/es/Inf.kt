@@ -2,7 +2,6 @@ package com.danstutzman.bank.es
 
 import com.danstutzman.bank.CardCreator
 import com.danstutzman.bank.GlossRow
-import com.danstutzman.bank.en.EnVerbs
 
 data class Inf (
   val leafId: Int,

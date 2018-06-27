@@ -18,7 +18,9 @@ class UniqVList {
             "Can't find infinitive for es=${it.infinitiveEsMixed}"),
         number = it.number,
         person = it.person,
-        tense = Tense.valueOf(it.tense)
+        tense = Tense.valueOf(it.tense),
+        enDisambiguation =
+          if (it.enDisambiguation == "") null else it.enDisambiguation
       )
     }
 
