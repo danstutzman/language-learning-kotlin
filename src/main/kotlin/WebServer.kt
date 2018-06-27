@@ -36,6 +36,7 @@ fun main(args: Array<String>) {
   }
 
   service.get("/", webapp.getRoot)
+  service.get("/cards", webapp.getCards)
   service.get("/goals", webapp.getGoals)
   service.post("/goals", webapp.postGoals)
   service.get("/goals/:goalId", webapp.getGoal)

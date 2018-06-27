@@ -3,6 +3,7 @@ package com.danstutzman
 import com.danstutzman.bank.Bank
 import com.danstutzman.bank.CantMakeCard
 import com.danstutzman.bank.GlossRow
+import com.danstutzman.bank.GlossRows
 import com.danstutzman.bank.es.InfList
 import com.danstutzman.bank.es.RegV
 import com.danstutzman.bank.es.RegVPatternList
@@ -45,6 +46,26 @@ fun escapeHTML(s: String): String {
   return out.toString()
 }
 
+fun htmlForGlossRowsTable(json: String): String {
+  val html = StringBuilder()
+  html.append("<table>")
+
+  html.append("<tr>")
+  for (row in GlossRows.expandGlossRows(json)) {
+    html.append("<td>${row.en}</td>")
+  }
+  html.append("</tr>")
+
+  html.append("<tr>")
+  for (row in GlossRows.expandGlossRows(json)) {
+    html.append("<td>${row.es}</td>")
+  }
+  html.append("</tr>")
+
+  html.append("</table>")
+  return html.toString()
+}
+
 class Webapp(
   val db: Db
 ) {
@@ -63,11 +84,43 @@ class Webapp(
   val getRoot = { _: Request, _: Response ->
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
+    html.append("<li><a href='/cards'>Cards</a></li>\n")
     html.append("<li><a href='/goals'>Goals</a></li>\n")
     html.append("<li><a href='/infinitives'>Infinitives</a></li>\n")
     html.append("<li><a href='/nonverbs'>Nonverbs</a></li>\n")
     html.append("<li><a href='/stem-changes'>Stem Changes</a></li>\n")
     html.append("<li><a href='/unique-conjugations'>Unique Conjugations</a></li>\n")
+    html.append(CLOSE_BODY_TAG)
+    html.toString()
+  }
+
+  val getCards = { _: Request, _: Response ->
+    val html = StringBuilder()
+    html.append(OPEN_BODY_TAG)
+
+    html.append("<a href='/'>Back to home</a>\n")
+    html.append("<h1>Cards</h1>\n")
+    html.append("<table border='1'>\n")
+    html.append("  <tr>\n")
+    html.append("    <th>CardId</td>\n")
+    html.append("    <th>Gloss Rows</td>\n")
+    html.append("    <th>Last Seen At</td>\n")
+    html.append("    <th>Mnemonic</td>\n")
+    html.append("    <th>Prompt</td>\n")
+    html.append("    <th>Stage</td>\n")
+    html.append("  </tr>\n")
+    for (card in db.selectAllCardRows()) {
+      html.append("  <tr>\n")
+      html.append("    <td>${card.cardId}</td>\n")
+      html.append("    <td>${htmlForGlossRowsTable(card.glossRowsJson)}</td>\n")
+      html.append("    <td>${card.lastSeenAt}</td>\n")
+      html.append("    <td>${card.mnemonic}</td>\n")
+      html.append("    <td>${card.prompt}</td>\n")
+      html.append("    <td>${card.stage}</td>\n")
+      html.append("  </tr>\n")
+    }
+    html.append("</table><br>\n")
+
     html.append(CLOSE_BODY_TAG)
     html.toString()
   }

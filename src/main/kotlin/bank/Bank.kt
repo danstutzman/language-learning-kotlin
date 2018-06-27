@@ -1,6 +1,7 @@
 package com.danstutzman.bank
 
 import com.danstutzman.bank.GlossRow
+import com.danstutzman.bank.GlossRows
 import com.danstutzman.bank.en.EnPronouns
 import com.danstutzman.bank.en.EnVerbs
 import com.danstutzman.bank.es.GENDER_TO_DESCRIPTION
@@ -61,22 +62,9 @@ class Bank(
                           regVPatternList, stemChangeList)
 
   val cardDownloads = db.selectAllCardRows().map {
-    val glossRowsUntyped = try {
-      Gson().fromJson(it.glossRowsJson, List::class.java)
-    } catch (e: com.google.gson.JsonSyntaxException) {
-      throw CantMakeCard("Bad glossRowsJson: ${it.glossRowsJson}, ${e}")
-    }
-    val glossRows = glossRowsUntyped.map {
-      val map = it as Map<*, *>
-      GlossRow(
-        (map.get("leafId") as Double).toInt(),
-        map.get("en") as String,
-        map.get("es") as String
-      )
-    }
     CardDownload(
       cardId = it.cardId,
-      glossRows = glossRows,
+      glossRows = GlossRows.expandGlossRows(it.glossRowsJson),
       lastSeenAt = it.lastSeenAt,
       leafIdsCsv = it.leafIdsCsv,
       mnemonic = it.mnemonic,
