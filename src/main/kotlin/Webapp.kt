@@ -169,7 +169,9 @@ class Webapp(
       val openTagsByGlossRowIndex = glossRows.map { mutableListOf<String>() }
       val closeTagsByGlossRowIndex = glossRows.map { mutableListOf<String>() }
       for (goalCardId in goalCardIds) {
-        val stage = cardByCardId[goalCardId.cardId]!!.stage
+        val stage = cardByCardId[goalCardId.cardId]?.stage ?:
+          throw RuntimeException(
+            "Can't find cardId ${goalCardId.cardId} for goalId ${goal.goalId}")
         val maybeMultipleWords =
           if (goalCardId.glossRowStart == goalCardId.glossRowEnd) ""
           else "goal-es-multiple-words"
