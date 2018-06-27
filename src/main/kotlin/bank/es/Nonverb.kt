@@ -9,6 +9,7 @@ data class Nonverb (
   val en: String,
   val enDisambiguation: String?
 ): CardCreator {
+  override fun getChildCardCreators(): List<CardCreator> = listOf<CardCreator>()
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(leafId, en, esMixed))
   override fun getPrompt(): String =

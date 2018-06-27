@@ -10,6 +10,8 @@ data class StemChange (
 	val inf:   Inf,
 	val stemMixed:  String
 ): CardCreator {
+  override fun getChildCardCreators(): List<CardCreator> =
+    listOf(inf) + inf.getChildCardCreators()
   fun getEnVerb(): String = when (tense) {
     Tense.PRES -> inf.enPresent
     Tense.PRET -> inf.enPast

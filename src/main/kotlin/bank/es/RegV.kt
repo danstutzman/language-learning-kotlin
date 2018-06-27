@@ -8,6 +8,10 @@ data class RegV (
   val inf: Inf,
   val pattern: RegVPattern
 ): CardCreator, V {
+  override fun getChildCardCreators(): List<CardCreator> =
+    listOf(inf, pattern) +
+    inf.getChildCardCreators() +
+    pattern.getChildCardCreators()
   fun getEsVerbPrefix(): String =
     inf.esMixed.substring(0, inf.esMixed.length - 2) + "-"
   fun getEsMixed(): String =

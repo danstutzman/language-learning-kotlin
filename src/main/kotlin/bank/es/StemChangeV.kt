@@ -8,6 +8,10 @@ data class StemChangeV (
   val stemChange: StemChange,
   val pattern: RegVPattern
 ): CardCreator, V {
+  override fun getChildCardCreators(): List<CardCreator> =
+    listOf(stemChange, pattern) +
+    stemChange.getChildCardCreators() +
+    pattern.getChildCardCreators()
   fun getEsMixed(): String =
     stemChange.stemMixed.substring(0, stemChange.stemMixed.length - 1) +
     pattern.esLower.substring(1)

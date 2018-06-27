@@ -241,18 +241,33 @@ class Webapp(
             else STAGE0_NOT_READY_TO_TEST
         )
       }
-      val allGlossRows = cardCreators.flatMap { it.getGlossRows() }
+      val cardRowsForWordsChildren =
+        cardCreators.flatMap { it.getChildCardCreators() }.map { cardCreator ->
+          val glossRows = cardCreator.getGlossRows()
+          CardRow(
+            cardId = 0,
+            glossRowsJson = gsonBuilder.toJson(glossRows),
+            lastSeenAt = null,
+            leafIdsCsv = glossRows.map { it.leafId }.joinToString(","),
+            mnemonic = "",
+            prompt = cardCreator.getPrompt(),
+            stage = if (glossRows.size == 1) STAGE1_READY_TO_TEST
+              else STAGE0_NOT_READY_TO_TEST
+          )
+        }
+      val glossRows = cardCreators.flatMap { it.getGlossRows() }
       val cardRowForGoal = CardRow(
         cardId = 0,
-        glossRowsJson = gsonBuilder.toJson(allGlossRows),
+        glossRowsJson = gsonBuilder.toJson(glossRows),
         lastSeenAt = null,
-        leafIdsCsv = allGlossRows.map { it.leafId }.joinToString(","),
+        leafIdsCsv = glossRows.map { it.leafId }.joinToString(","),
         mnemonic = "",
         prompt = goal.en,
-        stage = if (allGlossRows.size == 1) STAGE1_READY_TO_TEST
+        stage = if (glossRows.size == 1) STAGE1_READY_TO_TEST
           else STAGE0_NOT_READY_TO_TEST
       )
-      db.insertCardRows(listOf(cardRowForGoal) + cardRowsForWords)
+      db.insertCardRows(listOf(cardRowForGoal) + cardRowsForWords +
+        cardRowsForWordsChildren)
     }
 
     res.redirect("/goals")

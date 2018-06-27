@@ -13,6 +13,8 @@ data class UniqV (
   val person: Int,
   val tense: Tense
 ): CardCreator, V {
+  override fun getChildCardCreators(): List<CardCreator> =
+    listOf(inf) + inf.getChildCardCreators()
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(leafId, en, esMixed))
   override fun getPrompt(): String = "(" +

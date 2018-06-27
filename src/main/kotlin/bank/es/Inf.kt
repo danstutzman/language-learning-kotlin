@@ -11,6 +11,7 @@ data class Inf (
   val enPast: String,
   val enDisambiguation: String?
 ): CardCreator, V {
+  override fun getChildCardCreators(): List<CardCreator> = listOf<CardCreator>()
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(leafId, enPresent, esMixed))
   override fun getPrompt(): String =
