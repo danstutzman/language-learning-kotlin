@@ -25,6 +25,7 @@ CREATE UNIQUE INDEX idx_cards_leaf_ids_csv ON cards(leaf_ids_csv);
 CREATE TABLE paragraphs (
   paragraph_id      SERIAL PRIMARY KEY,
   topic             TEXT NOT NULL,
+  enabled           BOOLEAN NOT NULL,
   created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at        TIMESTAMPTZ NOT NULL
 );

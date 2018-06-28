@@ -58,19 +58,25 @@ class Bank(
   val vCloud          = VCloud(infList, uniqVList,
                           regVPatternList, stemChangeList)
 
-  val cardDownloads = db.selectAllCardRows().map {
-    CardDownload(
-      cardId = it.cardId,
-      glossRows = GlossRows.expandGlossRows(it.glossRowsJson),
-      lastSeenAt = it.lastSeenAt,
-      leafIdsCsv = it.leafIdsCsv,
-      mnemonic = it.mnemonic,
-      prompt = it.prompt,
-      stage = it.stage)
-  }
-  val assertion = assertUniqPrompts(cardDownloads)
 
   fun getCardDownloads(): Map<String, List<CardDownload>> {
+    val paragraphIds =
+      db.selectAllParagraphs().filter { it.enabled }.map { it.paragraphId }
+    val goalCardIds =
+      db.selectGoalsWithParagraphIdIn(paragraphIds).map { it.cardId }
+    val allCardIds = (db.selectCardEmbeddingsWithLongerCardIdIn(goalCardIds)
+      .map { it.shorterCardId } + goalCardIds).distinct()
+    val cardDownloads = db.selectCardRowsWithCardIdIn(allCardIds).map {
+      CardDownload(
+        cardId = it.cardId,
+        glossRows = GlossRows.expandGlossRows(it.glossRowsJson),
+        lastSeenAt = it.lastSeenAt,
+        leafIdsCsv = it.leafIdsCsv,
+        mnemonic = it.mnemonic,
+        prompt = it.prompt,
+        stage = it.stage)
+    }
+    assertUniqPrompts(cardDownloads)
     return linkedMapOf("cardDownloads" to cardDownloads)
   }
 

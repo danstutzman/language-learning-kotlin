@@ -91,7 +91,8 @@ data class CardEmbedding(
 
 data class Paragraph(
   val paragraphId: Int,
-  val topic: String
+  val topic: String,
+  val enabled: Boolean
 )
 
 class Db(
@@ -167,7 +168,7 @@ class Db(
         it.getValue(GOALS.PARAGRAPH_ID)
       )}
 
-  fun selectGoalsWithParagraphId(paragraphId: Int): List<Goal> =
+  fun selectGoalsWithParagraphIdIn(paragraphIds: List<Int>): List<Goal> =
     create
       .select(
         GOALS.GOAL_ID,
@@ -176,7 +177,7 @@ class Db(
         GOALS.CARD_ID,
         GOALS.PARAGRAPH_ID)
       .from(GOALS)
-      .where(GOALS.PARAGRAPH_ID.eq(paragraphId))
+      .where(GOALS.PARAGRAPH_ID.`in`(paragraphIds))
       .fetch()
       .map { Goal(
         it.getValue(GOALS.GOAL_ID),
@@ -495,27 +496,31 @@ class Db(
     create
       .select(
         PARAGRAPHS.PARAGRAPH_ID,
-        PARAGRAPHS.TOPIC)
+        PARAGRAPHS.TOPIC,
+        PARAGRAPHS.ENABLED)
       .from(PARAGRAPHS)
       .fetch()
       .map {
         Paragraph(
           it.getValue(PARAGRAPHS.PARAGRAPH_ID),
-          it.getValue(PARAGRAPHS.TOPIC))
+          it.getValue(PARAGRAPHS.TOPIC),
+          it.getValue(PARAGRAPHS.ENABLED))
       }
 
   fun selectParagraphById(paragraphId: Int) : Paragraph? =
     create
       .select(
         PARAGRAPHS.PARAGRAPH_ID,
-        PARAGRAPHS.TOPIC)
+        PARAGRAPHS.TOPIC,
+        PARAGRAPHS.ENABLED)
       .from(PARAGRAPHS)
       .where(PARAGRAPHS.PARAGRAPH_ID.eq(paragraphId))
       .fetchOne()
       ?.let {
         Paragraph(
           it.getValue(PARAGRAPHS.PARAGRAPH_ID),
-          it.getValue(PARAGRAPHS.TOPIC))
+          it.getValue(PARAGRAPHS.TOPIC),
+          it.getValue(PARAGRAPHS.ENABLED))
       }
 
   fun insertParagraph(paragraph: Paragraph): Paragraph =
@@ -523,17 +528,20 @@ class Db(
       .values(paragraph.topic, now())
       .returning(
         PARAGRAPHS.PARAGRAPH_ID,
-        PARAGRAPHS.TOPIC)
+        PARAGRAPHS.TOPIC,
+        PARAGRAPHS.ENABLED)
       .fetchOne().let {
         Paragraph(
           it.getValue(PARAGRAPHS.PARAGRAPH_ID),
-          it.getValue(PARAGRAPHS.TOPIC)
+          it.getValue(PARAGRAPHS.TOPIC),
+          it.getValue(PARAGRAPHS.ENABLED)
         )
       }
 
   fun updateParagraph(paragraph: Paragraph) =
     create.update(PARAGRAPHS)
       .set(PARAGRAPHS.TOPIC, paragraph.topic)
+      .set(PARAGRAPHS.ENABLED, paragraph.enabled)
       .set(GOALS.UPDATED_AT, now())
       .where(PARAGRAPHS.PARAGRAPH_ID.eq(paragraph.paragraphId))
       .execute()

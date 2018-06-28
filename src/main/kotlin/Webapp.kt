@@ -452,7 +452,8 @@ class Webapp(
     html.append("<a href='/'>Back to home</a>\n")
     html.append("<h1>Paragraphs</h1>\n")
     for (paragraph in paragraphs) {
-      html.append("<h2>Paragraph ${paragraph.paragraphId}: ${paragraph.topic}</h2>\n")
+      html.append("<h2>Paragraph ${paragraph.paragraphId}: ${paragraph.topic}")
+      html.append("  enabled=${paragraph.enabled}</h2>\n")
       html.append("<table border='1'>\n")
       html.append("  <tr>\n")
       html.append("    <th>Goal ID</td>\n")
@@ -476,6 +477,8 @@ class Webapp(
     html.append("<form method='POST' action='/paragraphs'>\n")
     html.append("  <label for='topic'>Topic</label><br>\n")
     html.append("  <input type='text' name='topic'><br>\n")
+    html.append("  <label for='enabled'>Enabled</label><br>\n")
+    html.append("  <input type='checkbox' name='enabled'><br>\n")
     html.append("  <input type='submit' name='submit' value='Add Paragraph'>\n")
     html.append("</form>\n")
 
@@ -486,14 +489,15 @@ class Webapp(
   val postParagraphs = { req: Request, res: Response ->
     val paragraphId = req.params("paragraphId")!!.toInt()
     val topic = req.queryParams("topic")
-    db.updateParagraph(Paragraph(paragraphId, topic))
+    val enabled = req.queryParams("enabled") != null
+    db.updateParagraph(Paragraph(paragraphId, topic, enabled))
     res.redirect("/paragraphs")
   }
 
   val getParagraph = { req: Request, _: Response ->
     val paragraphId = req.params("paragraphId")!!.toInt()
     val paragraph = db.selectParagraphById(paragraphId)!!
-    val goals = db.selectGoalsWithParagraphId(paragraph.paragraphId)
+    val goals = db.selectGoalsWithParagraphIdIn(listOf(paragraph.paragraphId))
 
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
@@ -503,6 +507,8 @@ class Webapp(
     html.append("<form method='POST' action='/paragraphs/${paragraph.paragraphId}'>\n")
     html.append("  <label for='en'>Topic</label><br>\n")
     html.append("  <input type='text' name='topic' value='${escapeHTML(paragraph.topic)}'><br>\n")
+    html.append("  <label for='enabled'>Enabled</label><br>\n")
+    html.append("  <input type='checkbox' name='enabled' ${if (paragraph.enabled) "checked" else ""}><br>\n")
 
     html.append("  <table>\n")
     html.append("    <tr>\n")
@@ -537,7 +543,8 @@ class Webapp(
     if (submit == "Edit Paragraph") {
       val paragraph = Paragraph(
         req.params("paragraphId").toInt(),
-        req.queryParams("topic"))
+        req.queryParams("topic"),
+        req.queryParams("enabled") != null)
       db.updateParagraph(paragraph)
 
       val goalEn = req.queryParams("en")
