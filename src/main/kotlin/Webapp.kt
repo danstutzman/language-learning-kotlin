@@ -9,6 +9,7 @@ import com.danstutzman.bank.es.RegV
 import com.danstutzman.bank.es.RegVPatternList
 import com.danstutzman.bank.es.Tense
 import com.danstutzman.bank.es.UniqVList
+import com.danstutzman.db.CardEmbedding
 import com.danstutzman.db.CardRow
 import com.danstutzman.db.CardUpdate
 import com.danstutzman.db.Db
@@ -21,6 +22,7 @@ import com.danstutzman.db.UniqueConjugation
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import java.io.File
+import java.util.LinkedList
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spark.Request
@@ -67,6 +69,33 @@ fun htmlForGlossRowsTable(json: String): String {
 
   html.append("</table>")
   return html.toString()
+}
+
+fun findCardEmbeddings(longerLeafIdsCsv: String,
+    shorterLeafIdsCsv: String) : List<CardEmbedding> {
+  val embeddings = mutableListOf<CardEmbedding>()
+  if (longerLeafIdsCsv != shorterLeafIdsCsv &&
+      longerLeafIdsCsv.contains(shorterLeafIdsCsv)) {
+    val longerLeafIds = longerLeafIdsCsv.split(",").map { it.toInt() }
+    val shorterLeafIds = shorterLeafIdsCsv.split(",").map { it.toInt() }
+    for (firstLeafIndex in 0..longerLeafIds.size - 1) {
+      val lastLeafIndex = firstLeafIndex + shorterLeafIds.size - 1
+      if (lastLeafIndex < longerLeafIds.size) {
+        var leafIdsMatch = true
+        for (i in firstLeafIndex..lastLeafIndex) {
+          if (shorterLeafIds[i - firstLeafIndex] != longerLeafIds[i]) {
+            leafIdsMatch = false
+            break
+          }
+        }
+
+        if (leafIdsMatch) {
+          embeddings.add(CardEmbedding(0, 0, firstLeafIndex, lastLeafIndex))
+        }
+      }
+    }
+  }
+  return embeddings
 }
 
 data class CardsUpload(val cards: List<CardUpload>)
@@ -140,8 +169,19 @@ class Webapp(
 
   val getGoals = { _: Request, _: Response ->
     val goals = db.selectAllGoals()
-    val cardByCardId =
-      db.selectAllCardRows().map { Pair(it.cardId, it) }.toMap()
+    val goalCardIds = goals.map { it.cardId }
+    val cardEmbeddingsByCardId = goals.map {
+      Pair(it.cardId, mutableListOf<CardEmbedding>())
+    }.toMap().toMutableMap()
+    val subCardIds = mutableListOf<Int>()
+    for (cardEmbedding in
+      db.selectCardEmbeddingsWithLongerCardIdIn(goalCardIds)) {
+      cardEmbeddingsByCardId[cardEmbedding.longerCardId]!!.add(cardEmbedding)
+      subCardIds.add(cardEmbedding.shorterCardId)
+    }
+    val allCardIds = (goalCardIds + subCardIds).distinct()
+    val cardByCardId = db.selectCardRowsWithCardIdIn(allCardIds)
+      .map { Pair(it.cardId, it) }.toMap()
 
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
@@ -156,29 +196,23 @@ class Webapp(
     html.append("    <th>Spanish</td>\n")
     html.append("  </tr>\n")
     for (goal in goals) {
-      val goalCardIdsUntyped =
-        Gson().fromJson(goal.goalCardIdsJson, List::class.java)
-      val goalCardIds = goalCardIdsUntyped.map {
-        val map = it as Map<String, Int>
-        GoalCardId(
-          map["cardId"]!!,
-          map["glossRowStart"]!!,
-          map["glossRowEnd"]!!)
-      }
-
-      val glossRows = GlossRows.expandGlossRows(goal.glossRowsJson)
-      val openTagsByGlossRowIndex = glossRows.map { mutableListOf<String>() }
-      val closeTagsByGlossRowIndex = glossRows.map { mutableListOf<String>() }
-      for (goalCardId in goalCardIds) {
-        val stage = cardByCardId[goalCardId.cardId]?.stage ?:
+      val card = cardByCardId[goal.cardId]!!
+      val glossRows = GlossRows.expandGlossRows(card.glossRowsJson)
+      val openTagsByGlossRowIndex = glossRows.map { LinkedList<String>() }
+      val closeTagsByGlossRowIndex = glossRows.map { LinkedList<String>() }
+      val cardEmbeddingsAndSelf = (cardEmbeddingsByCardId[goal.cardId]!! +
+        listOf(CardEmbedding(goal.cardId, goal.cardId, 0,
+          cardByCardId[goal.cardId]!!.leafIdsCsv.split(",").size - 1))
+      ).sortedBy { it.lastLeafIndex - it.firstLeafIndex } // short ones first
+      for (embedding in cardEmbeddingsAndSelf) {
+        val stage = cardByCardId[embedding.shorterCardId]?.stage ?:
           throw RuntimeException(
-            "Can't find cardId ${goalCardId.cardId} for goalId ${goal.goalId}")
-        val maybeMultipleWords =
-          if (goalCardId.glossRowStart == goalCardId.glossRowEnd) ""
-          else "goal-es-multiple-words"
-        openTagsByGlossRowIndex[goalCardId.glossRowStart].add(
-          "<span class='${maybeMultipleWords} stage${stage}'>")
-        closeTagsByGlossRowIndex[goalCardId.glossRowEnd].add("</span>")
+            "Can't find shorterCard for embedding ${embedding}")
+        val style = if (embedding.firstLeafIndex == embedding.lastLeafIndex)
+          "goal-es-single-word" else "goal-es-multiple-words"
+        openTagsByGlossRowIndex[embedding.firstLeafIndex].push(
+          "<span class='${style} stage${stage}'>")
+        closeTagsByGlossRowIndex[embedding.lastLeafIndex].add("</span>")
       }
 
       val glossRowsHtml = StringBuilder()
@@ -266,7 +300,7 @@ class Webapp(
     val bank = Bank(db)
     val gsonBuilder = GsonBuilder().create()
     val cardCreators = bank.parseEsPhrase(goalEs)
-    if (cardCreators.size > 0) {
+    if (cardCreators.size > 0) { 
       val cardRowsForWords = cardCreators.map { cardCreator ->
         val glossRows = cardCreator.getGlossRows()
         CardRow(
@@ -312,42 +346,41 @@ class Webapp(
         listOf(cardRowForGoal) + cardRowsForWords + cardRowsForWordsChildren
       db.insertCardRows(allCardRows)
 
-      val leafIdsCsvs = allCardRows.map { it.leafIdsCsv }
-      val leafIdCsvToCardId = db.lookupCardLeafIdsCsvToCardId(leafIdsCsvs)
+      val leafIdsCsvCardIdPairs = db.selectLeafIdsCsvCardIdPairs()
+      val leafIdCsvToCardId = leafIdsCsvCardIdPairs.toMap()
 
-      val goalCardIds = mutableListOf<GoalCardId>()
-      val goalLeafIds = cardRowForGoal.leafIdsCsv.split(",").map { it.toInt() }
-      for (glossStartIndex in 0..goalLeafIds.size - 1) {
-        for (cardRow in allCardRows) {
-          val cardLeafIds = cardRow.leafIdsCsv.split(",").map { it.toInt() }
-          val glossEndIndex = glossStartIndex + cardLeafIds.size - 1
-          if (glossEndIndex < goalLeafIds.size) {
-            var leafIdsMatch = true
-            for (i in glossStartIndex..glossEndIndex) {
-              if (cardLeafIds[i - glossStartIndex] != goalLeafIds[i]) {
-                leafIdsMatch = false
-                break
-              }
-            }
-
-            if (leafIdsMatch) {
-              goalCardIds.add(GoalCardId(
-                leafIdCsvToCardId[cardRow.leafIdsCsv]!!,
-                glossStartIndex,
-                glossEndIndex))
-            }
-          }
+      val cardEmbeddings = mutableListOf<CardEmbedding>()
+      for (outerPair in leafIdsCsvCardIdPairs) {
+        val outerLeafIdsCsv = outerPair.first
+        val outerCardId = outerPair.second
+        for (innerCardRow in allCardRows) {
+          val innerCardId = leafIdCsvToCardId[innerCardRow.leafIdsCsv]!!
+          cardEmbeddings.addAll(
+            findCardEmbeddings(outerLeafIdsCsv, innerCardRow.leafIdsCsv).map {
+              CardEmbedding(
+                outerCardId,
+                innerCardId,
+                it.firstLeafIndex,
+                it.lastLeafIndex)
+            })
+          cardEmbeddings.addAll(
+            findCardEmbeddings(innerCardRow.leafIdsCsv, outerLeafIdsCsv).map {
+              CardEmbedding(
+                innerCardId,
+                outerCardId,
+                it.firstLeafIndex,
+                it.lastLeafIndex)
+            })
         }
       }
+      db.insertCardEmbeddings(cardEmbeddings)
 
       db.insertGoal(Goal(
         0,
         goalTagsCsv,
         goalEn,
         goalEs,
-        glossRows.map { it.leafId }.joinToString(","),
-        gsonBuilder.toJson(goalCardIds),
-        cardRowForGoal.glossRowsJson
+        leafIdCsvToCardId[cardRowForGoal.leafIdsCsv]!!
       ))
     }
 

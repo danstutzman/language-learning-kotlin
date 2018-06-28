@@ -31,7 +31,9 @@ th {
 .goal-es-multiple-words.stage3 {
   border-bottom: #440 solid 2px;
 }
-.stage4 { /* passed */
+.goal-es-single-word.stage4 { /* passed */
+  text-decoration: underline;
+  text-decoration-color: green;
 }
 .goal-es-multiple-words.stage4 {
   border-bottom: #080 solid 2px;

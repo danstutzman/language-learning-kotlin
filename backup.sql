@@ -17,6 +17,8 @@ SET row_security = off;
 SET search_path = public, pg_catalog;
 
 ALTER TABLE ONLY public.leafs DROP CONSTRAINT fk_leafs_leafs_es_mixed;
+ALTER TABLE ONLY public.card_embeddings DROP CONSTRAINT card_embeddings_shorter_card_id_fkey;
+ALTER TABLE ONLY public.card_embeddings DROP CONSTRAINT card_embeddings_longer_card_id_fkey;
 DROP INDEX public.schema_version_s_idx;
 DROP INDEX public.idx_leafs_nonverbs_en_plural_and_en_disambiguation;
 DROP INDEX public.idx_leafs_nonverbs_en_and_en_disambiguation;
@@ -25,13 +27,16 @@ DROP INDEX public.idx_leafs_infinitives_en_and_en_disambiguation;
 DROP INDEX public.idx_leafs_es_mixed;
 DROP INDEX public.idx_leafs_es_lower;
 DROP INDEX public.idx_cards_leaf_ids_csv;
+DROP INDEX public.idx_card_embeddings;
 ALTER TABLE ONLY public.schema_version DROP CONSTRAINT schema_version_pk;
 ALTER TABLE ONLY public.leafs DROP CONSTRAINT leafs_pkey;
 ALTER TABLE ONLY public.goals DROP CONSTRAINT goals_pkey;
 ALTER TABLE ONLY public.cards DROP CONSTRAINT cards_pkey;
+ALTER TABLE ONLY public.card_embeddings DROP CONSTRAINT card_embeddings_pkey;
 ALTER TABLE public.leafs ALTER COLUMN leaf_id DROP DEFAULT;
 ALTER TABLE public.goals ALTER COLUMN goal_id DROP DEFAULT;
 ALTER TABLE public.cards ALTER COLUMN card_id DROP DEFAULT;
+ALTER TABLE public.card_embeddings ALTER COLUMN card_embedding_id DROP DEFAULT;
 DROP TABLE public.schema_version;
 DROP SEQUENCE public.leafs_leaf_id_seq;
 DROP TABLE public.leafs;
@@ -39,6 +44,8 @@ DROP SEQUENCE public.goals_goal_id_seq;
 DROP TABLE public.goals;
 DROP SEQUENCE public.cards_card_id_seq;
 DROP TABLE public.cards;
+DROP SEQUENCE public.card_embeddings_card_embedding_id_seq;
+DROP TABLE public.card_embeddings;
 DROP EXTENSION plpgsql;
 DROP SCHEMA public;
 --
@@ -76,6 +83,42 @@ SET search_path = public, pg_catalog;
 SET default_tablespace = '';
 
 SET default_with_oids = false;
+
+--
+-- Name: card_embeddings; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE card_embeddings (
+    card_embedding_id integer NOT NULL,
+    longer_card_id integer NOT NULL,
+    shorter_card_id integer NOT NULL,
+    first_leaf_index integer NOT NULL,
+    last_leaf_index integer NOT NULL
+);
+
+
+ALTER TABLE card_embeddings OWNER TO postgres;
+
+--
+-- Name: card_embeddings_card_embedding_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE card_embeddings_card_embedding_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE card_embeddings_card_embedding_id_seq OWNER TO postgres;
+
+--
+-- Name: card_embeddings_card_embedding_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE card_embeddings_card_embedding_id_seq OWNED BY card_embeddings.card_embedding_id;
+
 
 --
 -- Name: cards; Type: TABLE; Schema: public; Owner: postgres
@@ -126,11 +169,9 @@ CREATE TABLE goals (
     tags_csv text NOT NULL,
     en text NOT NULL,
     es text NOT NULL,
-    leaf_ids_csv text NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone NOT NULL,
-    goal_card_ids_json text NOT NULL,
-    gloss_rows_json text NOT NULL
+    card_id integer NOT NULL
 );
 
 
@@ -227,6 +268,13 @@ CREATE TABLE schema_version (
 ALTER TABLE schema_version OWNER TO postgres;
 
 --
+-- Name: card_embeddings card_embedding_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY card_embeddings ALTER COLUMN card_embedding_id SET DEFAULT nextval('card_embeddings_card_embedding_id_seq'::regclass);
+
+
+--
 -- Name: cards card_id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -245,6 +293,227 @@ ALTER TABLE ONLY goals ALTER COLUMN goal_id SET DEFAULT nextval('goals_goal_id_s
 --
 
 ALTER TABLE ONLY leafs ALTER COLUMN leaf_id SET DEFAULT nextval('leafs_leaf_id_seq'::regclass);
+
+
+--
+-- Data for Name: card_embeddings; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_leaf_index, last_leaf_index) FROM stdin;
+1	140	142	0	0
+3	144	140	0	1
+5	144	142	0	0
+7	139	140	0	1
+9	139	142	0	0
+10	122	123	0	0
+11	125	126	0	0
+13	128	409	0	0
+14	185	186	0	1
+15	185	193	0	0
+16	418	186	0	1
+17	418	193	0	0
+19	134	135	0	0
+21	425	415	0	0
+22	429	415	0	0
+23	433	415	0	0
+24	160	415	0	0
+28	437	438	0	0
+30	439	442	0	0
+32	444	156	0	0
+33	446	152	0	0
+34	450	451	0	1
+35	450	152	0	0
+37	451	152	0	0
+38	455	456	0	1
+39	455	458	0	0
+41	456	458	0	0
+44	462	458	0	0
+45	460	461	0	0
+48	465	466	0	1
+49	465	469	0	0
+51	466	469	0	0
+54	471	469	0	0
+55	472	469	0	0
+57	471	472	0	1
+60	476	477	0	0
+62	478	480	0	0
+72	155	156	0	0
+73	157	158	0	0
+75	167	137	0	0
+76	369	167	0	1
+77	176	181	0	0
+78	511	176	0	1
+82	186	193	0	0
+84	511	181	0	0
+85	215	192	0	0
+89	196	197	0	1
+90	196	202	0	0
+92	197	202	0	0
+95	204	205	0	0
+96	482	483	0	0
+97	136	137	0	0
+100	369	137	0	0
+107	489	490	0	0
+109	375	175	0	0
+110	237	225	0	0
+111	238	225	0	0
+112	219	227	0	0
+113	220	227	0	0
+114	499	227	0	0
+115	505	227	0	0
+116	506	227	0	0
+117	229	230	0	1
+118	229	235	0	0
+119	207	210	0	0
+121	230	235	0	0
+124	213	135	0	0
+127	219	220	0	1
+130	499	220	0	1
+132	237	238	0	1
+147	505	506	0	1
+153	122	124	1	1
+155	125	127	1	1
+157	128	131	2	2
+159	128	130	1	1
+160	128	132	3	3
+161	185	131	4	4
+163	185	187	2	2
+164	185	190	5	5
+165	185	191	6	6
+166	185	192	7	7
+168	185	194	1	1
+169	185	188	3	3
+170	418	421	3	3
+172	418	187	2	2
+174	418	194	1	1
+180	229	131	4	4
+181	134	136	1	2
+182	134	137	1	1
+183	134	138	2	2
+191	425	427	1	1
+196	429	431	1	1
+199	433	435	1	1
+202	437	439	1	2
+203	437	440	3	3
+204	437	441	4	4
+205	437	442	1	1
+206	437	218	2	2
+210	439	218	1	1
+215	444	446	1	2
+216	444	447	3	3
+217	444	152	1	1
+219	444	218	2	2
+222	446	218	1	1
+225	450	452	2	2
+227	450	236	1	1
+230	451	236	1	1
+233	455	457	2	2
+235	455	236	1	1
+238	456	236	1	1
+242	460	458	1	1
+246	460	462	1	2
+247	460	218	2	2
+251	462	218	1	1
+254	465	544	3	3
+255	465	236	1	1
+256	465	371	2	2
+259	466	236	1	1
+266	471	473	2	2
+267	471	218	1	1
+270	472	218	1	1
+273	476	478	1	2
+274	476	480	1	1
+275	476	162	3	3
+276	476	236	2	2
+280	478	236	1	1
+286	204	142	4	4
+289	144	143	1	1
+290	140	143	1	1
+291	237	143	1	1
+292	238	143	1	1
+293	139	143	1	1
+297	144	146	2	2
+302	167	153	1	1
+303	369	153	1	1
+304	155	157	1	2
+305	155	158	1	1
+306	155	138	2	2
+310	157	138	1	1
+316	176	182	1	1
+318	375	176	1	2
+320	375	177	3	3
+321	196	201	5	5
+322	375	180	6	6
+324	160	162	1	1
+326	196	182	1	1
+327	197	182	1	1
+328	482	182	2	2
+329	489	182	6	6
+330	219	182	1	1
+331	220	182	1	1
+332	375	182	2	2
+333	499	182	1	1
+334	511	182	1	1
+338	186	194	1	1
+340	375	181	1	1
+344	229	187	2	2
+345	219	187	2	2
+346	505	187	2	2
+349	219	191	5	5
+351	213	192	1	1
+364	196	199	3	3
+365	196	200	4	4
+367	196	198	2	2
+376	204	138	3	3
+377	204	141	5	5
+378	204	210	2	2
+380	204	206	1	1
+381	204	207	2	3
+384	482	485	3	3
+385	482	486	4	4
+386	482	227	1	1
+387	482	220	1	2
+390	136	138	1	1
+400	207	138	1	1
+406	229	141	5	5
+407	213	141	3	3
+408	219	141	7	7
+409	237	141	2	2
+410	139	141	2	2
+418	505	486	3	3
+421	489	227	5	5
+422	489	220	5	6
+423	489	491	1	1
+424	489	492	2	2
+425	489	493	3	3
+426	489	494	4	4
+428	369	169	3	3
+429	375	169	4	4
+432	219	225	6	6
+446	229	232	3	3
+448	229	236	1	1
+453	230	236	1	1
+469	213	215	1	2
+470	213	218	2	2
+474	215	218	1	1
+492	219	222	3	3
+493	219	223	4	4
+513	369	371	2	2
+516	375	371	5	5
+526	499	491	2	2
+545	499	502	3	3
+551	505	510	1	1
+554	506	510	1	1
+560	511	513	2	2
+561	511	514	3	3
+\.
+
+
+--
+-- Name: card_embeddings_card_embedding_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 563, true);
 
 
 --
@@ -399,48 +668,48 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 -- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('cards_card_id_seq', 546, true);
+SELECT pg_catalog.setval('cards_card_id_seq', 574, true);
 
 
 --
 -- Data for Name: goals; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY goals (goal_id, tags_csv, en, es, leaf_ids_csv, created_at, updated_at, goal_card_ids_json, gloss_rows_json) FROM stdin;
-51		Good morning!	buenos días	387,382	2018-06-27 11:32:20.197587-06	2018-06-27 11:32:20.196-06	[{"cardId":122,"glossRowStart":0,"glossRowEnd":1},{"cardId":123,"glossRowStart":0,"glossRowEnd":0},{"cardId":124,"glossRowStart":1,"glossRowEnd":1}]	[{"leafId":387,"en":"good","es":"buenos"},{"leafId":382,"en":"days","es":"días"}]
-52		Good afternoon!	buenas tardes	388,383	2018-06-27 11:33:22.240924-06	2018-06-27 11:33:22.239-06	[{"cardId":125,"glossRowStart":0,"glossRowEnd":1},{"cardId":126,"glossRowStart":0,"glossRowEnd":0},{"cardId":127,"glossRowStart":1,"glossRowEnd":1}]	[{"leafId":388,"en":"good","es":"buenas"},{"leafId":383,"en":"afternoons","es":"tardes"}]
-54		Where do you live?	dónde vives	410,349,-12	2018-06-27 11:33:43.293132-06	2018-06-27 11:33:43.291-06	[{"cardId":134,"glossRowStart":0,"glossRowEnd":2},{"cardId":135,"glossRowStart":0,"glossRowEnd":0},{"cardId":136,"glossRowStart":1,"glossRowEnd":2},{"cardId":137,"glossRowStart":1,"glossRowEnd":1},{"cardId":138,"glossRowStart":2,"glossRowEnd":2}]	[{"leafId":410,"en":"where","es":"dónde"},{"leafId":349,"en":"live","es":"viv-"},{"leafId":-12,"en":"(you)","es":"-es"}]
-56		I speak English.	hablo inglés	327,-1,381	2018-06-27 11:36:31.198704-06	2018-06-27 11:36:31.195-06	[{"cardId":144,"glossRowStart":0,"glossRowEnd":2},{"cardId":140,"glossRowStart":0,"glossRowEnd":1},{"cardId":142,"glossRowStart":0,"glossRowEnd":0},{"cardId":143,"glossRowStart":1,"glossRowEnd":1},{"cardId":146,"glossRowStart":2,"glossRowEnd":2}]	[{"leafId":327,"en":"speak","es":"habl-"},{"leafId":-1,"en":"(I)","es":"-o"},{"leafId":381,"en":"English","es":"inglés"}]
-57		What are you doing?	qué haces	407,328,-12	2018-06-27 11:36:42.409091-06	2018-06-27 11:36:42.408-06	[{"cardId":155,"glossRowStart":0,"glossRowEnd":2},{"cardId":156,"glossRowStart":0,"glossRowEnd":0},{"cardId":157,"glossRowStart":1,"glossRowEnd":2},{"cardId":158,"glossRowStart":1,"glossRowEnd":1},{"cardId":138,"glossRowStart":2,"glossRowEnd":2}]	[{"leafId":407,"en":"what","es":"qué"},{"leafId":328,"en":"do","es":"hac-"},{"leafId":-12,"en":"(you)","es":"-es"}]
-59		Hello!	hola	408	2018-06-27 11:36:54.74803-06	2018-06-27 11:36:54.747-06	[{"cardId":164,"glossRowStart":0,"glossRowEnd":0},{"cardId":164,"glossRowStart":0,"glossRowEnd":0}]	[{"leafId":408,"en":"hello","es":"hola"}]
-62		I made a list of sentences to learn.	hice una lista de oraciones para aprender	451,-22,392,385,409,386,421,316	2018-06-27 11:37:30.031693-06	2018-06-27 11:37:30.03-06	[{"cardId":185,"glossRowStart":0,"glossRowEnd":7},{"cardId":186,"glossRowStart":0,"glossRowEnd":1},{"cardId":193,"glossRowStart":0,"glossRowEnd":0},{"cardId":194,"glossRowStart":1,"glossRowEnd":1},{"cardId":187,"glossRowStart":2,"glossRowEnd":2},{"cardId":188,"glossRowStart":3,"glossRowEnd":3},{"cardId":131,"glossRowStart":4,"glossRowEnd":4},{"cardId":190,"glossRowStart":5,"glossRowEnd":5},{"cardId":191,"glossRowStart":6,"glossRowEnd":6},{"cardId":192,"glossRowStart":7,"glossRowEnd":7}]	[{"leafId":451,"en":"did","es":"hic-"},{"leafId":-22,"en":"(I)","es":"-e"},{"leafId":392,"en":"a","es":"una"},{"leafId":385,"en":"list","es":"lista"},{"leafId":409,"en":"of","es":"de"},{"leafId":386,"en":"sentences","es":"oraciones"},{"leafId":421,"en":"for","es":"para"},{"leafId":316,"en":"learn","es":"aprender"}]
-63		I visited Cuba for a few weeks.	visité Cuba por unas semanas	347,-6,418,420,426,428	2018-06-27 11:37:41.944888-06	2018-06-27 11:37:41.944-06	[{"cardId":196,"glossRowStart":0,"glossRowEnd":5},{"cardId":197,"glossRowStart":0,"glossRowEnd":1},{"cardId":202,"glossRowStart":0,"glossRowEnd":0},{"cardId":182,"glossRowStart":1,"glossRowEnd":1},{"cardId":198,"glossRowStart":2,"glossRowEnd":2},{"cardId":199,"glossRowStart":3,"glossRowEnd":3},{"cardId":200,"glossRowStart":4,"glossRowEnd":4},{"cardId":201,"glossRowStart":5,"glossRowEnd":5}]	[{"leafId":347,"en":"visited","es":"visit-"},{"leafId":-6,"en":"(I)","es":"-é"},{"leafId":418,"en":"Cuba","es":"Cuba"},{"leafId":420,"en":"for","es":"por"},{"leafId":426,"en":"some","es":"unas"},{"leafId":428,"en":"weeks","es":"semanas"}]
-64		Who do you want to speak Spanish with?	con quién quieres hablar español	413,414,431,-12,327,380	2018-06-27 11:38:01.05192-06	2018-06-27 11:38:01.051-06	[{"cardId":204,"glossRowStart":0,"glossRowEnd":5},{"cardId":205,"glossRowStart":0,"glossRowEnd":0},{"cardId":206,"glossRowStart":1,"glossRowEnd":1},{"cardId":207,"glossRowStart":2,"glossRowEnd":3},{"cardId":210,"glossRowStart":2,"glossRowEnd":2},{"cardId":138,"glossRowStart":3,"glossRowEnd":3},{"cardId":142,"glossRowStart":4,"glossRowEnd":4},{"cardId":141,"glossRowStart":5,"glossRowEnd":5}]	[{"leafId":413,"en":"with","es":"con"},{"leafId":414,"en":"who","es":"quién"},{"leafId":431,"en":"want","es":"quier-"},{"leafId":-12,"en":"(you)","es":"-es"},{"leafId":327,"en":"speak","es":"hablar"},{"leafId":380,"en":"Spanish","es":"español"}]
-65		Where did you learn Spanish?	dónde aprendiste español	410,316,-16,380	2018-06-27 11:38:14.912658-06	2018-06-27 11:38:14.911-06	[{"cardId":213,"glossRowStart":0,"glossRowEnd":3},{"cardId":135,"glossRowStart":0,"glossRowEnd":0},{"cardId":215,"glossRowStart":1,"glossRowEnd":2},{"cardId":192,"glossRowStart":1,"glossRowEnd":1},{"cardId":218,"glossRowStart":2,"glossRowEnd":2},{"cardId":141,"glossRowStart":3,"glossRowEnd":3}]	[{"leafId":410,"en":"where","es":"dónde"},{"leafId":316,"en":"learned","es":"aprend-"},{"leafId":-16,"en":"(you)","es":"-iste"},{"leafId":380,"en":"Spanish","es":"español"}]
-67		I took a Spanish class.	asistí una clase de español	350,-15,392,422,409,380	2018-06-27 11:39:07.120565-06	2018-06-27 11:39:07.119-06	[{"cardId":229,"glossRowStart":0,"glossRowEnd":5},{"cardId":230,"glossRowStart":0,"glossRowEnd":1},{"cardId":235,"glossRowStart":0,"glossRowEnd":0},{"cardId":236,"glossRowStart":1,"glossRowEnd":1},{"cardId":187,"glossRowStart":2,"glossRowEnd":2},{"cardId":232,"glossRowStart":3,"glossRowEnd":3},{"cardId":131,"glossRowStart":4,"glossRowEnd":4},{"cardId":141,"glossRowStart":5,"glossRowEnd":5}]	[{"leafId":350,"en":"attended","es":"asist-"},{"leafId":-15,"en":"(I)","es":"-í"},{"leafId":392,"en":"a","es":"una"},{"leafId":422,"en":"class","es":"clase"},{"leafId":409,"en":"of","es":"de"},{"leafId":380,"en":"Spanish","es":"español"}]
-55		I speak Spanish.	hablo español	327,-1,380	2018-06-27 11:36:23.881449-06	2018-06-27 11:36:23.88-06	[{"cardId":139,"glossRowStart":0,"glossRowEnd":2},{"cardId":140,"glossRowStart":0,"glossRowEnd":1},{"cardId":142,"glossRowStart":0,"glossRowEnd":0},{"cardId":143,"glossRowStart":1,"glossRowEnd":1},{"cardId":141,"glossRowStart":2,"glossRowEnd":2}]	[{"leafId":327,"en":"speak","es":"habl-"},{"leafId":-1,"en":"(I)","es":"-o"},{"leafId":380,"en":"Spanish","es":"español"}]
-86		Did you grow up here?	creciste aquí	513,-16,514	2018-06-27 16:17:49.579741-06	2018-06-27 16:17:49.579-06	[{"cardId":471,"glossRowStart":0,"glossRowEnd":2},{"cardId":472,"glossRowStart":0,"glossRowEnd":1},{"cardId":469,"glossRowStart":0,"glossRowEnd":0},{"cardId":218,"glossRowStart":1,"glossRowEnd":1},{"cardId":473,"glossRowStart":2,"glossRowEnd":2}]	[{"leafId":513,"en":"grew up","es":"crec-"},{"leafId":-16,"en":"(you)","es":"-iste"},{"leafId":514,"en":"here","es":"aquí"}]
-87		I knew him well.	lo conocí bien	515,318,-15,398	2018-06-27 16:21:20.059281-06	2018-06-27 16:21:20.058-06	[{"cardId":476,"glossRowStart":0,"glossRowEnd":3},{"cardId":477,"glossRowStart":0,"glossRowEnd":0},{"cardId":478,"glossRowStart":1,"glossRowEnd":2},{"cardId":480,"glossRowStart":1,"glossRowEnd":1},{"cardId":236,"glossRowStart":2,"glossRowEnd":2},{"cardId":162,"glossRowStart":3,"glossRowEnd":3}]	[{"leafId":515,"en":"him","es":"lo"},{"leafId":318,"en":"knew","es":"conoc-"},{"leafId":-15,"en":"(I)","es":"-í"},{"leafId":398,"en":"well","es":"bien"}]
-66		I created a mobile app to study Spanish.	creé una aplicación móvil para estudiar español	352,-6,392,424,427,421,353,380	2018-06-27 11:38:39.11106-06	2018-06-27 11:38:39.11-06	[{"cardId":219,"glossRowStart":0,"glossRowEnd":7},{"cardId":220,"glossRowStart":0,"glossRowEnd":1},{"cardId":227,"glossRowStart":0,"glossRowEnd":0},{"cardId":182,"glossRowStart":1,"glossRowEnd":1},{"cardId":187,"glossRowStart":2,"glossRowEnd":2},{"cardId":222,"glossRowStart":3,"glossRowEnd":3},{"cardId":223,"glossRowStart":4,"glossRowEnd":4},{"cardId":191,"glossRowStart":5,"glossRowEnd":5},{"cardId":225,"glossRowStart":6,"glossRowEnd":6},{"cardId":141,"glossRowStart":7,"glossRowEnd":7}]	[{"leafId":352,"en":"created","es":"cre-"},{"leafId":-6,"en":"(I)","es":"-é"},{"leafId":392,"en":"a","es":"una"},{"leafId":424,"en":"application","es":"aplicación"},{"leafId":427,"en":"mobile phone","es":"móvil"},{"leafId":421,"en":"for","es":"para"},{"leafId":353,"en":"study","es":"estudiar"},{"leafId":380,"en":"Spanish","es":"español"}]
-68		I live in Longmont.	vivo en Longmont	349,-11,498,417	2018-06-27 13:14:05.055061-06	2018-06-27 13:14:05.053-06	[{"cardId":369,"glossRowStart":0,"glossRowEnd":3},{"cardId":167,"glossRowStart":0,"glossRowEnd":1},{"cardId":137,"glossRowStart":0,"glossRowEnd":0},{"cardId":153,"glossRowStart":1,"glossRowEnd":1},{"cardId":371,"glossRowStart":2,"glossRowEnd":2},{"cardId":169,"glossRowStart":3,"glossRowEnd":3}]	[{"leafId":349,"en":"live","es":"viv-"},{"leafId":-11,"en":"(I)","es":"-o"},{"leafId":498,"en":"in/on","es":"en"},{"leafId":417,"en":"Longmont","es":"Longmont"}]
-69		I moved to Longmont in January.	me mudé a Longmont en enero	415,351,-6,419,417,498,423	2018-06-27 13:14:36.969027-06	2018-06-27 13:14:36.967-06	[{"cardId":375,"glossRowStart":0,"glossRowEnd":6},{"cardId":175,"glossRowStart":0,"glossRowEnd":0},{"cardId":176,"glossRowStart":1,"glossRowEnd":2},{"cardId":181,"glossRowStart":1,"glossRowEnd":1},{"cardId":182,"glossRowStart":2,"glossRowEnd":2},{"cardId":177,"glossRowStart":3,"glossRowEnd":3},{"cardId":169,"glossRowStart":4,"glossRowEnd":4},{"cardId":371,"glossRowStart":5,"glossRowEnd":5},{"cardId":180,"glossRowStart":6,"glossRowEnd":6}]	[{"leafId":415,"en":"me","es":"me"},{"leafId":351,"en":"moved","es":"mud-"},{"leafId":-6,"en":"(I)","es":"-é"},{"leafId":419,"en":"to","es":"a"},{"leafId":417,"en":"Longmont","es":"Longmont"},{"leafId":498,"en":"in/on","es":"en"},{"leafId":423,"en":"January","es":"enero"}]
-74		I'm a software engineer.	soy ingeniero de software	453,384,409,412	2018-06-27 15:22:50.59426-06	2018-06-27 15:22:50.593-06	[{"cardId":128,"glossRowStart":0,"glossRowEnd":3},{"cardId":409,"glossRowStart":0,"glossRowEnd":0},{"cardId":130,"glossRowStart":1,"glossRowEnd":1},{"cardId":131,"glossRowStart":2,"glossRowEnd":2},{"cardId":132,"glossRowStart":3,"glossRowEnd":3}]	[{"leafId":453,"en":"am","es":"soy"},{"leafId":384,"en":"engineer","es":"ingeniero"},{"leafId":409,"en":"of","es":"de"},{"leafId":412,"en":"software","es":"software"}]
-75		I'm well.	estoy bien	463,398	2018-06-27 15:23:20.094644-06	2018-06-27 15:23:20.093-06	[{"cardId":160,"glossRowStart":0,"glossRowEnd":1},{"cardId":415,"glossRowStart":0,"glossRowEnd":0},{"cardId":162,"glossRowStart":1,"glossRowEnd":1}]	[{"leafId":463,"en":"am","es":"estoy"},{"leafId":398,"en":"well","es":"bien"}]
-76		I did a test.	hice una prueba	451,-22,392,499	2018-06-27 15:36:09.526577-06	2018-06-27 15:36:09.525-06	[{"cardId":418,"glossRowStart":0,"glossRowEnd":3},{"cardId":186,"glossRowStart":0,"glossRowEnd":1},{"cardId":193,"glossRowStart":0,"glossRowEnd":0},{"cardId":194,"glossRowStart":1,"glossRowEnd":1},{"cardId":187,"glossRowStart":2,"glossRowEnd":2},{"cardId":421,"glossRowStart":3,"glossRowEnd":3}]	[{"leafId":451,"en":"did","es":"hic-"},{"leafId":-22,"en":"(I)","es":"-e"},{"leafId":392,"en":"a","es":"una"},{"leafId":499,"en":"test","es":"prueba"}]
-77		I'm happy.	estoy feliz	463,500	2018-06-27 16:00:49.992096-06	2018-06-27 16:00:49.991-06	[{"cardId":425,"glossRowStart":0,"glossRowEnd":1},{"cardId":415,"glossRowStart":0,"glossRowEnd":0},{"cardId":427,"glossRowStart":1,"glossRowEnd":1}]	[{"leafId":463,"en":"am","es":"estoy"},{"leafId":500,"en":"happy","es":"feliz"}]
-78		I'm alone.	estoy solo	463,501	2018-06-27 16:01:36.524009-06	2018-06-27 16:01:36.522-06	[{"cardId":429,"glossRowStart":0,"glossRowEnd":1},{"cardId":415,"glossRowStart":0,"glossRowEnd":0},{"cardId":431,"glossRowStart":1,"glossRowEnd":1}]	[{"leafId":463,"en":"am","es":"estoy"},{"leafId":501,"en":"alone","es":"solo"}]
-79		I'm sad.	estoy triste	463,502	2018-06-27 16:02:09.873451-06	2018-06-27 16:02:09.872-06	[{"cardId":433,"glossRowStart":0,"glossRowEnd":1},{"cardId":415,"glossRowStart":0,"glossRowEnd":0},{"cardId":435,"glossRowStart":1,"glossRowEnd":1}]	[{"leafId":463,"en":"am","es":"estoy"},{"leafId":502,"en":"sad","es":"triste"}]
-80		Did you sell the house yet?	ya vendiste la casa	503,504,-16,390,505	2018-06-27 16:06:42.83877-06	2018-06-27 16:06:42.838-06	[{"cardId":437,"glossRowStart":0,"glossRowEnd":4},{"cardId":438,"glossRowStart":0,"glossRowEnd":0},{"cardId":439,"glossRowStart":1,"glossRowEnd":2},{"cardId":442,"glossRowStart":1,"glossRowEnd":1},{"cardId":218,"glossRowStart":2,"glossRowEnd":2},{"cardId":440,"glossRowStart":3,"glossRowEnd":3},{"cardId":441,"glossRowStart":4,"glossRowEnd":4}]	[{"leafId":503,"en":"yet","es":"ya"},{"leafId":504,"en":"sold","es":"vend-"},{"leafId":-16,"en":"(you)","es":"-iste"},{"leafId":390,"en":"the","es":"la"},{"leafId":505,"en":"house","es":"casa"}]
-81		What did you eat today?	qué comiste hoy	407,317,-16,507	2018-06-27 16:10:43.303767-06	2018-06-27 16:10:43.303-06	[{"cardId":444,"glossRowStart":0,"glossRowEnd":3},{"cardId":156,"glossRowStart":0,"glossRowEnd":0},{"cardId":446,"glossRowStart":1,"glossRowEnd":2},{"cardId":152,"glossRowStart":1,"glossRowEnd":1},{"cardId":218,"glossRowStart":2,"glossRowEnd":2},{"cardId":447,"glossRowStart":3,"glossRowEnd":3}]	[{"leafId":407,"en":"what","es":"qué"},{"leafId":317,"en":"ate","es":"com-"},{"leafId":-16,"en":"(you)","es":"-iste"},{"leafId":507,"en":"today","es":"hoy"}]
-82		I ate too much.	comí demasiado	317,-15,508	2018-06-27 16:11:55.919313-06	2018-06-27 16:11:55.918-06	[{"cardId":450,"glossRowStart":0,"glossRowEnd":2},{"cardId":451,"glossRowStart":0,"glossRowEnd":1},{"cardId":152,"glossRowStart":0,"glossRowEnd":0},{"cardId":236,"glossRowStart":1,"glossRowEnd":1},{"cardId":452,"glossRowStart":2,"glossRowEnd":2}]	[{"leafId":317,"en":"ate","es":"com-"},{"leafId":-15,"en":"(I)","es":"-í"},{"leafId":508,"en":"too much","es":"demasiado"}]
-83		I ran outside.	corrí afuera	509,-15,510	2018-06-27 16:13:49.833986-06	2018-06-27 16:13:49.833-06	[{"cardId":455,"glossRowStart":0,"glossRowEnd":2},{"cardId":456,"glossRowStart":0,"glossRowEnd":1},{"cardId":458,"glossRowStart":0,"glossRowEnd":0},{"cardId":236,"glossRowStart":1,"glossRowEnd":1},{"cardId":457,"glossRowStart":2,"glossRowEnd":2}]	[{"leafId":509,"en":"ran","es":"corr-"},{"leafId":-15,"en":"(I)","es":"-í"},{"leafId":510,"en":"outside","es":"afuera"}]
-84		Why did you run?	porqué corriste	511,509,-16	2018-06-27 16:14:35.038984-06	2018-06-27 16:14:35.038-06	[{"cardId":460,"glossRowStart":0,"glossRowEnd":2},{"cardId":461,"glossRowStart":0,"glossRowEnd":0},{"cardId":462,"glossRowStart":1,"glossRowEnd":2},{"cardId":458,"glossRowStart":1,"glossRowEnd":1},{"cardId":218,"glossRowStart":2,"glossRowEnd":2}]	[{"leafId":511,"en":"why","es":"porqué"},{"leafId":509,"en":"ran","es":"corr-"},{"leafId":-16,"en":"(you)","es":"-iste"}]
-88		I didn't create that account	no creé esa cuenta	518,352,-6,516,517	2018-06-27 16:35:37.782737-06	2018-06-27 16:35:37.781-06	[{"cardId":482,"glossRowStart":0,"glossRowEnd":4},{"cardId":483,"glossRowStart":0,"glossRowEnd":0},{"cardId":220,"glossRowStart":1,"glossRowEnd":2},{"cardId":227,"glossRowStart":1,"glossRowEnd":1},{"cardId":182,"glossRowStart":2,"glossRowEnd":2},{"cardId":485,"glossRowStart":3,"glossRowEnd":3},{"cardId":486,"glossRowStart":4,"glossRowEnd":4}]	[{"leafId":518,"en":"not","es":"no"},{"leafId":352,"en":"created","es":"cre-"},{"leafId":-6,"en":"(I)","es":"-é"},{"leafId":516,"en":"that","es":"esa"},{"leafId":517,"en":"account","es":"cuenta"}]
-89		It's a game that I made	es un juego que yo creé	455,391,519,520,399,352,-6	2018-06-27 16:36:57.80771-06	2018-06-27 16:36:57.806-06	[{"cardId":489,"glossRowStart":0,"glossRowEnd":6},{"cardId":490,"glossRowStart":0,"glossRowEnd":0},{"cardId":491,"glossRowStart":1,"glossRowEnd":1},{"cardId":492,"glossRowStart":2,"glossRowEnd":2},{"cardId":493,"glossRowStart":3,"glossRowEnd":3},{"cardId":494,"glossRowStart":4,"glossRowEnd":4},{"cardId":220,"glossRowStart":5,"glossRowEnd":6},{"cardId":227,"glossRowStart":5,"glossRowEnd":5},{"cardId":182,"glossRowStart":6,"glossRowEnd":6}]	[{"leafId":455,"en":"is","es":"es"},{"leafId":391,"en":"a","es":"un"},{"leafId":519,"en":"game","es":"juego"},{"leafId":520,"en":"that","es":"que"},{"leafId":399,"en":"I","es":"yo"},{"leafId":352,"en":"created","es":"cre-"},{"leafId":-6,"en":"(I)","es":"-é"}]
-90		I created a profile.	creé un perfil	352,-6,391,521	2018-06-27 16:38:29.530083-06	2018-06-27 16:38:29.529-06	[{"cardId":499,"glossRowStart":0,"glossRowEnd":3},{"cardId":220,"glossRowStart":0,"glossRowEnd":1},{"cardId":227,"glossRowStart":0,"glossRowEnd":0},{"cardId":182,"glossRowStart":1,"glossRowEnd":1},{"cardId":491,"glossRowStart":2,"glossRowEnd":2},{"cardId":502,"glossRowStart":3,"glossRowEnd":3}]	[{"leafId":352,"en":"created","es":"cre-"},{"leafId":-6,"en":"(I)","es":"-é"},{"leafId":391,"en":"a","es":"un"},{"leafId":521,"en":"profile","es":"perfil"}]
-91		Did you create an account?	creaste una cuenta	352,-7,392,517	2018-06-27 16:40:23.232433-06	2018-06-27 16:40:23.231-06	[{"cardId":505,"glossRowStart":0,"glossRowEnd":3},{"cardId":506,"glossRowStart":0,"glossRowEnd":1},{"cardId":227,"glossRowStart":0,"glossRowEnd":0},{"cardId":510,"glossRowStart":1,"glossRowEnd":1},{"cardId":187,"glossRowStart":2,"glossRowEnd":2},{"cardId":486,"glossRowStart":3,"glossRowEnd":3}]	[{"leafId":352,"en":"created","es":"cre-"},{"leafId":-7,"en":"(you)","es":"-aste"},{"leafId":392,"en":"a","es":"una"},{"leafId":517,"en":"account","es":"cuenta"}]
-92		I moved three times.	mudé tres veces	351,-6,522,523	2018-06-27 16:42:16.920114-06	2018-06-27 16:42:16.918-06	[{"cardId":511,"glossRowStart":0,"glossRowEnd":3},{"cardId":176,"glossRowStart":0,"glossRowEnd":1},{"cardId":181,"glossRowStart":0,"glossRowEnd":0},{"cardId":182,"glossRowStart":1,"glossRowEnd":1},{"cardId":513,"glossRowStart":2,"glossRowEnd":2},{"cardId":514,"glossRowStart":3,"glossRowEnd":3}]	[{"leafId":351,"en":"moved","es":"mud-"},{"leafId":-6,"en":"(I)","es":"-é"},{"leafId":522,"en":"three","es":"tres"},{"leafId":523,"en":"times","es":"veces"}]
-97		I grew up in Pennsylvania.	crecí en Pennsylvania	513,-15,498,512	2018-06-27 17:08:39.852694-06	2018-06-27 17:08:39.851-06	[{"cardId":465,"glossRowStart":0,"glossRowEnd":3},{"cardId":466,"glossRowStart":0,"glossRowEnd":1},{"cardId":469,"glossRowStart":0,"glossRowEnd":0},{"cardId":236,"glossRowStart":1,"glossRowEnd":1},{"cardId":371,"glossRowStart":2,"glossRowEnd":2},{"cardId":544,"glossRowStart":3,"glossRowEnd":3}]	[{"leafId":513,"en":"grew up","es":"crec-"},{"leafId":-15,"en":"(I)","es":"-í"},{"leafId":498,"en":"in/on","es":"en"},{"leafId":512,"en":"Pennsylvania","es":"Pennsylvania"}]
+COPY goals (goal_id, tags_csv, en, es, created_at, updated_at, card_id) FROM stdin;
+51		Good morning!	buenos días	2018-06-27 11:32:20.197587-06	2018-06-27 11:32:20.196-06	122
+52		Good afternoon!	buenas tardes	2018-06-27 11:33:22.240924-06	2018-06-27 11:33:22.239-06	125
+66		I created a mobile app to study Spanish.	creé una aplicación móvil para estudiar español	2018-06-27 11:38:39.11106-06	2018-06-27 11:38:39.11-06	219
+54		Where do you live?	dónde vives	2018-06-27 11:33:43.293132-06	2018-06-27 11:33:43.291-06	134
+56		I speak English.	hablo inglés	2018-06-27 11:36:31.198704-06	2018-06-27 11:36:31.195-06	144
+57		What are you doing?	qué haces	2018-06-27 11:36:42.409091-06	2018-06-27 11:36:42.408-06	155
+59		Hello!	hola	2018-06-27 11:36:54.74803-06	2018-06-27 11:36:54.747-06	164
+62		I made a list of sentences to learn.	hice una lista de oraciones para aprender	2018-06-27 11:37:30.031693-06	2018-06-27 11:37:30.03-06	185
+63		I visited Cuba for a few weeks.	visité Cuba por unas semanas	2018-06-27 11:37:41.944888-06	2018-06-27 11:37:41.944-06	196
+88		I didn't create that account	no creé esa cuenta	2018-06-27 16:35:37.782737-06	2018-06-27 16:35:37.781-06	482
+89		It's a game that I made	es un juego que yo creé	2018-06-27 16:36:57.80771-06	2018-06-27 16:36:57.806-06	489
+90		I created a profile.	creé un perfil	2018-06-27 16:38:29.530083-06	2018-06-27 16:38:29.529-06	499
+91		Did you create an account?	creaste una cuenta	2018-06-27 16:40:23.232433-06	2018-06-27 16:40:23.231-06	505
+92		I moved three times.	mudé tres veces	2018-06-27 16:42:16.920114-06	2018-06-27 16:42:16.918-06	511
+97		I grew up in Pennsylvania.	crecí en Pennsylvania	2018-06-27 17:08:39.852694-06	2018-06-27 17:08:39.851-06	465
+64		Who do you want to speak Spanish with?	con quién quieres hablar español	2018-06-27 11:38:01.05192-06	2018-06-27 11:38:01.051-06	204
+65		Where did you learn Spanish?	dónde aprendiste español	2018-06-27 11:38:14.912658-06	2018-06-27 11:38:14.911-06	213
+67		I took a Spanish class.	asistí una clase de español	2018-06-27 11:39:07.120565-06	2018-06-27 11:39:07.119-06	229
+55		I speak Spanish.	hablo español	2018-06-27 11:36:23.881449-06	2018-06-27 11:36:23.88-06	139
+86		Did you grow up here?	creciste aquí	2018-06-27 16:17:49.579741-06	2018-06-27 16:17:49.579-06	471
+87		I knew him well.	lo conocí bien	2018-06-27 16:21:20.059281-06	2018-06-27 16:21:20.058-06	476
+68		I live in Longmont.	vivo en Longmont	2018-06-27 13:14:05.055061-06	2018-06-27 13:14:05.053-06	369
+69		I moved to Longmont in January.	me mudé a Longmont en enero	2018-06-27 13:14:36.969027-06	2018-06-27 13:14:36.967-06	375
+74		I'm a software engineer.	soy ingeniero de software	2018-06-27 15:22:50.59426-06	2018-06-27 15:22:50.593-06	128
+75		I'm well.	estoy bien	2018-06-27 15:23:20.094644-06	2018-06-27 15:23:20.093-06	160
+76		I did a test.	hice una prueba	2018-06-27 15:36:09.526577-06	2018-06-27 15:36:09.525-06	418
+77		I'm happy.	estoy feliz	2018-06-27 16:00:49.992096-06	2018-06-27 16:00:49.991-06	425
+78		I'm alone.	estoy solo	2018-06-27 16:01:36.524009-06	2018-06-27 16:01:36.522-06	429
+79		I'm sad.	estoy triste	2018-06-27 16:02:09.873451-06	2018-06-27 16:02:09.872-06	433
+80		Did you sell the house yet?	ya vendiste la casa	2018-06-27 16:06:42.83877-06	2018-06-27 16:06:42.838-06	437
+81		What did you eat today?	qué comiste hoy	2018-06-27 16:10:43.303767-06	2018-06-27 16:10:43.303-06	444
+82		I ate too much.	comí demasiado	2018-06-27 16:11:55.919313-06	2018-06-27 16:11:55.918-06	450
+83		I ran outside.	corrí afuera	2018-06-27 16:13:49.833986-06	2018-06-27 16:13:49.833-06	455
+84		Why did you run?	porqué corriste	2018-06-27 16:14:35.038984-06	2018-06-27 16:14:35.038-06	460
 \.
 
 
@@ -682,7 +951,16 @@ SELECT pg_catalog.setval('leafs_leaf_id_seq', 523, true);
 COPY schema_version (installed_rank, version, description, type, script, checksum, installed_by, installed_on, execution_time, success) FROM stdin;
 1	1	create goals and cards	SQL	V1__create_goals_and_cards.sql	-13256656	postgres	2018-06-27 09:31:17.379663	46	t
 2	2	create leaf tables	SQL	V2__create_leaf_tables.sql	779524700	postgres	2018-06-27 09:31:17.474367	34	t
+3	3	create card embeddings	SQL	V3__create_card_embeddings.sql	-552310015	postgres	2018-06-27 19:43:19.226605	42	t
 \.
+
+
+--
+-- Name: card_embeddings card_embeddings_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY card_embeddings
+    ADD CONSTRAINT card_embeddings_pkey PRIMARY KEY (card_embedding_id);
 
 
 --
@@ -715,6 +993,13 @@ ALTER TABLE ONLY leafs
 
 ALTER TABLE ONLY schema_version
     ADD CONSTRAINT schema_version_pk PRIMARY KEY (installed_rank);
+
+
+--
+-- Name: idx_card_embeddings; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE UNIQUE INDEX idx_card_embeddings ON card_embeddings USING btree (longer_card_id, shorter_card_id);
 
 
 --
@@ -771,6 +1056,22 @@ CREATE UNIQUE INDEX idx_leafs_nonverbs_en_plural_and_en_disambiguation ON leafs 
 --
 
 CREATE INDEX schema_version_s_idx ON schema_version USING btree (success);
+
+
+--
+-- Name: card_embeddings card_embeddings_longer_card_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY card_embeddings
+    ADD CONSTRAINT card_embeddings_longer_card_id_fkey FOREIGN KEY (longer_card_id) REFERENCES cards(card_id);
+
+
+--
+-- Name: card_embeddings card_embeddings_shorter_card_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY card_embeddings
+    ADD CONSTRAINT card_embeddings_shorter_card_id_fkey FOREIGN KEY (shorter_card_id) REFERENCES cards(card_id);
 
 
 --

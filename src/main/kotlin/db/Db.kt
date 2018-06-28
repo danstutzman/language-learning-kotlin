@@ -6,6 +6,7 @@ import com.google.gson.JsonParser
 import org.jooq.DSLContext
 import org.jooq.SQLDialect
 import org.jooq.generated.tables.Cards.CARDS
+import org.jooq.generated.tables.CardEmbeddings.CARD_EMBEDDINGS
 import org.jooq.generated.tables.Goals.GOALS
 import org.jooq.generated.tables.Leafs.LEAFS
 import org.jooq.impl.DSL
@@ -17,9 +18,7 @@ data class Goal(
   val tagsCsv: String,
   val en: String,
   val es: String,
-  val leafIdsCsv: String,
-  val goalCardIdsJson: String,
-  val glossRowsJson: String
+  val cardId: Int
 )
 
 data class CardRow(
@@ -82,6 +81,13 @@ data class GoalCardId(
   val glossRowEnd: Int
 )
 
+data class CardEmbedding(
+  val longerCardId: Int,
+  val shorterCardId: Int,
+  val firstLeafIndex: Int,
+  val lastLeafIndex: Int
+)
+
 class Db(
   private val conn: Connection
 ) {
@@ -99,25 +105,19 @@ class Db(
           GOALS.TAGS_CSV,
           GOALS.EN,
           GOALS.ES,
-          GOALS.LEAF_IDS_CSV,
-          GOALS.GOAL_CARD_IDS_JSON,
-          GOALS.GLOSS_ROWS_JSON,
+          GOALS.CARD_ID,
           GOALS.UPDATED_AT)
       .values(goal.tagsCsv,
           goal.en,
           goal.es,
-          goal.leafIdsCsv,
-          goal.goalCardIdsJson,
-          goal.glossRowsJson,
+          goal.cardId,
           now())
       .returning(
           GOALS.GOAL_ID,
           GOALS.TAGS_CSV,
           GOALS.EN,
           GOALS.ES,
-          GOALS.LEAF_IDS_CSV,
-          GOALS.GLOSS_ROWS_JSON,
-          GOALS.GOAL_CARD_IDS_JSON)
+          GOALS.CARD_ID)
       .fetchOne()
 
   fun selectGoalById(goalId: Int): Goal? {
@@ -127,9 +127,7 @@ class Db(
         GOALS.TAGS_CSV,
         GOALS.EN,
         GOALS.ES,
-        GOALS.LEAF_IDS_CSV,
-        GOALS.GOAL_CARD_IDS_JSON,
-        GOALS.GLOSS_ROWS_JSON)
+        GOALS.CARD_ID)
       .from(GOALS)
       .where(GOALS.GOAL_ID.eq(goalId))
       .fetchOne()
@@ -140,9 +138,7 @@ class Db(
         it.getValue(GOALS.TAGS_CSV),
         it.getValue(GOALS.EN),
         it.getValue(GOALS.ES),
-        it.getValue(GOALS.LEAF_IDS_CSV),
-        it.getValue(GOALS.GOAL_CARD_IDS_JSON),
-        it.getValue(GOALS.GLOSS_ROWS_JSON)
+        it.getValue(GOALS.CARD_ID)
       )
     }
   }
@@ -154,9 +150,7 @@ class Db(
         GOALS.TAGS_CSV,
         GOALS.EN,
         GOALS.ES,
-        GOALS.LEAF_IDS_CSV,
-        GOALS.GOAL_CARD_IDS_JSON,
-        GOALS.GLOSS_ROWS_JSON)
+        GOALS.CARD_ID)
       .from(GOALS)
       .fetch()
 
@@ -166,9 +160,7 @@ class Db(
         it.getValue(GOALS.TAGS_CSV),
         it.getValue(GOALS.EN),
         it.getValue(GOALS.ES),
-        it.getValue(GOALS.LEAF_IDS_CSV),
-        it.getValue(GOALS.GOAL_CARD_IDS_JSON),
-        it.getValue(GOALS.GLOSS_ROWS_JSON)
+        it.getValue(GOALS.CARD_ID)
       )
     }
   }
@@ -238,14 +230,37 @@ class Db(
     }
   }
 
-  fun lookupCardLeafIdsCsvToCardId(leafIdsCsvs: List<String>):
-    Map<String, Int> =
+  fun selectCardRowsWithCardIdIn(cardIds: List<Int>): List<CardRow> {
+    val rows = create.select(
+        CARDS.CARD_ID,
+        CARDS.GLOSS_ROWS_JSON,
+        CARDS.LAST_SEEN_AT,
+        CARDS.LEAF_IDS_CSV,
+        CARDS.MNEMONIC,
+        CARDS.PROMPT,
+        CARDS.STAGE)
+      .from(CARDS)
+      .where(CARDS.CARD_ID.`in`(cardIds))
+      .fetch()
+
+    return rows.map {
+      CardRow(
+        it.getValue(CARDS.CARD_ID),
+        it.getValue(CARDS.GLOSS_ROWS_JSON),
+        it.getValue(CARDS.LAST_SEEN_AT)?.let { it.getTime() / 1000 }?.toInt(),
+        it.getValue(CARDS.LEAF_IDS_CSV),
+        it.getValue(CARDS.MNEMONIC),
+        it.getValue(CARDS.PROMPT),
+        it.getValue(CARDS.STAGE)
+      )
+    }
+  }
+
+  fun selectLeafIdsCsvCardIdPairs(): List<Pair<String, Int>> =
     create.select(CARDS.LEAF_IDS_CSV, CARDS.CARD_ID)
       .from(CARDS)
-      .where(CARDS.LEAF_IDS_CSV.`in`(leafIdsCsvs))
       .fetch()
       .map { Pair(it.getValue(CARDS.LEAF_IDS_CSV), it.getValue(CARDS.CARD_ID)) }
-      .toMap()
 
   fun updateCard(cardUpdate: CardUpdate) {
     create.update(CARDS)
@@ -457,5 +472,43 @@ class Db(
           LEAFS.ES_MIXED,
           LEAFS.TENSE)
       .fetchOne()
+  }
+
+  fun selectCardEmbeddingsWithLongerCardIdIn(longerCardIds: List<Int>) :
+    List<CardEmbedding> {
+    val rows = create
+      .select(
+        CARD_EMBEDDINGS.LONGER_CARD_ID,
+        CARD_EMBEDDINGS.SHORTER_CARD_ID,
+        CARD_EMBEDDINGS.FIRST_LEAF_INDEX,
+        CARD_EMBEDDINGS.LAST_LEAF_INDEX)
+      .from(CARD_EMBEDDINGS)
+      .where(CARD_EMBEDDINGS.LONGER_CARD_ID.`in`(longerCardIds))
+      .fetch()
+
+    return rows.map {
+      CardEmbedding(
+        it.getValue(CARD_EMBEDDINGS.LONGER_CARD_ID),
+        it.getValue(CARD_EMBEDDINGS.SHORTER_CARD_ID),
+        it.getValue(CARD_EMBEDDINGS.FIRST_LEAF_INDEX),
+        it.getValue(CARD_EMBEDDINGS.LAST_LEAF_INDEX)
+      )
+    }
+  }
+
+  fun insertCardEmbeddings(cardEmbeddings: List<CardEmbedding>) {
+    if (cardEmbeddings.size == 0) { return }
+    var statement = create.insertInto(CARD_EMBEDDINGS,
+      CARD_EMBEDDINGS.LONGER_CARD_ID,
+      CARD_EMBEDDINGS.SHORTER_CARD_ID,
+      CARD_EMBEDDINGS.FIRST_LEAF_INDEX,
+      CARD_EMBEDDINGS.LAST_LEAF_INDEX)
+    for (cardEmbedding in cardEmbeddings) {
+      statement = statement.values(cardEmbedding.longerCardId,
+        cardEmbedding.shorterCardId,
+        cardEmbedding.firstLeafIndex,
+        cardEmbedding.lastLeafIndex)
+    }
+    statement.onDuplicateKeyIgnore().execute()
   }
 }
