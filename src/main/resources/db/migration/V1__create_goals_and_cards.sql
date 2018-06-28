@@ -1,9 +1,9 @@
 CREATE TABLE goals (
   goal_id           SERIAL PRIMARY KEY,
-  tags_csv          TEXT NOT NULL,
   en                TEXT NOT NULL,
   es                TEXT NOT NULL,
   leaf_ids_csv      TEXT NOT NULL,
+  paragraph_id      INTEGER NOT NULL REFERENCES paragraphs(paragraph_id),
   created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at        TIMESTAMPTZ NOT NULL
 );
@@ -21,3 +21,10 @@ CREATE TABLE cards (
 );
 
 CREATE UNIQUE INDEX idx_cards_leaf_ids_csv ON cards(leaf_ids_csv);
+
+CREATE TABLE paragraphs (
+  paragraph_id      SERIAL PRIMARY KEY,
+  topic             TEXT NOT NULL,
+  created_at        TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at        TIMESTAMPTZ NOT NULL
+);
