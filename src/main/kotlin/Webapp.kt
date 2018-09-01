@@ -300,7 +300,6 @@ class Webapp(
   val getNonverbs = { _: Request, _: Response ->
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
-
     html.append("<a href='/'>Back to home</a>\n")
     html.append("<h1>Nonverbs</h1>\n")
     html.append("<form method='POST' action='/nonverbs'>\n")
@@ -333,6 +332,8 @@ class Webapp(
     html.append("  </tr>\n")
     html.append("</table>\n")
     html.append("</form>\n")
+    html.append(CLOSE_BODY_TAG)
+    html.toString()
   }
 
   val postNonverbs = { req: Request, res: Response ->
@@ -362,7 +363,6 @@ class Webapp(
   val getInfinitives = { _: Request, _: Response ->
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
-
     html.append("<a href='/'>Back to home</a>\n")
     html.append("<h1>Infinitives</h1>\n")
     html.append("<form method='POST' action='/infinitives'>\n")
@@ -395,6 +395,8 @@ class Webapp(
     html.append("  </tr>\n")
     html.append("</table>\n")
     html.append("</form>\n")
+    html.append(CLOSE_BODY_TAG)
+    html.toString()
   }
 
   val postInfinitives = { req: Request, res: Response ->
@@ -605,6 +607,8 @@ class Webapp(
     html.append("  </tr>\n")
     html.append("</table>\n")
     html.append("</form>\n")
+    html.append(CLOSE_BODY_TAG)
+    html.toString()
   }
 
   val postUniqueConjugations = { req: Request, res: Response ->
@@ -675,6 +679,8 @@ class Webapp(
     html.append("  </tr>\n")
     html.append("</table>\n")
     html.append("</form>\n")
+    html.append(CLOSE_BODY_TAG)
+    html.toString()
   }
 
   val postStemChanges = { req: Request, res: Response ->
