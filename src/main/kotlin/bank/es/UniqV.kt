@@ -14,6 +14,12 @@ data class UniqV (
   val tense: Tense,
   val enDisambiguation: String?
 ): CardCreator, V {
+  override fun explainDerivation(): String {
+    val en = inf.enPresent + if (inf.enDisambiguation != null)
+      " (${inf.enDisambiguation})" else ""
+    return "infinitive=${inf.esMixed} en=${en} " +
+      "number=${number} person=${person} tense=${tense}"
+  }
   override fun getChildCardCreators(): List<CardCreator> =
     listOf(inf) + inf.getChildCardCreators()
   override fun getGlossRows(): List<GlossRow> =
@@ -22,4 +28,5 @@ data class UniqV (
     EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)] + " " +
       en +
       (if (enDisambiguation != "") " (${enDisambiguation})" else "")
+  override fun serializeLeafIds(): String = "leafId=${leafId}"
 }

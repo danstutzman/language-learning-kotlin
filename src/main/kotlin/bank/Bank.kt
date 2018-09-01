@@ -34,6 +34,7 @@ import spark.Response
 import java.io.File
 
 const val DELAY_THRESHOLD = 100000
+var SPANISH_PUNCTUATION_REGEX = Regex("[ .,;$?\u00BF\u00A1()-]+")
 
 data class CardDownload(
   val cardId: Int,
@@ -44,6 +45,7 @@ data class CardDownload(
   val prompt: String,
   val stage: Int
 ) {}
+
 
 class Bank(
   val db: Db
@@ -93,14 +95,14 @@ class Bank(
     }
   }
 
-  fun parseEsPhrase(esPhrase: String): List<CardCreator> =
-    esPhrase.split(" ").map { word ->
-      val wordLower = word.toLowerCase()
-      nonverbList.byEsLower(wordLower) ?:
-        uniqVList.byEsLower(wordLower) ?:
-        vCloud.byEsLower(wordLower) ?:
-        throw CantMakeCard("Can't make card for es ${wordLower}")
+  fun splitEsPhrase(esPhrase: String): List<String> =
+    esPhrase.split(SPANISH_PUNCTUATION_REGEX).flatMap { word ->
+      if (word == "") listOf<String>() else listOf(word)
     }
+
+  fun interpretEsWord(word: String): List<Interpretation> =
+    nonverbList.interpretEsLower(word.toLowerCase()) +
+      vCloud.interpretEsLower(word.toLowerCase())
 
   fun saveCardUpdates(cardUpdates: List<CardUpdate>) {
     for (cardUpdate in cardUpdates) {

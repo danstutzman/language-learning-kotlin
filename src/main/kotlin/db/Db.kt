@@ -301,7 +301,7 @@ class Db(
         it.getValue(LEAFS.ES_MIXED)
       )}
 
-  fun insertNonverbRow(nonverb: NonverbRow) =
+  fun insertNonverbRow(nonverb: NonverbRow): NonverbRow =
     create.insertInto(LEAFS,
         LEAFS.LEAF_TYPE,
         LEAFS.EN,
@@ -320,6 +320,15 @@ class Db(
         LEAFS.EN_PLURAL,
         LEAFS.ES_MIXED)
       .fetchOne()
+      .let {
+        NonverbRow(
+          it.getValue(LEAFS.LEAF_ID),
+          it.getValue(LEAFS.EN),
+          it.getValue(LEAFS.EN_DISAMBIGUATION),
+          it.getValue(LEAFS.EN_PLURAL),
+          it.getValue(LEAFS.ES_MIXED)
+        )
+      }
 
   fun deleteLeaf(leafId: Int) =
     create.delete(LEAFS)

@@ -1,6 +1,7 @@
 package com.danstutzman.bank.es
 
 import com.danstutzman.bank.CantMakeCard
+import com.danstutzman.bank.Interpretation
 
 class VCloud(
   val infList: InfList,
@@ -8,23 +9,12 @@ class VCloud(
   val regVPatternList: RegVPatternList,
   val stemChangeList: StemChangeList
 ) {
-  val createdCardsByEsLower = linkedMapOf<String, V>()
+  fun interpretEsLower(esLower: String): List<Interpretation> {
+    val interpretations = mutableListOf<Interpretation>()
 
-  fun byEsLower(esLower: String): V? {
-    val maybeExistingCard = createdCardsByEsLower[esLower]
-    if (maybeExistingCard != null) {
-      return maybeExistingCard
-    }
+    interpretations.addAll(uniqVList.interpretEsLower(esLower))
 
-    val maybeUniqV = uniqVList.byEsLower(esLower)
-    if (maybeUniqV != null) {
-      return maybeUniqV
-    }
-
-    val maybeInf = infList.byEsLower(esLower)
-    if (maybeInf != null) {
-      return maybeInf
-    }
+    interpretations.addAll(infList.interpretEsLower(esLower))
 
     val possibleInfs = infList.infs.filter { inf ->
       val base = inf.esMixed.substring(0, inf.esMixed.length - 2).toLowerCase()
@@ -42,8 +32,7 @@ class VCloud(
           if (newV.getEsMixed().toLowerCase() == esLower) {
             if (uniqVList.byInfNumberPersonTense(inf, pattern.number,
               pattern.person, pattern.tense) == null) {
-              createdCardsByEsLower[esLower] = newV
-              return newV
+              interpretations.add(Interpretation("RegV", newV))
             }
           }
         }
@@ -59,12 +48,13 @@ class VCloud(
             stemChange.inf.esMixed.toLowerCase(),
             pattern.infCategory,
             pattern.tense == Tense.PRET)) {
-            return StemChangeV(stemChange, pattern)
+            interpretations.add(Interpretation("StemChangeV",
+              StemChangeV(stemChange, pattern)))
           }
         }
       }
     }
 
-    return null
+    return interpretations
   }
 }

@@ -8,6 +8,12 @@ data class RegV (
   val inf: Inf,
   val pattern: RegVPattern
 ): CardCreator, V {
+  override fun explainDerivation(): String {
+    val en = inf.enPresent +
+       if (inf.enDisambiguation != null) " (${inf.enDisambiguation})" else ""
+    return "infinitive=${inf.esMixed} en=${en} " +
+      "number=${pattern.number} person=${pattern.person} tense=${pattern.tense}"
+  }
   override fun getChildCardCreators(): List<CardCreator> =
     listOf(inf, pattern) +
     inf.getChildCardCreators() +
@@ -28,4 +34,6 @@ data class RegV (
   override fun getPrompt(): String =
     "(${pattern.getEnPronoun()}) " +
       EnVerbs.getEnVerbFor(inf, pattern.number, pattern.person, pattern.tense)
+    override fun serializeLeafIds(): String =
+      "infLeafId=${inf.leafId} patternLeafId=${pattern.leafId}"
 }

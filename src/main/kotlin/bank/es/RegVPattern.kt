@@ -24,6 +24,9 @@ data class RegVPattern (
   val tense: Tense,
   val esLower: String
 ): CardCreator {
+  override fun explainDerivation(): String =
+    "infCategory=${infCategory} " +
+    "number=${number} person=${person} tense=${tense}"
   override fun getChildCardCreators(): List<CardCreator> = listOf<CardCreator>()
   fun getEnPronoun(): String =
     EnPronouns.NUMBER_AND_PERSON_TO_EN_PRONOUN[Pair(number, person)]!!
@@ -51,4 +54,5 @@ data class RegVPattern (
       }
     }
   }
+  override fun serializeLeafIds(): String = "leafId=${leafId}"
 }

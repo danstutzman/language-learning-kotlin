@@ -45,6 +45,10 @@ fun main(args: Array<String>) {
   service.post("/paragraphs", webapp.postParagraphs)
   service.get("/paragraphs/:paragraphId", webapp.getParagraph)
   service.post("/paragraphs/:paragraphId", webapp.postParagraph)
+  service.post("/paragraphs/:paragraphId/disambiguate-goal",
+    webapp.postParagraphDisambiguateGoal)
+  service.post("/paragraphs/:paragraphId/add-goal",
+    webapp.postParagraphAddGoal)
   service.get("/stem-changes", webapp.getStemChanges)
   service.post("/stem-changes", webapp.postStemChanges)
   service.get("/unique-conjugations", webapp.getUniqueConjugations)

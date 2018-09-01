@@ -13,6 +13,8 @@ data class StemChange (
   val enPast: String,
   val enDisambiguation: String
 ): CardCreator {
+  override fun explainDerivation(): String =
+    "inf=${inf.esMixed} enDisambiguation=${enDisambiguation} tense=${tense}"
   override fun getChildCardCreators(): List<CardCreator> =
     listOf(inf) + inf.getChildCardCreators()
   fun getEnVerb(): String = when (tense) {
@@ -23,4 +25,5 @@ data class StemChange (
     leafId, getEnVerb(), esMixed))
   override fun getPrompt(): String =
     "Stem change for ${inf.esMixed} in ${tense}"
+  override fun serializeLeafIds(): String = "leafId=${leafId}"
 }

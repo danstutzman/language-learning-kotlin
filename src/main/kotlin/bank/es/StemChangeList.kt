@@ -1,6 +1,7 @@
 package com.danstutzman.bank.es
 
 import com.danstutzman.bank.CantMakeCard
+import com.danstutzman.bank.Interpretation
 import com.danstutzman.db.Db
 
 class StemChangeList {
@@ -23,5 +24,14 @@ class StemChangeList {
     stemChangeByEsLower =
       stemChanges.map { Pair(it.esMixed.toLowerCase(), it) }.toMap()
   }
-  fun byEsLower(esLower: String): StemChange = stemChangeByEsLower[esLower]!!
+
+  fun interpretEsLower(esLower: String): List<Interpretation> {
+    val interpretations = mutableListOf<Interpretation>()
+    if (stemChangeByEsLower[esLower] != null) {
+      interpretations.add(Interpretation("StemChange",
+        stemChangeByEsLower[esLower]))
+    }
+    interpretations.add(Interpretation("StemChange", null))
+    return interpretations
+  }
 }

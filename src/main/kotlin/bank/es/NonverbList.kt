@@ -1,6 +1,7 @@
 package com.danstutzman.bank.es
 
 import com.danstutzman.bank.CantMakeCard
+import com.danstutzman.bank.Interpretation
 import com.danstutzman.db.Db
 
 fun pluralizeEs(base: String): String {
@@ -53,5 +54,13 @@ class NonverbList {
     nonverbByEsLower =
       nonverbs.map { Pair(it.esMixed.toLowerCase(), it) }.toMap()
   }
-  fun byEsLower(esLower: String): Nonverb? = nonverbByEsLower[esLower]
+
+  fun interpretEsLower(esLower: String): List<Interpretation> {
+    val interpretations = mutableListOf<Interpretation>()
+    if (nonverbByEsLower[esLower] != null) {
+      interpretations.add(Interpretation("Nonverb", nonverbByEsLower[esLower]))
+    }
+    interpretations.add(Interpretation("Nonverb", null))
+    return interpretations
+  }
 }

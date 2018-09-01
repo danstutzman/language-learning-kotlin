@@ -9,9 +9,12 @@ data class Nonverb (
   val en: String,
   val enDisambiguation: String?
 ): CardCreator {
+  override fun explainDerivation(): String =
+    "nonverb=${esMixed} en=${en} enDisambiguation=${enDisambiguation}"
   override fun getChildCardCreators(): List<CardCreator> = listOf<CardCreator>()
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(leafId, en, esMixed))
   override fun getPrompt(): String =
     if (enDisambiguation != null) "${en} (${enDisambiguation})" else en
+  override fun serializeLeafIds(): String = "leafId=${leafId}"
 }

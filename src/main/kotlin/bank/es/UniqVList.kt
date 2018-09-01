@@ -1,6 +1,7 @@
 package com.danstutzman.bank.es
 
 import com.danstutzman.bank.CantMakeCard
+import com.danstutzman.bank.Interpretation
 import com.danstutzman.db.Db
 
 class UniqVList {
@@ -26,7 +27,7 @@ class UniqVList {
 
     uniqVByEsLower = uniqVs.map { Pair(it.esMixed.toLowerCase(), it) }.toMap()
   }
-  fun byEsLower(esLower: String): UniqV? = uniqVByEsLower[esLower]
+
   fun byInfNumberPersonTense(inf: Inf, number: Int, person: Int, tense: Tense):
     UniqV? {
     for (uniqV in uniqVs) {
@@ -38,5 +39,14 @@ class UniqVList {
       }
     }
     return null
+  }
+
+  fun interpretEsLower(esLower: String): List<Interpretation> {
+    val interpretations = mutableListOf<Interpretation>()
+    if (uniqVByEsLower[esLower] !== null) {
+      interpretations.add(Interpretation("UniqV", uniqVByEsLower[esLower]))
+    }
+    interpretations.add(Interpretation("UniqV", null))
+    return interpretations
   }
 }

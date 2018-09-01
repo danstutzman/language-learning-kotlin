@@ -1,5 +1,6 @@
 package com.danstutzman.bank.es
 
+import com.danstutzman.bank.Interpretation
 import com.danstutzman.db.Db
 
 class InfList {
@@ -17,5 +18,15 @@ class InfList {
     }
     infByEsLower = infs.map { Pair(it.esMixed.toLowerCase(), it) }.toMap()
   }
+
   fun byEsLower(esLower: String): Inf? = infByEsLower[esLower]
+
+  fun interpretEsLower(esLower: String): List<Interpretation> {
+    val interpretations = mutableListOf<Interpretation>()
+    if (infByEsLower[esLower] != null) {
+      interpretations.add(Interpretation("Inf", infByEsLower[esLower]))
+    }
+    interpretations.add(Interpretation("Inf", null))
+    return interpretations
+  }
 }

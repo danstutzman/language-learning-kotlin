@@ -2,9 +2,12 @@ package com.danstutzman
 
 import com.danstutzman.bank.Bank
 import com.danstutzman.bank.CantMakeCard
+import com.danstutzman.bank.CardCreator
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.GlossRows
+import com.danstutzman.bank.Interpretation
 import com.danstutzman.bank.es.InfList
+import com.danstutzman.bank.es.Nonverb
 import com.danstutzman.bank.es.RegV
 import com.danstutzman.bank.es.RegVPatternList
 import com.danstutzman.bank.es.Tense
@@ -144,10 +147,9 @@ fun getGlossRowsHtml(
   return glossRowsHtml.toString()
 }
 
-fun createGoal(goalEs: String, goalEn: String, db: Db, paragraphId: Int) {
-  val bank = Bank(db)
+fun createGoal(goalEs:String, cardCreators: List<CardCreator>, goalEn: String,
+  db: Db, paragraphId: Int) {
   val gsonBuilder = GsonBuilder().create()
-  val cardCreators = bank.parseEsPhrase(goalEs)
   if (cardCreators.size > 0) { 
     val cardRowsForWords = cardCreators.map { cardCreator ->
       val glossRows = cardCreator.getGlossRows()
@@ -297,7 +299,6 @@ class Webapp(
       html.append("  </tr>\n")
     }
     html.append("</table><br>\n")
-
     html.append(CLOSE_BODY_TAG)
     html.toString()
   }
@@ -461,11 +462,6 @@ class Webapp(
       html.append("<h2>Paragraph ${paragraph.paragraphId}: ${paragraph.topic}")
       html.append("  enabled=${paragraph.enabled}</h2>\n")
       html.append("<table border='1'>\n")
-      html.append("  <tr>\n")
-      html.append("    <th>Goal ID</td>\n")
-      html.append("    <th>English</td>\n")
-      html.append("    <th>Spanish</td>\n")
-      html.append("  </tr>\n")
       for (goal in goalsByParagraphId[paragraph.paragraphId]!!) {
         val glossRowsHtml = getGlossRowsHtml(goal.goalId, goal.cardId,
           cardByCardId, cardEmbeddingsByCardId)
@@ -514,7 +510,12 @@ class Webapp(
     html.append("  <input type='text' name='topic' value='${escapeHTML(paragraph.topic)}'><br>\n")
     html.append("  <label for='enabled'>Enabled</label><br>\n")
     html.append("  <input type='checkbox' name='enabled' ${if (paragraph.enabled) "checked" else ""}><br>\n")
+    html.append("  <input type='submit' name='submit' value='Update Paragraph'>\n")
+    html.append("  <input type='submit' name='submit' value='Delete Paragraph' onClick='return confirm(\"Delete paragraph?\")'>\n")
+    html.append("</form>\n")
+    html.append("<hr>")
 
+    html.append("<form method='POST' action='/paragraphs/${paragraph.paragraphId}/disambiguate-goal'>\n")
     html.append("  <table>\n")
     html.append("    <tr>\n")
     html.append("      <th>Goal ID</th>\n")
@@ -532,10 +533,9 @@ class Webapp(
     html.append("      <td>New</td>\n")
     html.append("      <td><input type='text' name='en' value=''></td>\n")
     html.append("      <td><input type='text' name='es' value=''></td>\n")
+    html.append("      <td><input type='submit' name='submit' value='Add Goal to Paragraph'></td>\n")
     html.append("    </tr>")
     html.append("  </table>\n")
-    html.append("  <input type='submit' name='submit' value='Edit Paragraph'>\n")
-    html.append("  <input type='submit' name='submit' value='Delete Paragraph' onClick='return confirm(\"Delete paragraph?\")'>\n")
     html.append("</form>\n")
 
     html.append(CLOSE_BODY_TAG)
@@ -552,16 +552,117 @@ class Webapp(
         req.queryParams("enabled") != null)
       db.updateParagraph(paragraph)
 
-      val goalEn = req.queryParams("en")
-      val goalEs = req.queryParams("es")
-      if (goalEn != "" && goalEs != "") {
-        createGoal(goalEs, goalEn, db, paragraphId)
-      }
-    } else if (submit == "Delete Paragraph") {
+   } else if (submit == "Delete Paragraph") {
       db.deleteParagraph(req.params("paragraphId").toInt())
     } else {
       throw RuntimeException("Unexpected submit value: ${submit}")
     }
+
+    res.redirect("/paragraphs/${paragraphId}")
+  }
+
+  val postParagraphDisambiguateGoal = { req: Request, _: Response ->
+    val paragraphId = req.params("paragraphId").toInt()
+    val phraseEn = normalize(req.queryParams("en")!!)
+    val phraseEs = normalize(req.queryParams("es")!!)
+    if (phraseEn == "") {
+      throw RuntimeException("En param can't be blank")
+    }
+
+    val bank = Bank(db)
+    val words = bank.splitEsPhrase(phraseEs)
+    val interpretationsByWordNum = words.map { bank.interpretEsWord(it) }
+
+    val html = StringBuilder()
+    html.append(OPEN_BODY_TAG)
+    html.append("<a href='/'>Back to home</a>\n")
+    html.append("<form method='POST' action='/paragraphs/${paragraphId}/add-goal'>\n")
+    html.append("<h1>Disambiguate Goal</h1>\n")
+    html.append("<p>Phrase to disambiguate is: <i>${escapeHTML(phraseEs)}</i></p>\n")
+    html.append("<input type='hidden' name='en' value='${escapeHTML(phraseEn)}'>\n")
+    html.append("<input type='hidden' name='es' value='${escapeHTML(phraseEs)}'>\n")
+    for ((wordNum, word) in words.withIndex()) {
+      val interpretations = interpretationsByWordNum[wordNum]
+      val existingInterpretations = interpretations.filter { it.cardCreator != null }
+      val bestInterpretation: Interpretation? =
+        if (existingInterpretations.size == 1) existingInterpretations[0]
+        else if (interpretations.size == 1) interpretations[0]
+        else null
+
+      html.append("<h2>${word}</h2>")
+      for ((interpretationNum, interpretation) in
+        interpretations.sortedBy { it.cardCreator == null }.withIndex()) {
+        val checked = if (interpretation == bestInterpretation) "checked='checked'" else ""
+        if (interpretation.cardCreator != null) {
+          html.append("<input type='radio' name='word.${wordNum}' value='${interpretationNum}' ${checked}>")
+          html.append("<input type='hidden' name='word.${wordNum}.${interpretationNum}.leafIds' value='${escapeHTML(interpretation.cardCreator.serializeLeafIds())}'>")
+          html.append("<input type='hidden' name='word.${wordNum}.${interpretationNum}.exists' value='true'>")
+          html.append("Use existing ${interpretation.type} (${interpretation.cardCreator.explainDerivation()})")
+        } else {
+          html.append("<input type='radio' name='word.${wordNum}' value='${interpretationNum}' ${checked}>")
+          html.append("<input type='hidden' name='word.${wordNum}.${interpretationNum}.exists' value='false'>")
+          html.append("Add new ${interpretation.type}")
+          html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.es' value='${escapeHTML(word)}'> (check case)")
+          html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.en' placeholder='English'>")
+          html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.enDisambiguation' placeholder='English disambiguation (optional)'>")
+          html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.enPlural' placeholder='English plural (optional)'>")
+        }
+        html.append("<input type='hidden' name='word.${wordNum}.${interpretationNum}.type' value='${interpretation.type}'>")
+        html.append("<br>")
+      }
+    }
+    html.append("<p><input type='submit' name='submit' value='Add Goal'></p>")
+    html.append("</form>")
+    html.append(CLOSE_BODY_TAG)
+    html.toString()
+  }
+
+  val postParagraphAddGoal = { req: Request, res: Response ->
+    val paragraphId = req.params("paragraphId").toInt()
+    val goalEn = normalize(req.queryParams("en")!!)
+    val goalEs = normalize(req.queryParams("es")!!)
+    if (goalEn == "") {
+      throw RuntimeException("En param can't be blank")
+    }
+
+    val bank = Bank(db)
+    val cardCreators = mutableListOf<CardCreator>()
+    for ((wordNum, word) in bank.splitEsPhrase(goalEs).withIndex()) {
+      val interpretations: List<Interpretation> = bank.interpretEsWord(word)
+
+      val interpretationNum = req.queryParams("word.${wordNum}")
+      val type = req.queryParams("word.${wordNum}.${interpretationNum}.type")
+      val exists =
+        req.queryParams("word.${wordNum}.${interpretationNum}.exists")
+      if (exists == "true") {
+        val leafIds =
+          req.queryParams("word.${wordNum}.${interpretationNum}.leafIds")
+        val interpretation = interpretations.find {
+            it.type == type && it.cardCreator != null &&
+            it.cardCreator.serializeLeafIds() == leafIds
+          } ?: throw RuntimeException("Can't find ${type} with ${leafIds}")
+        cardCreators.add(interpretation.cardCreator!!)
+      } else {
+        if (type == "Nonverb") {
+          val row = db.insertNonverbRow(NonverbRow(
+            0,
+            normalize(req.queryParams(
+              "word.${wordNum}.${interpretationNum}.en")),
+            normalize(req.queryParams(
+              "word.${wordNum}.${interpretationNum}.enDisambiguation")),
+            blankToNull(normalize(req.queryParams(
+              "word.${wordNum}.${interpretationNum}.enPlural"))),
+            normalize(req.queryParams(
+              "word.${wordNum}.${interpretationNum}.es"))
+          ))
+          cardCreators.add(Nonverb(row.leafId, row.esMixed, row.en, blankToNull(row.enDisambiguation)))
+        } else {
+          throw RuntimeException("Can't create ${type}")
+        }
+      }
+    }
+
+    createGoal(goalEs, cardCreators, goalEn, db, paragraphId)
 
     res.redirect("/paragraphs/${paragraphId}")
   }
