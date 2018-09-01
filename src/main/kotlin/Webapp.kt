@@ -487,10 +487,9 @@ class Webapp(
   }
 
   val postParagraphs = { req: Request, res: Response ->
-    val paragraphId = req.params("paragraphId")!!.toInt()
     val topic = req.queryParams("topic")
     val enabled = req.queryParams("enabled") != null
-    db.updateParagraph(Paragraph(paragraphId, topic, enabled))
+    db.insertParagraph(Paragraph(0, topic, enabled))
     res.redirect("/paragraphs")
   }
 
