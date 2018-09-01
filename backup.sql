@@ -352,9 +352,6 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 5	144	142	0	0
 7	139	140	0	1
 9	139	142	0	0
-10	122	123	0	0
-11	125	126	0	0
-13	128	409	0	0
 14	185	186	0	1
 15	185	193	0	0
 16	418	186	0	1
@@ -418,12 +415,6 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 130	499	220	0	1
 132	237	238	0	1
 147	505	506	0	1
-153	122	124	1	1
-155	125	127	1	1
-157	128	131	2	2
-159	128	130	1	1
-160	128	132	3	3
-161	185	131	4	4
 163	185	187	2	2
 164	185	190	5	5
 165	185	191	6	6
@@ -433,7 +424,6 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 170	418	421	3	3
 172	418	187	2	2
 174	418	194	1	1
-180	229	131	4	4
 181	134	136	1	2
 182	134	137	1	1
 183	134	138	2	2
@@ -553,9 +543,6 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 554	506	510	1	1
 560	511	513	2	2
 561	511	514	3	3
-575	128	581	1	3
-580	581	130	0	0
-581	581	131	1	1
 582	581	132	2	2
 587	585	586	0	0
 588	585	491	1	1
@@ -581,7 +568,6 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 694	612	191	2	2
 695	612	616	3	3
 696	612	617	4	4
-697	612	131	5	5
 698	612	619	6	6
 731	628	622	1	1
 732	628	624	3	3
@@ -604,7 +590,6 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 794	652	588	2	2
 798	652	653	0	0
 799	652	654	1	1
-801	652	131	3	3
 803	652	657	4	4
 806	652	659	6	6
 815	661	207	0	1
@@ -612,7 +597,6 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 817	661	664	3	3
 818	661	210	0	0
 819	661	138	1	1
-844	668	131	3	3
 845	668	664	2	2
 846	668	143	1	1
 847	669	143	1	1
@@ -620,7 +604,6 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 855	668	669	0	1
 859	668	673	0	0
 862	669	673	0	0
-879	675	131	3	3
 880	675	664	2	2
 881	675	143	1	1
 884	675	187	8	8
@@ -634,7 +617,6 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 914	675	687	7	7
 918	681	686	0	0
 919	681	687	1	1
-933	688	131	4	4
 935	688	440	5	5
 937	688	490	1	1
 942	688	683	6	6
@@ -725,6 +707,100 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 1300	789	687	1	1
 1307	789	738	0	1
 1314	789	758	3	3
+1328	796	483	0	0
+1330	796	142	1	1
+1333	796	143	2	2
+1338	796	140	1	2
+1349	782	796	0	2
+1435	815	153	2	2
+1437	815	483	0	0
+1450	815	727	1	2
+1453	815	729	1	1
+1459	815	818	3	3
+1475	827	483	0	0
+1489	827	829	1	1
+1571	844	751	0	1
+1574	844	754	1	1
+1579	844	729	0	0
+1586	844	818	2	2
+1631	122	123	0	0
+1632	122	124	1	1
+1640	870	142	0	0
+1648	870	687	1	1
+1651	870	734	2	2
+1660	870	738	0	1
+1670	870	818	3	3
+1730	883	162	5	5
+1733	883	142	1	1
+1741	883	687	2	2
+1744	883	734	0	0
+1747	883	758	4	4
+1760	883	738	1	2
+1770	883	818	3	3
+1784	128	409	0	0
+1786	891	409	1	1
+1787	891	483	0	0
+1790	891	735	2	2
+1802	896	409	0	0
+1804	896	735	1	1
+1805	891	896	1	2
+1811	128	131	2	2
+1812	581	131	1	1
+1813	185	131	4	4
+1814	612	131	5	5
+1816	652	131	3	3
+1818	900	131	1	1
+1819	900	409	0	0
+1820	229	131	4	4
+1821	668	131	3	3
+1822	675	131	3	3
+1823	688	131	4	4
+1828	900	903	2	2
+1836	905	131	0	0
+1840	905	135	1	1
+1855	908	131	0	0
+1857	908	490	2	2
+1861	908	135	1	1
+1868	908	734	3	3
+1874	908	905	0	1
+1881	125	126	0	0
+1882	125	127	1	1
+1886	917	127	1	1
+1888	917	440	0	0
+1893	920	691	0	0
+1895	920	922	1	1
+1898	923	440	0	0
+1899	923	724	1	1
+1905	926	124	1	1
+1907	926	691	0	0
+1913	929	126	0	0
+1915	929	931	1	1
+1918	932	440	0	0
+1923	932	931	1	1
+1934	935	131	2	2
+1935	935	490	1	1
+1944	935	734	0	0
+1957	935	939	3	3
+1967	941	131	1	1
+1968	941	409	0	0
+1982	941	944	2	2
+1990	946	131	0	0
+2001	946	948	1	1
+2005	949	409	0	0
+2007	949	440	1	1
+2008	949	724	2	2
+2015	949	923	1	2
+2023	949	953	3	3
+2027	955	409	0	0
+2029	955	691	1	1
+2033	955	920	1	2
+2036	955	922	2	2
+2043	955	959	3	3
+2095	968	640	3	3
+2098	968	131	2	2
+2099	968	409	1	1
+2100	968	483	0	0
+2129	968	973	4	4
 \.
 
 
@@ -732,7 +808,7 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 -- Name: card_embeddings_card_embedding_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 1327, true);
+SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 2130, true);
 
 
 --
@@ -964,6 +1040,40 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 750	[{"leafId":443,"en":"understand","es":"entiend-"},{"leafId":-13,"en":"(he/she)","es":"-e"},{"leafId":380,"en":"Spanish","es":"español"}]	2018-08-31 20:09:21-06	443,-13,380	Do you understand Spanish? (formal)	3		2018-08-31 19:13:44.206561-06	2018-08-31 20:09:49.169-06
 775	[{"leafId":564,"en":"miss","es":"señorita"}]	2018-08-31 20:07:32-06	564	miss	4		2018-08-31 19:16:20.762468-06	2018-08-31 20:09:49.182-06
 776	[{"leafId":327,"en":"speak","es":"habl-"},{"leafId":-3,"en":"(he/she)","es":"-a"},{"leafId":557,"en":"you","es":"usted"},{"leafId":380,"en":"Spanish","es":"español"}]	2018-08-31 20:09:13-06	327,-3,557,380	Do you speak Spanish? (formal)	3		2018-08-31 19:16:43.205661-06	2018-08-31 20:09:49.183-06
+796	[{"leafId":518,"en":"not","es":"no"},{"leafId":327,"en":"speak","es":"habl-"},{"leafId":-1,"en":"(I)","es":"-o"}]	\N	518,327,-1		0		2018-09-01 16:07:37.035391-06	2018-09-01 16:07:37.029-06
+815	[{"leafId":518,"en":"not","es":"no"},{"leafId":443,"en":"understand","es":"entiend-"},{"leafId":-11,"en":"(I)","es":"-o"},{"leafId":565,"en":"Castilian","es":"castellano"}]	\N	518,443,-11,565	I don't understand Castilian.	0		2018-09-01 16:43:39.732548-06	2018-09-01 16:43:39.725-06
+818	[{"leafId":565,"en":"Castilian","es":"castellano"}]	\N	565	Castilian	1		2018-09-01 16:43:39.732548-06	2018-09-01 16:43:39.726-06
+827	[{"leafId":518,"en":"not","es":"no"},{"leafId":566,"en":"American","es":"norteamericana"},{"leafId":518,"en":"not","es":"no"}]	\N	518,566,518	No, not American.	0		2018-09-01 16:49:52.061252-06	2018-09-01 16:49:52.056-06
+829	[{"leafId":566,"en":"American","es":"norteamericana"}]	\N	566	American (fem.)	1		2018-09-01 16:49:52.061252-06	2018-09-01 16:49:52.056-06
+844	[{"leafId":443,"en":"understand","es":"entiend-"},{"leafId":-13,"en":"(he/she)","es":"-e"},{"leafId":565,"en":"Castilian","es":"castellano"}]	\N	443,-13,565	Do you understand Castilian? (formal)	0		2018-09-01 17:04:37.707161-06	2018-09-01 17:04:37.703-06
+870	[{"leafId":327,"en":"speak","es":"habl-"},{"leafId":-3,"en":"(he/she)","es":"-a"},{"leafId":557,"en":"you","es":"usted"},{"leafId":565,"en":"Castilian","es":"castellano"}]	\N	327,-3,557,565	Do you speak Castilian? (formal)	0		2018-09-01 17:06:44.755181-06	2018-09-01 17:06:44.753-06
+883	[{"leafId":557,"en":"you","es":"usted"},{"leafId":327,"en":"speak","es":"habl-"},{"leafId":-3,"en":"(he/she)","es":"-a"},{"leafId":565,"en":"Castilian","es":"castellano"},{"leafId":561,"en":"very","es":"muy"},{"leafId":398,"en":"well","es":"bien"}]	\N	557,327,-3,565,561,398	You speak Castilian very well. (formal)	0		2018-09-01 17:07:28.377416-06	2018-09-01 17:07:28.375-06
+891	[{"leafId":518,"en":"not","es":"no"},{"leafId":453,"en":"am","es":"soy"},{"leafId":558,"en":"American","es":"norteamericano"}]	\N	518,453,558	I'm not American. (masc.)	0		2018-09-01 17:08:39.13597-06	2018-09-01 17:08:39.134-06
+896	[{"leafId":453,"en":"am","es":"soy"},{"leafId":558,"en":"American","es":"norteamericano"}]	\N	453,558	I'm American. (masc.)	0		2018-09-01 17:08:52.384327-06	2018-09-01 17:08:52.383-06
+900	[{"leafId":453,"en":"am","es":"soy"},{"leafId":409,"en":"of","es":"de"},{"leafId":567,"en":"Chicago","es":"Chicago"}]	\N	453,409,567	I'm from Chicago.	0		2018-09-01 17:09:14.535417-06	2018-09-01 17:09:14.534-06
+903	[{"leafId":567,"en":"Chicago","es":"Chicago"}]	\N	567	Chicago	5		2018-09-01 17:09:14.535417-06	2018-09-01 17:09:14.534-06
+905	[{"leafId":409,"en":"of","es":"de"},{"leafId":410,"en":"where","es":"dónde"}]	\N	409,410	From where?	0		2018-09-01 17:10:05.224125-06	2018-09-01 17:10:05.223-06
+908	[{"leafId":409,"en":"of","es":"de"},{"leafId":410,"en":"where","es":"dónde"},{"leafId":455,"en":"is","es":"es"},{"leafId":557,"en":"you","es":"usted"}]	\N	409,410,455,557	Where are you from? (formal)	0		2018-09-01 17:10:23.669103-06	2018-09-01 17:10:23.668-06
+917	[{"leafId":390,"en":"the","es":"la"},{"leafId":383,"en":"afternoon","es":"tarde"}]	\N	390,383	the afternoon	0		2018-09-01 17:11:18.608673-06	2018-09-01 17:11:18.606-06
+920	[{"leafId":389,"en":"the","es":"el"},{"leafId":568,"en":"gentleman","es":"señor"}]	\N	389,568	the gentleman	0		2018-09-01 17:12:59.63222-06	2018-09-01 17:12:59.631-06
+922	[{"leafId":568,"en":"gentleman","es":"señor"}]	\N	568	gentleman	1		2018-09-01 17:12:59.63222-06	2018-09-01 17:12:59.631-06
+923	[{"leafId":390,"en":"the","es":"la"},{"leafId":556,"en":"ma\\u0027am/Mrs.","es":"señora"}]	\N	390,556	the lady	0		2018-09-01 17:13:50.153915-06	2018-09-01 17:13:50.153-06
+926	[{"leafId":389,"en":"the","es":"el"},{"leafId":382,"en":"day","es":"día"}]	\N	389,382	the day	0		2018-09-01 17:14:37.475525-06	2018-09-01 17:14:37.474-06
+929	[{"leafId":388,"en":"good","es":"buenas"},{"leafId":569,"en":"night","es":"noche"}]	\N	388,569	Good evening!	0		2018-09-01 17:18:57.108476-06	2018-09-01 17:18:57.103-06
+931	[{"leafId":569,"en":"night","es":"noche"}]	\N	569	night	1		2018-09-01 17:18:57.108476-06	2018-09-01 17:18:57.104-06
+932	[{"leafId":390,"en":"the","es":"la"},{"leafId":569,"en":"night","es":"noche"}]	\N	390,569	the night	0		2018-09-01 17:19:20.893234-06	2018-09-01 17:19:20.891-06
+935	[{"leafId":557,"en":"you","es":"usted"},{"leafId":455,"en":"is","es":"es"},{"leafId":409,"en":"of","es":"de"},{"leafId":570,"en":"Mexico","es":"México"}]	\N	557,455,409,570	You're from Mexico. (formal)	0		2018-09-01 17:20:15.392626-06	2018-09-01 17:20:15.39-06
+939	[{"leafId":570,"en":"Mexico","es":"México"}]	\N	570	Mexico	1		2018-09-01 17:20:15.392626-06	2018-09-01 17:20:15.39-06
+941	[{"leafId":453,"en":"am","es":"soy"},{"leafId":409,"en":"of","es":"de"},{"leafId":571,"en":"America","es":"Norteamérica"}]	\N	453,409,571	I'm from America. (formal)	0		2018-09-01 17:20:47.326717-06	2018-09-01 17:20:47.324-06
+944	[{"leafId":571,"en":"America","es":"Norteamérica"}]	\N	571	America	1		2018-09-01 17:20:47.326717-06	2018-09-01 17:20:47.324-06
+946	[{"leafId":409,"en":"of","es":"de"},{"leafId":572,"en":"Bolivia","es":"Bolivia"}]	\N	409,572	from Bolivia	0		2018-09-01 17:21:09.280959-06	2018-09-01 17:21:09.278-06
+948	[{"leafId":572,"en":"Bolivia","es":"Bolivia"}]	\N	572	Bolivia	5		2018-09-01 17:21:09.280959-06	2018-09-01 17:21:09.278-06
+949	[{"leafId":453,"en":"am","es":"soy"},{"leafId":390,"en":"the","es":"la"},{"leafId":556,"en":"lady, ma\\u0027am, Mrs.","es":"señora"},{"leafId":573,"en":"Garcia","es":"García"}]	\N	453,390,556,573	I'm Mrs. Garcia.	0		2018-09-01 17:21:42.806026-06	2018-09-01 17:21:42.803-06
+953	[{"leafId":573,"en":"Garcia","es":"García"}]	\N	573	Garcia	1		2018-09-01 17:21:42.806026-06	2018-09-01 17:21:42.803-06
+955	[{"leafId":453,"en":"am","es":"soy"},{"leafId":389,"en":"the","es":"el"},{"leafId":568,"en":"gentleman","es":"señor"},{"leafId":574,"en":"Jones","es":"Jones"}]	\N	453,389,568,574	I'm Mr. Jones.	0		2018-09-01 17:22:05.967308-06	2018-09-01 17:22:05.965-06
+959	[{"leafId":574,"en":"Jones","es":"Jones"}]	\N	574	Jones	5		2018-09-01 17:22:05.967308-06	2018-09-01 17:22:05.965-06
+968	[{"leafId":518,"en":"not","es":"no"},{"leafId":453,"en":"am","es":"soy"},{"leafId":409,"en":"of","es":"de"},{"leafId":532,"en":"the","es":"los"},{"leafId":575,"en":"angels","es":"angeles"}]	\N	518,453,409,532,575	I'm not from Los Angeles.	0		2018-09-01 17:27:54.366281-06	2018-09-01 17:27:54.364-06
+973	[{"leafId":575,"en":"angels","es":"angeles"}]	\N	575	angels	1		2018-09-01 17:27:54.366281-06	2018-09-01 17:27:54.364-06
 \.
 
 
@@ -971,7 +1081,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 -- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('cards_card_id_seq', 795, true);
+SELECT pg_catalog.setval('cards_card_id_seq', 974, true);
 
 
 --
@@ -1031,20 +1141,39 @@ COPY goals (goal_id, en, es, created_at, updated_at, card_id, paragraph_id) FROM
 115	In what sentence is it used?	en qué oración se usa	2018-07-17 08:56:27.735312-06	2018-07-17 08:56:27.734-06	697	2
 116	Words have a context	las palabras tienen un contexto	2018-07-17 08:56:49.715932-06	2018-07-17 08:56:49.715-06	705	2
 117	Words belong in sentences	las palabras pertenecen a oraciones	2018-07-17 08:58:30.433049-06	2018-07-17 08:58:30.432-06	714	2
-118	Pardon, ma'am.	perdón señora	2018-08-31 19:09:07.286377-06	2018-08-31 19:09:07.285-06	722	7
-119	I don't understand Spanish.	no entiendo español	2018-08-31 19:09:35.117295-06	2018-08-31 19:09:35.116-06	725	7
-120	Are you American?	es usted norteamericano	2018-08-31 19:11:55.666177-06	2018-08-31 19:11:55.664-06	732	7
-121	Do you speak English? (formal)	habla inglés	2018-08-31 19:12:24.476928-06	2018-08-31 19:12:24.476-06	737	7
-122	Yes, I speak English a little.	sí hablo inglés un poco	2018-08-31 19:13:13.83236-06	2018-08-31 19:13:13.831-06	742	7
-123	Do you understand Spanish? (formal)	entiende español	2018-08-31 19:13:44.230365-06	2018-08-31 19:13:44.229-06	750	7
-124	I understand very well.	entiendo muy bien	2018-08-31 19:14:10.373004-06	2018-08-31 19:14:10.372-06	756	7
-125	How are you? (formal)	cómo está usted	2018-08-31 19:14:24.005522-06	2018-08-31 19:14:24.004-06	763	7
-126	Good morning!	buenos días	2018-08-31 19:14:35.4107-06	2018-08-31 19:14:35.41-06	122	7
-127	Thanks	gracias	2018-08-31 19:15:25.431447-06	2018-08-31 19:15:25.43-06	771	7
-128	Bye, miss.	adiós señorita	2018-08-31 19:16:20.771698-06	2018-08-31 19:16:20.77-06	773	7
-129	Do you speak Spanish? (formal)	habla usted español	2018-08-31 19:16:43.216431-06	2018-08-31 19:16:43.215-06	776	7
-130	I don't speak well.	no hablo muy bien	2018-08-31 19:16:56.387328-06	2018-08-31 19:16:56.386-06	782	7
-131	You speak Spanish very well. (formal)	habla español muy bien	2018-08-31 19:17:19.723329-06	2018-08-31 19:17:19.722-06	789	7
+134	Pardon, ma'am.	Perdón, señora.	2018-09-01 16:29:03.566214-06	2018-09-01 16:29:03.564-06	722	7
+136	I don't understand Castilian.	No entiendo castellano.	2018-09-01 16:43:39.787248-06	2018-09-01 16:43:39.785-06	815	7
+137	Are you American? (formal)	¿Es usted norteamericano?	2018-09-01 16:45:34.324614-06	2018-09-01 16:45:34.323-06	732	7
+138	No, not American.	No, norteamericana no.	2018-09-01 16:49:52.115113-06	2018-09-01 16:49:52.114-06	827	7
+139	Do you speak English? (formal)	¿Habla inglés?	2018-09-01 17:03:58.601612-06	2018-09-01 17:03:58.6-06	737	7
+140	Yes, I speak English a little.	Sí, hablo inglés un poco.	2018-09-01 17:04:18.935675-06	2018-09-01 17:04:18.934-06	742	7
+141	Do you understand Castilian? (formal)	¿Entiende castellano?	2018-09-01 17:04:37.736529-06	2018-09-01 17:04:37.735-06	844	7
+142	I understand very well.	Entiendo muy bien.	2018-09-01 17:04:55.14432-06	2018-09-01 17:04:55.143-06	756	7
+143	How are you? (formal)	¿Cómo está usted?	2018-09-01 17:05:17.022334-06	2018-09-01 17:05:17.02-06	763	7
+144	Good morning!	Buenos días.	2018-09-01 17:05:51.032702-06	2018-09-01 17:05:51.032-06	122	7
+145	Thanks!	Gracias.	2018-09-01 17:06:05.159978-06	2018-09-01 17:06:05.158-06	771	7
+146	Bye, miss.	Adiós, señorita.	2018-09-01 17:06:19.850869-06	2018-09-01 17:06:19.85-06	773	7
+147	Do you speak Castilian? (formal)	¿Habla usted castellano?	2018-09-01 17:06:44.778785-06	2018-09-01 17:06:44.777-06	870	7
+148	I don't speak very well.	No hablo muy bien.	2018-09-01 17:07:00.475458-06	2018-09-01 17:07:00.474-06	782	7
+149	You speak Castilian very well. (formal)	(Usted) habla castellano muy bien.	2018-09-01 17:07:28.393163-06	2018-09-01 17:07:28.392-06	883	7
+150	I'm not American. (masc.)	No soy norteamericano.	2018-09-01 17:08:39.17807-06	2018-09-01 17:08:39.177-06	891	8
+151	I'm American. (masc.)	Soy norteamericano.	2018-09-01 17:08:52.40878-06	2018-09-01 17:08:52.408-06	896	8
+152	I'm from Chicago.	Soy de Chicago.	2018-09-01 17:09:14.548184-06	2018-09-01 17:09:14.547-06	900	8
+153	From where?	¿De dónde?	2018-09-01 17:10:05.242034-06	2018-09-01 17:10:05.241-06	905	8
+154	Where are you from? (formal)	¿De dónde es usted?	2018-09-01 17:10:23.683196-06	2018-09-01 17:10:23.682-06	908	8
+155	Good afternoon!	Buenas tardes.	2018-09-01 17:10:59.796903-06	2018-09-01 17:10:59.796-06	125	8
+156	the afternoon	la tarde	2018-09-01 17:11:18.626206-06	2018-09-01 17:11:18.625-06	917	8
+157	the gentleman	el señor	2018-09-01 17:12:59.641812-06	2018-09-01 17:12:59.64-06	920	8
+158	the lady	la señora	2018-09-01 17:13:50.160677-06	2018-09-01 17:13:50.16-06	923	8
+159	the day	el día	2018-09-01 17:14:37.491031-06	2018-09-01 17:14:37.49-06	926	8
+160	Good evening!	Buenas noches.	2018-09-01 17:18:57.171977-06	2018-09-01 17:18:57.17-06	929	8
+161	the night	la noche	2018-09-01 17:19:20.911304-06	2018-09-01 17:19:20.91-06	932	8
+162	You're from Mexico. (formal)	Usted es de México.	2018-09-01 17:20:15.418844-06	2018-09-01 17:20:15.418-06	935	8
+163	I'm from America. (formal)	Soy de Norteamérica.	2018-09-01 17:20:47.346149-06	2018-09-01 17:20:47.345-06	941	8
+164	from Bolivia	de Bolivia	2018-09-01 17:21:09.295713-06	2018-09-01 17:21:09.293-06	946	8
+165	I'm Mrs. Garcia.	Soy la señora García.	2018-09-01 17:21:42.828628-06	2018-09-01 17:21:42.827-06	949	8
+166	I'm Mr. Jones.	Soy el señor Jones	2018-09-01 17:22:05.97867-06	2018-09-01 17:22:05.978-06	955	8
+168	I'm not from Los Angeles.	No soy de Los Angeles.	2018-09-01 17:27:54.380998-06	2018-09-01 17:27:54.38-06	968	8
 \.
 
 
@@ -1052,7 +1181,7 @@ COPY goals (goal_id, en, es, created_at, updated_at, card_id, paragraph_id) FROM
 -- Name: goals_goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('goals_goal_id_seq', 131, true);
+SELECT pg_catalog.setval('goals_goal_id_seq', 168, true);
 
 
 --
@@ -1296,15 +1425,26 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 552	Nonverb	contexto	context		contexts	\N	\N	\N	\N	\N	2018-07-17 08:56:04.870809-06
 554	Inf	pertenecer	belong		\N	belonged	\N	\N	\N	\N	2018-07-17 08:58:24.780015-06
 555	Nonverb	perdón	pardon		pardons	\N	\N	\N	\N	\N	2018-08-31 19:08:04.939549-06
-556	Nonverb	señora	ma'am/Mrs.		\N	\N	\N	\N	\N	\N	2018-08-31 19:09:02.783478-06
 557	Nonverb	usted	you	formal	you all	\N	\N	\N	\N	\N	2018-08-31 19:10:16.458494-06
-558	Nonverb	norteamericano	American		Americans	\N	\N	\N	\N	\N	2018-08-31 19:11:52.624789-06
 559	Nonverb	sí	yes		\N	\N	\N	\N	\N	\N	2018-08-31 19:12:58.323924-06
 561	Nonverb	muy	very		\N	\N	\N	\N	\N	\N	2018-08-31 19:14:08.859179-06
 562	Nonverb	gracias	thanks		\N	\N	\N	\N	\N	\N	2018-08-31 19:15:21.864223-06
 563	Nonverb	adiós	bye		\N	\N	\N	\N	\N	\N	2018-08-31 19:16:02.683832-06
 564	Nonverb	señorita	miss		\N	\N	\N	\N	\N	\N	2018-08-31 19:16:19.062648-06
 560	Nonverb	poco	little bit		\N	\N	\N	\N	\N	\N	2018-08-31 19:13:10.526737-06
+565	Nonverb	castellano	Castilian		Castilians	\N	\N	\N	\N	\N	2018-09-01 16:35:55.371716-06
+558	Nonverb	norteamericano	American	masc.	Americans	\N	\N	\N	\N	\N	2018-08-31 19:11:52.624789-06
+566	Nonverb	norteamericana	American	fem.	Americans	\N	\N	\N	\N	\N	2018-09-01 16:49:51.953022-06
+567	Nonverb	Chicago	Chicago		\N	\N	\N	\N	\N	\N	2018-09-01 17:09:14.52525-06
+568	Nonverb	señor	gentleman		gentlemen	\N	\N	\N	\N	\N	2018-09-01 17:12:59.624633-06
+556	Nonverb	señora	lady, ma'am, Mrs.		\N	\N	\N	\N	\N	\N	2018-08-31 19:09:02.783478-06
+569	Nonverb	noche	night		nights	\N	\N	\N	\N	\N	2018-09-01 17:18:56.997228-06
+570	Nonverb	México	Mexico		Mexicos	\N	\N	\N	\N	\N	2018-09-01 17:20:15.384115-06
+571	Nonverb	Norteamérica	America		Americas	\N	\N	\N	\N	\N	2018-09-01 17:20:47.315399-06
+572	Nonverb	Bolivia	Bolivia		Bolivias	\N	\N	\N	\N	\N	2018-09-01 17:21:09.264117-06
+573	Nonverb	García	Garcia		Garcias	\N	\N	\N	\N	\N	2018-09-01 17:21:42.800262-06
+574	Nonverb	Jones	Jones		\N	\N	\N	\N	\N	\N	2018-09-01 17:22:05.963736-06
+575	Nonverb	angel	angel		angels	\N	\N	\N	\N	\N	2018-09-01 17:24:16.356883-06
 \.
 
 
@@ -1312,7 +1452,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 564, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 575, true);
 
 
 --
@@ -1325,6 +1465,7 @@ COPY paragraphs (paragraph_id, topic, created_at, updated_at, enabled) FROM stdi
 1	greetings	2018-06-28 11:09:01.735573-06	2018-06-28 12:24:00.777-06	f
 7	Pimsleur 1.1-2	2018-08-31 19:06:50.192626-06	2018-08-31 19:17:19.704-06	t
 4	language learning	2018-06-28 11:09:49.905994-06	2018-08-31 19:17:36.658-06	f
+8	Pimsleur 1.3	2018-09-01 17:07:43.000326-06	2018-09-01 17:07:42.999-06	t
 2	software	2018-06-28 11:09:42.833001-06	2018-07-17 08:58:30.411-06	f
 \.
 
@@ -1333,7 +1474,7 @@ COPY paragraphs (paragraph_id, topic, created_at, updated_at, enabled) FROM stdi
 -- Name: paragraphs_paragraph_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dan
 --
 
-SELECT pg_catalog.setval('paragraphs_paragraph_id_seq', 7, true);
+SELECT pg_catalog.setval('paragraphs_paragraph_id_seq', 8, true);
 
 
 --
