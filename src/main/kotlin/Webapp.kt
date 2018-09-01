@@ -23,6 +23,7 @@ import com.danstutzman.db.UniqueConjugation
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import java.io.File
+import java.text.Normalizer
 import java.util.LinkedList
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -51,6 +52,10 @@ fun escapeHTML(s: String): String {
   }
   return out.toString()
 }
+
+fun normalize(s: String): String = Normalizer.normalize(s, Normalizer.Form.NFC)
+
+fun blankToNull(s: String): String? = if (s == "") null else s
 
 fun htmlForGlossRowsTable(json: String): String {
   val html = StringBuilder()
@@ -349,11 +354,10 @@ class Webapp(
     if (req.queryParams("newNonverb") != null) {
       db.insertNonverbRow(NonverbRow(
         0,
-        req.queryParams("en"),
-        req.queryParams("en_disambiguation"),
-        if (req.queryParams("en_plural") != "")
-          req.queryParams("en_plural") else null,
-        req.queryParams("es_mixed")
+        normalize(req.queryParams("en")),
+        normalize(req.queryParams("en_disambiguation")),
+        blankToNull(normalize(req.queryParams("en_plural"))),
+        normalize(req.queryParams("es_mixed"))
       ))
     }
 
@@ -412,10 +416,10 @@ class Webapp(
     if (req.queryParams("newInfinitive") != null) {
       db.insertInfinitive(Infinitive(
         0,
-        req.queryParams("en"),
-        req.queryParams("en_disambiguation"),
-        req.queryParams("en_past"),
-        req.queryParams("es_mixed")
+        normalize(req.queryParams("en")),
+        normalize(req.queryParams("en_disambiguation")),
+        normalize(req.queryParams("en_past")),
+        normalize(req.queryParams("es_mixed"))
       ))
     }
 
@@ -489,7 +493,7 @@ class Webapp(
   }
 
   val postParagraphs = { req: Request, res: Response ->
-    val topic = req.queryParams("topic")
+    val topic = normalize(req.queryParams("topic"))
     val enabled = req.queryParams("enabled") != null
     db.insertParagraph(Paragraph(0, topic, enabled))
     res.redirect("/paragraphs")
@@ -624,13 +628,13 @@ class Webapp(
     if (req.queryParams("newUniqueConjugation") != null) {
       db.insertUniqueConjugation(UniqueConjugation(
         0,
-        req.queryParams("es_mixed"),
-        req.queryParams("en"),
-        req.queryParams("infinitive_es_mixed"),
+        normalize(req.queryParams("es_mixed")),
+        normalize(req.queryParams("en")),
+        normalize(req.queryParams("infinitive_es_mixed")),
         req.queryParams("number").toInt(),
         req.queryParams("person").toInt(),
         req.queryParams("tense"),
-        req.queryParams("en_disambiguation")
+        normalize(req.queryParams("en_disambiguation"))
       ))
     }
 
@@ -696,12 +700,12 @@ class Webapp(
     if (req.queryParams("newStemChange") != null) {
       db.insertStemChangeRow(StemChangeRow(
         0,
-        req.queryParams("infinitive_es_mixed"),
-        req.queryParams("es_mixed"),
+        normalize(req.queryParams("infinitive_es_mixed")),
+        normalize(req.queryParams("es_mixed")),
         req.queryParams("tense"),
-        req.queryParams("en"),
-        req.queryParams("en_past"),
-        req.queryParams("en_disambiguation")
+        normalize(req.queryParams("en")),
+        normalize(req.queryParams("en_past")),
+        normalize(req.queryParams("en_disambiguation"))
       ))
     }
 
