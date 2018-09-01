@@ -10,7 +10,8 @@ fun pluralizeEs(base: String): String {
     return base + "s"
   } else if (base.endsWith("ión")) {
     return base.substring(0, base.length - 3) + "iones"
-  } else if (base.endsWith("l") ||
+  } else if (base.endsWith("d") ||
+    base.endsWith("l") ||
     base.endsWith("n") ||
     base.endsWith("r")) {
     return base + "es"
