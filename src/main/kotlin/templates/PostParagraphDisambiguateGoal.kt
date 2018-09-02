@@ -47,8 +47,10 @@ fun PostParagraphDisambiguateGoal(
         } else if (interpretation.type == "FrNonverb") {
           html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.frMixed' value='${escapeHTML(word)}'> (check case)")
           html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.en' placeholder='English'>")
+        } else if (interpretation.type == "FrInf") {
+          html.append(" (manual only for now)")
         } else if (interpretation.type == "FrUniqV") {
-          html.append("(manual only for now)")
+          html.append(" (manual only for now)")
         } else {
           throw RuntimeException("Unknown interpretation type ${interpretation.type}")
         }

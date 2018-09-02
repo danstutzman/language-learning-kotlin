@@ -829,6 +829,42 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 2179	1014	1019	4	4
 2184	1021	998	1	1
 2185	1021	1022	0	0
+2189	1024	978	0	0
+2191	1024	1026	1	2
+2192	1024	1027	1	1
+2193	1024	1028	2	2
+2195	1026	1027	0	0
+2196	1026	1028	1	1
+2202	1029	982	0	0
+2205	1029	1027	1	1
+2206	1031	1027	0	0
+2208	1029	1031	1	2
+2210	1029	1033	2	2
+2213	1031	1033	1	1
+2217	1034	986	0	0
+2220	1034	1027	1	1
+2221	1036	1027	0	0
+2225	1034	1036	1	2
+2227	1034	1038	2	2
+2230	1036	1038	1	1
+2233	1039	994	0	0
+2237	1039	1027	1	1
+2238	1041	1027	0	0
+2244	1039	1041	1	2
+2246	1039	1043	2	2
+2249	1041	1043	1	1
+2253	1044	998	0	0
+2257	1044	1027	1	1
+2258	1046	1027	0	0
+2266	1044	1046	1	2
+2268	1044	1048	2	2
+2271	1046	1048	1	1
+2275	1049	1002	0	0
+2278	1049	1027	1	1
+2279	1051	1027	0	0
+2289	1049	1051	1	2
+2291	1049	1053	2	2
+2294	1051	1053	1	1
 \.
 
 
@@ -836,7 +872,7 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 -- Name: card_embeddings_card_embedding_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 2187, true);
+SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 2296, true);
 
 
 --
@@ -1137,6 +1173,25 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 1019	[{"leafId":608,"en":"thanks","l2":"merci"}]	\N	608	thanks	1		2018-09-02 16:55:18.451886-06	2018-09-02 16:55:18.45-06
 1021	[{"leafId":609,"en":"and","l2":"et"},{"leafId":594,"en":"you all","l2":"vous"}]	\N	609,594	And you? (formal)	0		2018-09-02 16:55:45.700067-06	2018-09-02 16:55:45.699-06
 1022	[{"leafId":609,"en":"and","l2":"et"}]	\N	609	and	1		2018-09-02 16:55:45.700067-06	2018-09-02 16:55:45.699-06
+1024	[{"leafId":589,"en":"I/me","l2":"je"},{"leafId":610,"en":"speak","l2":"parl-"},{"leafId":-101,"en":"(I)","l2":"-e"}]	\N	589,610,-101	I speak.	0		2018-09-02 17:17:58.945208-06	2018-09-02 17:17:58.94-06
+1026	[{"leafId":610,"en":"speak","l2":"parl-"},{"leafId":-101,"en":"(I)","l2":"-e"}]	\N	610,-101	(I) speak	0		2018-09-02 17:17:58.945208-06	2018-09-02 17:17:58.941-06
+1027	[{"leafId":610,"en":"speak","l2":"parler"}]	\N	610	to speak	1		2018-09-02 17:17:58.945208-06	2018-09-02 17:17:58.941-06
+1028	[{"leafId":-101,"en":"(I)","l2":"-e"}]	\N	-101	(I speak)	1		2018-09-02 17:17:58.945208-06	2018-09-02 17:17:58.941-06
+1029	[{"leafId":590,"en":"you","l2":"tu"},{"leafId":610,"en":"speak","l2":"parl-"},{"leafId":-102,"en":"(you)","l2":"-es"}]	\N	590,610,-102	You speak.	0		2018-09-02 17:18:18.323576-06	2018-09-02 17:18:18.322-06
+1031	[{"leafId":610,"en":"speak","l2":"parl-"},{"leafId":-102,"en":"(you)","l2":"-es"}]	\N	610,-102	(you) speak	0		2018-09-02 17:18:18.323576-06	2018-09-02 17:18:18.322-06
+1033	[{"leafId":-102,"en":"(you)","l2":"-es"}]	\N	-102	(you speak)	1		2018-09-02 17:18:18.323576-06	2018-09-02 17:18:18.322-06
+1034	[{"leafId":591,"en":"he","l2":"il"},{"leafId":610,"en":"speak","l2":"parl-"},{"leafId":-103,"en":"(he/she)","l2":"-e"}]	\N	591,610,-103	He speaks.	0		2018-09-02 17:18:33.176219-06	2018-09-02 17:18:33.173-06
+1036	[{"leafId":610,"en":"speak","l2":"parl-"},{"leafId":-103,"en":"(he/she)","l2":"-e"}]	\N	610,-103	(he/she) speaks	0		2018-09-02 17:18:33.176219-06	2018-09-02 17:18:33.173-06
+1038	[{"leafId":-103,"en":"(he/she)","l2":"-e"}]	\N	-103	(he/she speaks)	1		2018-09-02 17:18:33.176219-06	2018-09-02 17:18:33.173-06
+1039	[{"leafId":593,"en":"we","l2":"nous"},{"leafId":610,"en":"speak","l2":"parl-"},{"leafId":-104,"en":"(we)","l2":"-ons"}]	\N	593,610,-104	We speak.	0		2018-09-02 17:18:47.034566-06	2018-09-02 17:18:47.032-06
+1041	[{"leafId":610,"en":"speak","l2":"parl-"},{"leafId":-104,"en":"(we)","l2":"-ons"}]	\N	610,-104	(we) speak	0		2018-09-02 17:18:47.034566-06	2018-09-02 17:18:47.032-06
+1043	[{"leafId":-104,"en":"(we)","l2":"-ons"}]	\N	-104	(we speak)	1		2018-09-02 17:18:47.034566-06	2018-09-02 17:18:47.032-06
+1044	[{"leafId":594,"en":"you all","l2":"vous"},{"leafId":610,"en":"speak","l2":"parl-"},{"leafId":-105,"en":"(we)","l2":"-ez"}]	\N	594,610,-105	You speak. (pl.)	0		2018-09-02 17:19:01.169922-06	2018-09-02 17:19:01.168-06
+1046	[{"leafId":610,"en":"speak","l2":"parl-"},{"leafId":-105,"en":"(we)","l2":"-ez"}]	\N	610,-105	(we) speak	0		2018-09-02 17:19:01.169922-06	2018-09-02 17:19:01.168-06
+1048	[{"leafId":-105,"en":"(we)","l2":"-ez"}]	\N	-105	(we speak)	1		2018-09-02 17:19:01.169922-06	2018-09-02 17:19:01.168-06
+1049	[{"leafId":595,"en":"they (masc.)","l2":"ils"},{"leafId":610,"en":"speak","l2":"parl-"},{"leafId":-106,"en":"(they)","l2":"-ent"}]	\N	595,610,-106	They speak.	0		2018-09-02 17:19:21.828227-06	2018-09-02 17:19:21.825-06
+1051	[{"leafId":610,"en":"speak","l2":"parl-"},{"leafId":-106,"en":"(they)","l2":"-ent"}]	\N	610,-106	(they) speak	0		2018-09-02 17:19:21.828227-06	2018-09-02 17:19:21.825-06
+1053	[{"leafId":-106,"en":"(they)","l2":"-ent"}]	\N	-106	(they speak)	1		2018-09-02 17:19:21.828227-06	2018-09-02 17:19:21.825-06
 \.
 
 
@@ -1144,7 +1199,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 -- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('cards_card_id_seq', 1023, true);
+SELECT pg_catalog.setval('cards_card_id_seq', 1053, true);
 
 
 --
@@ -1249,6 +1304,12 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 178	How's it going?	Comment ça va?	2018-09-02 16:54:37.511941-06	2018-09-02 16:54:37.511-06	1009	9
 179	It's going very well, thanks.	Ça va très bien, merci.	2018-09-02 16:55:18.461535-06	2018-09-02 16:55:18.46-06	1014	9
 180	And you? (formal)	Et vous?	2018-09-02 16:55:45.705979-06	2018-09-02 16:55:45.705-06	1021	9
+181	I speak.	Je parle.	2018-09-02 17:17:58.996582-06	2018-09-02 17:17:58.995-06	1024	9
+182	You speak.	Tu parles.	2018-09-02 17:18:18.346806-06	2018-09-02 17:18:18.346-06	1029	9
+183	He speaks.	Il parle.	2018-09-02 17:18:33.197903-06	2018-09-02 17:18:33.197-06	1034	9
+184	We speak.	Nous parlons.	2018-09-02 17:18:47.058296-06	2018-09-02 17:18:47.055-06	1039	9
+185	You speak. (pl.)	Vous parlez.	2018-09-02 17:19:01.183814-06	2018-09-02 17:19:01.183-06	1044	9
+186	They speak.	Ils parlent.	2018-09-02 17:19:21.844623-06	2018-09-02 17:19:21.843-06	1049	9
 \.
 
 
@@ -1256,7 +1317,7 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 -- Name: goals_goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('goals_goal_id_seq', 180, true);
+SELECT pg_catalog.setval('goals_goal_id_seq', 186, true);
 
 
 --
@@ -1549,6 +1610,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 607	FrNonverb	\N	well	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:18.441939-06	\N	bien
 608	FrNonverb	\N	thanks	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:18.4482-06	\N	merci
 609	FrNonverb	\N	and	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:45.691008-06	\N	et
+610	FrInf	\N	speak	\N	\N	spoke	\N	\N	\N	2018-09-02 17:17:28.346519-06	\N	parler
 \.
 
 
@@ -1556,7 +1618,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 609, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 610, true);
 
 
 --
