@@ -14,6 +14,8 @@ data class EsNonverb(
   val esMixed: String
 )
 
+val ES_NONVERB_TYPE = "EsNonverb"
+
 class EsNonverbsTable (
   private val conn: Connection
 ) {
@@ -29,7 +31,7 @@ class EsNonverbsTable (
         LEAFS.EN_PLURAL,
         LEAFS.ES_MIXED)
       .from(LEAFS)
-      .where(LEAFS.LEAF_TYPE.eq("Nonverb"))
+      .where(LEAFS.LEAF_TYPE.eq(ES_NONVERB_TYPE))
       .fetch()
       .map { EsNonverb(
         it.getValue(LEAFS.LEAF_ID),

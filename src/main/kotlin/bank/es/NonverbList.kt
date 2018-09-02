@@ -58,9 +58,10 @@ class NonverbList {
   fun interpretEsLower(esLower: String): List<Interpretation> {
     val interpretations = mutableListOf<Interpretation>()
     if (nonverbByEsLower[esLower] != null) {
-      interpretations.add(Interpretation("Nonverb", nonverbByEsLower[esLower]))
+      interpretations.add(
+        Interpretation("EsNonverb", nonverbByEsLower[esLower]))
     }
-    interpretations.add(Interpretation("Nonverb", null))
+    interpretations.add(Interpretation("EsNonverb", null))
     return interpretations
   }
 }

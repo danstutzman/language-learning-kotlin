@@ -14,6 +14,8 @@ data class EsInfinitive(
   val esMixed: String
 )
 
+val ES_INFINITIVE_TYPE = "EsInf"
+
 class EsInfinitivesTable (
   private val conn: Connection
 ) {
@@ -29,7 +31,7 @@ class EsInfinitivesTable (
         LEAFS.EN_PAST,
         LEAFS.ES_MIXED)
       .from(LEAFS)
-      .where(LEAFS.LEAF_TYPE.eq("Inf"))
+      .where(LEAFS.LEAF_TYPE.eq(ES_INFINITIVE_TYPE))
       .fetch()
       .map { EsInfinitive(
         it.getValue(LEAFS.LEAF_ID),
@@ -47,7 +49,7 @@ class EsInfinitivesTable (
         LEAFS.EN_PAST,
         LEAFS.ES_MIXED)
       .from(LEAFS)
-      .where(LEAFS.LEAF_TYPE.eq("Inf"))
+      .where(LEAFS.LEAF_TYPE.eq(ES_INFINITIVE_TYPE))
       .and(LEAFS.LEAF_ID.`in`(leafIds))
       .fetch()
       .map { EsInfinitive(
@@ -83,7 +85,7 @@ class EsInfinitivesTable (
       LEAFS.EN_DISAMBIGUATION,
       LEAFS.EN_PAST,
       LEAFS.ES_MIXED)
-    .values("Inf",
+    .values(ES_INFINITIVE_TYPE,
       infinitive.en,
       infinitive.enDisambiguation,
       infinitive.enPast,

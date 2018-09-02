@@ -4,9 +4,10 @@ import com.danstutzman.db.CardEmbedding
 import com.danstutzman.db.Db
 import com.danstutzman.db.Goal
 
-fun GetParagraphs(db: Db): String {
-  val paragraphs = db.paragraphsTable.selectAll()
-  val allGoals = db.goalsTable.selectAll()
+fun GetParagraphs(db: Db, lang: String): String {
+  val paragraphs = db.paragraphsTable.selectForLang(lang)
+  val allGoals = db.goalsTable.selectWithParagraphIdIn(
+    paragraphs.map { it.paragraphId })
   val goalsByParagraphId = paragraphs.map {
     Pair(it.paragraphId, mutableListOf<Goal>())
   }.toMap()
@@ -30,6 +31,6 @@ fun GetParagraphs(db: Db): String {
   val cardByCardId = db.cardsTable.selectWithCardIdIn(allCardIds)
     .map { Pair(it.cardId, it) }.toMap()
 
-  return com.danstutzman.templates.GetParagraphs(paragraphs, goalsByParagraphId,
-    cardByCardId, cardEmbeddingsByCardId)
+  return com.danstutzman.templates.GetParagraphs(lang, paragraphs,
+    goalsByParagraphId, cardByCardId, cardEmbeddingsByCardId)
 }

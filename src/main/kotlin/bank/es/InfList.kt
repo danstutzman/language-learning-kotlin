@@ -28,9 +28,9 @@ class InfList {
   fun interpretEsLower(esLower: String): List<Interpretation> {
     val interpretations = mutableListOf<Interpretation>()
     if (infByEsLower[esLower] != null) {
-      interpretations.add(Interpretation("Inf", infByEsLower[esLower]))
+      interpretations.add(Interpretation("EsInf", infByEsLower[esLower]))
     }
-    interpretations.add(Interpretation("Inf", null))
+    interpretations.add(Interpretation("EsInf", null))
     return interpretations
   }
 }

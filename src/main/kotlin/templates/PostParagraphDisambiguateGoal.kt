@@ -3,20 +3,21 @@ package com.danstutzman.templates
 import com.danstutzman.bank.Interpretation
 
 fun PostParagraphDisambiguateGoal(
+  lang: String,
   paragraphId: Int,
   phraseEn: String,
-  phraseEs: String,
+  phraseL2: String,
   words: List<String>,
   interpretationsByWordNum: List<List<Interpretation>>
 ): String {
   val html = StringBuilder()
   html.append(OPEN_BODY_TAG)
   html.append("<a href='/'>Back to home</a>\n")
-  html.append("<form method='POST' action='/paragraphs/${paragraphId}/add-goal'>\n")
+  html.append("<form method='POST' action='/${lang}/paragraphs/${paragraphId}/add-goal'>\n")
   html.append("<h1>Disambiguate Goal</h1>\n")
-  html.append("<p>Phrase to disambiguate is: <i>${escapeHTML(phraseEs)}</i></p>\n")
+  html.append("<p>Phrase to disambiguate is: <i>${escapeHTML(phraseL2)}</i></p>\n")
   html.append("<input type='hidden' name='en' value='${escapeHTML(phraseEn)}'>\n")
-  html.append("<input type='hidden' name='es' value='${escapeHTML(phraseEs)}'>\n")
+  html.append("<input type='hidden' name='l2' value='${escapeHTML(phraseL2)}'>\n")
   for ((wordNum, word) in words.withIndex()) {
     val interpretations = interpretationsByWordNum[wordNum]
     val existingInterpretations = interpretations.filter { it.cardCreator != null }
@@ -38,10 +39,17 @@ fun PostParagraphDisambiguateGoal(
         html.append("<input type='radio' name='word.${wordNum}' value='${interpretationNum}' ${checked}>")
         html.append("<input type='hidden' name='word.${wordNum}.${interpretationNum}.exists' value='false'>")
         html.append("Add new ${interpretation.type}")
-        html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.es' value='${escapeHTML(word)}'> (check case)")
-        html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.en' placeholder='English'>")
-        html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.enDisambiguation' placeholder='English disambiguation (optional)'>")
-        html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.enPlural' placeholder='English plural (optional)'>")
+        if (interpretation.type == "EsNonverb") {
+          html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.es' value='${escapeHTML(word)}'> (check case)")
+          html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.en' placeholder='English'>")
+          html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.enDisambiguation' placeholder='English disambiguation (optional)'>")
+          html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.enPlural' placeholder='English plural (optional)'>")
+        } else if (interpretation.type == "FrNonverb") {
+          html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.frMixed' value='${escapeHTML(word)}'> (check case)")
+          html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.en' placeholder='English'>")
+        } else {
+          throw RuntimeException("Unknown interpretation type ${interpretation.type}")
+        }
       }
       html.append("<input type='hidden' name='word.${wordNum}.${interpretationNum}.type' value='${interpretation.type}'>")
       html.append("<br>")

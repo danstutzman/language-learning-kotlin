@@ -9,7 +9,7 @@ import org.jooq.impl.DSL
 data class Goal(
   val goalId: Int,
   val en: String,
-  val es: String,
+  val l2: String,
   val cardId: Int,
   val paragraphId: Int
 )
@@ -24,47 +24,29 @@ class GoalsTable (
   fun insert(goal: Goal) =
     create.insertInto(GOALS,
       GOALS.EN,
-      GOALS.ES,
+      GOALS.L2,
       GOALS.CARD_ID,
       GOALS.PARAGRAPH_ID,
       GOALS.UPDATED_AT)
     .values(goal.en,
-      goal.es,
+      goal.l2,
       goal.cardId,
       goal.paragraphId,
       now())
     .returning(
       GOALS.GOAL_ID,
       GOALS.EN,
-      GOALS.ES,
+      GOALS.L2,
       GOALS.PARAGRAPH_ID,
       GOALS.CARD_ID)
     .fetchOne()
-
-  fun selectAll(): List<Goal> =
-    create
-      .select(
-        GOALS.GOAL_ID,
-        GOALS.EN,
-        GOALS.ES,
-        GOALS.CARD_ID,
-        GOALS.PARAGRAPH_ID)
-      .from(GOALS)
-      .fetch()
-      .map { Goal(
-        it.getValue(GOALS.GOAL_ID),
-        it.getValue(GOALS.EN),
-        it.getValue(GOALS.ES),
-        it.getValue(GOALS.CARD_ID),
-        it.getValue(GOALS.PARAGRAPH_ID)
-      )}
 
   fun selectWithParagraphIdIn(paragraphIds: List<Int>): List<Goal> =
     create
       .select(
         GOALS.GOAL_ID,
         GOALS.EN,
-        GOALS.ES,
+        GOALS.L2,
         GOALS.CARD_ID,
         GOALS.PARAGRAPH_ID)
       .from(GOALS)
@@ -73,7 +55,7 @@ class GoalsTable (
       .map { Goal(
         it.getValue(GOALS.GOAL_ID),
         it.getValue(GOALS.EN),
-        it.getValue(GOALS.ES),
+        it.getValue(GOALS.L2),
         it.getValue(GOALS.CARD_ID),
         it.getValue(GOALS.PARAGRAPH_ID)
       )}

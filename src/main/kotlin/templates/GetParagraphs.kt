@@ -37,11 +37,11 @@ fun getGlossRowsHtml(
 
   val glossRowsHtml = StringBuilder()
   for (i in 0..glossRows.size - 1) {
-    val es = glossRows[i].es
+    val l2 = glossRows[i].l2
     glossRowsHtml.append(openTagsByGlossRowIndex[i].joinToString(""))
-    glossRowsHtml.append(es.replace("-", ""))
+    glossRowsHtml.append(l2.replace("-", ""))
     glossRowsHtml.append(closeTagsByGlossRowIndex[i].joinToString(""))
-    if (!es.endsWith("-")) {
+    if (!l2.endsWith("-")) {
       glossRowsHtml.append(" ")
     }
   }
@@ -49,6 +49,7 @@ fun getGlossRowsHtml(
 }
 
 fun GetParagraphs(
+  lang: String,
   paragraphs: List<Paragraph>,
   goalsByParagraphId: Map<Int, List<Goal>>,
   cardByCardId: Map<Int, CardRow>,
@@ -58,7 +59,7 @@ fun GetParagraphs(
   html.append(OPEN_BODY_TAG)
 
   html.append("<a href='/'>Back to home</a>\n")
-  html.append("<h1>Paragraphs</h1>\n")
+  html.append("<h1>${lang} Paragraphs</h1>\n")
   for (paragraph in paragraphs) {
     html.append("<h2>Paragraph ${paragraph.paragraphId}: ${paragraph.topic}")
     html.append("  enabled=${paragraph.enabled}</h2>\n")
@@ -73,11 +74,11 @@ fun GetParagraphs(
       html.append("  </tr>\n")
     }
     html.append("</table>\n")
-    html.append("<p><a href='/paragraphs/${paragraph.paragraphId}'>Edit</a></p>\n")
+    html.append("<p><a href='/${lang}/paragraphs/${paragraph.paragraphId}'>Edit</a></p>\n")
   }
 
   html.append("<h2>Add paragraph</h2>\n")
-  html.append("<form method='POST' action='/paragraphs'>\n")
+  html.append("<form method='POST' action='/${lang}/paragraphs'>\n")
   html.append("  <label for='topic'>Topic</label><br>\n")
   html.append("  <input type='text' name='topic'><br>\n")
   html.append("  <label for='enabled'>Enabled</label><br>\n")

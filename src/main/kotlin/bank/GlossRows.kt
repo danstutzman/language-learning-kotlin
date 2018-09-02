@@ -13,9 +13,9 @@ class GlossRows {
       return list.map {
         val map = it as Map<*, *>
         GlossRow(
-          (map.get("leafId") as Double).toInt(),
-          map.get("en") as String,
-          map.get("es") as String
+          leafId = (map.get("leafId") as Double).toInt(),
+          en = map.get("en") as String,
+          l2 = map.get("l2") as String
         )
       }
     }

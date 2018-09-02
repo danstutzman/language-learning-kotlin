@@ -27,10 +27,10 @@ class StemChangeList {
   fun interpretEsLower(esLower: String): List<Interpretation> {
     val interpretations = mutableListOf<Interpretation>()
     if (stemChangeByEsLower[esLower] != null) {
-      interpretations.add(Interpretation("StemChange",
+      interpretations.add(Interpretation("EsStemChange",
         stemChangeByEsLower[esLower]))
     }
-    interpretations.add(Interpretation("StemChange", null))
+    interpretations.add(Interpretation("EsStemChange", null))
     return interpretations
   }
 }

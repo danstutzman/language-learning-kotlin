@@ -17,6 +17,8 @@ data class EsUniqueConjugation(
   val enDisambiguation: String // "" if none
 )
 
+val ES_UNIQUE_CONJUGATION_TYPE = "EsUniqueV"
+
 class EsUniqueConjugationsTable (
   private val conn: Connection
 ) {
@@ -35,7 +37,7 @@ class EsUniqueConjugationsTable (
         LEAFS.TENSE,
         LEAFS.EN_DISAMBIGUATION)
       .from(LEAFS)
-      .where(LEAFS.LEAF_TYPE.eq("UniqV"))
+      .where(LEAFS.LEAF_TYPE.eq(ES_UNIQUE_CONJUGATION_TYPE))
       .fetch()
       .map { EsUniqueConjugation(
         it.getValue(LEAFS.LEAF_ID),
@@ -58,7 +60,7 @@ class EsUniqueConjugationsTable (
         LEAFS.PERSON,
         LEAFS.TENSE,
         LEAFS.EN_DISAMBIGUATION)
-    .values("UniqV",
+    .values(ES_UNIQUE_CONJUGATION_TYPE,
         uniqueConjugation.esMixed,
         uniqueConjugation.en,
         uniqueConjugation.infLeafId,

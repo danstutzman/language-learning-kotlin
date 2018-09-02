@@ -32,7 +32,7 @@ class VCloud(
           if (newV.getEsMixed().toLowerCase() == esLower) {
             if (uniqVList.byInfNumberPersonTense(inf, pattern.number,
               pattern.person, pattern.tense) == null) {
-              interpretations.add(Interpretation("RegV", newV))
+              interpretations.add(Interpretation("EsRegV", newV))
             }
           }
         }
@@ -48,7 +48,7 @@ class VCloud(
             stemChange.inf.esMixed.toLowerCase(),
             pattern.infCategory,
             pattern.tense == Tense.PRET)) {
-            interpretations.add(Interpretation("StemChangeV",
+            interpretations.add(Interpretation("EsStemChangeV",
               StemChangeV(stemChange, pattern)))
           }
         }

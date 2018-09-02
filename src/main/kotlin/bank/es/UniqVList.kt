@@ -42,9 +42,9 @@ class UniqVList {
   fun interpretEsLower(esLower: String): List<Interpretation> {
     val interpretations = mutableListOf<Interpretation>()
     if (uniqVByEsLower[esLower] !== null) {
-      interpretations.add(Interpretation("UniqV", uniqVByEsLower[esLower]))
+      interpretations.add(Interpretation("EsUniqV", uniqVByEsLower[esLower]))
     }
-    interpretations.add(Interpretation("UniqV", null))
+    interpretations.add(Interpretation("EsUniqV", null))
     return interpretations
   }
 }

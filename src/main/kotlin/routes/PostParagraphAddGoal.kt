@@ -3,11 +3,11 @@ package com.danstutzman.routes
 import com.danstutzman.bank.Bank
 import com.danstutzman.bank.CardCreator
 import com.danstutzman.bank.Interpretation
-import com.danstutzman.bank.es.Nonverb
 import com.danstutzman.db.Db
 import com.danstutzman.db.CardEmbedding
 import com.danstutzman.db.CardRow
 import com.danstutzman.db.EsNonverb
+import com.danstutzman.db.FrNonverb
 import com.danstutzman.db.Goal
 import com.google.gson.GsonBuilder
 
@@ -22,20 +22,21 @@ data class WordDisambiguation (
   val en: String?,
   val enDisambiguation: String?,
   val enPlural: String?,
-  val es: String?
+  val es: String?,
+  val frMixed: String?
 )
 
-fun PostParagraphAddGoal(db: Db, paragraphId: Int, goalEn: String,
-  goalEs: String, wordDisambiguations: List<WordDisambiguation>) {
+fun PostParagraphAddGoal(db: Db, lang: String, paragraphId: Int, goalEn: String,
+  goalL2: String, wordDisambiguations: List<WordDisambiguation>) {
   if (goalEn == "") {
     throw RuntimeException("En param can't be blank")
   }
 
   val bank = Bank(db)
   val cardCreators = mutableListOf<CardCreator>()
-  for ((wordNum, word) in bank.splitEsPhrase(goalEs).withIndex()) {
+  for ((wordNum, word) in bank.splitL2Phrase(goalL2).withIndex()) {
     val disambiguation = wordDisambiguations[wordNum]
-    val interpretations: List<Interpretation> = bank.interpretEsWord(word)
+    val interpretations: List<Interpretation> = bank.interpretL2Word(lang, word)
     if (disambiguation.exists) {
       val interpretation = interpretations.find {
           it.type == disambiguation.type && it.cardCreator != null &&
@@ -44,22 +45,28 @@ fun PostParagraphAddGoal(db: Db, paragraphId: Int, goalEn: String,
           "Can't find ${disambiguation.type} with ${disambiguation.leafIds}")
       cardCreators.add(interpretation.cardCreator!!)
     } else {
-      if (disambiguation.type == "Nonverb") {
+      if (disambiguation.type == "EsNonverb") {
         val row = db.esNonverbsTable.insert(EsNonverb(
           0, disambiguation.en!!, disambiguation.enDisambiguation!!,
           blankToNull(disambiguation.enPlural!!), disambiguation.es!!))
-        cardCreators.add(Nonverb(row.leafId, row.esMixed, row.en,
+        cardCreators.add(com.danstutzman.bank.es.Nonverb(
+          row.leafId, row.esMixed, row.en,
           blankToNull(row.enDisambiguation)))
+      } else if (disambiguation.type == "FrNonverb") {
+        val row = db.frNonverbsTable.insert(FrNonverb(
+          0, disambiguation.en!!, disambiguation.frMixed!!))
+        cardCreators.add(com.danstutzman.bank.fr.Nonverb(
+          row.leafId, row.frMixed, row.en))
       } else {
         throw RuntimeException("Can't create ${disambiguation.type}")
       }
     }
   }
 
-  createGoal(goalEs, cardCreators, goalEn, db, paragraphId)
+  createGoal(goalL2, cardCreators, goalEn, db, paragraphId)
 }
 
-private fun createGoal(goalEs:String, cardCreators: List<CardCreator>,
+private fun createGoal(goalL2:String, cardCreators: List<CardCreator>,
   goalEn: String, db:Db, paragraphId:Int) {
   val gsonBuilder = GsonBuilder().create()
   if (cardCreators.size > 0) {
@@ -73,7 +80,7 @@ private fun createGoal(goalEs:String, cardCreators: List<CardCreator>,
         mnemonic = "",
         prompt = cardCreator.getPrompt(),
         stage = if (glossRows.size == 1) {
-            if (glossRows[0].es == glossRows[0].en) STAGE5_SAME_AS_ENGLISH
+            if (glossRows[0].l2 == glossRows[0].en) STAGE5_SAME_AS_ENGLISH
             else STAGE1_READY_TO_TEST
           }
           else STAGE0_NOT_READY_TO_TEST
@@ -140,7 +147,7 @@ private fun createGoal(goalEs:String, cardCreators: List<CardCreator>,
     db.goalsTable.insert(Goal(
       0,
       goalEn,
-      goalEs,
+      goalL2,
       leafIdCsvToCardId[cardRowForGoal.leafIdsCsv]!!,
       paragraphId
     ))

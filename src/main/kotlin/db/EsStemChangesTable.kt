@@ -16,6 +16,8 @@ data class EsStemChange(
   val enDisambiguation: String // "" if none
 )
 
+val ES_STEM_CHANGE_TYPE = "EsStemChange"
+
 class EsStemChangesTable (
   private val conn: Connection
 ) {
@@ -34,7 +36,7 @@ class EsStemChangesTable (
         LEAFS.EN_PAST,
         LEAFS.EN_DISAMBIGUATION)
       .from(LEAFS)
-      .where(LEAFS.LEAF_TYPE.eq("StemChange"))
+      .where(LEAFS.LEAF_TYPE.eq(ES_STEM_CHANGE_TYPE))
       .fetch()
 
     return rows.map {
@@ -60,7 +62,7 @@ class EsStemChangesTable (
           LEAFS.EN,
           LEAFS.EN_PAST,
           LEAFS.EN_DISAMBIGUATION)
-      .values("StemChange",
+      .values(ES_STEM_CHANGE_TYPE,
           row.infLeafId,
           row.esMixed,
           row.tense,
