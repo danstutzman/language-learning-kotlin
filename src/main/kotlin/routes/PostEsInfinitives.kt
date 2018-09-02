@@ -10,7 +10,7 @@ fun PostEsInfinitives(
   en: String,
   enDisambiguation: String,
   enPast: String,
-  enMixed: String
+  esMixed: String
 ) {
   for (leafId in leafIdsToDelete) {
     db.esInfinitivesTable.delete(leafId)
@@ -18,6 +18,11 @@ fun PostEsInfinitives(
 
   if (newInfinitive) {
     db.esInfinitivesTable.insert(
-      EsInfinitive(0, en, enDisambiguation, enPast, enMixed))
+      EsInfinitive(
+        leafId = 0,
+        en = en,
+        enDisambiguation = enDisambiguation,
+        enPast = enPast,
+        esMixed = esMixed))
   }
 }

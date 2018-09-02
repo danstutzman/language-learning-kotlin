@@ -17,7 +17,7 @@ data class EsUniqueConjugation(
   val enDisambiguation: String // "" if none
 )
 
-val ES_UNIQUE_CONJUGATION_TYPE = "EsUniqueV"
+val ES_UNIQUE_CONJUGATION_TYPE = "EsUniqV"
 
 class EsUniqueConjugationsTable (
   private val conn: Connection
