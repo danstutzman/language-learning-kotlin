@@ -30,51 +30,6 @@ class CardsTable (
 
   private fun now() = Timestamp(System.currentTimeMillis().toLong())
 
-  fun insert(cardRows: List<CardRow>) {
-    if (cardRows.size == 0) { return }
-    var statement = create.insertInto(
-      CARDS,
-      CARDS.GLOSS_ROWS_JSON,
-      CARDS.LAST_SEEN_AT,
-      CARDS.LEAF_IDS_CSV,
-      CARDS.MNEMONIC,
-      CARDS.PROMPT,
-      CARDS.STAGE,
-      CARDS.UPDATED_AT)
-    for (row in cardRows) {
-      statement = statement.values(
-        row.glossRowsJson,
-        row.lastSeenAt?.let { Timestamp(it.toLong() * 1000) },
-        row.leafIdsCsv,
-        row.mnemonic,
-        row.prompt,
-        row.stage,
-        now())
-    }
-    statement.onDuplicateKeyIgnore().execute()
-  }
-
-  fun selectAll(): List<CardRow> =
-    create.select(
-        CARDS.CARD_ID,
-        CARDS.GLOSS_ROWS_JSON,
-        CARDS.LAST_SEEN_AT,
-        CARDS.LEAF_IDS_CSV,
-        CARDS.MNEMONIC,
-        CARDS.PROMPT,
-        CARDS.STAGE)
-      .from(CARDS)
-      .fetch()
-      .map { CardRow(
-        it.getValue(CARDS.CARD_ID),
-        it.getValue(CARDS.GLOSS_ROWS_JSON),
-        it.getValue(CARDS.LAST_SEEN_AT)?.let { it.getTime() / 1000 }?.toInt(),
-        it.getValue(CARDS.LEAF_IDS_CSV),
-        it.getValue(CARDS.MNEMONIC),
-        it.getValue(CARDS.PROMPT),
-        it.getValue(CARDS.STAGE)
-      )}
-
   fun selectWithCardIdIn(cardIds: List<Int>): List<CardRow> =
     create.select(
       CARDS.CARD_ID,
@@ -102,6 +57,30 @@ class CardsTable (
       .from(CARDS)
       .fetch()
       .map { Pair(it.getValue(CARDS.LEAF_IDS_CSV), it.getValue(CARDS.CARD_ID)) }
+
+  fun insert(cardRows: List<CardRow>) {
+    if (cardRows.size == 0) { return }
+    var statement = create.insertInto(
+      CARDS,
+      CARDS.GLOSS_ROWS_JSON,
+      CARDS.LAST_SEEN_AT,
+      CARDS.LEAF_IDS_CSV,
+      CARDS.MNEMONIC,
+      CARDS.PROMPT,
+      CARDS.STAGE,
+      CARDS.UPDATED_AT)
+    for (row in cardRows) {
+      statement = statement.values(
+        row.glossRowsJson,
+        row.lastSeenAt?.let { Timestamp(it.toLong() * 1000) },
+        row.leafIdsCsv,
+        row.mnemonic,
+        row.prompt,
+        row.stage,
+        now())
+    }
+    statement.onDuplicateKeyIgnore().execute()
+  }
 
   fun update(cardUpdate: CardUpdate) =
     create.update(CARDS)
