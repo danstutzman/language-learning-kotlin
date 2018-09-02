@@ -14,9 +14,7 @@ class UniqVList {
         leafId = it.leafId,
         esMixed = it.esMixed,
         en = it.en,
-        inf = infList.byEsLower(it.infinitiveEsMixed.toLowerCase()) ?:
-          throw CantMakeCard(
-            "Can't find infinitive for es=${it.infinitiveEsMixed}"),
+        inf = infList.byLeafId(it.infLeafId),
         number = it.number,
         person = it.person,
         tense = Tense.valueOf(it.tense),

@@ -6,6 +6,7 @@ import com.danstutzman.db.Db
 class InfList {
   val infs: List<Inf>
   val infByEsLower: Map<String, Inf>
+  val infByLeafId: Map<Int, Inf>
 
   constructor(db: Db) {
     infs = db.selectAllInfinitives().map {
@@ -17,9 +18,12 @@ class InfList {
         if (it.enDisambiguation == "") null else it.enDisambiguation)
     }
     infByEsLower = infs.map { Pair(it.esMixed.toLowerCase(), it) }.toMap()
+    infByLeafId = infs.map { it.leafId to it }.toMap()
   }
 
   fun byEsLower(esLower: String): Inf? = infByEsLower[esLower]
+
+  fun byLeafId(leafId: Int): Inf = infByLeafId[leafId]!!
 
   fun interpretEsLower(esLower: String): List<Interpretation> {
     val interpretations = mutableListOf<Interpretation>()

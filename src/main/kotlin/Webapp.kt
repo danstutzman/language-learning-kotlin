@@ -150,7 +150,7 @@ fun getGlossRowsHtml(
 fun createGoal(goalEs:String, cardCreators: List<CardCreator>, goalEn: String,
   db: Db, paragraphId: Int) {
   val gsonBuilder = GsonBuilder().create()
-  if (cardCreators.size > 0) { 
+  if (cardCreators.size > 0) {
     val cardRowsForWords = cardCreators.map { cardCreator ->
       val glossRows = cardCreator.getGlossRows()
       CardRow(
@@ -668,9 +668,13 @@ class Webapp(
   }
 
   val getUniqueConjugations = { _: Request, _: Response ->
+    val uniqueConjugations = db.selectAllUniqueConjugations()
+    val infEsByLeafId = db.selectInfinitivesWithLeafIdIn(
+      uniqueConjugations.map { it.infLeafId }.distinct()
+    ).map { it.leafId to it.esMixed }.toMap()
+
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
-
     html.append("<a href='/'>Back to home</a>\n")
     html.append("<h1>Unique Conjugations</h1>\n")
     html.append("<form method='POST' action='/unique-conjugations'>\n")
@@ -686,13 +690,15 @@ class Webapp(
     html.append("    <th>Tense</td>\n")
     html.append("    <th></td>\n")
     html.append("  </tr>\n")
-    for (uniqueConjugation in db.selectAllUniqueConjugations()) {
+    for (uniqueConjugation in uniqueConjugations) {
+      val infEs = infEsByLeafId[uniqueConjugation.infLeafId]
+
       html.append("  <tr>\n")
       html.append("    <td>${uniqueConjugation.leafId}</td>\n")
       html.append("    <td>${uniqueConjugation.esMixed}</td>\n")
       html.append("    <td>${uniqueConjugation.en}</td>\n")
       html.append("    <td>${uniqueConjugation.enDisambiguation}</td>\n")
-      html.append("    <td>${uniqueConjugation.infinitiveEsMixed}</td>\n")
+      html.append("    <td>${infEs}</td>\n")
       html.append("    <td>${uniqueConjugation.number}</td>\n")
       html.append("    <td>${uniqueConjugation.person}</td>\n")
       html.append("    <td>${uniqueConjugation.tense}</td>\n")
@@ -727,11 +733,14 @@ class Webapp(
     }
 
     if (req.queryParams("newUniqueConjugation") != null) {
+      var infinitive = db.findInfinitiveByEsMixed(
+        normalize(req.queryParams("infinitive_es_mixed")))!!
+
       db.insertUniqueConjugation(UniqueConjugation(
         0,
         normalize(req.queryParams("es_mixed")),
         normalize(req.queryParams("en")),
-        normalize(req.queryParams("infinitive_es_mixed")),
+        infinitive.leafId,
         req.queryParams("number").toInt(),
         req.queryParams("person").toInt(),
         req.queryParams("tense"),
@@ -743,9 +752,13 @@ class Webapp(
   }
 
   val getStemChanges = { _: Request, _: Response ->
+    val stemChanges = db.selectAllStemChangeRows()
+    val infEsMixedByLeafId = db.selectInfinitivesWithLeafIdIn(
+      stemChanges.map { it.infLeafId }.distinct()
+    ).map { it.leafId to it.esMixed }.toMap()
+
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
-
     html.append("<a href='/'>Back to home</a>\n")
     html.append("<h1>Stem Changes</h1>\n")
     html.append("<form method='POST' action='/stem-changes'>\n")
@@ -760,10 +773,11 @@ class Webapp(
     html.append("    <th>English disambiguation</td>\n")
     html.append("    <th></th>\n")
     html.append("  </tr>\n")
-    for (row in db.selectAllStemChangeRows()) {
+    for (row in stemChanges) {
+      val infEsMixed = infEsMixedByLeafId[row.infLeafId]
       html.append("  <tr>\n")
       html.append("    <td>${row.leafId}</td>\n")
-      html.append("    <td>${row.infinitiveEsMixed}</td>\n")
+      html.append("    <td>${infEsMixed}</td>\n")
       html.append("    <td>${row.esMixed}</td>\n")
       html.append("    <td>${row.tense}</td>\n")
       html.append("    <td>${row.en}</td>\n")
@@ -799,14 +813,17 @@ class Webapp(
     }
 
     if (req.queryParams("newStemChange") != null) {
+      var infinitive = db.findInfinitiveByEsMixed(
+        normalize(req.queryParams("infinitive_es_mixed")))!!
+
       db.insertStemChangeRow(StemChangeRow(
-        0,
-        normalize(req.queryParams("infinitive_es_mixed")),
-        normalize(req.queryParams("es_mixed")),
-        req.queryParams("tense"),
-        normalize(req.queryParams("en")),
-        normalize(req.queryParams("en_past")),
-        normalize(req.queryParams("en_disambiguation"))
+        leafId = 0,
+        infLeafId = infinitive.leafId,
+        esMixed = normalize(req.queryParams("es_mixed")),
+        tense = req.queryParams("tense"),
+        en = normalize(req.queryParams("en")),
+        enPast = normalize(req.queryParams("en_past")),
+        enDisambiguation = normalize(req.queryParams("en_disambiguation"))
       ))
     }
 

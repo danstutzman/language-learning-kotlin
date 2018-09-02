@@ -13,8 +13,7 @@ class StemChangeList {
       StemChange(
         it.leafId,
         Tense.valueOf(it.tense),
-        infList.byEsLower(it.infinitiveEsMixed.toLowerCase()) ?:
-          throw CantMakeCard("No inf for ${it.infinitiveEsMixed}"),
+        infList.byLeafId(it.infLeafId),
         it.esMixed,
         it.en,
         it.enPast,

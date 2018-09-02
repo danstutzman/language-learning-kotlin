@@ -59,7 +59,7 @@ data class UniqueConjugation(
   val leafId: Int,
   val esMixed: String,
   val en: String,
-  val infinitiveEsMixed: String,
+  val infLeafId: Int,
   val number: Int,
   val person: Int,
   val tense: String,
@@ -68,7 +68,7 @@ data class UniqueConjugation(
 
 data class StemChangeRow(
   val leafId: Int,
-  val infinitiveEsMixed: String,
+  val infLeafId: Int,
   val esMixed: String,
   val tense: String,
   val en: String,
@@ -353,6 +353,43 @@ class Db(
         it.getValue(LEAFS.ES_MIXED)
       )}
 
+  fun selectInfinitivesWithLeafIdIn(leafIds: List<Int>): List<Infinitive> =
+    create.select(
+        LEAFS.LEAF_ID,
+        LEAFS.EN,
+        LEAFS.EN_DISAMBIGUATION,
+        LEAFS.EN_PAST,
+        LEAFS.ES_MIXED)
+      .from(LEAFS)
+      .where(LEAFS.LEAF_TYPE.eq("Inf"))
+      .and(LEAFS.LEAF_ID.`in`(leafIds))
+      .fetch()
+      .map { Infinitive(
+        it.getValue(LEAFS.LEAF_ID),
+        it.getValue(LEAFS.EN),
+        it.getValue(LEAFS.EN_DISAMBIGUATION),
+        it.getValue(LEAFS.EN_PAST),
+        it.getValue(LEAFS.ES_MIXED)
+      )}
+
+  fun findInfinitiveByEsMixed(esMixed: String): Infinitive? =
+    create.select(
+        LEAFS.LEAF_ID,
+        LEAFS.EN,
+        LEAFS.EN_DISAMBIGUATION,
+        LEAFS.EN_PAST,
+        LEAFS.ES_MIXED)
+      .from(LEAFS)
+      .where(LEAFS.ES_MIXED.eq(esMixed))
+      .fetchOne()
+      ?.let { Infinitive(
+        it.getValue(LEAFS.LEAF_ID),
+        it.getValue(LEAFS.EN),
+        it.getValue(LEAFS.EN_DISAMBIGUATION),
+        it.getValue(LEAFS.EN_PAST),
+        it.getValue(LEAFS.ES_MIXED)
+      )}
+
   fun insertInfinitive(infinitive: Infinitive) =
     create.insertInto(LEAFS,
       LEAFS.LEAF_TYPE,
@@ -378,7 +415,7 @@ class Db(
         LEAFS.LEAF_ID,
         LEAFS.ES_MIXED,
         LEAFS.EN,
-        LEAFS.INFINITIVE_ES_MIXED,
+        LEAFS.INFINITIVE_LEAF_ID,
         LEAFS.NUMBER,
         LEAFS.PERSON,
         LEAFS.TENSE,
@@ -390,7 +427,7 @@ class Db(
         it.getValue(LEAFS.LEAF_ID),
         it.getValue(LEAFS.ES_MIXED),
         it.getValue(LEAFS.EN),
-        it.getValue(LEAFS.INFINITIVE_ES_MIXED),
+        it.getValue(LEAFS.INFINITIVE_LEAF_ID),
         it.getValue(LEAFS.NUMBER),
         it.getValue(LEAFS.PERSON),
         it.getValue(LEAFS.TENSE),
@@ -402,7 +439,7 @@ class Db(
         LEAFS.LEAF_TYPE,
         LEAFS.ES_MIXED,
         LEAFS.EN,
-        LEAFS.INFINITIVE_ES_MIXED,
+        LEAFS.INFINITIVE_LEAF_ID,
         LEAFS.NUMBER,
         LEAFS.PERSON,
         LEAFS.TENSE,
@@ -410,7 +447,7 @@ class Db(
     .values("UniqV",
         uniqueConjugation.esMixed,
         uniqueConjugation.en,
-        uniqueConjugation.infinitiveEsMixed,
+        uniqueConjugation.infLeafId,
         uniqueConjugation.number,
         uniqueConjugation.person,
         uniqueConjugation.tense,
@@ -421,7 +458,7 @@ class Db(
     val rows = create
       .select(
         LEAFS.LEAF_ID,
-        LEAFS.INFINITIVE_ES_MIXED,
+        LEAFS.INFINITIVE_LEAF_ID,
         LEAFS.ES_MIXED,
         LEAFS.TENSE,
         LEAFS.EN,
@@ -434,7 +471,7 @@ class Db(
     return rows.map {
       StemChangeRow(
         it.getValue(LEAFS.LEAF_ID),
-        it.getValue(LEAFS.INFINITIVE_ES_MIXED),
+        it.getValue(LEAFS.INFINITIVE_LEAF_ID),
         it.getValue(LEAFS.ES_MIXED),
         it.getValue(LEAFS.TENSE),
         it.getValue(LEAFS.EN),
@@ -444,24 +481,32 @@ class Db(
     }
   }
 
-  fun insertStemChangeRow(row: StemChangeRow) {
+  fun insertStemChangeRow(row: StemChangeRow) =
     create
       .insertInto(LEAFS,
           LEAFS.LEAF_TYPE,
-          LEAFS.INFINITIVE_ES_MIXED,
+          LEAFS.INFINITIVE_LEAF_ID,
           LEAFS.ES_MIXED,
-          LEAFS.TENSE)
+          LEAFS.TENSE,
+          LEAFS.EN,
+          LEAFS.EN_PAST,
+          LEAFS.EN_DISAMBIGUATION)
       .values("StemChange",
-          row.infinitiveEsMixed,
+          row.infLeafId,
           row.esMixed,
-          row.tense)
+          row.tense,
+          row.en,
+          row.enPast,
+          row.enDisambiguation)
       .returning(
           LEAFS.LEAF_ID,
-          LEAFS.INFINITIVE_ES_MIXED,
+          LEAFS.INFINITIVE_LEAF_ID,
           LEAFS.ES_MIXED,
-          LEAFS.TENSE)
+          LEAFS.TENSE,
+          LEAFS.EN,
+          LEAFS.EN_PAST,
+          LEAFS.EN_DISAMBIGUATION)
       .fetchOne()
-  }
 
   fun selectCardEmbeddingsWithLongerCardIdIn(longerCardIds: List<Int>) :
     List<CardEmbedding> {

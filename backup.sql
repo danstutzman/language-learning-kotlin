@@ -16,7 +16,7 @@ SET row_security = off;
 
 SET search_path = public, pg_catalog;
 
-ALTER TABLE ONLY public.leafs DROP CONSTRAINT fk_leafs_leafs_es_mixed;
+ALTER TABLE ONLY public.leafs DROP CONSTRAINT leafs_infinitive_leaf_id_fkey;
 ALTER TABLE ONLY public.card_embeddings DROP CONSTRAINT card_embeddings_shorter_card_id_fkey;
 ALTER TABLE ONLY public.card_embeddings DROP CONSTRAINT card_embeddings_longer_card_id_fkey;
 DROP INDEX public.schema_version_s_idx;
@@ -25,7 +25,6 @@ DROP INDEX public.idx_leafs_nonverbs_en_and_en_disambiguation;
 DROP INDEX public.idx_leafs_infinitives_en_past_and_en_disambiguation;
 DROP INDEX public.idx_leafs_infinitives_en_and_en_disambiguation;
 DROP INDEX public.idx_leafs_es_mixed;
-DROP INDEX public.idx_leafs_es_lower;
 DROP INDEX public.idx_cards_leaf_ids_csv;
 DROP INDEX public.idx_card_embeddings;
 ALTER TABLE ONLY public.schema_version DROP CONSTRAINT schema_version_pk;
@@ -214,13 +213,12 @@ CREATE TABLE leafs (
     en_disambiguation text NOT NULL,
     en_plural text,
     en_past text,
-    infinitive_es_mixed text,
     number integer,
     person integer,
     tense text,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
+    infinitive_leaf_id integer,
     CONSTRAINT leafs_check CHECK ((NOT ((leaf_type = 'Inf'::text) AND (en_past IS NULL)))),
-    CONSTRAINT leafs_check1 CHECK ((NOT ((leaf_type = ANY (ARRAY['StemChange'::text, 'UniqV'::text])) AND (infinitive_es_mixed IS NULL)))),
     CONSTRAINT leafs_check2 CHECK ((NOT ((leaf_type = 'UniqV'::text) AND (number IS NULL)))),
     CONSTRAINT leafs_check3 CHECK ((NOT ((leaf_type = 'UniqV'::text) AND (person IS NULL)))),
     CONSTRAINT leafs_check4 CHECK ((NOT ((leaf_type = ANY (ARRAY['StemChange'::text, 'UniqV'::text])) AND (tense <> ALL (ARRAY['PRES'::text, 'PRET'::text]))))),
@@ -907,6 +905,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 162	[{"leafId":398,"en":"well","es":"bien"}]	2018-06-27 15:42:36-06	398	well	4		2018-06-26 21:23:47.71726-06	2018-08-31 20:09:49.15-06
 152	[{"leafId":317,"en":"eat","es":"comer"}]	2018-06-27 15:42:40-06	317	to eat	4		2018-06-26 21:23:25.706003-06	2018-06-27 16:43:32.678-06
 483	[{"leafId":518,"en":"not","es":"no"}]	2018-06-27 16:43:25-06	518	not	4		2018-06-27 16:35:37.766885-06	2018-08-31 20:09:49.151-06
+689	[{"leafId":551,"en":"which","es":"cuál"}]	\N	551	which	1		2018-07-17 08:56:07.444174-06	2018-07-17 08:56:07.443-06
 155	[{"leafId":407,"en":"what","es":"qué"},{"leafId":328,"en":"do","es":"hac-"},{"leafId":-12,"en":"(you)","es":"-es"}]	2018-06-26 21:29:18-06	407,328,-12	What are you doing?	0		2018-06-26 21:23:38.542987-06	2018-06-27 16:43:32.68-06
 157	[{"leafId":328,"en":"do","es":"hac-"},{"leafId":-12,"en":"(you)","es":"-es"}]	2018-06-26 21:29:15-06	328,-12	(you) do	0		2018-06-26 21:23:38.542987-06	2018-06-27 16:43:32.682-06
 164	[{"leafId":408,"en":"hello","es":"hola"}]	2018-06-27 13:58:56-06	408	Hello!	4		2018-06-26 21:23:53.914204-06	2018-06-27 16:43:32.685-06
@@ -999,7 +998,6 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 683	[{"leafId":550,"en":"word","es":"palabra"}]	\N	550	word	1		2018-07-17 08:54:45.43614-06	2018-07-17 08:54:45.434-06
 686	[{"leafId":549,"en":"use","es":"usar"}]	\N	549	to use	1		2018-07-17 08:54:45.43614-06	2018-07-17 08:54:45.434-06
 688	[{"leafId":551,"en":"which","es":"cuál"},{"leafId":455,"en":"is","es":"es"},{"leafId":389,"en":"the","es":"el"},{"leafId":552,"en":"context","es":"contexto"},{"leafId":409,"en":"of","es":"de"},{"leafId":390,"en":"the","es":"la"},{"leafId":550,"en":"word","es":"palabra"}]	\N	551,455,389,552,409,390,550	What's the context of the word?	0		2018-07-17 08:56:07.444174-06	2018-07-17 08:56:07.443-06
-689	[{"leafId":551,"en":"which","es":"cuál"}]	\N	551	which	1		2018-07-17 08:56:07.444174-06	2018-07-17 08:56:07.443-06
 691	[{"leafId":389,"en":"the","es":"el"}]	\N	389	the (masc.)	1		2018-07-17 08:56:07.444174-06	2018-07-17 08:56:07.443-06
 692	[{"leafId":552,"en":"context","es":"contexto"}]	\N	552	context	1		2018-07-17 08:56:07.444174-06	2018-07-17 08:56:07.443-06
 697	[{"leafId":498,"en":"in/on","es":"en"},{"leafId":407,"en":"what","es":"qué"},{"leafId":386,"en":"sentence","es":"oración"},{"leafId":548,"en":"itself","es":"se"},{"leafId":549,"en":"use","es":"us-"},{"leafId":-3,"en":"(he/she)","es":"-a"}]	\N	498,407,386,548,549,-3	In what sentence is it used?	0		2018-07-17 08:56:27.721413-06	2018-07-17 08:56:27.719-06
@@ -1188,263 +1186,263 @@ SELECT pg_catalog.setval('goals_goal_id_seq', 168, true);
 -- Data for Name: leafs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_past, infinitive_es_mixed, number, person, tense, created_at) FROM stdin;
-315	Inf	andar	walk		\N	walked	\N	\N	\N	\N	2018-06-24 09:57:33.983446-06
-316	Inf	aprender	learn		\N	learned	\N	\N	\N	\N	2018-06-24 09:57:33.984734-06
-317	Inf	comer	eat		\N	ate	\N	\N	\N	\N	2018-06-24 09:57:33.985347-06
-319	Inf	contar	tell		\N	told	\N	\N	\N	\N	2018-06-24 09:57:33.98678-06
-320	Inf	dar	give		\N	gave	\N	\N	\N	\N	2018-06-24 09:57:33.987309-06
-321	Inf	decir	say		\N	said	\N	\N	\N	\N	2018-06-24 09:57:33.987899-06
-322	Inf	empezar	start		\N	started	\N	\N	\N	\N	2018-06-24 09:57:33.988574-06
-323	Inf	encontrar	find		\N	found	\N	\N	\N	\N	2018-06-24 09:57:33.994568-06
-324	Inf	entender	understand		\N	understood	\N	\N	\N	\N	2018-06-24 09:57:34.000548-06
-325	Inf	enviar	send		\N	sent	\N	\N	\N	\N	2018-06-24 09:57:34.006513-06
-327	Inf	hablar	speak		\N	spoke	\N	\N	\N	\N	2018-06-24 09:57:34.017548-06
-328	Inf	hacer	do		\N	did	\N	\N	\N	\N	2018-06-24 09:57:34.018056-06
-329	Inf	ir	go		\N	went	\N	\N	\N	\N	2018-06-24 09:57:34.018688-06
-330	Inf	parecer	seem		\N	seemed	\N	\N	\N	\N	2018-06-24 09:57:34.019227-06
-331	Inf	pedir	request		\N	requested	\N	\N	\N	\N	2018-06-24 09:57:34.019677-06
-332	Inf	pensar	think		\N	thought	\N	\N	\N	\N	2018-06-24 09:57:34.020182-06
-333	Inf	poder	can		\N	could	\N	\N	\N	\N	2018-06-24 09:57:34.020785-06
-334	Inf	poner	put		\N	put	\N	\N	\N	\N	2018-06-24 09:57:34.021223-06
-335	Inf	preguntar	ask		\N	asked	\N	\N	\N	\N	2018-06-24 09:57:34.021846-06
-336	Inf	querer	want		\N	wanted	\N	\N	\N	\N	2018-06-24 09:57:34.022716-06
-337	Inf	recordar	remember		\N	remembered	\N	\N	\N	\N	2018-06-24 09:57:34.023446-06
-339	Inf	salir	go out		\N	went out	\N	\N	\N	\N	2018-06-24 09:57:34.02479-06
-340	Inf	seguir	follow		\N	followed	\N	\N	\N	\N	2018-06-24 09:57:34.025256-06
-341	Inf	sentir	feel		\N	felt	\N	\N	\N	\N	2018-06-24 09:57:34.026079-06
-343	Inf	tener	have		\N	had	\N	\N	\N	\N	2018-06-24 09:57:34.027222-06
-344	Inf	trabajar	work		\N	worked	\N	\N	\N	\N	2018-06-24 09:57:34.027967-06
-345	Inf	ver	see		\N	saw	\N	\N	\N	\N	2018-06-24 09:57:34.028806-06
-346	Inf	venir	come		\N	came	\N	\N	\N	\N	2018-06-24 09:57:34.029696-06
-347	Inf	visitar	visit		\N	visited	\N	\N	\N	\N	2018-06-24 09:57:34.030334-06
-348	Inf	volver	return		\N	returned	\N	\N	\N	\N	2018-06-24 09:57:34.031357-06
-349	Inf	vivir	live		\N	lived	\N	\N	\N	\N	2018-06-24 10:12:18.679112-06
-350	Inf	asistir	attend		\N	attended	\N	\N	\N	\N	2018-06-24 10:15:03.427516-06
-351	Inf	mudar	move		\N	moved	\N	\N	\N	\N	2018-06-24 10:16:29.743042-06
-352	Inf	crear	create		\N	created	\N	\N	\N	\N	2018-06-24 10:17:19.293622-06
-353	Inf	estudiar	study		\N	studied	\N	\N	\N	\N	2018-06-24 10:21:48.839702-06
-383	Nonverb	tarde	afternoon		afternoons	\N	\N	\N	\N	\N	2018-06-24 09:42:32.325038-06
-354	Nonverb	brazo	arm		arms	\N	\N	\N	\N	\N	2018-06-24 09:42:32.310062-06
-355	Nonverb	pierna	leg		legs	\N	\N	\N	\N	\N	2018-06-24 09:42:32.31134-06
-356	Nonverb	corazón	heart		hearts	\N	\N	\N	\N	\N	2018-06-24 09:42:32.311925-06
-357	Nonverb	estómago	stomach		stomachs	\N	\N	\N	\N	\N	2018-06-24 09:42:32.312547-06
-358	Nonverb	ojo	eye		eyes	\N	\N	\N	\N	\N	2018-06-24 09:42:32.313039-06
-359	Nonverb	nariz	nose		noses	\N	\N	\N	\N	\N	2018-06-24 09:42:32.313538-06
-360	Nonverb	boca	mouth		mouths	\N	\N	\N	\N	\N	2018-06-24 09:42:32.31404-06
-361	Nonverb	oreja	ear		ears	\N	\N	\N	\N	\N	2018-06-24 09:42:32.314516-06
-362	Nonverb	cara	face		faces	\N	\N	\N	\N	\N	2018-06-24 09:42:32.314983-06
-363	Nonverb	cuello	neck		necks	\N	\N	\N	\N	\N	2018-06-24 09:42:32.315436-06
-364	Nonverb	dedo	finger		fingers	\N	\N	\N	\N	\N	2018-06-24 09:42:32.315907-06
-365	Nonverb	pie	foot		feet	\N	\N	\N	\N	\N	2018-06-24 09:42:32.316363-06
-366	Nonverb	muslo	thigh		thighs	\N	\N	\N	\N	\N	2018-06-24 09:42:32.316797-06
-367	Nonverb	tobillo	ankle		ankles	\N	\N	\N	\N	\N	2018-06-24 09:42:32.317247-06
-368	Nonverb	codo	elbow		elbows	\N	\N	\N	\N	\N	2018-06-24 09:42:32.317698-06
-369	Nonverb	muñeca	wrist		wrists	\N	\N	\N	\N	\N	2018-06-24 09:42:32.318139-06
-370	Nonverb	cuerpo	body		bodies	\N	\N	\N	\N	\N	2018-06-24 09:42:32.318608-06
-371	Nonverb	diente	tooth		tooths	\N	\N	\N	\N	\N	2018-06-24 09:42:32.319075-06
-372	Nonverb	mano	hand		hands	\N	\N	\N	\N	\N	2018-06-24 09:42:32.319518-06
-373	Nonverb	espalda	back		backs	\N	\N	\N	\N	\N	2018-06-24 09:42:32.31995-06
-374	Nonverb	cadera	hip		hips	\N	\N	\N	\N	\N	2018-06-24 09:42:32.320412-06
-375	Nonverb	mandíbula	jaw		jaws	\N	\N	\N	\N	\N	2018-06-24 09:42:32.320864-06
-376	Nonverb	hombro	shoulder		shoulders	\N	\N	\N	\N	\N	2018-06-24 09:42:32.321315-06
-377	Nonverb	pulgar	thumb		thumbs	\N	\N	\N	\N	\N	2018-06-24 09:42:32.321761-06
-378	Nonverb	lengua	tongue		tongues	\N	\N	\N	\N	\N	2018-06-24 09:42:32.322202-06
-379	Nonverb	garganta	throat		throats	\N	\N	\N	\N	\N	2018-06-24 09:42:32.322985-06
-380	Nonverb	español	Spanish		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.323407-06
-381	Nonverb	inglés	English		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.323906-06
-382	Nonverb	día	day		days	\N	\N	\N	\N	\N	2018-06-24 09:42:32.324572-06
-384	Nonverb	ingeniero	engineer		engineers	\N	\N	\N	\N	\N	2018-06-24 09:42:32.325593-06
-385	Nonverb	lista	list		lists	\N	\N	\N	\N	\N	2018-06-24 09:42:32.326072-06
-386	Nonverb	oración	sentence		sentences	\N	\N	\N	\N	\N	2018-06-24 09:42:32.326465-06
-387	Nonverb	bueno	good	masc.	good	\N	\N	\N	\N	\N	2018-06-24 09:42:32.326926-06
-388	Nonverb	buena	good	fem.	good	\N	\N	\N	\N	\N	2018-06-24 09:42:32.327412-06
-389	Nonverb	el	the	masc.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.327897-06
-390	Nonverb	la	the	fem.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.32839-06
-391	Nonverb	un	a	masc.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.328869-06
-392	Nonverb	una	a	fem.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.329419-06
-393	Nonverb	mi	my		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.329823-06
-394	Nonverb	este	this	masc.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.330276-06
-395	Nonverb	esta	this	fem.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33074-06
-396	Nonverb	cada	every		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.331212-06
-397	Nonverb	cómo	how		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.331646-06
-398	Nonverb	bien	well		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.332094-06
-399	Nonverb	yo	I		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.332558-06
-400	Nonverb	tú	you	pronoun	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33304-06
-401	Nonverb	él	he		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33464-06
-402	Nonverb	ella	she		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.335082-06
-403	Nonverb	nosotros	we	masc.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.335483-06
-404	Nonverb	nosotras	we	fem.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.335885-06
-405	Nonverb	ellos	they	masc.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33628-06
-406	Nonverb	ellas	they	fem.	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.336675-06
-407	Nonverb	qué	what		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.337066-06
-408	Nonverb	hola	hello		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.337468-06
-409	Nonverb	de	of		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.337867-06
-410	Nonverb	dónde	where	question	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.338256-06
-411	Nonverb	donde	where	relative	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.338645-06
-412	Nonverb	software	software		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.339084-06
-413	Nonverb	con	with		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.339496-06
-414	Nonverb	quién	who		\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.339963-06
-416	Nonverb	te	you	direct/indirect object	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.340855-06
-417	Nonverb	Longmont	Longmont		\N	\N	\N	\N	\N	\N	2018-06-24 10:12:57.81832-06
-418	Nonverb	Cuba	Cuba		\N	\N	\N	\N	\N	\N	2018-06-24 10:14:14.159249-06
-420	Nonverb	por	for	on behalf of	\N	\N	\N	\N	\N	\N	2018-06-24 10:18:21.748271-06
-421	Nonverb	para	for	in order to	\N	\N	\N	\N	\N	\N	2018-06-24 10:18:37.720114-06
-422	Nonverb	clase	class		classes	\N	\N	\N	\N	\N	2018-06-24 10:18:54.790579-06
-326	Inf	estar	be	how	\N	was	\N	\N	\N	\N	2018-06-24 09:57:34.012434-06
-318	Inf	conocer	know	someone	\N	knew	\N	\N	\N	\N	2018-06-24 09:57:33.986019-06
-338	Inf	saber	know	something	\N	knew	\N	\N	\N	\N	2018-06-24 09:57:34.024181-06
-423	Nonverb	enero	January		\N	\N	\N	\N	\N	\N	2018-06-24 10:19:36.45117-06
-424	Nonverb	aplicación	application		applications	\N	\N	\N	\N	\N	2018-06-24 10:19:47.157449-06
-425	Nonverb	unos	some	masc.	\N	\N	\N	\N	\N	\N	2018-06-24 10:20:00.535063-06
-426	Nonverb	unas	some	fem.	\N	\N	\N	\N	\N	\N	2018-06-24 10:20:07.365061-06
-427	Nonverb	móvil	mobile phone		mobile phones	\N	\N	\N	\N	\N	2018-06-24 10:20:48.975803-06
-428	Nonverb	semana	week		weeks	\N	\N	\N	\N	\N	2018-06-24 10:21:05.140751-06
-497	Nonverb	piel	skin		\N	\N	\N	\N	\N	\N	2018-06-26 20:37:34.949585-06
-419	Nonverb	a	to	toward	\N	\N	\N	\N	\N	\N	2018-06-24 10:16:56.797247-06
-415	Nonverb	me	me	to me	\N	\N	\N	\N	\N	\N	2018-06-24 09:42:32.340438-06
-429	StemChange	pued-	can		\N	could	poder	\N	\N	PRES	2018-06-24 11:26:43.651439-06
-430	StemChange	tien-	have		\N	had	tener	\N	\N	PRES	2018-06-24 11:26:43.803834-06
-431	StemChange	quier-	want		\N	wanted	querer	\N	\N	PRES	2018-06-24 11:26:43.804733-06
-432	StemChange	sig-	follow		\N	followed	seguir	\N	\N	PRES	2018-06-24 11:26:43.805456-06
-433	StemChange	encuentr-	find		\N	found	encontrar	\N	\N	PRES	2018-06-24 11:26:43.806086-06
-434	StemChange	vien-	come		\N	came	venir	\N	\N	PRES	2018-06-24 11:26:43.806698-06
-435	StemChange	piens-	think		\N	thought	pensar	\N	\N	PRES	2018-06-24 11:26:43.807283-06
-436	StemChange	vuelv-	return		\N	returned	volver	\N	\N	PRES	2018-06-24 11:26:43.807795-06
-437	StemChange	sient-	feel		\N	felt	sentir	\N	\N	PRES	2018-06-24 11:26:43.808329-06
-438	StemChange	cuent-	tell		\N	told	contar	\N	\N	PRES	2018-06-24 11:26:43.808861-06
-439	StemChange	empiez-	start		\N	started	empezar	\N	\N	PRES	2018-06-24 11:26:43.809358-06
-440	StemChange	dic-	say		\N	said	decir	\N	\N	PRES	2018-06-24 11:26:43.809844-06
-441	StemChange	recuerd-	remember		\N	remembered	recordar	\N	\N	PRES	2018-06-24 11:26:43.810424-06
-442	StemChange	pid-	request		\N	requested	pedir	\N	\N	PRES	2018-06-24 11:26:43.81091-06
-443	StemChange	entiend-	understand		\N	understood	entender	\N	\N	PRES	2018-06-24 11:26:43.811642-06
-444	StemChange	anduv-	walk		\N	walked	andar	\N	\N	PRET	2018-06-24 11:26:43.812328-06
-445	StemChange	sup-	know		\N	knew	saber	\N	\N	PRET	2018-06-24 11:26:43.812976-06
-446	StemChange	quis-	want		\N	wanted	querer	\N	\N	PRET	2018-06-24 11:26:43.81373-06
-447	StemChange	pus-	put		\N	put	poner	\N	\N	PRET	2018-06-24 11:26:43.814224-06
-448	StemChange	vin-	come		\N	came	venir	\N	\N	PRET	2018-06-24 11:26:43.814936-06
-449	StemChange	dij-	say		\N	said	decir	\N	\N	PRET	2018-06-24 11:26:43.815792-06
-450	StemChange	tuv-	have		\N	had	tener	\N	\N	PRET	2018-06-24 11:26:43.816356-06
-451	StemChange	hic-	do		\N	did	hacer	\N	\N	PRET	2018-06-24 11:26:43.816942-06
-452	StemChange	pud-	can		\N	could	poder	\N	\N	PRET	2018-06-24 11:26:43.817449-06
-467	UniqV	tengo	have		\N	\N	tener	1	1	PRES	2018-06-24 10:53:11.341841-06
-468	UniqV	hago	do		\N	\N	hacer	1	1	PRES	2018-06-24 10:53:11.342385-06
-469	UniqV	digo	say		\N	\N	decir	1	1	PRES	2018-06-24 10:53:11.34283-06
-470	UniqV	dijeron	said		\N	\N	decir	2	3	PRET	2018-06-24 10:53:11.343357-06
-471	UniqV	voy	go		\N	\N	ir	1	1	PRES	2018-06-24 10:53:11.343851-06
-472	UniqV	vas	go		\N	\N	ir	1	2	PRES	2018-06-24 10:53:11.344385-06
-473	UniqV	va	goes		\N	\N	ir	1	3	PRES	2018-06-24 10:53:11.34485-06
-474	UniqV	vamos	go		\N	\N	ir	2	1	PRES	2018-06-24 10:53:11.345309-06
-475	UniqV	van	go		\N	\N	ir	2	3	PRES	2018-06-24 10:53:11.345931-06
-476	UniqV	veo	see		\N	\N	ver	1	1	PRES	2018-06-24 10:53:11.346443-06
-477	UniqV	vi	saw		\N	\N	ver	1	1	PRET	2018-06-24 10:53:11.346938-06
-478	UniqV	vio	saw		\N	\N	ver	1	3	PRET	2018-06-24 10:53:11.347455-06
-479	UniqV	vimos	saw		\N	\N	ver	2	1	PRET	2018-06-24 10:53:11.347861-06
-480	UniqV	doy	give		\N	\N	dar	1	1	PRES	2018-06-24 10:53:11.348332-06
-481	UniqV	di	gave		\N	\N	dar	1	1	PRET	2018-06-24 10:53:11.348782-06
-482	UniqV	diste	gave		\N	\N	dar	1	2	PRET	2018-06-24 10:53:11.349211-06
-483	UniqV	dio	gave		\N	\N	dar	1	3	PRET	2018-06-24 10:53:11.349614-06
-484	UniqV	dimos	gave		\N	\N	dar	2	1	PRET	2018-06-24 10:53:11.349999-06
-485	UniqV	dieron	gave		\N	\N	dar	2	3	PRET	2018-06-24 10:53:11.350387-06
-486	UniqV	sé	know		\N	\N	saber	1	1	PRES	2018-06-24 10:53:11.350775-06
-487	UniqV	pongo	put		\N	\N	poner	1	1	PRES	2018-06-24 10:53:11.351199-06
-488	UniqV	vengo	come		\N	\N	venir	1	1	PRES	2018-06-24 10:53:11.351597-06
-489	UniqV	salgo	go out		\N	\N	salir	1	1	PRES	2018-06-24 10:53:11.351985-06
-490	UniqV	parezco	look like		\N	\N	parecer	1	1	PRES	2018-06-24 10:53:11.352406-06
-491	UniqV	conozco	know		\N	\N	conocer	1	1	PRES	2018-06-24 10:53:11.352811-06
-492	UniqV	empecé	started		\N	\N	empezar	1	1	PRET	2018-06-24 10:53:11.353348-06
-493	UniqV	envío	sent		\N	\N	enviar	1	1	PRES	2018-06-24 10:53:11.354736-06
-494	UniqV	envías	sent		\N	\N	enviar	1	2	PRES	2018-06-24 10:53:11.355389-06
-495	UniqV	envía	sent		\N	\N	enviar	1	3	PRES	2018-06-24 10:53:11.355845-06
-496	UniqV	envían	sent		\N	\N	enviar	2	1	PRES	2018-06-24 10:53:11.356343-06
-498	Nonverb	en	in/on		\N	\N	\N	\N	\N	\N	2018-06-27 13:09:57.624981-06
-453	UniqV	soy	am	what	\N	\N	ser	1	1	PRES	2018-06-24 10:53:11.331513-06
-454	UniqV	eres	are	what	\N	\N	ser	1	2	PRES	2018-06-24 10:53:11.334102-06
-455	UniqV	es	is	what	\N	\N	ser	1	3	PRES	2018-06-24 10:53:11.334799-06
-456	UniqV	somos	are	what	\N	\N	ser	2	1	PRES	2018-06-24 10:53:11.335596-06
-457	UniqV	son	are	what	\N	\N	ser	2	3	PRES	2018-06-24 10:53:11.336235-06
-458	UniqV	fui	was	what	\N	\N	ser	1	1	PRET	2018-06-24 10:53:11.336833-06
-459	UniqV	fuiste	were	what	\N	\N	ser	1	2	PRET	2018-06-24 10:53:11.337566-06
-460	UniqV	fue	was	what	\N	\N	ser	1	3	PRET	2018-06-24 10:53:11.338114-06
-461	UniqV	fuimos	were	what	\N	\N	ser	2	1	PRET	2018-06-24 10:53:11.338658-06
-462	UniqV	fueron	were	what	\N	\N	ser	2	3	PRET	2018-06-24 10:53:11.339177-06
-463	UniqV	estoy	am	how	\N	\N	estar	1	1	PRES	2018-06-24 10:53:11.339723-06
-464	UniqV	estás	are	how	\N	\N	estar	1	2	PRES	2018-06-24 10:53:11.340233-06
-465	UniqV	está	is	how	\N	\N	estar	1	3	PRES	2018-06-24 10:53:11.340796-06
-466	UniqV	están	are	how	\N	\N	estar	2	3	PRES	2018-06-24 10:53:11.341339-06
-342	Inf	ser	be	what	\N	was	\N	\N	\N	\N	2018-06-24 09:57:34.026682-06
-499	Nonverb	prueba	test		tests	\N	\N	\N	\N	\N	2018-06-27 15:35:58.629886-06
-500	Nonverb	feliz	happy		\N	\N	\N	\N	\N	\N	2018-06-27 16:00:33.653382-06
-501	Nonverb	solo	alone		\N	\N	\N	\N	\N	\N	2018-06-27 16:01:16.754582-06
-502	Nonverb	triste	sad		\N	\N	\N	\N	\N	\N	2018-06-27 16:02:01.449627-06
-503	Nonverb	ya	yet		\N	\N	\N	\N	\N	\N	2018-06-27 16:04:47.506244-06
-504	Inf	vender	sell		\N	sold	\N	\N	\N	\N	2018-06-27 16:05:02.651479-06
-505	Nonverb	casa	house		houses	\N	\N	\N	\N	\N	2018-06-27 16:06:23.119046-06
-506	Nonverb	almuerzo	lunch		lunches	\N	\N	\N	\N	\N	2018-06-27 16:10:03.657745-06
-507	Nonverb	hoy	today		\N	\N	\N	\N	\N	\N	2018-06-27 16:10:22.676819-06
-508	Nonverb	demasiado	too much		\N	\N	\N	\N	\N	\N	2018-06-27 16:11:43.342318-06
-509	Inf	correr	run		\N	ran	\N	\N	\N	\N	2018-06-27 16:13:24.686094-06
-510	Inf	afuera	outside		\N		\N	\N	\N	\N	2018-06-27 16:13:41.673097-06
-511	Nonverb	porqué	why		\N	\N	\N	\N	\N	\N	2018-06-27 16:14:22.939146-06
-512	Nonverb	Pennsylvania	Pennsylvania		\N	\N	\N	\N	\N	\N	2018-06-27 16:15:45.409633-06
-513	Inf	crecer	grow up		\N	grew up	\N	\N	\N	\N	2018-06-27 16:16:00.615531-06
-514	Nonverb	aquí	here		\N	\N	\N	\N	\N	\N	2018-06-27 16:17:37.925483-06
-515	Nonverb	lo	him		\N	\N	\N	\N	\N	\N	2018-06-27 16:21:02.916295-06
-516	Nonverb	esa	that	fem.	\N	\N	\N	\N	\N	\N	2018-06-27 16:34:31.058747-06
-517	Nonverb	cuenta	account		accounts	\N	\N	\N	\N	\N	2018-06-27 16:34:39.097297-06
-518	Nonverb	no	not		\N	\N	\N	\N	\N	\N	2018-06-27 16:35:32.851134-06
-519	Nonverb	juego	game		games	\N	\N	\N	\N	\N	2018-06-27 16:36:31.585454-06
-520	Nonverb	que	that		\N	\N	\N	\N	\N	\N	2018-06-27 16:36:37.387123-06
-521	Nonverb	perfil	profile		profiles	\N	\N	\N	\N	\N	2018-06-27 16:38:19.183428-06
-522	Nonverb	tres	three		\N	\N	\N	\N	\N	\N	2018-06-27 16:41:20.489311-06
-523	Nonverb	vez	time	occasion	times	\N	\N	\N	\N	\N	2018-06-27 16:42:00.67647-06
-524	Nonverb	programa	program		programs	\N	\N	\N	\N	\N	2018-07-17 08:24:58.585589-06
-525	Nonverb	proyecto	project		projects	\N	\N	\N	\N	\N	2018-07-17 08:26:04.045616-06
-526	Inf	practicar	practice		\N	practiced	\N	\N	\N	\N	2018-07-17 08:27:34.682383-06
-527	Inf	revisar	review		\N	reviewed	\N	\N	\N	\N	2018-07-17 08:29:02.066228-06
-528	Nonverb	memoria	memory		memories	\N	\N	\N	\N	\N	2018-07-17 08:29:22.454611-06
-529	Nonverb	tarjeta	card		cards	\N	\N	\N	\N	\N	2018-07-17 08:29:33.244463-06
-530	Nonverb	diferente	different		\N	\N	\N	\N	\N	\N	2018-07-17 08:30:09.528205-06
-531	Nonverb	las	the	fem. pl.	\N	\N	\N	\N	\N	\N	2018-07-17 08:32:06.026733-06
-532	Nonverb	los	the	masc. pl.	\N	\N	\N	\N	\N	\N	2018-07-17 08:32:19.32709-06
-534	Nonverb	otra	other	fem.	others	\N	\N	\N	\N	\N	2018-07-17 08:33:31.661991-06
-533	Nonverb	otro	other	masc.	others	\N	\N	\N	\N	\N	2018-07-17 08:32:38.307387-06
-535	Nonverb	persona	person		persons	\N	\N	\N	\N	\N	2018-07-17 08:35:10.365693-06
-536	Nonverb	aprendizaje	learning		learnings	\N	\N	\N	\N	\N	2018-07-17 08:40:55.205649-06
-538	Inf	haber	be	exist	\N	existed	\N	\N	\N	\N	2018-07-17 08:44:14.793496-06
-539	UniqV	hay	is	exists	\N	\N	haber	1	3	PRES	2018-07-17 08:45:19.386968-06
-542	Nonverb	mucho	many		many	\N	\N	\N	\N	\N	2018-07-17 08:48:32.554069-06
-543	Nonverb	idioma	language		languages	\N	\N	\N	\N	\N	2018-07-17 08:49:33.488019-06
-544	Inf	escuchar	listen		\N	listened	\N	\N	\N	\N	2018-07-17 08:50:59.808615-06
-546	Nonverb	ejemplo	example		examples	\N	\N	\N	\N	\N	2018-07-17 08:51:50.906959-06
-547	Inf	necesitar	need		\N	needed	\N	\N	\N	\N	2018-07-17 08:52:50.335987-06
-548	Nonverb	se	itself		\N	\N	\N	\N	\N	\N	2018-07-17 08:54:04.413751-06
-549	Inf	usar	use		\N	used	\N	\N	\N	\N	2018-07-17 08:54:22.907576-06
-550	Nonverb	palabra	word		words	\N	\N	\N	\N	\N	2018-07-17 08:54:42.693204-06
-551	Nonverb	cuál	which		\N	\N	\N	\N	\N	\N	2018-07-17 08:55:57.61761-06
-552	Nonverb	contexto	context		contexts	\N	\N	\N	\N	\N	2018-07-17 08:56:04.870809-06
-554	Inf	pertenecer	belong		\N	belonged	\N	\N	\N	\N	2018-07-17 08:58:24.780015-06
-555	Nonverb	perdón	pardon		pardons	\N	\N	\N	\N	\N	2018-08-31 19:08:04.939549-06
-557	Nonverb	usted	you	formal	you all	\N	\N	\N	\N	\N	2018-08-31 19:10:16.458494-06
-559	Nonverb	sí	yes		\N	\N	\N	\N	\N	\N	2018-08-31 19:12:58.323924-06
-561	Nonverb	muy	very		\N	\N	\N	\N	\N	\N	2018-08-31 19:14:08.859179-06
-562	Nonverb	gracias	thanks		\N	\N	\N	\N	\N	\N	2018-08-31 19:15:21.864223-06
-563	Nonverb	adiós	bye		\N	\N	\N	\N	\N	\N	2018-08-31 19:16:02.683832-06
-564	Nonverb	señorita	miss		\N	\N	\N	\N	\N	\N	2018-08-31 19:16:19.062648-06
-560	Nonverb	poco	little bit		\N	\N	\N	\N	\N	\N	2018-08-31 19:13:10.526737-06
-565	Nonverb	castellano	Castilian		Castilians	\N	\N	\N	\N	\N	2018-09-01 16:35:55.371716-06
-558	Nonverb	norteamericano	American	masc.	Americans	\N	\N	\N	\N	\N	2018-08-31 19:11:52.624789-06
-566	Nonverb	norteamericana	American	fem.	Americans	\N	\N	\N	\N	\N	2018-09-01 16:49:51.953022-06
-567	Nonverb	Chicago	Chicago		\N	\N	\N	\N	\N	\N	2018-09-01 17:09:14.52525-06
-568	Nonverb	señor	gentleman		gentlemen	\N	\N	\N	\N	\N	2018-09-01 17:12:59.624633-06
-556	Nonverb	señora	lady, ma'am, Mrs.		\N	\N	\N	\N	\N	\N	2018-08-31 19:09:02.783478-06
-569	Nonverb	noche	night		nights	\N	\N	\N	\N	\N	2018-09-01 17:18:56.997228-06
-570	Nonverb	México	Mexico		Mexicos	\N	\N	\N	\N	\N	2018-09-01 17:20:15.384115-06
-571	Nonverb	Norteamérica	America		Americas	\N	\N	\N	\N	\N	2018-09-01 17:20:47.315399-06
-572	Nonverb	Bolivia	Bolivia		Bolivias	\N	\N	\N	\N	\N	2018-09-01 17:21:09.264117-06
-573	Nonverb	García	Garcia		Garcias	\N	\N	\N	\N	\N	2018-09-01 17:21:42.800262-06
-574	Nonverb	Jones	Jones		\N	\N	\N	\N	\N	\N	2018-09-01 17:22:05.963736-06
-575	Nonverb	angel	angel		angels	\N	\N	\N	\N	\N	2018-09-01 17:24:16.356883-06
+COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_past, number, person, tense, created_at, infinitive_leaf_id) FROM stdin;
+315	Inf	andar	walk		\N	walked	\N	\N	\N	2018-06-24 09:57:33.983446-06	\N
+316	Inf	aprender	learn		\N	learned	\N	\N	\N	2018-06-24 09:57:33.984734-06	\N
+317	Inf	comer	eat		\N	ate	\N	\N	\N	2018-06-24 09:57:33.985347-06	\N
+319	Inf	contar	tell		\N	told	\N	\N	\N	2018-06-24 09:57:33.98678-06	\N
+320	Inf	dar	give		\N	gave	\N	\N	\N	2018-06-24 09:57:33.987309-06	\N
+321	Inf	decir	say		\N	said	\N	\N	\N	2018-06-24 09:57:33.987899-06	\N
+322	Inf	empezar	start		\N	started	\N	\N	\N	2018-06-24 09:57:33.988574-06	\N
+323	Inf	encontrar	find		\N	found	\N	\N	\N	2018-06-24 09:57:33.994568-06	\N
+324	Inf	entender	understand		\N	understood	\N	\N	\N	2018-06-24 09:57:34.000548-06	\N
+325	Inf	enviar	send		\N	sent	\N	\N	\N	2018-06-24 09:57:34.006513-06	\N
+327	Inf	hablar	speak		\N	spoke	\N	\N	\N	2018-06-24 09:57:34.017548-06	\N
+328	Inf	hacer	do		\N	did	\N	\N	\N	2018-06-24 09:57:34.018056-06	\N
+329	Inf	ir	go		\N	went	\N	\N	\N	2018-06-24 09:57:34.018688-06	\N
+330	Inf	parecer	seem		\N	seemed	\N	\N	\N	2018-06-24 09:57:34.019227-06	\N
+331	Inf	pedir	request		\N	requested	\N	\N	\N	2018-06-24 09:57:34.019677-06	\N
+332	Inf	pensar	think		\N	thought	\N	\N	\N	2018-06-24 09:57:34.020182-06	\N
+333	Inf	poder	can		\N	could	\N	\N	\N	2018-06-24 09:57:34.020785-06	\N
+334	Inf	poner	put		\N	put	\N	\N	\N	2018-06-24 09:57:34.021223-06	\N
+335	Inf	preguntar	ask		\N	asked	\N	\N	\N	2018-06-24 09:57:34.021846-06	\N
+336	Inf	querer	want		\N	wanted	\N	\N	\N	2018-06-24 09:57:34.022716-06	\N
+337	Inf	recordar	remember		\N	remembered	\N	\N	\N	2018-06-24 09:57:34.023446-06	\N
+339	Inf	salir	go out		\N	went out	\N	\N	\N	2018-06-24 09:57:34.02479-06	\N
+340	Inf	seguir	follow		\N	followed	\N	\N	\N	2018-06-24 09:57:34.025256-06	\N
+341	Inf	sentir	feel		\N	felt	\N	\N	\N	2018-06-24 09:57:34.026079-06	\N
+343	Inf	tener	have		\N	had	\N	\N	\N	2018-06-24 09:57:34.027222-06	\N
+344	Inf	trabajar	work		\N	worked	\N	\N	\N	2018-06-24 09:57:34.027967-06	\N
+345	Inf	ver	see		\N	saw	\N	\N	\N	2018-06-24 09:57:34.028806-06	\N
+346	Inf	venir	come		\N	came	\N	\N	\N	2018-06-24 09:57:34.029696-06	\N
+347	Inf	visitar	visit		\N	visited	\N	\N	\N	2018-06-24 09:57:34.030334-06	\N
+348	Inf	volver	return		\N	returned	\N	\N	\N	2018-06-24 09:57:34.031357-06	\N
+349	Inf	vivir	live		\N	lived	\N	\N	\N	2018-06-24 10:12:18.679112-06	\N
+350	Inf	asistir	attend		\N	attended	\N	\N	\N	2018-06-24 10:15:03.427516-06	\N
+351	Inf	mudar	move		\N	moved	\N	\N	\N	2018-06-24 10:16:29.743042-06	\N
+352	Inf	crear	create		\N	created	\N	\N	\N	2018-06-24 10:17:19.293622-06	\N
+353	Inf	estudiar	study		\N	studied	\N	\N	\N	2018-06-24 10:21:48.839702-06	\N
+383	Nonverb	tarde	afternoon		afternoons	\N	\N	\N	\N	2018-06-24 09:42:32.325038-06	\N
+354	Nonverb	brazo	arm		arms	\N	\N	\N	\N	2018-06-24 09:42:32.310062-06	\N
+355	Nonverb	pierna	leg		legs	\N	\N	\N	\N	2018-06-24 09:42:32.31134-06	\N
+356	Nonverb	corazón	heart		hearts	\N	\N	\N	\N	2018-06-24 09:42:32.311925-06	\N
+357	Nonverb	estómago	stomach		stomachs	\N	\N	\N	\N	2018-06-24 09:42:32.312547-06	\N
+358	Nonverb	ojo	eye		eyes	\N	\N	\N	\N	2018-06-24 09:42:32.313039-06	\N
+359	Nonverb	nariz	nose		noses	\N	\N	\N	\N	2018-06-24 09:42:32.313538-06	\N
+360	Nonverb	boca	mouth		mouths	\N	\N	\N	\N	2018-06-24 09:42:32.31404-06	\N
+361	Nonverb	oreja	ear		ears	\N	\N	\N	\N	2018-06-24 09:42:32.314516-06	\N
+362	Nonverb	cara	face		faces	\N	\N	\N	\N	2018-06-24 09:42:32.314983-06	\N
+363	Nonverb	cuello	neck		necks	\N	\N	\N	\N	2018-06-24 09:42:32.315436-06	\N
+364	Nonverb	dedo	finger		fingers	\N	\N	\N	\N	2018-06-24 09:42:32.315907-06	\N
+365	Nonverb	pie	foot		feet	\N	\N	\N	\N	2018-06-24 09:42:32.316363-06	\N
+366	Nonverb	muslo	thigh		thighs	\N	\N	\N	\N	2018-06-24 09:42:32.316797-06	\N
+367	Nonverb	tobillo	ankle		ankles	\N	\N	\N	\N	2018-06-24 09:42:32.317247-06	\N
+368	Nonverb	codo	elbow		elbows	\N	\N	\N	\N	2018-06-24 09:42:32.317698-06	\N
+369	Nonverb	muñeca	wrist		wrists	\N	\N	\N	\N	2018-06-24 09:42:32.318139-06	\N
+370	Nonverb	cuerpo	body		bodies	\N	\N	\N	\N	2018-06-24 09:42:32.318608-06	\N
+371	Nonverb	diente	tooth		tooths	\N	\N	\N	\N	2018-06-24 09:42:32.319075-06	\N
+372	Nonverb	mano	hand		hands	\N	\N	\N	\N	2018-06-24 09:42:32.319518-06	\N
+373	Nonverb	espalda	back		backs	\N	\N	\N	\N	2018-06-24 09:42:32.31995-06	\N
+374	Nonverb	cadera	hip		hips	\N	\N	\N	\N	2018-06-24 09:42:32.320412-06	\N
+375	Nonverb	mandíbula	jaw		jaws	\N	\N	\N	\N	2018-06-24 09:42:32.320864-06	\N
+376	Nonverb	hombro	shoulder		shoulders	\N	\N	\N	\N	2018-06-24 09:42:32.321315-06	\N
+377	Nonverb	pulgar	thumb		thumbs	\N	\N	\N	\N	2018-06-24 09:42:32.321761-06	\N
+378	Nonverb	lengua	tongue		tongues	\N	\N	\N	\N	2018-06-24 09:42:32.322202-06	\N
+379	Nonverb	garganta	throat		throats	\N	\N	\N	\N	2018-06-24 09:42:32.322985-06	\N
+380	Nonverb	español	Spanish		\N	\N	\N	\N	\N	2018-06-24 09:42:32.323407-06	\N
+381	Nonverb	inglés	English		\N	\N	\N	\N	\N	2018-06-24 09:42:32.323906-06	\N
+382	Nonverb	día	day		days	\N	\N	\N	\N	2018-06-24 09:42:32.324572-06	\N
+384	Nonverb	ingeniero	engineer		engineers	\N	\N	\N	\N	2018-06-24 09:42:32.325593-06	\N
+385	Nonverb	lista	list		lists	\N	\N	\N	\N	2018-06-24 09:42:32.326072-06	\N
+386	Nonverb	oración	sentence		sentences	\N	\N	\N	\N	2018-06-24 09:42:32.326465-06	\N
+387	Nonverb	bueno	good	masc.	good	\N	\N	\N	\N	2018-06-24 09:42:32.326926-06	\N
+388	Nonverb	buena	good	fem.	good	\N	\N	\N	\N	2018-06-24 09:42:32.327412-06	\N
+389	Nonverb	el	the	masc.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.327897-06	\N
+390	Nonverb	la	the	fem.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.32839-06	\N
+391	Nonverb	un	a	masc.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.328869-06	\N
+392	Nonverb	una	a	fem.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.329419-06	\N
+393	Nonverb	mi	my		\N	\N	\N	\N	\N	2018-06-24 09:42:32.329823-06	\N
+394	Nonverb	este	this	masc.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.330276-06	\N
+395	Nonverb	esta	this	fem.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33074-06	\N
+396	Nonverb	cada	every		\N	\N	\N	\N	\N	2018-06-24 09:42:32.331212-06	\N
+397	Nonverb	cómo	how		\N	\N	\N	\N	\N	2018-06-24 09:42:32.331646-06	\N
+398	Nonverb	bien	well		\N	\N	\N	\N	\N	2018-06-24 09:42:32.332094-06	\N
+399	Nonverb	yo	I		\N	\N	\N	\N	\N	2018-06-24 09:42:32.332558-06	\N
+400	Nonverb	tú	you	pronoun	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33304-06	\N
+401	Nonverb	él	he		\N	\N	\N	\N	\N	2018-06-24 09:42:32.33464-06	\N
+402	Nonverb	ella	she		\N	\N	\N	\N	\N	2018-06-24 09:42:32.335082-06	\N
+403	Nonverb	nosotros	we	masc.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.335483-06	\N
+404	Nonverb	nosotras	we	fem.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.335885-06	\N
+405	Nonverb	ellos	they	masc.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33628-06	\N
+406	Nonverb	ellas	they	fem.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.336675-06	\N
+407	Nonverb	qué	what		\N	\N	\N	\N	\N	2018-06-24 09:42:32.337066-06	\N
+408	Nonverb	hola	hello		\N	\N	\N	\N	\N	2018-06-24 09:42:32.337468-06	\N
+409	Nonverb	de	of		\N	\N	\N	\N	\N	2018-06-24 09:42:32.337867-06	\N
+410	Nonverb	dónde	where	question	\N	\N	\N	\N	\N	2018-06-24 09:42:32.338256-06	\N
+411	Nonverb	donde	where	relative	\N	\N	\N	\N	\N	2018-06-24 09:42:32.338645-06	\N
+412	Nonverb	software	software		\N	\N	\N	\N	\N	2018-06-24 09:42:32.339084-06	\N
+413	Nonverb	con	with		\N	\N	\N	\N	\N	2018-06-24 09:42:32.339496-06	\N
+414	Nonverb	quién	who		\N	\N	\N	\N	\N	2018-06-24 09:42:32.339963-06	\N
+416	Nonverb	te	you	direct/indirect object	\N	\N	\N	\N	\N	2018-06-24 09:42:32.340855-06	\N
+417	Nonverb	Longmont	Longmont		\N	\N	\N	\N	\N	2018-06-24 10:12:57.81832-06	\N
+418	Nonverb	Cuba	Cuba		\N	\N	\N	\N	\N	2018-06-24 10:14:14.159249-06	\N
+420	Nonverb	por	for	on behalf of	\N	\N	\N	\N	\N	2018-06-24 10:18:21.748271-06	\N
+421	Nonverb	para	for	in order to	\N	\N	\N	\N	\N	2018-06-24 10:18:37.720114-06	\N
+422	Nonverb	clase	class		classes	\N	\N	\N	\N	2018-06-24 10:18:54.790579-06	\N
+326	Inf	estar	be	how	\N	was	\N	\N	\N	2018-06-24 09:57:34.012434-06	\N
+318	Inf	conocer	know	someone	\N	knew	\N	\N	\N	2018-06-24 09:57:33.986019-06	\N
+338	Inf	saber	know	something	\N	knew	\N	\N	\N	2018-06-24 09:57:34.024181-06	\N
+423	Nonverb	enero	January		\N	\N	\N	\N	\N	2018-06-24 10:19:36.45117-06	\N
+424	Nonverb	aplicación	application		applications	\N	\N	\N	\N	2018-06-24 10:19:47.157449-06	\N
+425	Nonverb	unos	some	masc.	\N	\N	\N	\N	\N	2018-06-24 10:20:00.535063-06	\N
+426	Nonverb	unas	some	fem.	\N	\N	\N	\N	\N	2018-06-24 10:20:07.365061-06	\N
+427	Nonverb	móvil	mobile phone		mobile phones	\N	\N	\N	\N	2018-06-24 10:20:48.975803-06	\N
+428	Nonverb	semana	week		weeks	\N	\N	\N	\N	2018-06-24 10:21:05.140751-06	\N
+497	Nonverb	piel	skin		\N	\N	\N	\N	\N	2018-06-26 20:37:34.949585-06	\N
+419	Nonverb	a	to	toward	\N	\N	\N	\N	\N	2018-06-24 10:16:56.797247-06	\N
+415	Nonverb	me	me	to me	\N	\N	\N	\N	\N	2018-06-24 09:42:32.340438-06	\N
+429	StemChange	pued-	can		\N	could	\N	\N	PRES	2018-06-24 11:26:43.651439-06	333
+430	StemChange	tien-	have		\N	had	\N	\N	PRES	2018-06-24 11:26:43.803834-06	343
+431	StemChange	quier-	want		\N	wanted	\N	\N	PRES	2018-06-24 11:26:43.804733-06	336
+432	StemChange	sig-	follow		\N	followed	\N	\N	PRES	2018-06-24 11:26:43.805456-06	340
+433	StemChange	encuentr-	find		\N	found	\N	\N	PRES	2018-06-24 11:26:43.806086-06	323
+434	StemChange	vien-	come		\N	came	\N	\N	PRES	2018-06-24 11:26:43.806698-06	346
+435	StemChange	piens-	think		\N	thought	\N	\N	PRES	2018-06-24 11:26:43.807283-06	332
+436	StemChange	vuelv-	return		\N	returned	\N	\N	PRES	2018-06-24 11:26:43.807795-06	348
+437	StemChange	sient-	feel		\N	felt	\N	\N	PRES	2018-06-24 11:26:43.808329-06	341
+438	StemChange	cuent-	tell		\N	told	\N	\N	PRES	2018-06-24 11:26:43.808861-06	319
+439	StemChange	empiez-	start		\N	started	\N	\N	PRES	2018-06-24 11:26:43.809358-06	322
+440	StemChange	dic-	say		\N	said	\N	\N	PRES	2018-06-24 11:26:43.809844-06	321
+441	StemChange	recuerd-	remember		\N	remembered	\N	\N	PRES	2018-06-24 11:26:43.810424-06	337
+442	StemChange	pid-	request		\N	requested	\N	\N	PRES	2018-06-24 11:26:43.81091-06	331
+443	StemChange	entiend-	understand		\N	understood	\N	\N	PRES	2018-06-24 11:26:43.811642-06	324
+444	StemChange	anduv-	walk		\N	walked	\N	\N	PRET	2018-06-24 11:26:43.812328-06	315
+445	StemChange	sup-	know		\N	knew	\N	\N	PRET	2018-06-24 11:26:43.812976-06	338
+446	StemChange	quis-	want		\N	wanted	\N	\N	PRET	2018-06-24 11:26:43.81373-06	336
+447	StemChange	pus-	put		\N	put	\N	\N	PRET	2018-06-24 11:26:43.814224-06	334
+448	StemChange	vin-	come		\N	came	\N	\N	PRET	2018-06-24 11:26:43.814936-06	346
+449	StemChange	dij-	say		\N	said	\N	\N	PRET	2018-06-24 11:26:43.815792-06	321
+450	StemChange	tuv-	have		\N	had	\N	\N	PRET	2018-06-24 11:26:43.816356-06	343
+451	StemChange	hic-	do		\N	did	\N	\N	PRET	2018-06-24 11:26:43.816942-06	328
+452	StemChange	pud-	can		\N	could	\N	\N	PRET	2018-06-24 11:26:43.817449-06	333
+467	UniqV	tengo	have		\N	\N	1	1	PRES	2018-06-24 10:53:11.341841-06	343
+468	UniqV	hago	do		\N	\N	1	1	PRES	2018-06-24 10:53:11.342385-06	328
+469	UniqV	digo	say		\N	\N	1	1	PRES	2018-06-24 10:53:11.34283-06	321
+470	UniqV	dijeron	said		\N	\N	2	3	PRET	2018-06-24 10:53:11.343357-06	321
+471	UniqV	voy	go		\N	\N	1	1	PRES	2018-06-24 10:53:11.343851-06	329
+472	UniqV	vas	go		\N	\N	1	2	PRES	2018-06-24 10:53:11.344385-06	329
+473	UniqV	va	goes		\N	\N	1	3	PRES	2018-06-24 10:53:11.34485-06	329
+474	UniqV	vamos	go		\N	\N	2	1	PRES	2018-06-24 10:53:11.345309-06	329
+475	UniqV	van	go		\N	\N	2	3	PRES	2018-06-24 10:53:11.345931-06	329
+476	UniqV	veo	see		\N	\N	1	1	PRES	2018-06-24 10:53:11.346443-06	345
+477	UniqV	vi	saw		\N	\N	1	1	PRET	2018-06-24 10:53:11.346938-06	345
+478	UniqV	vio	saw		\N	\N	1	3	PRET	2018-06-24 10:53:11.347455-06	345
+479	UniqV	vimos	saw		\N	\N	2	1	PRET	2018-06-24 10:53:11.347861-06	345
+480	UniqV	doy	give		\N	\N	1	1	PRES	2018-06-24 10:53:11.348332-06	320
+481	UniqV	di	gave		\N	\N	1	1	PRET	2018-06-24 10:53:11.348782-06	320
+482	UniqV	diste	gave		\N	\N	1	2	PRET	2018-06-24 10:53:11.349211-06	320
+483	UniqV	dio	gave		\N	\N	1	3	PRET	2018-06-24 10:53:11.349614-06	320
+484	UniqV	dimos	gave		\N	\N	2	1	PRET	2018-06-24 10:53:11.349999-06	320
+485	UniqV	dieron	gave		\N	\N	2	3	PRET	2018-06-24 10:53:11.350387-06	320
+486	UniqV	sé	know		\N	\N	1	1	PRES	2018-06-24 10:53:11.350775-06	338
+487	UniqV	pongo	put		\N	\N	1	1	PRES	2018-06-24 10:53:11.351199-06	334
+488	UniqV	vengo	come		\N	\N	1	1	PRES	2018-06-24 10:53:11.351597-06	346
+489	UniqV	salgo	go out		\N	\N	1	1	PRES	2018-06-24 10:53:11.351985-06	339
+490	UniqV	parezco	look like		\N	\N	1	1	PRES	2018-06-24 10:53:11.352406-06	330
+491	UniqV	conozco	know		\N	\N	1	1	PRES	2018-06-24 10:53:11.352811-06	318
+492	UniqV	empecé	started		\N	\N	1	1	PRET	2018-06-24 10:53:11.353348-06	322
+493	UniqV	envío	sent		\N	\N	1	1	PRES	2018-06-24 10:53:11.354736-06	325
+494	UniqV	envías	sent		\N	\N	1	2	PRES	2018-06-24 10:53:11.355389-06	325
+495	UniqV	envía	sent		\N	\N	1	3	PRES	2018-06-24 10:53:11.355845-06	325
+496	UniqV	envían	sent		\N	\N	2	1	PRES	2018-06-24 10:53:11.356343-06	325
+498	Nonverb	en	in/on		\N	\N	\N	\N	\N	2018-06-27 13:09:57.624981-06	\N
+453	UniqV	soy	am	what	\N	\N	1	1	PRES	2018-06-24 10:53:11.331513-06	342
+454	UniqV	eres	are	what	\N	\N	1	2	PRES	2018-06-24 10:53:11.334102-06	342
+455	UniqV	es	is	what	\N	\N	1	3	PRES	2018-06-24 10:53:11.334799-06	342
+456	UniqV	somos	are	what	\N	\N	2	1	PRES	2018-06-24 10:53:11.335596-06	342
+457	UniqV	son	are	what	\N	\N	2	3	PRES	2018-06-24 10:53:11.336235-06	342
+458	UniqV	fui	was	what	\N	\N	1	1	PRET	2018-06-24 10:53:11.336833-06	342
+459	UniqV	fuiste	were	what	\N	\N	1	2	PRET	2018-06-24 10:53:11.337566-06	342
+460	UniqV	fue	was	what	\N	\N	1	3	PRET	2018-06-24 10:53:11.338114-06	342
+461	UniqV	fuimos	were	what	\N	\N	2	1	PRET	2018-06-24 10:53:11.338658-06	342
+462	UniqV	fueron	were	what	\N	\N	2	3	PRET	2018-06-24 10:53:11.339177-06	342
+463	UniqV	estoy	am	how	\N	\N	1	1	PRES	2018-06-24 10:53:11.339723-06	326
+464	UniqV	estás	are	how	\N	\N	1	2	PRES	2018-06-24 10:53:11.340233-06	326
+465	UniqV	está	is	how	\N	\N	1	3	PRES	2018-06-24 10:53:11.340796-06	326
+466	UniqV	están	are	how	\N	\N	2	3	PRES	2018-06-24 10:53:11.341339-06	326
+342	Inf	ser	be	what	\N	was	\N	\N	\N	2018-06-24 09:57:34.026682-06	\N
+499	Nonverb	prueba	test		tests	\N	\N	\N	\N	2018-06-27 15:35:58.629886-06	\N
+500	Nonverb	feliz	happy		\N	\N	\N	\N	\N	2018-06-27 16:00:33.653382-06	\N
+501	Nonverb	solo	alone		\N	\N	\N	\N	\N	2018-06-27 16:01:16.754582-06	\N
+502	Nonverb	triste	sad		\N	\N	\N	\N	\N	2018-06-27 16:02:01.449627-06	\N
+503	Nonverb	ya	yet		\N	\N	\N	\N	\N	2018-06-27 16:04:47.506244-06	\N
+504	Inf	vender	sell		\N	sold	\N	\N	\N	2018-06-27 16:05:02.651479-06	\N
+505	Nonverb	casa	house		houses	\N	\N	\N	\N	2018-06-27 16:06:23.119046-06	\N
+506	Nonverb	almuerzo	lunch		lunches	\N	\N	\N	\N	2018-06-27 16:10:03.657745-06	\N
+507	Nonverb	hoy	today		\N	\N	\N	\N	\N	2018-06-27 16:10:22.676819-06	\N
+508	Nonverb	demasiado	too much		\N	\N	\N	\N	\N	2018-06-27 16:11:43.342318-06	\N
+509	Inf	correr	run		\N	ran	\N	\N	\N	2018-06-27 16:13:24.686094-06	\N
+510	Inf	afuera	outside		\N		\N	\N	\N	2018-06-27 16:13:41.673097-06	\N
+511	Nonverb	porqué	why		\N	\N	\N	\N	\N	2018-06-27 16:14:22.939146-06	\N
+512	Nonverb	Pennsylvania	Pennsylvania		\N	\N	\N	\N	\N	2018-06-27 16:15:45.409633-06	\N
+513	Inf	crecer	grow up		\N	grew up	\N	\N	\N	2018-06-27 16:16:00.615531-06	\N
+514	Nonverb	aquí	here		\N	\N	\N	\N	\N	2018-06-27 16:17:37.925483-06	\N
+515	Nonverb	lo	him		\N	\N	\N	\N	\N	2018-06-27 16:21:02.916295-06	\N
+516	Nonverb	esa	that	fem.	\N	\N	\N	\N	\N	2018-06-27 16:34:31.058747-06	\N
+517	Nonverb	cuenta	account		accounts	\N	\N	\N	\N	2018-06-27 16:34:39.097297-06	\N
+518	Nonverb	no	not		\N	\N	\N	\N	\N	2018-06-27 16:35:32.851134-06	\N
+519	Nonverb	juego	game		games	\N	\N	\N	\N	2018-06-27 16:36:31.585454-06	\N
+520	Nonverb	que	that		\N	\N	\N	\N	\N	2018-06-27 16:36:37.387123-06	\N
+521	Nonverb	perfil	profile		profiles	\N	\N	\N	\N	2018-06-27 16:38:19.183428-06	\N
+522	Nonverb	tres	three		\N	\N	\N	\N	\N	2018-06-27 16:41:20.489311-06	\N
+523	Nonverb	vez	time	occasion	times	\N	\N	\N	\N	2018-06-27 16:42:00.67647-06	\N
+524	Nonverb	programa	program		programs	\N	\N	\N	\N	2018-07-17 08:24:58.585589-06	\N
+525	Nonverb	proyecto	project		projects	\N	\N	\N	\N	2018-07-17 08:26:04.045616-06	\N
+526	Inf	practicar	practice		\N	practiced	\N	\N	\N	2018-07-17 08:27:34.682383-06	\N
+527	Inf	revisar	review		\N	reviewed	\N	\N	\N	2018-07-17 08:29:02.066228-06	\N
+528	Nonverb	memoria	memory		memories	\N	\N	\N	\N	2018-07-17 08:29:22.454611-06	\N
+529	Nonverb	tarjeta	card		cards	\N	\N	\N	\N	2018-07-17 08:29:33.244463-06	\N
+530	Nonverb	diferente	different		\N	\N	\N	\N	\N	2018-07-17 08:30:09.528205-06	\N
+531	Nonverb	las	the	fem. pl.	\N	\N	\N	\N	\N	2018-07-17 08:32:06.026733-06	\N
+532	Nonverb	los	the	masc. pl.	\N	\N	\N	\N	\N	2018-07-17 08:32:19.32709-06	\N
+534	Nonverb	otra	other	fem.	others	\N	\N	\N	\N	2018-07-17 08:33:31.661991-06	\N
+533	Nonverb	otro	other	masc.	others	\N	\N	\N	\N	2018-07-17 08:32:38.307387-06	\N
+535	Nonverb	persona	person		persons	\N	\N	\N	\N	2018-07-17 08:35:10.365693-06	\N
+536	Nonverb	aprendizaje	learning		learnings	\N	\N	\N	\N	2018-07-17 08:40:55.205649-06	\N
+538	Inf	haber	be	exist	\N	existed	\N	\N	\N	2018-07-17 08:44:14.793496-06	\N
+539	UniqV	hay	is	exists	\N	\N	1	3	PRES	2018-07-17 08:45:19.386968-06	538
+542	Nonverb	mucho	many		many	\N	\N	\N	\N	2018-07-17 08:48:32.554069-06	\N
+543	Nonverb	idioma	language		languages	\N	\N	\N	\N	2018-07-17 08:49:33.488019-06	\N
+544	Inf	escuchar	listen		\N	listened	\N	\N	\N	2018-07-17 08:50:59.808615-06	\N
+546	Nonverb	ejemplo	example		examples	\N	\N	\N	\N	2018-07-17 08:51:50.906959-06	\N
+547	Inf	necesitar	need		\N	needed	\N	\N	\N	2018-07-17 08:52:50.335987-06	\N
+548	Nonverb	se	itself		\N	\N	\N	\N	\N	2018-07-17 08:54:04.413751-06	\N
+549	Inf	usar	use		\N	used	\N	\N	\N	2018-07-17 08:54:22.907576-06	\N
+550	Nonverb	palabra	word		words	\N	\N	\N	\N	2018-07-17 08:54:42.693204-06	\N
+551	Nonverb	cuál	which		\N	\N	\N	\N	\N	2018-07-17 08:55:57.61761-06	\N
+552	Nonverb	contexto	context		contexts	\N	\N	\N	\N	2018-07-17 08:56:04.870809-06	\N
+554	Inf	pertenecer	belong		\N	belonged	\N	\N	\N	2018-07-17 08:58:24.780015-06	\N
+555	Nonverb	perdón	pardon		pardons	\N	\N	\N	\N	2018-08-31 19:08:04.939549-06	\N
+557	Nonverb	usted	you	formal	you all	\N	\N	\N	\N	2018-08-31 19:10:16.458494-06	\N
+559	Nonverb	sí	yes		\N	\N	\N	\N	\N	2018-08-31 19:12:58.323924-06	\N
+561	Nonverb	muy	very		\N	\N	\N	\N	\N	2018-08-31 19:14:08.859179-06	\N
+562	Nonverb	gracias	thanks		\N	\N	\N	\N	\N	2018-08-31 19:15:21.864223-06	\N
+563	Nonverb	adiós	bye		\N	\N	\N	\N	\N	2018-08-31 19:16:02.683832-06	\N
+564	Nonverb	señorita	miss		\N	\N	\N	\N	\N	2018-08-31 19:16:19.062648-06	\N
+560	Nonverb	poco	little bit		\N	\N	\N	\N	\N	2018-08-31 19:13:10.526737-06	\N
+565	Nonverb	castellano	Castilian		Castilians	\N	\N	\N	\N	2018-09-01 16:35:55.371716-06	\N
+558	Nonverb	norteamericano	American	masc.	Americans	\N	\N	\N	\N	2018-08-31 19:11:52.624789-06	\N
+566	Nonverb	norteamericana	American	fem.	Americans	\N	\N	\N	\N	2018-09-01 16:49:51.953022-06	\N
+567	Nonverb	Chicago	Chicago		\N	\N	\N	\N	\N	2018-09-01 17:09:14.52525-06	\N
+568	Nonverb	señor	gentleman		gentlemen	\N	\N	\N	\N	2018-09-01 17:12:59.624633-06	\N
+556	Nonverb	señora	lady, ma'am, Mrs.		\N	\N	\N	\N	\N	2018-08-31 19:09:02.783478-06	\N
+569	Nonverb	noche	night		nights	\N	\N	\N	\N	2018-09-01 17:18:56.997228-06	\N
+570	Nonverb	México	Mexico		Mexicos	\N	\N	\N	\N	2018-09-01 17:20:15.384115-06	\N
+571	Nonverb	Norteamérica	America		Americas	\N	\N	\N	\N	2018-09-01 17:20:47.315399-06	\N
+572	Nonverb	Bolivia	Bolivia		Bolivias	\N	\N	\N	\N	2018-09-01 17:21:09.264117-06	\N
+573	Nonverb	García	Garcia		Garcias	\N	\N	\N	\N	2018-09-01 17:21:42.800262-06	\N
+574	Nonverb	Jones	Jones		\N	\N	\N	\N	\N	2018-09-01 17:22:05.963736-06	\N
+575	Nonverb	angel	angel		angels	\N	\N	\N	\N	2018-09-01 17:24:16.356883-06	\N
 \.
 
 
@@ -1452,7 +1450,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 575, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 580, true);
 
 
 --
@@ -1485,6 +1483,7 @@ COPY schema_version (installed_rank, version, description, type, script, checksu
 2	2	create leaf tables	SQL	V2__create_leaf_tables.sql	779524700	postgres	2018-06-27 09:31:17.474367	34	t
 3	3	create card embeddings	SQL	V3__create_card_embeddings.sql	-552310015	postgres	2018-06-27 19:43:19.226605	42	t
 1	1	create goals and cards	SQL	V1__create_goals_and_cards.sql	1062513313	postgres	2018-06-27 09:31:17.379663	46	t
+4	4	no unique es mixed	SQL	V4__no_unique_es_mixed.sql	604495595	postgres	2018-09-01 18:07:12.74282	129	t
 \.
 
 
@@ -1551,17 +1550,10 @@ CREATE UNIQUE INDEX idx_cards_leaf_ids_csv ON cards USING btree (leaf_ids_csv);
 
 
 --
--- Name: idx_leafs_es_lower; Type: INDEX; Schema: public; Owner: postgres
---
-
-CREATE UNIQUE INDEX idx_leafs_es_lower ON leafs USING btree (lower(es_mixed));
-
-
---
 -- Name: idx_leafs_es_mixed; Type: INDEX; Schema: public; Owner: postgres
 --
 
-CREATE UNIQUE INDEX idx_leafs_es_mixed ON leafs USING btree (es_mixed);
+CREATE INDEX idx_leafs_es_mixed ON leafs USING btree (es_mixed);
 
 
 --
@@ -1616,11 +1608,11 @@ ALTER TABLE ONLY card_embeddings
 
 
 --
--- Name: leafs fk_leafs_leafs_es_mixed; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+-- Name: leafs leafs_infinitive_leaf_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY leafs
-    ADD CONSTRAINT fk_leafs_leafs_es_mixed FOREIGN KEY (infinitive_es_mixed) REFERENCES leafs(es_mixed);
+    ADD CONSTRAINT leafs_infinitive_leaf_id_fkey FOREIGN KEY (infinitive_leaf_id) REFERENCES leafs(leaf_id);
 
 
 --
