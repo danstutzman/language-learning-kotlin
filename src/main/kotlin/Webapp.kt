@@ -1,17 +1,10 @@
 package com.danstutzman
 
 import com.danstutzman.bank.Bank
-import com.danstutzman.bank.CantMakeCard
 import com.danstutzman.bank.CardCreator
 import com.danstutzman.bank.GlossRow
-import com.danstutzman.bank.GlossRows
 import com.danstutzman.bank.Interpretation
-import com.danstutzman.bank.es.InfList
 import com.danstutzman.bank.es.Nonverb
-import com.danstutzman.bank.es.RegV
-import com.danstutzman.bank.es.RegVPatternList
-import com.danstutzman.bank.es.Tense
-import com.danstutzman.bank.es.UniqVList
 import com.danstutzman.db.CardEmbedding
 import com.danstutzman.db.CardRow
 import com.danstutzman.db.CardUpdate
@@ -22,11 +15,19 @@ import com.danstutzman.db.NonverbRow
 import com.danstutzman.db.Paragraph
 import com.danstutzman.db.StemChangeRow
 import com.danstutzman.db.UniqueConjugation
+import com.danstutzman.templates.GetCards
+import com.danstutzman.templates.GetInfinitives
+import com.danstutzman.templates.GetNonverbs
+import com.danstutzman.templates.GetParagraph
+import com.danstutzman.templates.GetParagraphs
+import com.danstutzman.templates.GetRoot
+import com.danstutzman.templates.GetStemChanges
+import com.danstutzman.templates.GetUniqueConjugations
+import com.danstutzman.templates.PostParagraphDisambiguateGoal
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import java.io.File
 import java.text.Normalizer
-import java.util.LinkedList
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import spark.Request
@@ -36,48 +37,9 @@ val STAGE0_NOT_READY_TO_TEST = 0
 val STAGE1_READY_TO_TEST = 1
 val STAGE5_SAME_AS_ENGLISH = 5
 
-fun escapeHTML(s: String): String {
-  val out = StringBuilder(Math.max(16, s.length))
-  for (c in s) {
-    if (c.toInt() > 127 ||
-      c == '"' ||
-      c == '<' ||
-      c == '>' ||
-      c == '&' ||
-      c == '\'') {
-      out.append("&#")
-      out.append(c.toInt())
-      out.append(';')
-    } else {
-      out.append(c)
-    }
-  }
-  return out.toString()
-}
-
 fun normalize(s: String): String = Normalizer.normalize(s, Normalizer.Form.NFC)
 
 fun blankToNull(s: String): String? = if (s == "") null else s
-
-fun htmlForGlossRowsTable(json: String): String {
-  val html = StringBuilder()
-  html.append("<table>")
-
-  html.append("<tr>")
-  for (row in GlossRows.expandGlossRows(json)) {
-    html.append("<td>${row.en}</td>")
-  }
-  html.append("</tr>")
-
-  html.append("<tr>")
-  for (row in GlossRows.expandGlossRows(json)) {
-    html.append("<td>${row.es}</td>")
-  }
-  html.append("</tr>")
-
-  html.append("</table>")
-  return html.toString()
-}
 
 fun findCardEmbeddings(longerLeafIdsCsv: String,
   shorterLeafIdsCsv: String) : List<CardEmbedding> {
@@ -104,46 +66,6 @@ if (longerLeafIdsCsv != shorterLeafIdsCsv &&
   }
 }
 return embeddings
-}
-
-fun getGlossRowsHtml(
-  goalId: Int,
-  cardId: Int,
-  cardByCardId: Map<Int, CardRow>,
-  cardEmbeddingsByCardId: Map<Int, List<CardEmbedding>>
- ): String {
-
-  val card = cardByCardId[cardId] ?: throw RuntimeException(
-    "Can't find cardId ${cardId} from goal ${goalId}")
-  val glossRows = GlossRows.expandGlossRows(card.glossRowsJson)
-  val openTagsByGlossRowIndex = glossRows.map { LinkedList<String>() }
-  val closeTagsByGlossRowIndex = glossRows.map { LinkedList<String>() }
-  val numLeafs = cardByCardId[cardId]!!.leafIdsCsv.split(",").size - 1
-  val cardEmbeddingsAndSelf = (cardEmbeddingsByCardId[cardId]!! +
-    listOf(CardEmbedding(cardId, cardId, 0, numLeafs))
-  ).sortedBy { it.lastLeafIndex - it.firstLeafIndex } // short ones first
-  for (embedding in cardEmbeddingsAndSelf) {
-    val stage = cardByCardId[embedding.shorterCardId]?.stage ?:
-      throw RuntimeException(
-        "Can't find shorterCard for embedding ${embedding}")
-    val style = if (embedding.firstLeafIndex == embedding.lastLeafIndex)
-      "goal-es-single-word" else "goal-es-multiple-words"
-    openTagsByGlossRowIndex[embedding.firstLeafIndex].push(
-      "<span class='${style} stage${stage}'>")
-    closeTagsByGlossRowIndex[embedding.lastLeafIndex].add("</span>")
-  }
-
-  val glossRowsHtml = StringBuilder()
-  for (i in 0..glossRows.size - 1) {
-    val es = glossRows[i].es
-    glossRowsHtml.append(openTagsByGlossRowIndex[i].joinToString(""))
-    glossRowsHtml.append(es.replace("-", ""))
-    glossRowsHtml.append(closeTagsByGlossRowIndex[i].joinToString(""))
-    if (!es.endsWith("-")) {
-      glossRowsHtml.append(" ")
-    }
-  }
-  return glossRowsHtml.toString()
 }
 
 fun createGoal(goalEs:String, cardCreators: List<CardCreator>, goalEn: String,
@@ -259,86 +181,16 @@ class Webapp(
       <body>"""
   val CLOSE_BODY_TAG = "</body></html>"
 
-  val getRoot = { _: Request, _: Response ->
-    val html = StringBuilder()
-    html.append(OPEN_BODY_TAG)
-    html.append("<li><a href='/cards'>Cards</a></li>\n")
-    html.append("<li><a href='/infinitives'>Infinitives</a></li>\n")
-    html.append("<li><a href='/nonverbs'>Nonverbs</a></li>\n")
-    html.append("<li><a href='/paragraphs'>Paragraphs</a></li>\n")
-    html.append("<li><a href='/stem-changes'>Stem Changes</a></li>\n")
-    html.append("<li><a href='/unique-conjugations'>Unique Conjugations</a></li>\n")
-    html.append(CLOSE_BODY_TAG)
-    html.toString()
-  }
+  val getRoot = { _: Request, _: Response -> GetRoot() }
 
   val getCards = { _: Request, _: Response ->
-    val html = StringBuilder()
-    html.append(OPEN_BODY_TAG)
-
-    html.append("<a href='/'>Back to home</a>\n")
-    html.append("<h1>Cards</h1>\n")
-    html.append("<table border='1'>\n")
-    html.append("  <tr>\n")
-    html.append("    <th>CardId</td>\n")
-    html.append("    <th>Gloss Rows</td>\n")
-    html.append("    <th>Last Seen At</td>\n")
-    html.append("    <th>Mnemonic</td>\n")
-    html.append("    <th>Prompt</td>\n")
-    html.append("    <th>Stage</td>\n")
-    html.append("  </tr>\n")
-    for (card in db.cardsTable.selectAll()) {
-      html.append("  <tr>\n")
-      html.append("    <td>${card.cardId}</td>\n")
-      html.append("    <td>${htmlForGlossRowsTable(card.glossRowsJson)}</td>\n")
-      html.append("    <td>${card.lastSeenAt}</td>\n")
-      html.append("    <td>${card.mnemonic}</td>\n")
-      html.append("    <td>${card.prompt}</td>\n")
-      html.append("    <td>${card.stage}</td>\n")
-      html.append("  </tr>\n")
-    }
-    html.append("</table><br>\n")
-    html.append(CLOSE_BODY_TAG)
-    html.toString()
+    val cardRows = db.cardsTable.selectAll()
+    GetCards(cardRows)
   }
 
   val getNonverbs = { _: Request, _: Response ->
-    val html = StringBuilder()
-    html.append(OPEN_BODY_TAG)
-    html.append("<a href='/'>Back to home</a>\n")
-    html.append("<h1>Nonverbs</h1>\n")
-    html.append("<form method='POST' action='/nonverbs'>\n")
-    html.append("<table border='1'>\n")
-    html.append("  <tr>\n")
-    html.append("    <th>LeafId</td>\n")
-    html.append("    <th>Spanish</td>\n")
-    html.append("    <th>English</td>\n")
-    html.append("    <th>English disambiguation</td>\n")
-    html.append("    <th>English plural</td>\n")
-    html.append("    <th></td>\n")
-    html.append("  </tr>\n")
-    for (row in db.leafsTable.selectAllNonverbRows()) {
-      html.append("  <tr>\n")
-      html.append("    <td>${row.leafId}</td>\n")
-      html.append("    <td>${row.esMixed}</td>\n")
-      html.append("    <td>${row.en}</td>\n")
-      html.append("    <td>${row.enDisambiguation}</td>\n")
-      html.append("    <td>${row.enPlural ?: ""}</td>\n")
-      html.append("    <td><input type='submit' name='deleteLeaf${row.leafId}' value='Delete' onClick='return confirm(\"Delete nonverb?\")'></td>\n")
-      html.append("  </tr>\n")
-    }
-    html.append("  <tr>\n")
-    html.append("    <th></td>\n")
-    html.append("    <th><input type='text' name='es_mixed'></td>\n")
-    html.append("    <th><input type='text' name='en'></td>\n")
-    html.append("    <th><input type='text' name='en_disambiguation'></td>\n")
-    html.append("    <th><input type='text' name='en_plural'></td>\n")
-    html.append("    <th><input type='submit' name='newNonverb' value='Insert'></td>\n")
-    html.append("  </tr>\n")
-    html.append("</table>\n")
-    html.append("</form>\n")
-    html.append(CLOSE_BODY_TAG)
-    html.toString()
+    val nonverbs = db.leafsTable.selectAllNonverbRows()
+    GetNonverbs(nonverbs)
   }
 
   val postNonverbs = { req: Request, res: Response ->
@@ -365,42 +217,8 @@ class Webapp(
   }
 
   val getInfinitives = { _: Request, _: Response ->
-    val html = StringBuilder()
-    html.append(OPEN_BODY_TAG)
-    html.append("<a href='/'>Back to home</a>\n")
-    html.append("<h1>Infinitives</h1>\n")
-    html.append("<form method='POST' action='/infinitives'>\n")
-    html.append("<table border='1'>\n")
-    html.append("  <tr>\n")
-    html.append("    <th>LeafId</td>\n")
-    html.append("    <th>Spanish</td>\n")
-    html.append("    <th>English</td>\n")
-    html.append("    <th>English disambiguation</td>\n")
-    html.append("    <th>English past</td>\n")
-    html.append("    <th></td>\n")
-    html.append("  </tr>\n")
-    for (infinitive in db.leafsTable.selectAllInfinitives()) {
-      html.append("  <tr>\n")
-      html.append("    <td>${infinitive.leafId}</td>\n")
-      html.append("    <td>${infinitive.esMixed}</td>\n")
-      html.append("    <td>${infinitive.en}</td>\n")
-      html.append("    <td>${infinitive.enDisambiguation}</td>\n")
-      html.append("    <td>${infinitive.enPast}</td>\n")
-      html.append("    <td><input type='submit' name='deleteLeaf${infinitive.leafId}' value='Delete' onClick='return confirm(\"Delete infinitive?\")'></td>\n")
-      html.append("  </tr>\n")
-    }
-    html.append("  <tr>\n")
-    html.append("    <th></td>\n")
-    html.append("    <th><input type='text' name='es_mixed'></td>\n")
-    html.append("    <th><input type='text' name='en'></td>\n")
-    html.append("    <th><input type='text' name='en_disambiguation'></td>\n")
-    html.append("    <th><input type='text' name='en_past'></td>\n")
-    html.append("    <th><input type='submit' name='newInfinitive' value='Insert'></td>\n")
-    html.append("  </tr>\n")
-    html.append("</table>\n")
-    html.append("</form>\n")
-    html.append(CLOSE_BODY_TAG)
-    html.toString()
+    val infinitives = db.leafsTable.selectAllInfinitives()
+    GetInfinitives(infinitives)
   }
 
   val postInfinitives = { req: Request, res: Response ->
@@ -452,39 +270,8 @@ class Webapp(
     val cardByCardId = db.cardsTable.selectWithCardIdIn(allCardIds)
       .map { Pair(it.cardId, it) }.toMap()
 
-    val html = StringBuilder()
-    html.append(OPEN_BODY_TAG)
-
-    html.append("<a href='/'>Back to home</a>\n")
-    html.append("<h1>Paragraphs</h1>\n")
-    for (paragraph in paragraphs) {
-      html.append("<h2>Paragraph ${paragraph.paragraphId}: ${paragraph.topic}")
-      html.append("  enabled=${paragraph.enabled}</h2>\n")
-      html.append("<table border='1'>\n")
-      for (goal in goalsByParagraphId[paragraph.paragraphId]!!) {
-        val glossRowsHtml = getGlossRowsHtml(goal.goalId, goal.cardId,
-          cardByCardId, cardEmbeddingsByCardId)
-
-        html.append("  <tr>\n")
-        html.append("    <td>${goal.en}</td>\n")
-        html.append("    <td>${glossRowsHtml}</td>\n")
-        html.append("  </tr>\n")
-      }
-      html.append("</table>\n")
-      html.append("<p><a href='/paragraphs/${paragraph.paragraphId}'>Edit</a></p>\n")
-    }
-
-    html.append("<h2>Add paragraph</h2>\n")
-    html.append("<form method='POST' action='/paragraphs'>\n")
-    html.append("  <label for='topic'>Topic</label><br>\n")
-    html.append("  <input type='text' name='topic'><br>\n")
-    html.append("  <label for='enabled'>Enabled</label><br>\n")
-    html.append("  <input type='checkbox' name='enabled'><br>\n")
-    html.append("  <input type='submit' name='submit' value='Add Paragraph'>\n")
-    html.append("</form>\n")
-
-    html.append(CLOSE_BODY_TAG)
-    html.toString()
+    GetParagraphs(paragraphs, goalsByParagraphId, cardByCardId,
+      cardEmbeddingsByCardId)
   }
 
   val postParagraphs = { req: Request, res: Response ->
@@ -499,47 +286,7 @@ class Webapp(
     val paragraph = db.paragraphsTable.selectById(paragraphId)!!
     val goals = db.goalsTable.selectWithParagraphIdIn(
       listOf(paragraph.paragraphId))
-
-    val html = StringBuilder()
-    html.append(OPEN_BODY_TAG)
-
-    html.append("<a href='/paragraphs'>Back to paragraphs</a>\n")
-    html.append("<h1>Edit Paragraph ${paragraph.paragraphId}</h1>\n")
-    html.append("<form method='POST' action='/paragraphs/${paragraph.paragraphId}'>\n")
-    html.append("  <label for='en'>Topic</label><br>\n")
-    html.append("  <input type='text' name='topic' value='${escapeHTML(paragraph.topic)}'><br>\n")
-    html.append("  <label for='enabled'>Enabled</label><br>\n")
-    html.append("  <input type='checkbox' name='enabled' ${if (paragraph.enabled) "checked" else ""}><br>\n")
-    html.append("  <input type='submit' name='submit' value='Update Paragraph'>\n")
-    html.append("  <input type='submit' name='submit' value='Delete Paragraph' onClick='return confirm(\"Delete paragraph?\")'>\n")
-    html.append("</form>\n")
-    html.append("<hr>")
-
-    html.append("<form method='POST' action='/paragraphs/${paragraph.paragraphId}/disambiguate-goal'>\n")
-    html.append("  <table>\n")
-    html.append("    <tr>\n")
-    html.append("      <th>Goal ID</th>\n")
-    html.append("      <th>English</th>\n")
-    html.append("      <th>Spanish</th>\n")
-    html.append("    </tr>\n")
-    for (goal in goals) {
-      html.append("    <tr>")
-      html.append("      <td>${goal.goalId}</td>\n")
-      html.append("      <td>${goal.en}</td>\n")
-      html.append("      <td>${goal.es}</td>\n")
-      html.append("    </tr>")
-    }
-    html.append("    <tr>")
-    html.append("      <td>New</td>\n")
-    html.append("      <td><input type='text' name='en' value=''></td>\n")
-    html.append("      <td><input type='text' name='es' value=''></td>\n")
-    html.append("      <td><input type='submit' name='submit' value='Add Goal to Paragraph'></td>\n")
-    html.append("    </tr>")
-    html.append("  </table>\n")
-    html.append("</form>\n")
-
-    html.append(CLOSE_BODY_TAG)
-    html.toString()
+    GetParagraph(paragraph, goals)
   }
 
   val postParagraph = { req: Request, res: Response ->
@@ -573,48 +320,8 @@ class Webapp(
     val words = bank.splitEsPhrase(phraseEs)
     val interpretationsByWordNum = words.map { bank.interpretEsWord(it) }
 
-    val html = StringBuilder()
-    html.append(OPEN_BODY_TAG)
-    html.append("<a href='/'>Back to home</a>\n")
-    html.append("<form method='POST' action='/paragraphs/${paragraphId}/add-goal'>\n")
-    html.append("<h1>Disambiguate Goal</h1>\n")
-    html.append("<p>Phrase to disambiguate is: <i>${escapeHTML(phraseEs)}</i></p>\n")
-    html.append("<input type='hidden' name='en' value='${escapeHTML(phraseEn)}'>\n")
-    html.append("<input type='hidden' name='es' value='${escapeHTML(phraseEs)}'>\n")
-    for ((wordNum, word) in words.withIndex()) {
-      val interpretations = interpretationsByWordNum[wordNum]
-      val existingInterpretations = interpretations.filter { it.cardCreator != null }
-      val bestInterpretation: Interpretation? =
-        if (existingInterpretations.size == 1) existingInterpretations[0]
-        else if (interpretations.size == 1) interpretations[0]
-        else null
-
-      html.append("<h2>${word}</h2>")
-      for ((interpretationNum, interpretation) in
-        interpretations.sortedBy { it.cardCreator == null }.withIndex()) {
-        val checked = if (interpretation == bestInterpretation) "checked='checked'" else ""
-        if (interpretation.cardCreator != null) {
-          html.append("<input type='radio' name='word.${wordNum}' value='${interpretationNum}' ${checked}>")
-          html.append("<input type='hidden' name='word.${wordNum}.${interpretationNum}.leafIds' value='${escapeHTML(interpretation.cardCreator.serializeLeafIds())}'>")
-          html.append("<input type='hidden' name='word.${wordNum}.${interpretationNum}.exists' value='true'>")
-          html.append("Use existing ${interpretation.type} (${interpretation.cardCreator.explainDerivation()})")
-        } else {
-          html.append("<input type='radio' name='word.${wordNum}' value='${interpretationNum}' ${checked}>")
-          html.append("<input type='hidden' name='word.${wordNum}.${interpretationNum}.exists' value='false'>")
-          html.append("Add new ${interpretation.type}")
-          html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.es' value='${escapeHTML(word)}'> (check case)")
-          html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.en' placeholder='English'>")
-          html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.enDisambiguation' placeholder='English disambiguation (optional)'>")
-          html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.enPlural' placeholder='English plural (optional)'>")
-        }
-        html.append("<input type='hidden' name='word.${wordNum}.${interpretationNum}.type' value='${interpretation.type}'>")
-        html.append("<br>")
-      }
-    }
-    html.append("<p><input type='submit' name='submit' value='Add Goal'></p>")
-    html.append("</form>")
-    html.append(CLOSE_BODY_TAG)
-    html.toString()
+    PostParagraphDisambiguateGoal(paragraphId, phraseEn, phraseEs, words,
+      interpretationsByWordNum)
   }
 
   val postParagraphAddGoal = { req: Request, res: Response ->
@@ -673,53 +380,7 @@ class Webapp(
       uniqueConjugations.map { it.infLeafId }.distinct()
     ).map { it.leafId to it.esMixed }.toMap()
 
-    val html = StringBuilder()
-    html.append(OPEN_BODY_TAG)
-    html.append("<a href='/'>Back to home</a>\n")
-    html.append("<h1>Unique Conjugations</h1>\n")
-    html.append("<form method='POST' action='/unique-conjugations'>\n")
-    html.append("<table border='1'>\n")
-    html.append("  <tr>\n")
-    html.append("    <th>LeafId</td>\n")
-    html.append("    <th>Spanish</td>\n")
-    html.append("    <th>English</td>\n")
-    html.append("    <th>English disambiguation</td>\n")
-    html.append("    <th>Infinitive</td>\n")
-    html.append("    <th>Number</td>\n")
-    html.append("    <th>Person</td>\n")
-    html.append("    <th>Tense</td>\n")
-    html.append("    <th></td>\n")
-    html.append("  </tr>\n")
-    for (uniqueConjugation in uniqueConjugations) {
-      val infEs = infEsByLeafId[uniqueConjugation.infLeafId]
-
-      html.append("  <tr>\n")
-      html.append("    <td>${uniqueConjugation.leafId}</td>\n")
-      html.append("    <td>${uniqueConjugation.esMixed}</td>\n")
-      html.append("    <td>${uniqueConjugation.en}</td>\n")
-      html.append("    <td>${uniqueConjugation.enDisambiguation}</td>\n")
-      html.append("    <td>${infEs}</td>\n")
-      html.append("    <td>${uniqueConjugation.number}</td>\n")
-      html.append("    <td>${uniqueConjugation.person}</td>\n")
-      html.append("    <td>${uniqueConjugation.tense}</td>\n")
-      html.append("    <td><input type='submit' name='deleteLeaf${uniqueConjugation.leafId}' value='Delete' onClick='return confirm(\"Delete conjugation?\")'></td>\n")
-      html.append("  </tr>\n")
-    }
-    html.append("  <tr>\n")
-    html.append("    <th></td>\n")
-    html.append("    <th><input type='text' name='es_mixed'></td>\n")
-    html.append("    <th><input type='text' name='en'></td>\n")
-    html.append("    <th><input type='text' name='en_disambiguation'></td>\n")
-    html.append("    <th><input type='text' name='infinitive_es_mixed'></td>\n")
-    html.append("    <th><select name='number'><option></option><option>1</option><option>2</option></select>\n")
-    html.append("    <th><select name='person'><option></option><option>1</option><option>2</option><option>3</option></select></td>\n")
-    html.append("    <th><select name='tense'><option></option><option>PRES</option><option>PRET</option></select></td>\n")
-    html.append("    <th><input type='submit' name='newUniqueConjugation' value='Insert'></td>\n")
-    html.append("  </tr>\n")
-    html.append("</table>\n")
-    html.append("</form>\n")
-    html.append(CLOSE_BODY_TAG)
-    html.toString()
+    GetUniqueConjugations(uniqueConjugations, infEsByLeafId)
   }
 
   val postUniqueConjugations = { req: Request, res: Response ->
@@ -756,50 +417,7 @@ class Webapp(
     val infEsMixedByLeafId = db.leafsTable.selectInfinitivesWithLeafIdIn(
       stemChanges.map { it.infLeafId }.distinct()
     ).map { it.leafId to it.esMixed }.toMap()
-
-    val html = StringBuilder()
-    html.append(OPEN_BODY_TAG)
-    html.append("<a href='/'>Back to home</a>\n")
-    html.append("<h1>Stem Changes</h1>\n")
-    html.append("<form method='POST' action='/stem-changes'>\n")
-    html.append("<table border='1'>\n")
-    html.append("  <tr>\n")
-    html.append("    <th>LeafId</td>\n")
-    html.append("    <th>Infinitive</td>\n")
-    html.append("    <th>Stem</td>\n")
-    html.append("    <th>Tense</td>\n")
-    html.append("    <th>English</td>\n")
-    html.append("    <th>English past</td>\n")
-    html.append("    <th>English disambiguation</td>\n")
-    html.append("    <th></th>\n")
-    html.append("  </tr>\n")
-    for (row in stemChanges) {
-      val infEsMixed = infEsMixedByLeafId[row.infLeafId]
-      html.append("  <tr>\n")
-      html.append("    <td>${row.leafId}</td>\n")
-      html.append("    <td>${infEsMixed}</td>\n")
-      html.append("    <td>${row.esMixed}</td>\n")
-      html.append("    <td>${row.tense}</td>\n")
-      html.append("    <td>${row.en}</td>\n")
-      html.append("    <td>${row.enPast}</td>\n")
-      html.append("    <td>${row.enDisambiguation}</td>\n")
-      html.append("    <td><input type='submit' name='deleteLeaf${row.leafId}' value='Delete' onClick='return confirm(\"Delete stem change?\")'></td>\n")
-      html.append("  </tr>\n")
-    }
-    html.append("  <tr>\n")
-    html.append("    <th></td>\n")
-    html.append("    <th><input type='text' name='infinitive_es_mixed'></td>\n")
-    html.append("    <th><input type='text' name='es_mixed'></td>\n")
-    html.append("    <th><select name='tense'><option></option><option>PRES</option><option>PRET</option></select></td>\n")
-    html.append("    <th><input type='text' name='en'></td>\n")
-    html.append("    <th><input type='text' name='en_past'></td>\n")
-    html.append("    <th><input type='text' name='en_disambiguation'></td>\n")
-    html.append("    <th><input type='submit' name='newStemChange' value='Insert'></td>\n")
-    html.append("  </tr>\n")
-    html.append("</table>\n")
-    html.append("</form>\n")
-    html.append(CLOSE_BODY_TAG)
-    html.toString()
+    GetStemChanges(stemChanges, infEsMixedByLeafId)
   }
 
   val postStemChanges = { req: Request, res: Response ->
@@ -829,7 +447,6 @@ class Webapp(
 
     res.redirect("/stem-changes")
   }
-
 
   val getApi = { _: Request, res: Response ->
     val bank = Bank(db)
