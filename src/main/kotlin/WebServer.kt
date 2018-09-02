@@ -7,7 +7,9 @@ import com.danstutzman.routes.GetEsInfinitives
 import com.danstutzman.routes.GetEsNonverbs
 import com.danstutzman.routes.GetEsStemChanges
 import com.danstutzman.routes.GetEsUniqueConjugations
+import com.danstutzman.routes.GetFrInfinitives
 import com.danstutzman.routes.GetFrNonverbs
+import com.danstutzman.routes.GetFrUniqueConjugations
 import com.danstutzman.routes.GetParagraph
 import com.danstutzman.routes.GetParagraphs
 import com.danstutzman.routes.GetRoot
@@ -16,7 +18,9 @@ import com.danstutzman.routes.PostEsInfinitives
 import com.danstutzman.routes.PostEsNonverbs
 import com.danstutzman.routes.PostEsStemChanges
 import com.danstutzman.routes.PostEsUniqueConjugations
+import com.danstutzman.routes.PostFrInfinitives
 import com.danstutzman.routes.PostFrNonverbs
+import com.danstutzman.routes.PostFrUniqueConjugations
 import com.danstutzman.routes.PostParagraph
 import com.danstutzman.routes.PostParagraphAddGoal
 import com.danstutzman.routes.PostParagraphDisambiguateGoal
@@ -87,6 +91,7 @@ fun main(args: Array<String>) {
   }
 
   service.get("/") { _: Request, _: Response -> GetRoot() }
+
   service.get("/es/infinitives") { _: Request, _: Response ->
     GetEsInfinitives(db) }
   service.post("/es/infinitives") { req: Request, res: Response ->
@@ -97,6 +102,16 @@ fun main(args: Array<String>) {
       normalize(req.queryParams("en_past"))!!,
       normalize(req.queryParams("es_mixed"))!!)
     res.redirect("/es/infinitives")
+  }
+  service.get("/fr/infinitives") { _: Request, _: Response ->
+    GetFrInfinitives(db) }
+  service.post("/fr/infinitives") { req: Request, res: Response ->
+    PostFrInfinitives(db, extractLeafIdsToDelete(req),
+      req.queryParams("newInfinitive") != null,
+      normalize(req.queryParams("en"))!!,
+      normalize(req.queryParams("en_past"))!!,
+      normalize(req.queryParams("fr_mixed"))!!)
+    res.redirect("/fr/infinitives")
   }
 
   service.get("/es/nonverbs") { _: Request, _: Response -> GetEsNonverbs(db) }
@@ -171,6 +186,7 @@ fun main(args: Array<String>) {
       normalize(req.queryParams("en_disambiguation"))!!)
     res.redirect("/es/stem-changes")
   }
+
   service.get("/es/unique-conjugations") { _: Request, _: Response ->
     GetEsUniqueConjugations(db) }
   service.post("/es/unique-conjugations") { req: Request, res: Response ->
@@ -185,6 +201,20 @@ fun main(args: Array<String>) {
       normalize(req.queryParams("en_disambiguation"))!!)
     res.redirect("/es/unique-conjugations")
   }
+  service.get("/fr/unique-conjugations") { _: Request, _: Response ->
+    GetFrUniqueConjugations(db) }
+  service.post("/fr/unique-conjugations") { req: Request, res: Response ->
+    PostFrUniqueConjugations(db, extractLeafIdsToDelete(req),
+      req.queryParams("newUniqueConjugation") != null,
+      normalize(req.queryParams("infinitive_fr_mixed"))!!,
+      normalize(req.queryParams("fr_mixed"))!!,
+      normalize(req.queryParams("en"))!!,
+      req.queryParams("number")!!.toInt(),
+      req.queryParams("person")!!.toInt(),
+      req.queryParams("tense")!!)
+    res.redirect("/fr/unique-conjugations")
+  }
+
   service.get("/es/api") { _: Request, res: Response ->
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Content-Type", "application/json")

@@ -1,6 +1,6 @@
 package com.danstutzman.bank.es
 
-enum class Tense {
+enum class EsTense {
   PRES,
   PRET
 }

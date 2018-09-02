@@ -2,6 +2,7 @@ package com.danstutzman.bank.es
 
 import com.danstutzman.bank.CardCreator
 import com.danstutzman.bank.GlossRow
+import com.danstutzman.bank.V
 import com.danstutzman.bank.en.EnVerbs
 
 data class RegV (
@@ -26,8 +27,8 @@ data class RegV (
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(inf.leafId,
       when (pattern.tense) {
-        Tense.PRES -> inf.enPresent
-        Tense.PRET -> inf.enPast
+        EsTense.PRES -> inf.enPresent
+        EsTense.PRET -> inf.enPast
       },
       getEsVerbPrefix())) +
     pattern.getGlossRows()

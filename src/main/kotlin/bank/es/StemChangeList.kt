@@ -12,7 +12,7 @@ class StemChangeList {
     stemChanges = db.esStemChangesTable.selectAll().map {
       StemChange(
         it.leafId,
-        Tense.valueOf(it.tense),
+        EsTense.valueOf(it.tense),
         infList.byLeafId(it.infLeafId),
         it.esMixed,
         it.en,

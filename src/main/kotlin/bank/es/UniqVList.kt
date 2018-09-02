@@ -17,7 +17,7 @@ class UniqVList {
         inf = infList.byLeafId(it.infLeafId),
         number = it.number,
         person = it.person,
-        tense = Tense.valueOf(it.tense),
+        tense = EsTense.valueOf(it.tense),
         enDisambiguation =
           if (it.enDisambiguation == "") null else it.enDisambiguation
       )
@@ -26,8 +26,8 @@ class UniqVList {
     uniqVByEsLower = uniqVs.map { Pair(it.esMixed.toLowerCase(), it) }.toMap()
   }
 
-  fun byInfNumberPersonTense(inf: Inf, number: Int, person: Int, tense: Tense):
-    UniqV? {
+  fun byInfNumberPersonTense(inf: Inf, number: Int, person: Int,
+    tense: EsTense): UniqV? {
     for (uniqV in uniqVs) {
       if (uniqV.inf.esMixed == inf.esMixed &&
         uniqV.number == number &&

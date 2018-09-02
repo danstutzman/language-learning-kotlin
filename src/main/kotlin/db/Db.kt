@@ -22,7 +22,9 @@ class Db(
   val esNonverbsTable = EsNonverbsTable(conn)
   val esStemChangesTable = EsStemChangesTable(conn)
   val esUniqueConjugationsTable = EsUniqueConjugationsTable(conn)
+  val frInfinitivesTable = FrInfinitivesTable(conn)
   val frNonverbsTable = FrNonverbsTable(conn)
+  val frUniqueConjugationsTable = FrUniqueConjugationsTable(conn)
   val goalsTable = GoalsTable(conn)
   val paragraphsTable = ParagraphsTable(conn)
 }

@@ -1,24 +1,20 @@
-package com.danstutzman.bank.es
+package com.danstutzman.bank.fr
 
 import com.danstutzman.bank.CardCreator
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.V
 
-data class Inf (
+data class FrInf (
   val leafId: Int,
-  val esMixed: String,
+  val frMixed: String,
   val enPresent: String,
-  val enPast: String,
-  val enDisambiguation: String?
+  val enPast: String
 ): CardCreator, V {
   override fun explainDerivation(): String =
-    "infinitive=${esMixed} enPresent=${enPresent} " +
-    "enDisambiguation=${enDisambiguation}"
+    "infinitive=${frMixed} enPresent=${enPresent}"
   override fun getChildCardCreators(): List<CardCreator> = listOf<CardCreator>()
   override fun getGlossRows(): List<GlossRow> =
-    listOf(GlossRow(leafId, enPresent, esMixed))
-  override fun getPrompt(): String =
-    if (enDisambiguation != null) "to ${enPresent} (${enDisambiguation})"
-      else "to ${enPresent}"
+    listOf(GlossRow(leafId, enPresent, frMixed))
+  override fun getPrompt(): String = "to ${enPresent}"
   override fun serializeLeafIds(): String = "leafId=${leafId}"
 }

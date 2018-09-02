@@ -5,8 +5,10 @@ fun GetRoot(): String {
   html.append(OPEN_BODY_TAG)
 
   html.append("<h2>French</h2>\n")
+  html.append("<li><a href='/fr/infinitives'>Infinitives</a></li>\n")
   html.append("<li><a href='/fr/nonverbs'>Nonverbs</a></li>\n")
   html.append("<li><a href='/fr/paragraphs'>Paragraphs</a></li>\n")
+  html.append("<li><a href='/fr/unique-conjugations'>Unique Conjugations</a></li>\n")
 
   html.append("<h2>Spanish</h2>\n")
   html.append("<li><a href='/es/infinitives'>Infinitives</a></li>\n")

@@ -21,7 +21,7 @@ data class RegVPattern (
   val infCategory: InfCategory,
   val number: Int,
   val person: Int,
-  val tense: Tense,
+  val tense: EsTense,
   val esLower: String
 ): CardCreator {
   override fun explainDerivation(): String =
@@ -38,14 +38,14 @@ data class RegVPattern (
     val enVerbSuffix =
       EnVerbs.NUMBER_AND_PERSON_TO_EN_VERB_SUFFIX[Pair(number, person)]!!
     return when (tense) {
-      Tense.PRES -> when (infCategory) {
+      EsTense.PRES -> when (infCategory) {
         InfCategory.AR   -> "(${enPronoun} work${enVerbSuffix})"
         InfCategory.ER   -> "(${enPronoun} learn${enVerbSuffix})"
         InfCategory.ERIR -> "(${enPronoun} learn${enVerbSuffix})"
         InfCategory.IR   -> "(${enPronoun} live${enVerbSuffix})"
         InfCategory.STEMPRET -> throw RuntimeException("Shouldn't happen")
       }
-      Tense.PRET -> when (infCategory) {
+      EsTense.PRET -> when (infCategory) {
         InfCategory.AR   -> "(${enPronoun} worked)"
         InfCategory.ER   -> "(${enPronoun} learned)"
         InfCategory.ERIR -> "(${enPronoun} learned)"

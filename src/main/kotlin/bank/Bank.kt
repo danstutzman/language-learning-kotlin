@@ -14,9 +14,10 @@ import com.danstutzman.bank.es.RegVPatternList
 import com.danstutzman.bank.es.StemChange
 import com.danstutzman.bank.es.StemChangeList
 import com.danstutzman.bank.es.StemChangeV
-import com.danstutzman.bank.es.Tense
 import com.danstutzman.bank.es.UniqV
 import com.danstutzman.bank.es.UniqVList
+import com.danstutzman.bank.fr.FrInfList
+import com.danstutzman.bank.fr.FrUniqVList
 import com.danstutzman.db.CardUpdate
 import com.danstutzman.db.Db
 import com.google.gson.Gson
@@ -55,6 +56,7 @@ class Bank(
     esInfList, UniqVList(esInfList, db), RegVPatternList(),
     StemChangeList(esInfList, db))
   val frNonverbList = com.danstutzman.bank.fr.NonverbList(db)
+  val frUniqVList   = FrUniqVList(FrInfList(db), db)
 
   fun getCardDownloads(lang: String): Map<String, List<CardDownload>> {
     val paragraphIds = db.paragraphsTable.selectForLang(lang)
@@ -102,7 +104,8 @@ class Bank(
       esNonverbList.interpretEsLower(word.toLowerCase()) +
       esVCloud.interpretEsLower(word.toLowerCase())
     else if (lang == "fr")
-      frNonverbList.interpretFrLower(word.toLowerCase())
+      frNonverbList.interpretFrLower(word.toLowerCase()) +
+      frUniqVList.interpretFrLower(word.toLowerCase())
     else throw RuntimeException("Unknown lang ${lang}")
 
   fun saveCardUpdates(cardUpdates: List<CardUpdate>) {

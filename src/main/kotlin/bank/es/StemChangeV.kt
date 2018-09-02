@@ -3,6 +3,7 @@ package com.danstutzman.bank.es
 import com.danstutzman.bank.CardCreator
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.Interpretation
+import com.danstutzman.bank.V
 import com.danstutzman.bank.en.EnVerbs
 
 data class StemChangeV (

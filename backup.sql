@@ -217,14 +217,15 @@ CREATE TABLE leafs (
     infinitive_leaf_id integer,
     fr_mixed text,
     CONSTRAINT leafs_en_disambiguation_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'EsNonverb'::text, 'EsInf'::text])) AND (en_disambiguation IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'EsNonverb'::text, 'EsInf'::text])) AND (en_disambiguation IS NULL)))),
-    CONSTRAINT leafs_en_past_check CHECK ((((leaf_type = ANY (ARRAY['EsInf'::text, 'EsStemChange'::text])) AND (en_past IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsInf'::text, 'EsStemChange'::text])) AND (en_past IS NULL)))),
+    CONSTRAINT leafs_en_past_check CHECK ((((leaf_type = ANY (ARRAY['EsInf'::text, 'EsStemChange'::text, 'FrInf'::text])) AND (en_past IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsInf'::text, 'EsStemChange'::text, 'FrInf'::text])) AND (en_past IS NULL)))),
     CONSTRAINT leafs_en_plural_check CHECK (((leaf_type = 'EsNonverb'::text) OR ((leaf_type <> 'EsNonverb'::text) AND (en_plural IS NULL)))),
     CONSTRAINT leafs_es_mixed_check CHECK ((((leaf_type = ANY (ARRAY['EsInf'::text, 'EsStemChange'::text, 'EsUniqV'::text, 'EsNonverb'::text])) AND (es_mixed IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsInf'::text, 'EsStemChange'::text, 'EsUniqV'::text, 'EsNonverb'::text])) AND (es_mixed IS NULL)))),
-    CONSTRAINT leafs_infinitive_leaf_id_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text])) AND (infinitive_leaf_id IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text])) AND (infinitive_leaf_id IS NULL)))),
-    CONSTRAINT leafs_leaf_type_check CHECK ((leaf_type = ANY (ARRAY['EsInf'::text, 'EsNonverb'::text, 'EsStemChange'::text, 'EsUniqV'::text, 'FrNonverb'::text]))),
-    CONSTRAINT leafs_number_check CHECK ((((leaf_type = 'EsUniqV'::text) AND (number = ANY (ARRAY[1, 2]))) OR ((leaf_type <> 'EsUniqV'::text) AND (number IS NULL)))),
-    CONSTRAINT leafs_person_check CHECK ((((leaf_type = 'EsUniqV'::text) AND (person = ANY (ARRAY[1, 2, 3]))) OR ((leaf_type <> 'EsUniqV'::text) AND (person IS NULL)))),
-    CONSTRAINT leafs_tense_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text])) AND (tense = ANY (ARRAY['PRES'::text, 'PRET'::text]))) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text])) AND (person IS NULL))))
+    CONSTRAINT leafs_fr_mixed_check CHECK ((((leaf_type = ANY (ARRAY['FrInf'::text, 'FrUniqV'::text, 'FrNonverb'::text])) AND (fr_mixed IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['FrInf'::text, 'FrUniqV'::text, 'FrNonverb'::text])) AND (fr_mixed IS NULL)))),
+    CONSTRAINT leafs_infinitive_leaf_id_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text])) AND (infinitive_leaf_id IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text])) AND (infinitive_leaf_id IS NULL)))),
+    CONSTRAINT leafs_leaf_type_check CHECK ((leaf_type = ANY (ARRAY['EsInf'::text, 'EsNonverb'::text, 'EsStemChange'::text, 'EsUniqV'::text, 'FrNonverb'::text, 'FrInf'::text, 'FrUniqV'::text]))),
+    CONSTRAINT leafs_number_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'FrUniqV'::text])) AND (number = ANY (ARRAY[1, 2]))) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'FrUniqV'::text])) AND (number IS NULL)))),
+    CONSTRAINT leafs_person_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'FrUniqV'::text])) AND (person = ANY (ARRAY[1, 2, 3]))) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'FrUniqV'::text])) AND (person IS NULL)))),
+    CONSTRAINT leafs_tense_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text])) AND (tense = ANY (ARRAY['PRES'::text, 'PRET'::text]))) OR ((leaf_type = 'FrUniqV'::text) AND (tense = 'PRES'::text)) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text])) AND (person IS NULL))))
 );
 
 
@@ -802,6 +803,32 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 2099	968	409	1	1
 2100	968	483	0	0
 2129	968	973	4	4
+2131	977	978	0	0
+2132	977	979	1	1
+2135	981	982	0	0
+2136	981	983	1	1
+2139	985	986	0	0
+2140	985	987	1	1
+2144	989	987	1	1
+2145	989	990	0	0
+2148	993	994	0	0
+2150	993	995	1	1
+2152	997	998	0	0
+2153	997	999	1	1
+2156	1001	1002	0	0
+2157	1001	1003	1	1
+2161	1005	1003	1	1
+2162	1005	1006	0	0
+2165	1009	1010	0	0
+2166	1009	1011	1	1
+2167	1009	1012	2	2
+2173	1014	1011	0	0
+2174	1014	1012	1	1
+2177	1014	1017	2	2
+2178	1014	1018	3	3
+2179	1014	1019	4	4
+2184	1021	998	1	1
+2185	1021	1022	0	0
 \.
 
 
@@ -809,7 +836,7 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 -- Name: card_embeddings_card_embedding_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 2130, true);
+SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 2187, true);
 
 
 --
@@ -857,6 +884,8 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 657	[{"leafId":536,"en":"learning","l2":"aprendizaje"}]	\N	536	learning	1		2018-07-17 08:49:36.241636-06	2018-07-17 08:49:36.24-06
 659	[{"leafId":378,"en":"tongues","l2":"lenguas"}]	\N	378	tongues	1		2018-07-17 08:49:36.241636-06	2018-07-17 08:49:36.24-06
 660	[{"leafId":538,"en":"be","l2":"haber"}]	\N	538	to be (exist)	1		2018-07-17 08:49:36.241636-06	2018-07-17 08:49:36.24-06
+152	[{"leafId":317,"en":"eat","l2":"comer"}]	2018-06-27 15:42:40-06	317	to eat	4		2018-06-26 21:23:25.706003-06	2018-06-27 16:43:32.678-06
+483	[{"leafId":518,"en":"not","l2":"no"}]	2018-06-27 16:43:25-06	518	not	4		2018-06-27 16:35:37.766885-06	2018-08-31 20:09:49.151-06
 661	[{"leafId":431,"en":"want","l2":"quier-"},{"leafId":-12,"en":"(you)","l2":"-es"},{"leafId":544,"en":"listen","l2":"escuchar"},{"leafId":546,"en":"examples","l2":"ejemplos"}]	\N	431,-12,544,546	Do you want to listen to examples?	0		2018-07-17 08:51:53.467863-06	2018-07-17 08:51:53.465-06
 131	[{"leafId":409,"en":"of","l2":"de"}]	2018-06-27 13:59:49-06	409	of	4		2018-06-26 21:22:57.352948-06	2018-06-28 12:41:00.484-06
 134	[{"leafId":410,"en":"where","l2":"dónde"},{"leafId":349,"en":"live","l2":"viv-"},{"leafId":-12,"en":"(you)","l2":"-es"}]	2018-06-26 21:29:32-06	410,349,-12	Where do you live?	0		2018-06-26 21:23:03.228956-06	2018-06-27 16:43:32.668-06
@@ -908,8 +937,6 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 146	[{"leafId":381,"en":"English","l2":"inglés"}]	2018-08-31 20:07:30-06	381	English	4		2018-06-26 21:23:18.524111-06	2018-08-31 20:09:49.13-06
 153	[{"leafId":-11,"en":"(I)","l2":"-o"}]	2018-08-31 20:07:28-06	-11	(I learn)	4		2018-06-26 21:23:25.706003-06	2018-08-31 20:09:49.143-06
 162	[{"leafId":398,"en":"well","l2":"bien"}]	2018-06-27 15:42:36-06	398	well	4		2018-06-26 21:23:47.71726-06	2018-08-31 20:09:49.15-06
-152	[{"leafId":317,"en":"eat","l2":"comer"}]	2018-06-27 15:42:40-06	317	to eat	4		2018-06-26 21:23:25.706003-06	2018-06-27 16:43:32.678-06
-483	[{"leafId":518,"en":"not","l2":"no"}]	2018-06-27 16:43:25-06	518	not	4		2018-06-27 16:35:37.766885-06	2018-08-31 20:09:49.151-06
 689	[{"leafId":551,"en":"which","l2":"cuál"}]	\N	551	which	1		2018-07-17 08:56:07.444174-06	2018-07-17 08:56:07.443-06
 155	[{"leafId":407,"en":"what","l2":"qué"},{"leafId":328,"en":"do","l2":"hac-"},{"leafId":-12,"en":"(you)","l2":"-es"}]	2018-06-26 21:29:18-06	407,328,-12	What are you doing?	0		2018-06-26 21:23:38.542987-06	2018-06-27 16:43:32.68-06
 157	[{"leafId":328,"en":"do","l2":"hac-"},{"leafId":-12,"en":"(you)","l2":"-es"}]	2018-06-26 21:29:15-06	328,-12	(you) do	0		2018-06-26 21:23:38.542987-06	2018-06-27 16:43:32.682-06
@@ -1043,6 +1070,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 775	[{"leafId":564,"en":"miss","l2":"señorita"}]	2018-08-31 20:07:32-06	564	miss	4		2018-08-31 19:16:20.762468-06	2018-08-31 20:09:49.182-06
 776	[{"leafId":327,"en":"speak","l2":"habl-"},{"leafId":-3,"en":"(he/she)","l2":"-a"},{"leafId":557,"en":"you","l2":"usted"},{"leafId":380,"en":"Spanish","l2":"español"}]	2018-08-31 20:09:13-06	327,-3,557,380	Do you speak Spanish? (formal)	3		2018-08-31 19:16:43.205661-06	2018-08-31 20:09:49.183-06
 796	[{"leafId":518,"en":"not","l2":"no"},{"leafId":327,"en":"speak","l2":"habl-"},{"leafId":-1,"en":"(I)","l2":"-o"}]	\N	518,327,-1		0		2018-09-01 16:07:37.035391-06	2018-09-01 16:07:37.029-06
+994	[{"leafId":593,"en":"we","l2":"nous"}]	\N	593	we	1		2018-09-02 16:49:20.074875-06	2018-09-02 16:49:20.072-06
 815	[{"leafId":518,"en":"not","l2":"no"},{"leafId":443,"en":"understand","l2":"entiend-"},{"leafId":-11,"en":"(I)","l2":"-o"},{"leafId":565,"en":"Castilian","l2":"castellano"}]	\N	518,443,-11,565	I don't understand Castilian.	0		2018-09-01 16:43:39.732548-06	2018-09-01 16:43:39.725-06
 818	[{"leafId":565,"en":"Castilian","l2":"castellano"}]	\N	565	Castilian	1		2018-09-01 16:43:39.732548-06	2018-09-01 16:43:39.726-06
 827	[{"leafId":518,"en":"not","l2":"no"},{"leafId":566,"en":"American","l2":"norteamericana"},{"leafId":518,"en":"not","l2":"no"}]	\N	518,566,518	No, not American.	0		2018-09-01 16:49:52.061252-06	2018-09-01 16:49:52.056-06
@@ -1076,6 +1104,39 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 959	[{"leafId":574,"en":"Jones","l2":"Jones"}]	\N	574	Jones	5		2018-09-01 17:22:05.967308-06	2018-09-01 17:22:05.965-06
 968	[{"leafId":518,"en":"not","l2":"no"},{"leafId":453,"en":"am","l2":"soy"},{"leafId":409,"en":"of","l2":"de"},{"leafId":532,"en":"the","l2":"los"},{"leafId":575,"en":"angels","l2":"angeles"}]	\N	518,453,409,532,575	I'm not from Los Angeles.	0		2018-09-01 17:27:54.366281-06	2018-09-01 17:27:54.364-06
 973	[{"leafId":575,"en":"angels","l2":"angeles"}]	\N	575	angels	1		2018-09-01 17:27:54.366281-06	2018-09-01 17:27:54.364-06
+977	[{"leafId":589,"en":"I/me","l2":"je"},{"leafId":583,"en":"am","l2":"suis"}]	\N	589,583	I am.	0		2018-09-02 16:46:53.913397-06	2018-09-02 16:46:53.908-06
+978	[{"leafId":589,"en":"I/me","l2":"je"}]	\N	589	I/me	1		2018-09-02 16:46:53.913397-06	2018-09-02 16:46:53.908-06
+979	[{"leafId":583,"en":"am","l2":"suis"}]	\N	583	I am	1		2018-09-02 16:46:53.913397-06	2018-09-02 16:46:53.908-06
+980	[{"leafId":582,"en":"be","l2":"être"}]	\N	582	to be	1		2018-09-02 16:46:53.913397-06	2018-09-02 16:46:53.908-06
+981	[{"leafId":590,"en":"you","l2":"tu"},{"leafId":584,"en":"are","l2":"es"}]	\N	590,584	You are.	0		2018-09-02 16:48:08.855588-06	2018-09-02 16:48:08.853-06
+982	[{"leafId":590,"en":"you","l2":"tu"}]	\N	590	you	1		2018-09-02 16:48:08.855588-06	2018-09-02 16:48:08.853-06
+983	[{"leafId":584,"en":"are","l2":"es"}]	\N	584	you are	1		2018-09-02 16:48:08.855588-06	2018-09-02 16:48:08.853-06
+985	[{"leafId":591,"en":"he","l2":"il"},{"leafId":585,"en":"is","l2":"est"}]	\N	591,585	He is.	0		2018-09-02 16:48:38.395058-06	2018-09-02 16:48:38.393-06
+986	[{"leafId":591,"en":"he","l2":"il"}]	\N	591	he	1		2018-09-02 16:48:38.395058-06	2018-09-02 16:48:38.393-06
+987	[{"leafId":585,"en":"is","l2":"est"}]	\N	585	he/she is	1		2018-09-02 16:48:38.395058-06	2018-09-02 16:48:38.393-06
+989	[{"leafId":592,"en":"she","l2":"elle"},{"leafId":585,"en":"is","l2":"est"}]	\N	592,585	She is.	0		2018-09-02 16:48:59.899569-06	2018-09-02 16:48:59.897-06
+990	[{"leafId":592,"en":"she","l2":"elle"}]	\N	592	she	1		2018-09-02 16:48:59.899569-06	2018-09-02 16:48:59.897-06
+993	[{"leafId":593,"en":"we","l2":"nous"},{"leafId":586,"en":"are","l2":"sommes"}]	\N	593,586	We are.	0		2018-09-02 16:49:20.074875-06	2018-09-02 16:49:20.072-06
+995	[{"leafId":586,"en":"are","l2":"sommes"}]	\N	586	we are	1		2018-09-02 16:49:20.074875-06	2018-09-02 16:49:20.072-06
+997	[{"leafId":594,"en":"you all","l2":"vous"},{"leafId":587,"en":"are","l2":"êtes"}]	\N	594,587	You are. (pl.)	0		2018-09-02 16:49:52.69405-06	2018-09-02 16:49:52.692-06
+998	[{"leafId":594,"en":"you all","l2":"vous"}]	\N	594	you all	1		2018-09-02 16:49:52.69405-06	2018-09-02 16:49:52.692-06
+999	[{"leafId":587,"en":"are","l2":"êtes"}]	\N	587	null are	1		2018-09-02 16:49:52.69405-06	2018-09-02 16:49:52.692-06
+1001	[{"leafId":595,"en":"they (masc.)","l2":"ils"},{"leafId":588,"en":"are","l2":"sont"}]	\N	595,588	They are. (masc.)	0		2018-09-02 16:50:59.551823-06	2018-09-02 16:50:59.55-06
+1002	[{"leafId":595,"en":"they (masc.)","l2":"ils"}]	\N	595	they (masc.)	1		2018-09-02 16:50:59.551823-06	2018-09-02 16:50:59.55-06
+1003	[{"leafId":588,"en":"are","l2":"sont"}]	\N	588	they are	1		2018-09-02 16:50:59.551823-06	2018-09-02 16:50:59.55-06
+1005	[{"leafId":596,"en":"they (fem.)","l2":"elles"},{"leafId":588,"en":"are","l2":"sont"}]	\N	596,588	They are. (fem.)	0		2018-09-02 16:51:13.354222-06	2018-09-02 16:51:13.352-06
+1006	[{"leafId":596,"en":"they (fem.)","l2":"elles"}]	\N	596	they (fem.)	1		2018-09-02 16:51:13.354222-06	2018-09-02 16:51:13.352-06
+1009	[{"leafId":604,"en":"how","l2":"comment"},{"leafId":605,"en":"it","l2":"ça"},{"leafId":600,"en":"goes","l2":"va"}]	\N	604,605,600	How's it going?	0		2018-09-02 16:54:37.503502-06	2018-09-02 16:54:37.502-06
+1010	[{"leafId":604,"en":"how","l2":"comment"}]	\N	604	how	1		2018-09-02 16:54:37.503502-06	2018-09-02 16:54:37.502-06
+1011	[{"leafId":605,"en":"it","l2":"ça"}]	\N	605	it	1		2018-09-02 16:54:37.503502-06	2018-09-02 16:54:37.502-06
+1012	[{"leafId":600,"en":"goes","l2":"va"}]	\N	600	he/she goes	1		2018-09-02 16:54:37.503502-06	2018-09-02 16:54:37.502-06
+1013	[{"leafId":597,"en":"go","l2":"aller"}]	\N	597	to go	1		2018-09-02 16:54:37.503502-06	2018-09-02 16:54:37.502-06
+1014	[{"leafId":605,"en":"it","l2":"ça"},{"leafId":600,"en":"goes","l2":"va"},{"leafId":606,"en":"very","l2":"très"},{"leafId":607,"en":"well","l2":"bien"},{"leafId":608,"en":"thanks","l2":"merci"}]	\N	605,600,606,607,608	It's going very well, thanks.	0		2018-09-02 16:55:18.451886-06	2018-09-02 16:55:18.45-06
+1017	[{"leafId":606,"en":"very","l2":"très"}]	\N	606	very	1		2018-09-02 16:55:18.451886-06	2018-09-02 16:55:18.45-06
+1018	[{"leafId":607,"en":"well","l2":"bien"}]	\N	607	well	1		2018-09-02 16:55:18.451886-06	2018-09-02 16:55:18.45-06
+1019	[{"leafId":608,"en":"thanks","l2":"merci"}]	\N	608	thanks	1		2018-09-02 16:55:18.451886-06	2018-09-02 16:55:18.45-06
+1021	[{"leafId":609,"en":"and","l2":"et"},{"leafId":594,"en":"you all","l2":"vous"}]	\N	609,594	And you? (formal)	0		2018-09-02 16:55:45.700067-06	2018-09-02 16:55:45.699-06
+1022	[{"leafId":609,"en":"and","l2":"et"}]	\N	609	and	1		2018-09-02 16:55:45.700067-06	2018-09-02 16:55:45.699-06
 \.
 
 
@@ -1083,7 +1144,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 -- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('cards_card_id_seq', 976, true);
+SELECT pg_catalog.setval('cards_card_id_seq', 1023, true);
 
 
 --
@@ -1177,6 +1238,17 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 166	I'm Mr. Jones.	Soy el señor Jones	2018-09-01 17:22:05.97867-06	2018-09-01 17:22:05.978-06	955	8
 168	I'm not from Los Angeles.	No soy de Los Angeles.	2018-09-01 17:27:54.380998-06	2018-09-01 17:27:54.38-06	968	8
 169	Hello!	Bonjour!	2018-09-02 15:44:30.792113-06	2018-09-02 15:44:30.79-06	975	9
+170	I am.	Je suis.	2018-09-02 16:46:53.979935-06	2018-09-02 16:46:53.978-06	977	9
+172	He is.	Il est.	2018-09-02 16:48:38.406524-06	2018-09-02 16:48:38.405-06	985	9
+173	She is.	Elle est.	2018-09-02 16:48:59.912164-06	2018-09-02 16:48:59.909-06	989	9
+174	We are.	Nous sommes.	2018-09-02 16:49:20.086159-06	2018-09-02 16:49:20.085-06	993	9
+175	You are. (pl.)	Vous êtes.	2018-09-02 16:49:52.701229-06	2018-09-02 16:49:52.7-06	997	9
+171	You are. (sing.)	Tu es.	2018-09-02 16:48:08.869497-06	2018-09-02 16:48:08.868-06	981	9
+176	They are. (masc.)	Ils sont.	2018-09-02 16:50:59.558839-06	2018-09-02 16:50:59.558-06	1001	9
+177	They are. (fem.)	Elles sont.	2018-09-02 16:51:13.364943-06	2018-09-02 16:51:13.364-06	1005	9
+178	How's it going?	Comment ça va?	2018-09-02 16:54:37.511941-06	2018-09-02 16:54:37.511-06	1009	9
+179	It's going very well, thanks.	Ça va très bien, merci.	2018-09-02 16:55:18.461535-06	2018-09-02 16:55:18.46-06	1014	9
+180	And you? (formal)	Et vous?	2018-09-02 16:55:45.705979-06	2018-09-02 16:55:45.705-06	1021	9
 \.
 
 
@@ -1184,7 +1256,7 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 -- Name: goals_goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('goals_goal_id_seq', 169, true);
+SELECT pg_catalog.setval('goals_goal_id_seq', 180, true);
 
 
 --
@@ -1449,6 +1521,34 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 465	EsUniqV	está	is	how	\N	\N	1	3	PRES	2018-06-24 10:53:11.340796-06	326	\N
 466	EsUniqV	están	are	how	\N	\N	2	3	PRES	2018-06-24 10:53:11.341339-06	326	\N
 539	EsUniqV	hay	is	exists	\N	\N	1	3	PRES	2018-07-17 08:45:19.386968-06	538	\N
+582	FrInf	\N	be	\N	\N	was	\N	\N	\N	2018-09-02 16:18:34.96525-06	\N	être
+583	FrUniqV	\N	am	\N	\N	\N	1	1	PRES	2018-09-02 16:18:57.751959-06	582	suis
+584	FrUniqV	\N	are	\N	\N	\N	1	2	PRES	2018-09-02 16:19:23.37562-06	582	es
+585	FrUniqV	\N	is	\N	\N	\N	1	3	PRES	2018-09-02 16:19:36.769782-06	582	est
+586	FrUniqV	\N	are	\N	\N	\N	2	1	PRES	2018-09-02 16:20:04.263868-06	582	sommes
+587	FrUniqV	\N	are	\N	\N	\N	2	2	PRES	2018-09-02 16:20:16.369155-06	582	êtes
+588	FrUniqV	\N	are	\N	\N	\N	2	3	PRES	2018-09-02 16:20:32.375836-06	582	sont
+589	FrNonverb	\N	I/me	\N	\N	\N	\N	\N	\N	2018-09-02 16:46:53.784662-06	\N	je
+590	FrNonverb	\N	you	\N	\N	\N	\N	\N	\N	2018-09-02 16:48:08.846709-06	\N	tu
+591	FrNonverb	\N	he	\N	\N	\N	\N	\N	\N	2018-09-02 16:48:38.39048-06	\N	il
+592	FrNonverb	\N	she	\N	\N	\N	\N	\N	\N	2018-09-02 16:48:59.888882-06	\N	elle
+593	FrNonverb	\N	we	\N	\N	\N	\N	\N	\N	2018-09-02 16:49:20.063779-06	\N	nous
+594	FrNonverb	\N	you all	\N	\N	\N	\N	\N	\N	2018-09-02 16:49:52.683555-06	\N	vous
+595	FrNonverb	\N	they (masc.)	\N	\N	\N	\N	\N	\N	2018-09-02 16:50:59.541744-06	\N	ils
+596	FrNonverb	\N	they (fem.)	\N	\N	\N	\N	\N	\N	2018-09-02 16:51:13.343919-06	\N	elles
+597	FrInf	\N	go	\N	\N	went	\N	\N	\N	2018-09-02 16:51:54.849762-06	\N	aller
+598	FrUniqV	\N	go	\N	\N	\N	1	1	PRES	2018-09-02 16:52:10.070708-06	597	vais
+599	FrUniqV	\N	go	\N	\N	\N	1	2	PRES	2018-09-02 16:52:24.04008-06	597	vas
+600	FrUniqV	\N	goes	\N	\N	\N	1	3	PRES	2018-09-02 16:53:00.013994-06	597	va
+601	FrUniqV	\N	go	\N	\N	\N	2	1	PRES	2018-09-02 16:53:22.421248-06	597	allons
+602	FrUniqV	\N	go	\N	\N	\N	2	2	PRES	2018-09-02 16:53:32.464416-06	597	allez
+603	FrUniqV	\N	go	\N	\N	\N	2	3	PRES	2018-09-02 16:53:42.408866-06	597	vont
+604	FrNonverb	\N	how	\N	\N	\N	\N	\N	\N	2018-09-02 16:54:37.497641-06	\N	comment
+605	FrNonverb	\N	it	\N	\N	\N	\N	\N	\N	2018-09-02 16:54:37.500128-06	\N	ça
+606	FrNonverb	\N	very	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:18.434126-06	\N	très
+607	FrNonverb	\N	well	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:18.441939-06	\N	bien
+608	FrNonverb	\N	thanks	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:18.4482-06	\N	merci
+609	FrNonverb	\N	and	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:45.691008-06	\N	et
 \.
 
 
@@ -1456,7 +1556,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 581, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 609, true);
 
 
 --
@@ -1492,6 +1592,7 @@ COPY schema_version (installed_rank, version, description, type, script, checksu
 1	1	create goals and cards	SQL	V1__create_goals_and_cards.sql	1062513313	postgres	2018-06-27 09:31:17.379663	46	t
 4	4	no unique es mixed	SQL	V4__no_unique_es_mixed.sql	604495595	postgres	2018-09-01 18:07:12.74282	129	t
 5	5	add french	SQL	V5__add_french.sql	701199897	postgres	2018-09-02 15:33:33.249875	118	t
+6	6	add french infinitives	SQL	V6__add_french_infinitives.sql	1362844776	postgres	2018-09-02 16:03:54.533692	32	t
 \.
 
 

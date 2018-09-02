@@ -6,7 +6,7 @@ import com.danstutzman.bank.es.Inf
 
 data class StemChange (
   val leafId: Int,
-  val tense: Tense,
+  val tense: EsTense,
   val inf:   Inf,
   val esMixed:  String,
   val en: String,
@@ -18,8 +18,8 @@ data class StemChange (
   override fun getChildCardCreators(): List<CardCreator> =
     listOf(inf) + inf.getChildCardCreators()
   fun getEnVerb(): String = when (tense) {
-    Tense.PRES -> en
-    Tense.PRET -> enPast
+    EsTense.PRES -> en
+    EsTense.PRET -> enPast
   }
   override fun getGlossRows(): List<GlossRow> = listOf(GlossRow(
     leafId, getEnVerb(), esMixed))

@@ -1,7 +1,7 @@
 package com.danstutzman.bank.en
 
 import com.danstutzman.bank.es.Inf
-import com.danstutzman.bank.es.Tense
+import com.danstutzman.bank.es.EsTense
 
 class EnVerbs {
   companion object {
@@ -13,12 +13,13 @@ class EnVerbs {
       Pair(2, 3) to ""
     )
 
-    fun getEnVerbFor(inf: Inf, number: Int, person: Int, tense: Tense): String =
+    fun getEnVerbFor(inf: Inf, number: Int, person: Int, tense: EsTense):
+      String =
       when (tense) {
-        Tense.PRES ->
+        EsTense.PRES ->
           inf.enPresent +
           NUMBER_AND_PERSON_TO_EN_VERB_SUFFIX[Pair(number, person)]!!
-        Tense.PRET -> inf.enPast
+        EsTense.PRET -> inf.enPast
       } + if (inf.enDisambiguation != null) " (${inf.enDisambiguation})" else ""
   }
 }

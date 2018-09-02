@@ -47,7 +47,7 @@ class VCloud(
           if (pattern.tense == stemChange.tense && InfCategory.isInfCategory(
             stemChange.inf.esMixed.toLowerCase(),
             pattern.infCategory,
-            pattern.tense == Tense.PRET)) {
+            pattern.tense == EsTense.PRET)) {
             interpretations.add(Interpretation("EsStemChangeV",
               StemChangeV(stemChange, pattern)))
           }
