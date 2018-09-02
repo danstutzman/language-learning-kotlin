@@ -1,16 +1,16 @@
 package com.danstutzman.templates
 
-import com.danstutzman.db.UniqueConjugation
+import com.danstutzman.db.EsUniqueConjugation
 
-fun GetUniqueConjugations(
-  uniqueConjugations: List<UniqueConjugation>,
+fun GetEsUniqueConjugations(
+  uniqueConjugations: List<EsUniqueConjugation>,
   infEsByLeafId: Map<Int, String>
 ): String {
   val html = StringBuilder()
   html.append(OPEN_BODY_TAG)
   html.append("<a href='/'>Back to home</a>\n")
-  html.append("<h1>Unique Conjugations</h1>\n")
-  html.append("<form method='POST' action='/unique-conjugations'>\n")
+  html.append("<h1>Spanish Unique Conjugations</h1>\n")
+  html.append("<form method='POST' action='/es/unique-conjugations'>\n")
   html.append("<table border='1'>\n")
   html.append("  <tr>\n")
   html.append("    <th>LeafId</td>\n")

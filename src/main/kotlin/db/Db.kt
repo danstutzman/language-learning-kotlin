@@ -18,7 +18,10 @@ class Db(
 ) {
   val cardsTable = CardsTable(conn)
   val cardEmbeddingsTable = CardEmbeddingsTable(conn)
+  val esInfinitivesTable = EsInfinitivesTable(conn)
+  val esNonverbsTable = EsNonverbsTable(conn)
+  val esStemChangesTable = EsStemChangesTable(conn)
+  val esUniqueConjugationsTable = EsUniqueConjugationsTable(conn)
   val goalsTable = GoalsTable(conn)
-  val leafsTable = LeafsTable(conn)
   val paragraphsTable = ParagraphsTable(conn)
 }

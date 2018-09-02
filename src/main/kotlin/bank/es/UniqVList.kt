@@ -9,7 +9,7 @@ class UniqVList {
   val uniqVByEsLower: Map<String, UniqV>
 
   constructor(infList: InfList, db: Db) {
-    uniqVs = db.leafsTable.selectAllUniqueConjugations().map {
+    uniqVs = db.esUniqueConjugationsTable.selectAll().map {
       UniqV(
         leafId = it.leafId,
         esMixed = it.esMixed,

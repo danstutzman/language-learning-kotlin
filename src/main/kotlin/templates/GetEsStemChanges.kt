@@ -1,9 +1,9 @@
 package com.danstutzman.templates
 
-import com.danstutzman.db.StemChangeRow
+import com.danstutzman.db.EsStemChange
 
-fun GetStemChanges(
-  stemChanges: List<StemChangeRow>,
+fun GetEsStemChanges(
+  stemChanges: List<EsStemChange>,
   infEsMixedByLeafId: Map<Int, String>
 ): String {
   val html = StringBuilder()

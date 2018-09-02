@@ -28,7 +28,7 @@ class NonverbList {
   val nonverbByEsLower: Map<String, Nonverb>
 
   constructor(db: Db) {
-    nonverbs = db.leafsTable.selectAllNonverbRows().flatMap { row ->
+    nonverbs = db.esNonverbsTable.selectAll().flatMap { row ->
       val newNonverbs = mutableListOf<Nonverb>()
 
       newNonverbs.add(Nonverb(

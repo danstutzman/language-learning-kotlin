@@ -7,8 +7,8 @@ import com.danstutzman.bank.es.Nonverb
 import com.danstutzman.db.Db
 import com.danstutzman.db.CardEmbedding
 import com.danstutzman.db.CardRow
+import com.danstutzman.db.EsNonverb
 import com.danstutzman.db.Goal
-import com.danstutzman.db.NonverbRow
 import com.google.gson.GsonBuilder
 
 val STAGE0_NOT_READY_TO_TEST = 0
@@ -45,7 +45,7 @@ fun PostParagraphAddGoal(db: Db, paragraphId: Int, goalEn: String,
       cardCreators.add(interpretation.cardCreator!!)
     } else {
       if (disambiguation.type == "Nonverb") {
-        val row = db.leafsTable.insertNonverbRow(NonverbRow(
+        val row = db.esNonverbsTable.insert(EsNonverb(
           0, disambiguation.en!!, disambiguation.enDisambiguation!!,
           blankToNull(disambiguation.enPlural!!), disambiguation.es!!))
         cardCreators.add(Nonverb(row.leafId, row.esMixed, row.en,

@@ -1,9 +1,9 @@
 package com.danstutzman.routes
 
-import com.danstutzman.db.Infinitive
+import com.danstutzman.db.EsInfinitive
 import com.danstutzman.db.Db
 
-fun PostInfinitives(
+fun PostEsInfinitives(
   db: Db,
   leafIdsToDelete: List<Int>,
   newInfinitive: Boolean,
@@ -13,11 +13,11 @@ fun PostInfinitives(
   enMixed: String
 ) {
   for (leafId in leafIdsToDelete) {
-    db.leafsTable.deleteLeaf(leafId)
+    db.esInfinitivesTable.delete(leafId)
   }
 
   if (newInfinitive) {
-    db.leafsTable.insertInfinitive(
-      Infinitive(0, en, enDisambiguation, enPast, enMixed))
+    db.esInfinitivesTable.insert(
+      EsInfinitive(0, en, enDisambiguation, enPast, enMixed))
   }
 }

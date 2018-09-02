@@ -3,23 +3,22 @@ package com.danstutzman
 import com.danstutzman.bank.Bank
 import com.danstutzman.db.Db
 import com.danstutzman.routes.GetApi
-import com.danstutzman.routes.GetCards
-import com.danstutzman.routes.GetInfinitives
-import com.danstutzman.routes.GetNonverbs
+import com.danstutzman.routes.GetEsInfinitives
+import com.danstutzman.routes.GetEsNonverbs
+import com.danstutzman.routes.GetEsStemChanges
+import com.danstutzman.routes.GetEsUniqueConjugations
 import com.danstutzman.routes.GetParagraph
 import com.danstutzman.routes.GetParagraphs
 import com.danstutzman.routes.GetRoot
-import com.danstutzman.routes.GetStemChanges
-import com.danstutzman.routes.GetUniqueConjugations
 import com.danstutzman.routes.PostApi
-import com.danstutzman.routes.PostInfinitives
-import com.danstutzman.routes.PostNonverbs
+import com.danstutzman.routes.PostEsInfinitives
+import com.danstutzman.routes.PostEsNonverbs
+import com.danstutzman.routes.PostEsStemChanges
+import com.danstutzman.routes.PostEsUniqueConjugations
 import com.danstutzman.routes.PostParagraph
 import com.danstutzman.routes.PostParagraphAddGoal
 import com.danstutzman.routes.PostParagraphDisambiguateGoal
 import com.danstutzman.routes.PostParagraphs
-import com.danstutzman.routes.PostStemChanges
-import com.danstutzman.routes.PostUniqueConjugations
 import com.danstutzman.routes.WordDisambiguation
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -83,26 +82,26 @@ fun main(args: Array<String>) {
   }
 
   service.get("/") { _: Request, _: Response -> GetRoot() }
-  service.get("/cards") { _: Request, _: Response -> GetCards(db) }
-  service.get("/infinitives") { _: Request, _: Response -> GetInfinitives(db) }
-  service.post("/infinitives") { req: Request, res: Response ->
-    PostInfinitives(db, extractLeafIdsToDelete(req),
+  service.get("/es/infinitives") { _: Request, _: Response ->
+    GetEsInfinitives(db) }
+  service.post("/es/infinitives") { req: Request, res: Response ->
+    PostEsInfinitives(db, extractLeafIdsToDelete(req),
       req.queryParams("newInfinitive") != null,
       normalize(req.queryParams("en")),
       normalize(req.queryParams("en_disambiguation")),
       normalize(req.queryParams("en_past")),
       normalize(req.queryParams("es_mixed")))
-    res.redirect("/infinitives")
+    res.redirect("/es/infinitives")
   }
-  service.get("/nonverbs") { _: Request, _: Response -> GetNonverbs(db) }
-  service.post("/nonverbs") { req: Request, res: Response ->
-    PostNonverbs(db, extractLeafIdsToDelete(req),
+  service.get("/es/nonverbs") { _: Request, _: Response -> GetEsNonverbs(db) }
+  service.post("/es/nonverbs") { req: Request, res: Response ->
+    PostEsNonverbs(db, extractLeafIdsToDelete(req),
       req.queryParams("newNonverb") != null, 
       normalize(req.queryParams("en")),
       normalize(req.queryParams("en_disambiguation")),
       normalize(req.queryParams("en_plural")),
       normalize(req.queryParams("es_mixed")))
-    res.redirect("/nonverbs")
+    res.redirect("/es/nonverbs")
   }
   service.get("/paragraphs") { _: Request, _: Response -> GetParagraphs(db) }
   service.post("/paragraphs") { req: Request, res: Response ->
@@ -133,9 +132,10 @@ fun main(args: Array<String>) {
       normalize(req.queryParams("es")!!), extractWordDisambiguations(req))
     res.redirect("/paragraphs/${paragraphId}")
   }
-  service.get("/stem-changes") { _: Request, _: Response -> GetStemChanges(db) }
-  service.post("/stem-changes") { req: Request, res: Response ->
-    PostStemChanges(db, extractLeafIdsToDelete(req),
+  service.get("/es/stem-changes") { _: Request, _: Response ->
+    GetEsStemChanges(db) }
+  service.post("/es/stem-changes") { req: Request, res: Response ->
+    PostEsStemChanges(db, extractLeafIdsToDelete(req),
       req.queryParams("newStemChange") != null,
       normalize(req.queryParams("infinitive_es_mixed"))!!,
       normalize(req.queryParams("es_mixed")),
@@ -143,12 +143,12 @@ fun main(args: Array<String>) {
       normalize(req.queryParams("en")),
       normalize(req.queryParams("en_past")),
       normalize(req.queryParams("en_disambiguation")))
-    res.redirect("/stem-changes")
+    res.redirect("/es/stem-changes")
   }
-  service.get("/unique-conjugations") { _: Request, _: Response ->
-    GetUniqueConjugations(db) }
-  service.post("/unique-conjugations") { req: Request, res: Response ->
-    PostUniqueConjugations(db, extractLeafIdsToDelete(req),
+  service.get("/es/unique-conjugations") { _: Request, _: Response ->
+    GetEsUniqueConjugations(db) }
+  service.post("/es/unique-conjugations") { req: Request, res: Response ->
+    PostEsUniqueConjugations(db, extractLeafIdsToDelete(req),
       req.queryParams("newUniqueConjugation") != null,
       normalize(req.queryParams("infinitive_es_mixed")),
       normalize(req.queryParams("es_mixed")),
@@ -157,7 +157,7 @@ fun main(args: Array<String>) {
       req.queryParams("person").toInt(),
       req.queryParams("tense"),
       normalize(req.queryParams("en_disambiguation")))
-    res.redirect("/unique-conjugations")
+    res.redirect("/es/unique-conjugations")
   }
   service.get("/api") { _: Request, res: Response ->
     res.header("Access-Control-Allow-Origin", "*")
