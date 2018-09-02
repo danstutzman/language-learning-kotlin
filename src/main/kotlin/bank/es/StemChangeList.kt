@@ -9,7 +9,7 @@ class StemChangeList {
   val stemChangeByEsLower: Map<String, StemChange>
 
   constructor(infList: InfList, db: Db) {
-    stemChanges = db.selectAllStemChangeRows().map {
+    stemChanges = db.leafsTable.selectAllStemChangeRows().map {
       StemChange(
         it.leafId,
         Tense.valueOf(it.tense),

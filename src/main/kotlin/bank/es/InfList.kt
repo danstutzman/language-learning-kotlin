@@ -9,7 +9,7 @@ class InfList {
   val infByLeafId: Map<Int, Inf>
 
   constructor(db: Db) {
-    infs = db.selectAllInfinitives().map {
+    infs = db.leafsTable.selectAllInfinitives().map {
       Inf(
         it.leafId,
         it.esMixed,

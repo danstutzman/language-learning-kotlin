@@ -62,13 +62,15 @@ class Bank(
 
 
   fun getCardDownloads(): Map<String, List<CardDownload>> {
-    val paragraphIds =
-      db.selectAllParagraphs().filter { it.enabled }.map { it.paragraphId }
+    val paragraphIds = db.paragraphsTable.selectAll()
+      .filter { it.enabled }.map { it.paragraphId }
     val goalCardIds =
-      db.selectGoalsWithParagraphIdIn(paragraphIds).map { it.cardId }
-    val allCardIds = (db.selectCardEmbeddingsWithLongerCardIdIn(goalCardIds)
-      .map { it.shorterCardId } + goalCardIds).distinct()
-    val cardDownloads = db.selectCardRowsWithCardIdIn(allCardIds).map {
+      db.goalsTable.selectWithParagraphIdIn(paragraphIds).map { it.cardId }
+    val allCardIds = (db.cardEmbeddingsTable
+      .selectWithLongerCardIdIn(goalCardIds)
+      .map { it.shorterCardId } + goalCardIds
+     ).distinct()
+    val cardDownloads = db.cardsTable.selectWithCardIdIn(allCardIds).map {
       CardDownload(
         cardId = it.cardId,
         glossRows = GlossRows.expandGlossRows(it.glossRowsJson),
@@ -106,7 +108,7 @@ class Bank(
 
   fun saveCardUpdates(cardUpdates: List<CardUpdate>) {
     for (cardUpdate in cardUpdates) {
-      db.updateCard(cardUpdate)
+      db.cardsTable.update(cardUpdate)
     }
   }
 }

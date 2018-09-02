@@ -17,7 +17,6 @@ import com.danstutzman.db.CardRow
 import com.danstutzman.db.CardUpdate
 import com.danstutzman.db.Db
 import com.danstutzman.db.Goal
-import com.danstutzman.db.GoalCardId
 import com.danstutzman.db.Infinitive
 import com.danstutzman.db.NonverbRow
 import com.danstutzman.db.Paragraph
@@ -194,9 +193,9 @@ fun createGoal(goalEs:String, cardCreators: List<CardCreator>, goalEn: String,
     )
     val allCardRows =
       listOf(cardRowForGoal) + cardRowsForWords + cardRowsForWordsChildren
-    db.insertCardRows(allCardRows)
+    db.cardsTable.insert(allCardRows)
 
-    val leafIdsCsvCardIdPairs = db.selectLeafIdsCsvCardIdPairs()
+    val leafIdsCsvCardIdPairs = db.cardsTable.selectLeafIdsCsvCardIdPairs()
     val leafIdCsvToCardId = leafIdsCsvCardIdPairs.toMap()
 
     val cardEmbeddings = mutableListOf<CardEmbedding>()
@@ -223,9 +222,9 @@ fun createGoal(goalEs:String, cardCreators: List<CardCreator>, goalEn: String,
           })
       }
     }
-    db.insertCardEmbeddings(cardEmbeddings)
+    db.cardEmbeddingsTable.insertCardEmbeddings(cardEmbeddings)
 
-    db.insertGoal(Goal(
+    db.goalsTable.insert(Goal(
       0,
       goalEn,
       goalEs,
@@ -288,7 +287,7 @@ class Webapp(
     html.append("    <th>Prompt</td>\n")
     html.append("    <th>Stage</td>\n")
     html.append("  </tr>\n")
-    for (card in db.selectAllCardRows()) {
+    for (card in db.cardsTable.selectAll()) {
       html.append("  <tr>\n")
       html.append("    <td>${card.cardId}</td>\n")
       html.append("    <td>${htmlForGlossRowsTable(card.glossRowsJson)}</td>\n")
@@ -318,7 +317,7 @@ class Webapp(
     html.append("    <th>English plural</td>\n")
     html.append("    <th></td>\n")
     html.append("  </tr>\n")
-    for (row in db.selectAllNonverbRows()) {
+    for (row in db.leafsTable.selectAllNonverbRows()) {
       html.append("  <tr>\n")
       html.append("    <td>${row.leafId}</td>\n")
       html.append("    <td>${row.esMixed}</td>\n")
@@ -349,11 +348,11 @@ class Webapp(
       if (match != null) match.groupValues[1].toInt() else null
     }.filterNotNull()
     for (leafId in leafIdsToDelete) {
-      db.deleteLeaf(leafId)
+      db.leafsTable.deleteLeaf(leafId)
     }
 
     if (req.queryParams("newNonverb") != null) {
-      db.insertNonverbRow(NonverbRow(
+      db.leafsTable.insertNonverbRow(NonverbRow(
         0,
         normalize(req.queryParams("en")),
         normalize(req.queryParams("en_disambiguation")),
@@ -380,7 +379,7 @@ class Webapp(
     html.append("    <th>English past</td>\n")
     html.append("    <th></td>\n")
     html.append("  </tr>\n")
-    for (infinitive in db.selectAllInfinitives()) {
+    for (infinitive in db.leafsTable.selectAllInfinitives()) {
       html.append("  <tr>\n")
       html.append("    <td>${infinitive.leafId}</td>\n")
       html.append("    <td>${infinitive.esMixed}</td>\n")
@@ -411,11 +410,11 @@ class Webapp(
       if (match != null) match.groupValues[1].toInt() else null
     }.filterNotNull()
     for (leafId in leafIdsToDelete) {
-      db.deleteLeaf(leafId)
+      db.leafsTable.deleteLeaf(leafId)
     }
 
     if (req.queryParams("newInfinitive") != null) {
-      db.insertInfinitive(Infinitive(
+      db.leafsTable.insertInfinitive(Infinitive(
         0,
         normalize(req.queryParams("en")),
         normalize(req.queryParams("en_disambiguation")),
@@ -428,8 +427,8 @@ class Webapp(
   }
 
   val getParagraphs = { _: Request, _: Response ->
-    val paragraphs = db.selectAllParagraphs()
-    val allGoals = db.selectAllGoals()
+    val paragraphs = db.paragraphsTable.selectAll()
+    val allGoals = db.goalsTable.selectAll()
     val goalsByParagraphId = paragraphs.map {
       Pair(it.paragraphId, mutableListOf<Goal>())
     }.toMap()
@@ -445,12 +444,12 @@ class Webapp(
     }.toMap().toMutableMap()
     val subCardIds = mutableListOf<Int>()
     for (cardEmbedding in
-      db.selectCardEmbeddingsWithLongerCardIdIn(goalCardIds)) {
+      db.cardEmbeddingsTable.selectWithLongerCardIdIn(goalCardIds)) {
       cardEmbeddingsByCardId[cardEmbedding.longerCardId]!!.add(cardEmbedding)
       subCardIds.add(cardEmbedding.shorterCardId)
     }
     val allCardIds = (goalCardIds + subCardIds).distinct()
-    val cardByCardId = db.selectCardRowsWithCardIdIn(allCardIds)
+    val cardByCardId = db.cardsTable.selectWithCardIdIn(allCardIds)
       .map { Pair(it.cardId, it) }.toMap()
 
     val html = StringBuilder()
@@ -491,14 +490,15 @@ class Webapp(
   val postParagraphs = { req: Request, res: Response ->
     val topic = normalize(req.queryParams("topic"))
     val enabled = req.queryParams("enabled") != null
-    db.insertParagraph(Paragraph(0, topic, enabled))
+    db.paragraphsTable.insert(Paragraph(0, topic, enabled))
     res.redirect("/paragraphs")
   }
 
   val getParagraph = { req: Request, _: Response ->
     val paragraphId = req.params("paragraphId")!!.toInt()
-    val paragraph = db.selectParagraphById(paragraphId)!!
-    val goals = db.selectGoalsWithParagraphIdIn(listOf(paragraph.paragraphId))
+    val paragraph = db.paragraphsTable.selectById(paragraphId)!!
+    val goals = db.goalsTable.selectWithParagraphIdIn(
+      listOf(paragraph.paragraphId))
 
     val html = StringBuilder()
     html.append(OPEN_BODY_TAG)
@@ -550,10 +550,10 @@ class Webapp(
         req.params("paragraphId").toInt(),
         req.queryParams("topic"),
         req.queryParams("enabled") != null)
-      db.updateParagraph(paragraph)
+      db.paragraphsTable.update(paragraph)
 
    } else if (submit == "Delete Paragraph") {
-      db.deleteParagraph(req.params("paragraphId").toInt())
+      db.paragraphsTable.delete(req.params("paragraphId").toInt())
     } else {
       throw RuntimeException("Unexpected submit value: ${submit}")
     }
@@ -644,7 +644,7 @@ class Webapp(
         cardCreators.add(interpretation.cardCreator!!)
       } else {
         if (type == "Nonverb") {
-          val row = db.insertNonverbRow(NonverbRow(
+          val row = db.leafsTable.insertNonverbRow(NonverbRow(
             0,
             normalize(req.queryParams(
               "word.${wordNum}.${interpretationNum}.en")),
@@ -668,8 +668,8 @@ class Webapp(
   }
 
   val getUniqueConjugations = { _: Request, _: Response ->
-    val uniqueConjugations = db.selectAllUniqueConjugations()
-    val infEsByLeafId = db.selectInfinitivesWithLeafIdIn(
+    val uniqueConjugations = db.leafsTable.selectAllUniqueConjugations()
+    val infEsByLeafId = db.leafsTable.selectInfinitivesWithLeafIdIn(
       uniqueConjugations.map { it.infLeafId }.distinct()
     ).map { it.leafId to it.esMixed }.toMap()
 
@@ -729,14 +729,14 @@ class Webapp(
       if (match != null) match.groupValues[1].toInt() else null
     }.filterNotNull()
     for (leafId in leafIdsToDelete) {
-      db.deleteLeaf(leafId)
+      db.leafsTable.deleteLeaf(leafId)
     }
 
     if (req.queryParams("newUniqueConjugation") != null) {
-      var infinitive = db.findInfinitiveByEsMixed(
+      var infinitive = db.leafsTable.findInfinitiveByEsMixed(
         normalize(req.queryParams("infinitive_es_mixed")))!!
 
-      db.insertUniqueConjugation(UniqueConjugation(
+      db.leafsTable.insertUniqueConjugation(UniqueConjugation(
         0,
         normalize(req.queryParams("es_mixed")),
         normalize(req.queryParams("en")),
@@ -752,8 +752,8 @@ class Webapp(
   }
 
   val getStemChanges = { _: Request, _: Response ->
-    val stemChanges = db.selectAllStemChangeRows()
-    val infEsMixedByLeafId = db.selectInfinitivesWithLeafIdIn(
+    val stemChanges = db.leafsTable.selectAllStemChangeRows()
+    val infEsMixedByLeafId = db.leafsTable.selectInfinitivesWithLeafIdIn(
       stemChanges.map { it.infLeafId }.distinct()
     ).map { it.leafId to it.esMixed }.toMap()
 
@@ -809,14 +809,14 @@ class Webapp(
       if (match != null) match.groupValues[1].toInt() else null
     }.filterNotNull()
     for (leafId in leafIdsToDelete) {
-      db.deleteLeaf(leafId)
+      db.leafsTable.deleteLeaf(leafId)
     }
 
     if (req.queryParams("newStemChange") != null) {
-      var infinitive = db.findInfinitiveByEsMixed(
+      var infinitive = db.leafsTable.findInfinitiveByEsMixed(
         normalize(req.queryParams("infinitive_es_mixed")))!!
 
-      db.insertStemChangeRow(StemChangeRow(
+      db.leafsTable.insertStemChangeRow(StemChangeRow(
         leafId = 0,
         infLeafId = infinitive.leafId,
         esMixed = normalize(req.queryParams("es_mixed")),
