@@ -1,7 +1,8 @@
 package com.danstutzman.bank.fr
 
-enum class FrInfCategory {
-  ER;
+enum class FrInfCategory(val length: Int) {
+  ER(2),
+  ENIR(4);
 
   companion object {
     fun isInfCategory(
@@ -10,6 +11,7 @@ enum class FrInfCategory {
     ): Boolean =
       when (infCategory) {
         ER -> infFrLower.endsWith("er")
+        ENIR -> infFrLower.endsWith("enir")
       }
   }
 }

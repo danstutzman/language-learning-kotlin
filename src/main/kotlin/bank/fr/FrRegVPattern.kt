@@ -28,7 +28,8 @@ data class FrRegVPattern (
       EnVerbs.NUMBER_AND_PERSON_TO_EN_VERB_SUFFIX[Pair(number, person)]!!
     return when (tense) {
       FrTense.PRES -> when (infCategory) {
-        FrInfCategory.ER   -> "(${enPronoun} speak${enVerbSuffix})"
+        FrInfCategory.ER -> "(${enPronoun} speak${enVerbSuffix})"
+        FrInfCategory.ENIR -> "(${enPronoun} come${enVerbSuffix})"
       }
     }
   }

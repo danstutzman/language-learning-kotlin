@@ -19,9 +19,10 @@ data class FrRegV (
     inf.getChildCardCreators() +
     pattern.getChildCardCreators()
   fun getFrVerbPrefix(): String =
-    inf.frMixed.substring(0, inf.frMixed.length - 2) + "-"
+    inf.frMixed.substring(0, inf.frMixed.length - pattern.infCategory.length) +
+    "-"
   fun getFrMixed(): String =
-    inf.frMixed.substring(0, inf.frMixed.length - 2) +
+    inf.frMixed.substring(0, inf.frMixed.length - pattern.infCategory.length) +
     pattern.frLower.substring(1)
   override fun getGlossRows(): List<GlossRow> =
     listOf(GlossRow(inf.leafId,
