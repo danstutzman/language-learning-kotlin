@@ -6,7 +6,8 @@ import com.danstutzman.bank.Interpretation
 class FrVCloud(
   val infList: FrInfList,
   val uniqVList: FrUniqVList,
-  val regVPatternList: FrRegVPatternList
+  val regVPatternList: FrRegVPatternList,
+  val stemChangeList: FrStemChangeList
 ) {
   fun interpretFrLower(frLower: String): List<Interpretation> {
     val interpretations = mutableListOf<Interpretation>()
@@ -38,6 +39,25 @@ class FrVCloud(
       }
     }
 
+    for (stemChange in stemChangeList.stemChanges) {
+      val base = stemChange.frMixed.substring(0,
+        stemChange.frMixed.length - 1).toLowerCase()
+      if (frLower.startsWith(base)) {
+        for (pattern in possiblePatterns) {
+          if (pattern.tense == stemChange.tense && FrInfCategory.isInfCategory(
+            stemChange.inf.frMixed.toLowerCase(), pattern.infCategory) &&
+            canDoStemChange(pattern.number, pattern.person, pattern.tense)) {
+            interpretations.add(Interpretation("FrStemChangeV",
+              FrStemChangeV(stemChange, pattern)))
+          }
+        }
+      }
+    }
+
     return interpretations
   }
+
+  private fun canDoStemChange(number: Int, person: Int, tense: FrTense) =
+    (number == 1) || // e.g. appelle
+    (number == 2 && person == 3) // e.g. appellent
 }

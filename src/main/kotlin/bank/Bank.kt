@@ -18,6 +18,7 @@ import com.danstutzman.bank.es.UniqV
 import com.danstutzman.bank.es.UniqVList
 import com.danstutzman.bank.fr.FrInfList
 import com.danstutzman.bank.fr.FrRegVPatternList
+import com.danstutzman.bank.fr.FrStemChangeList
 import com.danstutzman.bank.fr.FrUniqVList
 import com.danstutzman.bank.fr.FrVCloud
 import com.danstutzman.db.CardUpdate
@@ -60,7 +61,8 @@ class Bank(
   val frNonverbList = com.danstutzman.bank.fr.NonverbList(db)
   val frInfList     = FrInfList(db)
   val frVCloud      = FrVCloud(
-    frInfList, FrUniqVList(frInfList, db), FrRegVPatternList())
+    frInfList, FrUniqVList(frInfList, db), FrRegVPatternList(),
+    FrStemChangeList(frInfList, db))
 
   fun getCardDownloads(lang: String): Map<String, List<CardDownload>> {
     val paragraphIds = db.paragraphsTable.selectForLang(lang)

@@ -217,15 +217,15 @@ CREATE TABLE leafs (
     infinitive_leaf_id integer,
     fr_mixed text,
     CONSTRAINT leafs_en_disambiguation_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'EsNonverb'::text, 'EsInf'::text])) AND (en_disambiguation IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'EsNonverb'::text, 'EsInf'::text])) AND (en_disambiguation IS NULL)))),
-    CONSTRAINT leafs_en_past_check CHECK ((((leaf_type = ANY (ARRAY['EsInf'::text, 'EsStemChange'::text, 'FrInf'::text])) AND (en_past IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsInf'::text, 'EsStemChange'::text, 'FrInf'::text])) AND (en_past IS NULL)))),
+    CONSTRAINT leafs_en_past_check CHECK ((((leaf_type = ANY (ARRAY['EsInf'::text, 'EsStemChange'::text, 'FrInf'::text, 'FrStemChange'::text])) AND (en_past IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsInf'::text, 'EsStemChange'::text, 'FrInf'::text, 'FrStemChange'::text])) AND (en_past IS NULL)))),
     CONSTRAINT leafs_en_plural_check CHECK (((leaf_type = 'EsNonverb'::text) OR ((leaf_type <> 'EsNonverb'::text) AND (en_plural IS NULL)))),
     CONSTRAINT leafs_es_mixed_check CHECK ((((leaf_type = ANY (ARRAY['EsInf'::text, 'EsStemChange'::text, 'EsUniqV'::text, 'EsNonverb'::text])) AND (es_mixed IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsInf'::text, 'EsStemChange'::text, 'EsUniqV'::text, 'EsNonverb'::text])) AND (es_mixed IS NULL)))),
-    CONSTRAINT leafs_fr_mixed_check CHECK ((((leaf_type = ANY (ARRAY['FrInf'::text, 'FrUniqV'::text, 'FrNonverb'::text])) AND (fr_mixed IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['FrInf'::text, 'FrUniqV'::text, 'FrNonverb'::text])) AND (fr_mixed IS NULL)))),
-    CONSTRAINT leafs_infinitive_leaf_id_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text])) AND (infinitive_leaf_id IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text])) AND (infinitive_leaf_id IS NULL)))),
-    CONSTRAINT leafs_leaf_type_check CHECK ((leaf_type = ANY (ARRAY['EsInf'::text, 'EsNonverb'::text, 'EsStemChange'::text, 'EsUniqV'::text, 'FrNonverb'::text, 'FrInf'::text, 'FrUniqV'::text]))),
+    CONSTRAINT leafs_fr_mixed_check CHECK ((((leaf_type = ANY (ARRAY['FrInf'::text, 'FrUniqV'::text, 'FrNonverb'::text, 'FrStemChange'::text])) AND (fr_mixed IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['FrInf'::text, 'FrUniqV'::text, 'FrNonverb'::text, 'FrStemChange'::text])) AND (fr_mixed IS NULL)))),
+    CONSTRAINT leafs_infinitive_leaf_id_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text, 'FrStemChange'::text])) AND (infinitive_leaf_id IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text, 'FrStemChange'::text])) AND (infinitive_leaf_id IS NULL)))),
+    CONSTRAINT leafs_leaf_type_check CHECK ((leaf_type = ANY (ARRAY['EsInf'::text, 'EsNonverb'::text, 'EsStemChange'::text, 'EsUniqV'::text, 'FrNonverb'::text, 'FrInf'::text, 'FrUniqV'::text, 'FrStemChange'::text]))),
     CONSTRAINT leafs_number_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'FrUniqV'::text])) AND (number = ANY (ARRAY[1, 2]))) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'FrUniqV'::text])) AND (number IS NULL)))),
     CONSTRAINT leafs_person_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'FrUniqV'::text])) AND (person = ANY (ARRAY[1, 2, 3]))) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'FrUniqV'::text])) AND (person IS NULL)))),
-    CONSTRAINT leafs_tense_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text])) AND (tense = ANY (ARRAY['PRES'::text, 'PRET'::text]))) OR ((leaf_type = 'FrUniqV'::text) AND (tense = 'PRES'::text)) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text])) AND (person IS NULL))))
+    CONSTRAINT leafs_tense_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text])) AND (tense = ANY (ARRAY['PRES'::text, 'PRET'::text]))) OR ((leaf_type = ANY (ARRAY['FrUniqV'::text, 'FrStemChange'::text])) AND (tense = 'PRES'::text)) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text, 'FrStemChange'::text])) AND (person IS NULL))))
 );
 
 
@@ -865,6 +865,30 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 2289	1049	1051	1	2
 2291	1049	1053	2	2
 2294	1051	1053	1	1
+2298	1054	986	0	0
+2302	1054	1038	2	2
+2303	1056	1038	1	1
+2305	1054	1056	1	2
+2306	1054	1057	1	1
+2309	1056	1057	0	0
+2313	1060	994	0	0
+2318	1060	1043	2	2
+2319	1062	1043	1	1
+2320	1060	1059	1	1
+2321	1062	1059	0	0
+2323	1060	1062	1	2
+2330	1065	990	0	0
+2333	1065	1028	2	2
+2334	1067	1028	1	1
+2337	1065	1057	1	1
+2338	1067	1057	0	0
+2342	1065	1067	1	2
+2349	1071	1002	0	0
+2353	1071	1053	2	2
+2354	1073	1053	1	1
+2357	1071	1057	1	1
+2358	1073	1057	0	0
+2364	1071	1073	1	2
 \.
 
 
@@ -872,7 +896,7 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 -- Name: card_embeddings_card_embedding_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 2296, true);
+SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 2369, true);
 
 
 --
@@ -1192,6 +1216,16 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 1049	[{"leafId":595,"en":"they (masc.)","l2":"ils"},{"leafId":610,"en":"speak","l2":"parl-"},{"leafId":-106,"en":"(they)","l2":"-ent"}]	\N	595,610,-106	They speak.	0		2018-09-02 17:19:21.828227-06	2018-09-02 17:19:21.825-06
 1051	[{"leafId":610,"en":"speak","l2":"parl-"},{"leafId":-106,"en":"(they)","l2":"-ent"}]	\N	610,-106	(they) speak	0		2018-09-02 17:19:21.828227-06	2018-09-02 17:19:21.825-06
 1053	[{"leafId":-106,"en":"(they)","l2":"-ent"}]	\N	-106	(they speak)	1		2018-09-02 17:19:21.828227-06	2018-09-02 17:19:21.825-06
+1054	[{"leafId":591,"en":"he","l2":"il"},{"leafId":613,"en":"call","l2":"appell"},{"leafId":-103,"en":"(he/she)","l2":"-e"}]	\N	591,613,-103	He calls.	0		2018-09-03 01:46:19.399464-06	2018-09-03 01:46:19.392-06
+1056	[{"leafId":613,"en":"call","l2":"appell"},{"leafId":-103,"en":"(he/she)","l2":"-e"}]	\N	613,-103	(he/she) calls	0		2018-09-03 01:46:19.399464-06	2018-09-03 01:46:19.393-06
+1057	[{"leafId":613,"en":"call","l2":"appell"}]	\N	613	Stem change for appeler in PRES	1		2018-09-03 01:46:19.399464-06	2018-09-03 01:46:19.393-06
+1059	[{"leafId":611,"en":"call","l2":"appeler"}]	\N	611	to call	1		2018-09-03 01:46:19.399464-06	2018-09-03 01:46:19.393-06
+1060	[{"leafId":593,"en":"we","l2":"nous"},{"leafId":611,"en":"call","l2":"appel-"},{"leafId":-104,"en":"(we)","l2":"-ons"}]	\N	593,611,-104	We call.	0		2018-09-03 01:57:58.767856-06	2018-09-03 01:57:58.763-06
+1062	[{"leafId":611,"en":"call","l2":"appel-"},{"leafId":-104,"en":"(we)","l2":"-ons"}]	\N	611,-104	(we) call	0		2018-09-03 01:57:58.767856-06	2018-09-03 01:57:58.763-06
+1065	[{"leafId":592,"en":"she","l2":"elle"},{"leafId":613,"en":"call","l2":"appell-"},{"leafId":-101,"en":"(I)","l2":"-e"}]	\N	592,613,-101	She calls.	0		2018-09-03 01:58:13.571453-06	2018-09-03 01:58:13.568-06
+1067	[{"leafId":613,"en":"call","l2":"appell-"},{"leafId":-101,"en":"(I)","l2":"-e"}]	\N	613,-101	(I) call	0		2018-09-03 01:58:13.571453-06	2018-09-03 01:58:13.568-06
+1071	[{"leafId":595,"en":"they (masc.)","l2":"ils"},{"leafId":613,"en":"call","l2":"appell-"},{"leafId":-106,"en":"(they)","l2":"-ent"}]	\N	595,613,-106	They call.	0		2018-09-03 02:03:42.540446-06	2018-09-03 02:03:42.533-06
+1073	[{"leafId":613,"en":"call","l2":"appell-"},{"leafId":-106,"en":"(they)","l2":"-ent"}]	\N	613,-106	(they) call	0		2018-09-03 02:03:42.540446-06	2018-09-03 02:03:42.535-06
 \.
 
 
@@ -1199,7 +1233,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 -- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('cards_card_id_seq', 1053, true);
+SELECT pg_catalog.setval('cards_card_id_seq', 1076, true);
 
 
 --
@@ -1310,6 +1344,10 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 184	We speak.	Nous parlons.	2018-09-02 17:18:47.058296-06	2018-09-02 17:18:47.055-06	1039	9
 185	You speak. (pl.)	Vous parlez.	2018-09-02 17:19:01.183814-06	2018-09-02 17:19:01.183-06	1044	9
 186	They speak.	Ils parlent.	2018-09-02 17:19:21.844623-06	2018-09-02 17:19:21.843-06	1049	9
+187	He calls.	Il appelle.	2018-09-03 01:46:19.484676-06	2018-09-03 01:46:19.482-06	1054	9
+188	We call.	Nous appelons.	2018-09-03 01:57:58.839346-06	2018-09-03 01:57:58.837-06	1060	9
+189	She calls.	Elle appelle.	2018-09-03 01:58:13.595394-06	2018-09-03 01:58:13.594-06	1065	9
+190	They call.	Ils appellent.	2018-09-03 02:03:42.605601-06	2018-09-03 02:03:42.603-06	1071	9
 \.
 
 
@@ -1317,7 +1355,7 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 -- Name: goals_goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('goals_goal_id_seq', 186, true);
+SELECT pg_catalog.setval('goals_goal_id_seq', 190, true);
 
 
 --
@@ -1611,6 +1649,8 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 608	FrNonverb	\N	thanks	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:18.4482-06	\N	merci
 609	FrNonverb	\N	and	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:45.691008-06	\N	et
 610	FrInf	\N	speak	\N	\N	spoke	\N	\N	\N	2018-09-02 17:17:28.346519-06	\N	parler
+611	FrInf	\N	call	\N	\N	called	\N	\N	\N	2018-09-03 01:26:22.431007-06	\N	appeler
+613	FrStemChange	\N	call	\N	\N	called	\N	\N	PRES	2018-09-03 01:31:58.545072-06	611	appell-
 \.
 
 
@@ -1618,7 +1658,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 610, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 613, true);
 
 
 --
@@ -1654,7 +1694,7 @@ COPY schema_version (installed_rank, version, description, type, script, checksu
 1	1	create goals and cards	SQL	V1__create_goals_and_cards.sql	1062513313	postgres	2018-06-27 09:31:17.379663	46	t
 4	4	no unique es mixed	SQL	V4__no_unique_es_mixed.sql	604495595	postgres	2018-09-01 18:07:12.74282	129	t
 5	5	add french	SQL	V5__add_french.sql	701199897	postgres	2018-09-02 15:33:33.249875	118	t
-6	6	add french infinitives	SQL	V6__add_french_infinitives.sql	1362844776	postgres	2018-09-02 16:03:54.533692	32	t
+6	6	add french verbs	SQL	V6__add_french_verbs.sql	667749704	postgres	2018-09-02 16:03:54.533692	32	t
 \.
 
 

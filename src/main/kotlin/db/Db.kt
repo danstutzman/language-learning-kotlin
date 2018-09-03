@@ -24,6 +24,7 @@ class Db(
   val esUniqueConjugationsTable = EsUniqueConjugationsTable(conn)
   val frInfinitivesTable = FrInfinitivesTable(conn)
   val frNonverbsTable = FrNonverbsTable(conn)
+  val frStemChangesTable = FrStemChangesTable(conn)
   val frUniqueConjugationsTable = FrUniqueConjugationsTable(conn)
   val goalsTable = GoalsTable(conn)
   val paragraphsTable = ParagraphsTable(conn)

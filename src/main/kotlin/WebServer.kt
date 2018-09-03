@@ -9,6 +9,7 @@ import com.danstutzman.routes.GetEsStemChanges
 import com.danstutzman.routes.GetEsUniqueConjugations
 import com.danstutzman.routes.GetFrInfinitives
 import com.danstutzman.routes.GetFrNonverbs
+import com.danstutzman.routes.GetFrStemChanges
 import com.danstutzman.routes.GetFrUniqueConjugations
 import com.danstutzman.routes.GetParagraph
 import com.danstutzman.routes.GetParagraphs
@@ -20,6 +21,7 @@ import com.danstutzman.routes.PostEsStemChanges
 import com.danstutzman.routes.PostEsUniqueConjugations
 import com.danstutzman.routes.PostFrInfinitives
 import com.danstutzman.routes.PostFrNonverbs
+import com.danstutzman.routes.PostFrStemChanges
 import com.danstutzman.routes.PostFrUniqueConjugations
 import com.danstutzman.routes.PostParagraph
 import com.danstutzman.routes.PostParagraphAddGoal
@@ -185,6 +187,18 @@ fun main(args: Array<String>) {
       normalize(req.queryParams("en_past"))!!,
       normalize(req.queryParams("en_disambiguation"))!!)
     res.redirect("/es/stem-changes")
+  }
+  service.get("/fr/stem-changes") { _: Request, _: Response ->
+    GetFrStemChanges(db) }
+  service.post("/fr/stem-changes") { req: Request, res: Response ->
+    PostFrStemChanges(db, extractLeafIdsToDelete(req),
+      req.queryParams("newStemChange") != null,
+      normalize(req.queryParams("infinitive_fr_mixed"))!!,
+      normalize(req.queryParams("fr_mixed"))!!,
+      req.queryParams("tense")!!,
+      normalize(req.queryParams("en"))!!,
+      normalize(req.queryParams("en_past"))!!)
+    res.redirect("/fr/stem-changes")
   }
 
   service.get("/es/unique-conjugations") { _: Request, _: Response ->
