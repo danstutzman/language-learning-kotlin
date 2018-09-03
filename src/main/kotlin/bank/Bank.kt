@@ -105,7 +105,7 @@ class Bank(
         .split(Regex("[ .,;$?!\u00BF\u00A1()'\"-]+"))
         .filterNot { it == "" }
       "fr" -> l2Phrase
-        .split(Regex("[ .,;$?!\u00BF\u00A1()\"-]+"))
+        .split(Regex("[^a-zàâçéèêëîïôûùüÿæœ']+", RegexOption.IGNORE_CASE))
         .flatMap { 
           // combined="m'appelle" becomes ["m'", "appelle"]
           val match = Regex("^([djmt]')(.+)$").find(it)
