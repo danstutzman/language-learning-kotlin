@@ -10,6 +10,7 @@ class EnVerbs {
       Pair(1, 2) to "",
       Pair(1, 3) to "s",
       Pair(2, 1) to "",
+      Pair(2, 2) to "",
       Pair(2, 3) to ""
     )
 
