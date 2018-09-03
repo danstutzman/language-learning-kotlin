@@ -35,7 +35,6 @@ import spark.Response
 import java.io.File
 
 const val DELAY_THRESHOLD = 100000
-var L2_PUNCTUATION_REGEX = Regex("[ .,;$?!\u00BF\u00A1()-]+")
 
 data class CardDownload(
   val cardId: Int,
@@ -100,9 +99,21 @@ class Bank(
     }
   }
 
-  fun splitL2Phrase(l2Phrase: String): List<String> =
-    l2Phrase.split(L2_PUNCTUATION_REGEX).flatMap { word ->
-      if (word == "") listOf<String>() else listOf(word)
+  fun splitL2Phrase(lang: String, l2Phrase: String): List<String> =
+    when(lang) {
+      "es" -> l2Phrase
+        .split(Regex("[ .,;$?!\u00BF\u00A1()'\"-]+"))
+        .filterNot { it == "" }
+      "fr" -> l2Phrase
+        .split(Regex("[ .,;$?!\u00BF\u00A1()\"-]+"))
+        .flatMap { 
+          // combined="m'appelle" becomes ["m'", "appelle"]
+          val match = Regex("^([djmt]')(.+)$").find(it)
+          if (match != null) listOf(match.groupValues[1], match.groupValues[2])
+          else listOf(it)
+        }
+        .filterNot { it == "" }
+      else -> throw RuntimeException("Unknown lang ${lang}")
     }
 
   fun interpretL2Word(lang: String, word: String): List<Interpretation> =

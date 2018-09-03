@@ -889,6 +889,104 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 2357	1071	1057	1	1
 2358	1073	1057	0	0
 2364	1071	1073	1	2
+2372	1077	1011	0	0
+2373	1077	1012	1	1
+2377	1077	1019	2	2
+2383	1082	998	1	1
+2386	1082	1010	0	0
+2393	1082	1048	3	3
+2394	1085	1048	1	1
+2395	1082	1059	2	2
+2396	1085	1059	0	0
+2402	1082	1085	2	3
+2442	1097	978	0	0
+2446	1097	1028	3	3
+2450	1097	1057	2	2
+2457	1097	1067	2	3
+2464	1097	1093	4	4
+2466	1097	1099	1	1
+2473	1107	998	1	1
+2474	1107	1021	0	1
+2477	1107	1022	0	0
+2483	1107	1110	2	3
+2484	1107	1111	4	4
+2485	1107	1112	5	5
+2486	1107	1113	2	2
+2487	1107	1114	3	3
+2489	1110	1113	0	0
+2490	1110	1114	1	1
+2498	1115	978	0	0
+2504	1115	1117	1	2
+2505	1115	1118	3	3
+2506	1115	1119	4	4
+2507	1115	1120	1	1
+2508	1115	1121	2	2
+2510	1117	1120	0	0
+2511	1117	1121	1	1
+2518	1123	977	0	1
+2521	1123	978	0	0
+2522	1123	979	1	1
+2528	1123	1126	2	2
+2531	1128	978	0	0
+2540	1128	1117	1	2
+2543	1128	1120	1	1
+2545	1128	1121	2	2
+2550	1128	1131	3	3
+2551	1128	1132	4	4
+2552	1128	1133	5	5
+2558	1137	977	0	1
+2561	1137	978	0	0
+2562	1137	979	1	1
+2571	1137	1140	2	2
+2574	1142	998	0	0
+2585	1142	1110	1	2
+2588	1142	1111	3	3
+2589	1142	1112	4	4
+2590	1142	1113	1	1
+2592	1142	1114	2	2
+2598	1142	1147	5	5
+2603	1150	978	0	0
+2613	1150	1117	1	2
+2616	1150	1118	3	3
+2617	1150	1120	1	1
+2619	1150	1121	2	2
+2631	1150	1154	4	4
+2635	1158	977	0	1
+2638	1158	978	0	0
+2639	1158	979	1	1
+2651	1158	1161	2	2
+2653	1163	977	0	1
+2656	1163	978	0	0
+2657	1163	979	1	1
+2661	1163	1111	3	3
+2674	1163	1166	2	2
+2676	1163	1168	4	4
+2680	1170	998	0	0
+2684	1170	1027	1	1
+2692	1170	1044	0	2
+2697	1170	1046	1	2
+2700	1170	1048	2	2
+2711	1170	1168	3	3
+2718	1178	998	0	0
+2722	1178	1027	1	1
+2730	1178	1044	0	2
+2735	1178	1046	1	2
+2738	1178	1048	2	2
+2748	1178	1126	3	3
+2759	1184	1185	0	0
+2760	1184	1186	1	1
+2761	1184	1187	2	2
+2766	1188	978	0	0
+2777	1188	1190	1	1
+2778	1188	1191	2	2
+2779	1188	1192	3	3
+2780	1188	1193	4	4
+2786	1195	1192	0	0
+2788	1195	1197	1	1
+2790	1198	1199	0	0
+2791	1198	1200	1	1
+2794	1201	1202	0	0
+2795	1201	1203	1	1
 \.
 
 
@@ -896,7 +994,7 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 -- Name: card_embeddings_card_embedding_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 2369, true);
+SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 2797, true);
 
 
 --
@@ -1226,6 +1324,63 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 1067	[{"leafId":613,"en":"call","l2":"appell-"},{"leafId":-101,"en":"(I)","l2":"-e"}]	\N	613,-101	(I) call	0		2018-09-03 01:58:13.571453-06	2018-09-03 01:58:13.568-06
 1071	[{"leafId":595,"en":"they (masc.)","l2":"ils"},{"leafId":613,"en":"call","l2":"appell-"},{"leafId":-106,"en":"(they)","l2":"-ent"}]	\N	595,613,-106	They call.	0		2018-09-03 02:03:42.540446-06	2018-09-03 02:03:42.533-06
 1073	[{"leafId":613,"en":"call","l2":"appell-"},{"leafId":-106,"en":"(they)","l2":"-ent"}]	\N	613,-106	(they) call	0		2018-09-03 02:03:42.540446-06	2018-09-03 02:03:42.535-06
+1077	[{"leafId":605,"en":"it","l2":"ça"},{"leafId":600,"en":"goes","l2":"va"},{"leafId":608,"en":"thanks","l2":"merci"}]	\N	605,600,608	It's going well, thanks.	0		2018-09-03 07:40:24.725002-06	2018-09-03 07:40:24.72-06
+1082	[{"leafId":604,"en":"how","l2":"comment"},{"leafId":594,"en":"you all","l2":"vous"},{"leafId":611,"en":"call","l2":"appel-"},{"leafId":-105,"en":"(we)","l2":"-ez"},{"leafId":594,"en":"you all","l2":"vous"}]	\N	604,594,611,-105,594	What do you call yourself?	0		2018-09-03 07:40:54.242283-06	2018-09-03 07:40:54.239-06
+1085	[{"leafId":611,"en":"call","l2":"appel-"},{"leafId":-105,"en":"(we)","l2":"-ez"}]	\N	611,-105	(we) call	0		2018-09-03 07:40:54.242283-06	2018-09-03 07:40:54.239-06
+1091	[{"leafId":614,"en":"me","l2":"me"}]	\N	614	me	5		2018-09-03 09:03:17.864285-06	2018-09-03 09:03:17.854-06
+1093	[{"leafId":615,"en":"Pat","l2":"Pat"}]	\N	615	Pat	5		2018-09-03 09:03:17.864285-06	2018-09-03 09:03:17.858-06
+1097	[{"leafId":589,"en":"I/me","l2":"je"},{"leafId":616,"en":"me","l2":"m\\u0027"},{"leafId":613,"en":"call","l2":"appell-"},{"leafId":-101,"en":"(I)","l2":"-e"},{"leafId":615,"en":"Pat","l2":"Pat"}]	\N	589,616,613,-101,615	I call myself Pat.	0		2018-09-03 09:06:47.279612-06	2018-09-03 09:06:47.274-06
+1099	[{"leafId":616,"en":"me","l2":"m\\u0027"}]	\N	616	me	1		2018-09-03 09:06:47.279612-06	2018-09-03 09:06:47.275-06
+1105	[{"leafId":617,"en":"enchanted","l2":"enchanté"}]	\N	617	Enchanted.	1		2018-09-03 10:13:44.473515-06	2018-09-03 10:13:44.471-06
+1107	[{"leafId":609,"en":"and","l2":"et"},{"leafId":594,"en":"you all","l2":"vous"},{"leafId":618,"en":"come","l2":"v-"},{"leafId":-115,"en":"(you)","l2":"-enez"},{"leafId":620,"en":"from","l2":"d\\u0027"},{"leafId":621,"en":"where","l2":"où"}]	\N	609,594,618,-115,620,621	And you come from where? (formal)	0		2018-09-03 10:41:36.623821-06	2018-09-03 10:41:36.617-06
+1110	[{"leafId":618,"en":"come","l2":"v-"},{"leafId":-115,"en":"(you)","l2":"-enez"}]	\N	618,-115	(you) come	0		2018-09-03 10:41:36.623821-06	2018-09-03 10:41:36.618-06
+1111	[{"leafId":620,"en":"from","l2":"d\\u0027"}]	\N	620	from	1		2018-09-03 10:41:36.623821-06	2018-09-03 10:41:36.618-06
+1112	[{"leafId":621,"en":"where","l2":"où"}]	\N	621	where	1		2018-09-03 10:41:36.623821-06	2018-09-03 10:41:36.618-06
+1113	[{"leafId":618,"en":"come","l2":"venir"}]	\N	618	to come	1		2018-09-03 10:41:36.623821-06	2018-09-03 10:41:36.618-06
+1114	[{"leafId":-115,"en":"(you)","l2":"-enez"}]	\N	-115	(you come)	1		2018-09-03 10:41:36.623821-06	2018-09-03 10:41:36.618-06
+1115	[{"leafId":589,"en":"I/me","l2":"je"},{"leafId":619,"en":"come","l2":"vien-"},{"leafId":-111,"en":"(I)","l2":"-iens"},{"leafId":623,"en":"from","l2":"de"},{"leafId":624,"en":"France","l2":"France"}]	\N	589,619,-111,623,624	I come from France.	0		2018-09-03 10:42:20.266468-06	2018-09-03 10:42:20.258-06
+1117	[{"leafId":619,"en":"come","l2":"vien-"},{"leafId":-111,"en":"(I)","l2":"-iens"}]	\N	619,-111	(I) come	0		2018-09-03 10:42:20.266468-06	2018-09-03 10:42:20.258-06
+1118	[{"leafId":623,"en":"from","l2":"de"}]	\N	623	from	1		2018-09-03 10:42:20.266468-06	2018-09-03 10:42:20.258-06
+1119	[{"leafId":624,"en":"France","l2":"France"}]	\N	624	France	5		2018-09-03 10:42:20.266468-06	2018-09-03 10:42:20.258-06
+1120	[{"leafId":619,"en":"come","l2":"vien-"}]	\N	619	Stem change for venir in PRES	1		2018-09-03 10:42:20.266468-06	2018-09-03 10:42:20.258-06
+1121	[{"leafId":-111,"en":"(I)","l2":"-iens"}]	\N	-111	(I come)	1		2018-09-03 10:42:20.266468-06	2018-09-03 10:42:20.259-06
+1123	[{"leafId":589,"en":"I/me","l2":"je"},{"leafId":583,"en":"am","l2":"suis"},{"leafId":625,"en":"French","l2":"français"}]	\N	589,583,625	I am French. (masc.)	0		2018-09-03 10:42:42.689761-06	2018-09-03 10:42:42.687-06
+1126	[{"leafId":625,"en":"French","l2":"français"}]	\N	625	French	1		2018-09-03 10:42:42.689761-06	2018-09-03 10:42:42.687-06
+1128	[{"leafId":589,"en":"I/me","l2":"je"},{"leafId":619,"en":"come","l2":"vien-"},{"leafId":-111,"en":"(I)","l2":"-iens"},{"leafId":626,"en":"from","l2":"des"},{"leafId":627,"en":"states","l2":"états"},{"leafId":628,"en":"united","l2":"unis"}]	\N	589,619,-111,626,627,628	I come from the United States.	0		2018-09-03 10:44:02.894182-06	2018-09-03 10:44:02.89-06
+1131	[{"leafId":626,"en":"from","l2":"des"}]	\N	626	from	1		2018-09-03 10:44:02.894182-06	2018-09-03 10:44:02.89-06
+1132	[{"leafId":627,"en":"states","l2":"états"}]	\N	627	states	1		2018-09-03 10:44:02.894182-06	2018-09-03 10:44:02.89-06
+1133	[{"leafId":628,"en":"united","l2":"unis"}]	\N	628	united	1		2018-09-03 10:44:02.894182-06	2018-09-03 10:44:02.89-06
+1137	[{"leafId":589,"en":"I/me","l2":"je"},{"leafId":583,"en":"am","l2":"suis"},{"leafId":629,"en":"American","l2":"américain"}]	\N	589,583,629	I am American.	0		2018-09-03 10:44:28.944079-06	2018-09-03 10:44:28.942-06
+1140	[{"leafId":629,"en":"American","l2":"américain"}]	\N	629	American	1		2018-09-03 10:44:28.944079-06	2018-09-03 10:44:28.943-06
+1142	[{"leafId":594,"en":"you all","l2":"vous"},{"leafId":618,"en":"come","l2":"v-"},{"leafId":-115,"en":"(you)","l2":"-enez"},{"leafId":620,"en":"from","l2":"d\\u0027"},{"leafId":621,"en":"where","l2":"où"},{"leafId":630,"en":"exactly","l2":"exactement"}]	\N	594,618,-115,620,621,630	You come from where exactly? (formal)	0		2018-09-03 10:44:59.573471-06	2018-09-03 10:44:59.571-06
+1147	[{"leafId":630,"en":"exactly","l2":"exactement"}]	\N	630	exactly	1		2018-09-03 10:44:59.573471-06	2018-09-03 10:44:59.571-06
+1150	[{"leafId":589,"en":"I/me","l2":"je"},{"leafId":619,"en":"come","l2":"vien-"},{"leafId":-111,"en":"(I)","l2":"-iens"},{"leafId":623,"en":"from","l2":"de"},{"leafId":631,"en":"Boston","l2":"Boston"}]	\N	589,619,-111,623,631	I come from Boston.	0		2018-09-03 10:45:39.670279-06	2018-09-03 10:45:39.668-06
+1154	[{"leafId":631,"en":"Boston","l2":"Boston"}]	\N	631	Boston	5		2018-09-03 10:45:39.670279-06	2018-09-03 10:45:39.668-06
+1158	[{"leafId":589,"en":"I/me","l2":"je"},{"leafId":583,"en":"am","l2":"suis"},{"leafId":632,"en":"student","l2":"étudiant"}]	\N	589,583,632	I am a student.	0		2018-09-03 10:46:05.028706-06	2018-09-03 10:46:05.022-06
+1161	[{"leafId":632,"en":"student","l2":"étudiant"}]	\N	632	student	1		2018-09-03 10:46:05.028706-06	2018-09-03 10:46:05.022-06
+1163	[{"leafId":589,"en":"I/me","l2":"je"},{"leafId":583,"en":"am","l2":"suis"},{"leafId":633,"en":"professor","l2":"professeur"},{"leafId":620,"en":"from","l2":"d\\u0027"},{"leafId":634,"en":"English","l2":"anglais"}]	\N	589,583,633,620,634	I'm an professor of English.	0		2018-09-03 10:47:02.83699-06	2018-09-03 10:47:02.835-06
+1166	[{"leafId":633,"en":"professor","l2":"professeur"}]	\N	633	professor	1		2018-09-03 10:47:02.83699-06	2018-09-03 10:47:02.835-06
+1168	[{"leafId":634,"en":"English","l2":"anglais"}]	\N	634	English	1		2018-09-03 10:47:02.83699-06	2018-09-03 10:47:02.835-06
+1170	[{"leafId":594,"en":"you all","l2":"vous"},{"leafId":610,"en":"speak","l2":"parl-"},{"leafId":-105,"en":"(you)","l2":"-ez"},{"leafId":634,"en":"English","l2":"anglais"}]	\N	594,610,-105,634	You speak English? (formal)	0		2018-09-03 10:47:22.294687-06	2018-09-03 10:47:22.293-06
+1176	[{"leafId":635,"en":"yes","l2":"oui"}]	\N	635	Yes.	1		2018-09-03 10:47:45.268003-06	2018-09-03 10:47:45.267-06
+1178	[{"leafId":594,"en":"you all","l2":"vous"},{"leafId":610,"en":"speak","l2":"parl-"},{"leafId":-105,"en":"(you)","l2":"-ez"},{"leafId":625,"en":"French","l2":"français"}]	\N	594,610,-105,625	You speak French? (formal)	0		2018-09-03 10:48:05.38478-06	2018-09-03 10:48:05.383-06
+1184	[{"leafId":636,"en":"a","l2":"un"},{"leafId":637,"en":"little","l2":"petit"},{"leafId":638,"en":"bit","l2":"peu"}]	\N	636,637,638	A little bit.	0		2018-09-03 10:48:55.320384-06	2018-09-03 10:48:55.318-06
+1185	[{"leafId":636,"en":"a","l2":"un"}]	\N	636	a	1		2018-09-03 10:48:55.320384-06	2018-09-03 10:48:55.318-06
+1186	[{"leafId":637,"en":"little","l2":"petit"}]	\N	637	little	1		2018-09-03 10:48:55.320384-06	2018-09-03 10:48:55.318-06
+1187	[{"leafId":638,"en":"bit","l2":"peu"}]	\N	638	bit	1		2018-09-03 10:48:55.320384-06	2018-09-03 10:48:55.318-06
+1188	[{"leafId":589,"en":"I/me","l2":"je"},{"leafId":598,"en":"go","l2":"vais"},{"leafId":639,"en":"home","l2":"chez"},{"leafId":640,"en":"my","l2":"moi"},{"leafId":641,"en":"now","l2":"maintenant"}]	\N	589,598,639,640,641	I'm going to my home now.	0		2018-09-03 10:50:14.129822-06	2018-09-03 10:50:14.128-06
+1190	[{"leafId":598,"en":"go","l2":"vais"}]	\N	598	I go	1		2018-09-03 10:50:14.129822-06	2018-09-03 10:50:14.128-06
+1191	[{"leafId":639,"en":"home","l2":"chez"}]	\N	639	home	1		2018-09-03 10:50:14.129822-06	2018-09-03 10:50:14.128-06
+1192	[{"leafId":640,"en":"my","l2":"moi"}]	\N	640	my	1		2018-09-03 10:50:14.129822-06	2018-09-03 10:50:14.128-06
+1193	[{"leafId":641,"en":"now","l2":"maintenant"}]	\N	641	now	1		2018-09-03 10:50:14.129822-06	2018-09-03 10:50:14.128-06
+1195	[{"leafId":640,"en":"my","l2":"moi"},{"leafId":642,"en":"also","l2":"aussi"}]	\N	640,642	Me too.	0		2018-09-03 10:50:39.87576-06	2018-09-03 10:50:39.874-06
+1197	[{"leafId":642,"en":"also","l2":"aussi"}]	\N	642	also	1		2018-09-03 10:50:39.87576-06	2018-09-03 10:50:39.874-06
+1198	[{"leafId":643,"en":"to the","l2":"Au"},{"leafId":644,"en":"seeing again","l2":"revoir"}]	\N	643,644	Goodbye!	0		2018-09-03 10:52:25.893737-06	2018-09-03 10:52:25.893-06
+1199	[{"leafId":643,"en":"to the","l2":"Au"}]	\N	643	to the	1		2018-09-03 10:52:25.893737-06	2018-09-03 10:52:25.893-06
+1200	[{"leafId":644,"en":"seeing again","l2":"revoir"}]	\N	644	seeing again	1		2018-09-03 10:52:25.893737-06	2018-09-03 10:52:25.893-06
+1201	[{"leafId":645,"en":"good","l2":"bonne"},{"leafId":646,"en":"day","l2":"journée"}]	\N	645,646	Good day!	0		2018-09-03 10:53:12.939458-06	2018-09-03 10:53:12.938-06
+1202	[{"leafId":645,"en":"good","l2":"bonne"}]	\N	645	good	1		2018-09-03 10:53:12.939458-06	2018-09-03 10:53:12.938-06
+1203	[{"leafId":646,"en":"day","l2":"journée"}]	\N	646	day	1		2018-09-03 10:53:12.939458-06	2018-09-03 10:53:12.938-06
 \.
 
 
@@ -1233,7 +1388,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 -- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('cards_card_id_seq', 1076, true);
+SELECT pg_catalog.setval('cards_card_id_seq', 1203, true);
 
 
 --
@@ -1348,6 +1503,27 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 188	We call.	Nous appelons.	2018-09-03 01:57:58.839346-06	2018-09-03 01:57:58.837-06	1060	9
 189	She calls.	Elle appelle.	2018-09-03 01:58:13.595394-06	2018-09-03 01:58:13.594-06	1065	9
 190	They call.	Ils appellent.	2018-09-03 02:03:42.605601-06	2018-09-03 02:03:42.603-06	1071	9
+191	It's going well, thanks.	Ça va, merci.	2018-09-03 07:40:24.808897-06	2018-09-03 07:40:24.806-06	1077	9
+192	What do you call yourself?	Comment vous appelez-vous?	2018-09-03 07:40:54.270232-06	2018-09-03 07:40:54.269-06	1082	9
+194	I call myself Pat.	Je m'appelle Pat.	2018-09-03 09:06:47.349887-06	2018-09-03 09:06:47.348-06	1097	9
+195	Enchanted.	Enchanté.	2018-09-03 10:13:44.483017-06	2018-09-03 10:13:44.481-06	1105	9
+196	And you come from where? (formal)	Et vous venez d'où?	2018-09-03 10:41:36.694268-06	2018-09-03 10:41:36.692-06	1107	9
+197	I come from France.	Je viens de France.	2018-09-03 10:42:20.303468-06	2018-09-03 10:42:20.302-06	1115	9
+198	I am French. (masc.)	Je suis français.	2018-09-03 10:42:42.702922-06	2018-09-03 10:42:42.702-06	1123	9
+199	I come from the United States.	Je viens des États-Unis.	2018-09-03 10:44:02.9212-06	2018-09-03 10:44:02.92-06	1128	9
+200	I am American.	Je suis américain.	2018-09-03 10:44:28.953505-06	2018-09-03 10:44:28.952-06	1137	9
+201	You come from where exactly? (formal)	Vous venez d'où exactement?	2018-09-03 10:44:59.589935-06	2018-09-03 10:44:59.589-06	1142	9
+202	I come from Boston.	Je viens de Boston.	2018-09-03 10:45:39.687164-06	2018-09-03 10:45:39.686-06	1150	9
+203	I am a student.	Je suis étudiant.	2018-09-03 10:46:05.057655-06	2018-09-03 10:46:05.056-06	1158	9
+204	I'm an professor of English.	Je suis professeur d'anglais.	2018-09-03 10:47:02.846993-06	2018-09-03 10:47:02.846-06	1163	9
+205	You speak English? (formal)	Vous parlez anglais?	2018-09-03 10:47:22.308728-06	2018-09-03 10:47:22.308-06	1170	9
+206	Yes.	Oui.	2018-09-03 10:47:45.277554-06	2018-09-03 10:47:45.276-06	1176	9
+207	You speak French? (formal)	Vous parlez français?	2018-09-03 10:48:05.397261-06	2018-09-03 10:48:05.396-06	1178	9
+208	A little bit.	Un petit peu.	2018-09-03 10:48:55.333109-06	2018-09-03 10:48:55.332-06	1184	9
+209	I'm going to my home now.	Je vais chez moi maintenant.	2018-09-03 10:50:14.15055-06	2018-09-03 10:50:14.149-06	1188	9
+210	Me too.	Moi aussi.	2018-09-03 10:50:39.900853-06	2018-09-03 10:50:39.9-06	1195	9
+211	Goodbye!	Au revoir!	2018-09-03 10:52:25.904307-06	2018-09-03 10:52:25.903-06	1198	9
+212	Good day!	Bonne journée!	2018-09-03 10:53:12.948423-06	2018-09-03 10:53:12.947-06	1201	9
 \.
 
 
@@ -1355,7 +1531,7 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 -- Name: goals_goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('goals_goal_id_seq', 190, true);
+SELECT pg_catalog.setval('goals_goal_id_seq', 212, true);
 
 
 --
@@ -1651,6 +1827,38 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 610	FrInf	\N	speak	\N	\N	spoke	\N	\N	\N	2018-09-02 17:17:28.346519-06	\N	parler
 611	FrInf	\N	call	\N	\N	called	\N	\N	\N	2018-09-03 01:26:22.431007-06	\N	appeler
 613	FrStemChange	\N	call	\N	\N	called	\N	\N	PRES	2018-09-03 01:31:58.545072-06	611	appell-
+614	FrNonverb	\N	me	\N	\N	\N	\N	\N	\N	2018-09-03 09:03:17.7684-06	\N	me
+615	FrNonverb	\N	Pat	\N	\N	\N	\N	\N	\N	2018-09-03 09:03:17.81668-06	\N	Pat
+616	FrNonverb	\N	me	\N	\N	\N	\N	\N	\N	2018-09-03 09:06:47.13204-06	\N	m'
+617	FrNonverb	\N	enchanted	\N	\N	\N	\N	\N	\N	2018-09-03 10:13:44.461449-06	\N	enchanté
+618	FrInf	\N	come	\N	\N	came	\N	\N	\N	2018-09-03 10:15:07.839627-06	\N	venir
+619	FrStemChange	\N	come	\N	\N	came	\N	\N	PRES	2018-09-03 10:15:30.875707-06	618	vien-
+620	FrNonverb	\N	from	\N	\N	\N	\N	\N	\N	2018-09-03 10:38:12.118663-06	\N	d'
+621	FrNonverb	\N	where	\N	\N	\N	\N	\N	\N	2018-09-03 10:38:12.144859-06	\N	où
+623	FrNonverb	\N	from	\N	\N	\N	\N	\N	\N	2018-09-03 10:42:20.240474-06	\N	de
+624	FrNonverb	\N	France	\N	\N	\N	\N	\N	\N	2018-09-03 10:42:20.25281-06	\N	France
+625	FrNonverb	\N	French	\N	\N	\N	\N	\N	\N	2018-09-03 10:42:42.683836-06	\N	français
+626	FrNonverb	\N	from	\N	\N	\N	\N	\N	\N	2018-09-03 10:44:02.877696-06	\N	des
+627	FrNonverb	\N	states	\N	\N	\N	\N	\N	\N	2018-09-03 10:44:02.884474-06	\N	états
+628	FrNonverb	\N	united	\N	\N	\N	\N	\N	\N	2018-09-03 10:44:02.886831-06	\N	unis
+629	FrNonverb	\N	American	\N	\N	\N	\N	\N	\N	2018-09-03 10:44:28.940238-06	\N	américain
+630	FrNonverb	\N	exactly	\N	\N	\N	\N	\N	\N	2018-09-03 10:44:59.567957-06	\N	exactement
+631	FrNonverb	\N	Boston	\N	\N	\N	\N	\N	\N	2018-09-03 10:45:39.660305-06	\N	Boston
+632	FrNonverb	\N	student	\N	\N	\N	\N	\N	\N	2018-09-03 10:46:05.007854-06	\N	étudiant
+633	FrNonverb	\N	professor	\N	\N	\N	\N	\N	\N	2018-09-03 10:47:02.821171-06	\N	professeur
+634	FrNonverb	\N	English	\N	\N	\N	\N	\N	\N	2018-09-03 10:47:02.828475-06	\N	anglais
+635	FrNonverb	\N	yes	\N	\N	\N	\N	\N	\N	2018-09-03 10:47:45.258482-06	\N	oui
+636	FrNonverb	\N	a	\N	\N	\N	\N	\N	\N	2018-09-03 10:48:55.30511-06	\N	un
+637	FrNonverb	\N	little	\N	\N	\N	\N	\N	\N	2018-09-03 10:48:55.308051-06	\N	petit
+638	FrNonverb	\N	bit	\N	\N	\N	\N	\N	\N	2018-09-03 10:48:55.310823-06	\N	peu
+639	FrNonverb	\N	home	\N	\N	\N	\N	\N	\N	2018-09-03 10:50:14.122687-06	\N	chez
+640	FrNonverb	\N	my	\N	\N	\N	\N	\N	\N	2018-09-03 10:50:14.124387-06	\N	moi
+641	FrNonverb	\N	now	\N	\N	\N	\N	\N	\N	2018-09-03 10:50:14.125663-06	\N	maintenant
+642	FrNonverb	\N	also	\N	\N	\N	\N	\N	\N	2018-09-03 10:50:39.872063-06	\N	aussi
+643	FrNonverb	\N	to the	\N	\N	\N	\N	\N	\N	2018-09-03 10:52:25.886468-06	\N	Au
+644	FrNonverb	\N	seeing again	\N	\N	\N	\N	\N	\N	2018-09-03 10:52:25.89043-06	\N	revoir
+645	FrNonverb	\N	good	\N	\N	\N	\N	\N	\N	2018-09-03 10:53:12.935056-06	\N	bonne
+646	FrNonverb	\N	day	\N	\N	\N	\N	\N	\N	2018-09-03 10:53:12.93673-06	\N	journée
 \.
 
 
@@ -1658,7 +1866,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 613, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 646, true);
 
 
 --

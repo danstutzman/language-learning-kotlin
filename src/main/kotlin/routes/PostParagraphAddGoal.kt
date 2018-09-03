@@ -34,7 +34,7 @@ fun PostParagraphAddGoal(db: Db, lang: String, paragraphId: Int, goalEn: String,
 
   val bank = Bank(db)
   val cardCreators = mutableListOf<CardCreator>()
-  for ((wordNum, word) in bank.splitL2Phrase(goalL2).withIndex()) {
+  for ((wordNum, word) in bank.splitL2Phrase(lang, goalL2).withIndex()) {
     val disambiguation = wordDisambiguations[wordNum]
     val interpretations: List<Interpretation> = bank.interpretL2Word(lang, word)
     if (disambiguation.exists) {
