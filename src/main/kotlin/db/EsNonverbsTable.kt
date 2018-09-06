@@ -48,7 +48,7 @@ class EsNonverbsTable (
         LEAFS.EN_DISAMBIGUATION,
         LEAFS.EN_PLURAL,
         LEAFS.ES_MIXED)
-      .values("Nonverb",
+      .values(ES_NONVERB_TYPE,
         nonverb.en,
         nonverb.enDisambiguation,
         nonverb.enPlural,
