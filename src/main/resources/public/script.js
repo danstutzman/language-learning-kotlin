@@ -195,7 +195,8 @@ function convertBuckwalterToMiddles(buckwalter) {
     .trim()
     .split('')
     .map(function (c) { return BUCKWALTER_TO_MIDDLES[c] })
-    .join('');
+    .join('')
+    .replace(/\ufee0\ufe8e/, '\ufee0\ufeff\ufe8e'); // split up l+a ligature
 }
 
 function convertBuckwalterToQalam(buckwalter) {
