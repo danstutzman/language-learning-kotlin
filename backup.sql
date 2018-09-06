@@ -1895,6 +1895,48 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 682	ArNonverb	\N	Libya	\N	\N	\N	\N	\N	\N	2018-09-05 22:29:54.155753-06	\N	\N	liybiyaA
 683	ArNonverb	\N	Malawi	\N	\N	\N	\N	\N	\N	2018-09-05 22:30:27.905264-06	\N	\N	maAlaAwiy
 684	ArNonverb	\N	Malaysia	\N	\N	\N	\N	\N	\N	2018-09-05 22:30:51.754102-06	\N	\N	maAlayoziyaA
+685	ArNonverb	\N	Ali	\N	\N	\N	\N	\N	\N	2018-09-05 23:03:09.294198-06	\N	\N	EAly
+686	ArNonverb	\N	Amir	\N	\N	\N	\N	\N	\N	2018-09-05 23:03:31.51387-06	\N	\N	EAmr
+687	ArNonverb	\N	Adam	\N	\N	\N	\N	\N	\N	2018-09-05 23:04:30.824261-06	\N	\N	|dm
+688	ArNonverb	\N	Barack	\N	\N	\N	\N	\N	\N	2018-09-05 23:05:39.427498-06	\N	\N	bArAk
+689	ArNonverb	\N	Hussein	\N	\N	\N	\N	\N	\N	2018-09-05 23:07:31.256917-06	\N	\N	Hsyn
+690	ArNonverb	\N	imam	\N	\N	\N	\N	\N	\N	2018-09-05 23:08:04.692543-06	\N	\N	<mAm
+691	ArNonverb	\N	Islam	\N	\N	\N	\N	\N	\N	2018-09-05 23:08:21.156435-06	\N	\N	<slAm
+692	ArNonverb	\N	Jamal	\N	\N	\N	\N	\N	\N	2018-09-05 23:08:45.45169-06	\N	\N	jmAl
+694	ArNonverb	\N	Muhammad	\N	\N	\N	\N	\N	\N	2018-09-05 23:10:02.221466-06	\N	\N	mHm~d
+695	ArNonverb	\N	Omar	\N	\N	\N	\N	\N	\N	2018-09-05 23:10:35.791887-06	\N	\N	Emr
+696	ArNonverb	\N	Saddam	\N	\N	\N	\N	\N	\N	2018-09-05 23:11:15.077444-06	\N	\N	Sd~Am
+697	ArNonverb	\N	Shakira	\N	\N	\N	\N	\N	\N	2018-09-05 23:11:42.464971-06	\N	\N	$Akrp
+698	ArNonverb	\N	ayatollah	\N	\N	\N	\N	\N	\N	2018-09-05 23:14:39.804042-06	\N	\N	|yap Allh
+699	ArNonverb	\N	caliphate	\N	\N	\N	\N	\N	\N	2018-09-05 23:15:28.90548-06	\N	\N	xalyfp
+700	ArNonverb	\N	fatwa	\N	\N	\N	\N	\N	\N	2018-09-05 23:15:57.530548-06	\N	\N	ftwY
+701	ArNonverb	\N	hadith	\N	\N	\N	\N	\N	\N	2018-09-05 23:16:14.43252-06	\N	\N	Hdyv
+702	ArNonverb	\N	Hajj	\N	\N	\N	\N	\N	\N	2018-09-05 23:16:38.176596-06	\N	\N	Haj~
+703	ArNonverb	\N	jihad	\N	\N	\N	\N	\N	\N	2018-09-05 23:17:02.051567-06	\N	\N	jhAd
+704	ArNonverb	\N	Quran	\N	\N	\N	\N	\N	\N	2018-09-05 23:17:27.428895-06	\N	\N	Alqr|n
+705	ArNonverb	\N	Sharia	\N	\N	\N	\N	\N	\N	2018-09-05 23:18:17.046085-06	\N	\N	$ryEp
+706	ArNonverb	\N	Shia	\N	\N	\N	\N	\N	\N	2018-09-05 23:18:45.925244-06	\N	\N	$yEp
+707	ArNonverb	\N	Sufi	\N	\N	\N	\N	\N	\N	2018-09-05 23:19:18.7801-06	\N	\N	Suwfiy~
+709	ArNonverb	\N	shah	\N	\N	\N	\N	\N	\N	2018-09-05 23:21:30.051582-06	\N	\N	$Ah
+710	ArNonverb	\N	God is great	\N	\N	\N	\N	\N	\N	2018-09-05 23:23:42.109949-06	\N	\N	Allh >kbr
+711	ArNonverb	\N	halal	\N	\N	\N	\N	\N	\N	2018-09-05 23:24:56.921142-06	\N	\N	HlAl
+712	ArNonverb	\N	if God wills	\N	\N	\N	\N	\N	\N	2018-09-05 23:25:41.976384-06	\N	\N	<n $A' Allh
+713	ArNonverb	\N	madrasah	\N	\N	\N	\N	\N	\N	2018-09-05 23:26:31.651612-06	\N	\N	mdrsp
+714	ArNonverb	\N	Sunni	\N	\N	\N	\N	\N	\N	2018-09-05 23:28:58.477545-06	\N	\N	sn~y
+715	ArNonverb	\N	burqa	\N	\N	\N	\N	\N	\N	2018-09-05 23:30:16.091452-06	\N	\N	brqE
+716	ArNonverb	\N	hijab	\N	\N	\N	\N	\N	\N	2018-09-05 23:30:47.489298-06	\N	\N	HjAb
+717	ArNonverb	\N	couscous	\N	\N	\N	\N	\N	\N	2018-09-05 23:32:32.150726-06	\N	\N	kusokus
+718	ArNonverb	\N	Al Jazeera	\N	\N	\N	\N	\N	\N	2018-09-05 23:34:57.952292-06	\N	\N	Aljzyrp
+719	ArNonverb	\N	Barack Hussein Obama	\N	\N	\N	\N	\N	\N	2018-09-05 23:37:38.638441-06	\N	\N	bArAk Hsyn >wbAmA
+720	ArNonverb	\N	Kareem Abdul-Jabbar	\N	\N	\N	\N	\N	\N	2018-09-05 23:38:24.147108-06	\N	\N	krym Ebd AljbAr
+721	ArNonverb	\N	Hamid Karzai	\N	\N	\N	\N	\N	\N	2018-09-05 23:40:21.46567-06	\N	\N	HAmd krzAy
+722	ArNonverb	\N	Muhammad Ali	\N	\N	\N	\N	\N	\N	2018-09-05 23:40:54.272101-06	\N	\N	mHmd Ely
+723	ArNonverb	\N	Rihanna	\N	\N	\N	\N	\N	\N	2018-09-05 23:41:31.925495-06	\N	\N	ryhAnA
+724	ArNonverb	\N	Shaquille O’Neal	\N	\N	\N	\N	\N	\N	2018-09-05 23:42:07.107402-06	\N	\N	$Akyl Awnyl
+725	ArNonverb	\N	Tupac Shakur	\N	\N	\N	\N	\N	\N	2018-09-05 23:42:38.620662-06	\N	\N	twbAk $Akwr
+726	ArNonverb	\N	Saddam Hussein	\N	\N	\N	\N	\N	\N	2018-09-05 23:44:09.882005-06	\N	\N	SdAm Hsyn
+727	ArNonverb	\N	Mahmoud Ahmadinejad	\N	\N	\N	\N	\N	\N	2018-09-05 23:44:41.363239-06	\N	\N	mHmwd AHmdynjAd
+728	ArNonverb	\N	Mahmoud Abbas	\N	\N	\N	\N	\N	\N	2018-09-05 23:45:04.596028-06	\N	\N	maHomuwd Eaba~As
 \.
 
 
@@ -1902,7 +1944,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 684, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 728, true);
 
 
 --
