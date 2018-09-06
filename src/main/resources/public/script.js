@@ -211,7 +211,7 @@ function onLoad() {
   for (const element of document.getElementsByClassName('ar-buckwalter')) {
     const leafId = element.getAttribute('data-leaf-id');
 
-    const buckwalter = element.innerHTML;
+    const buckwalter = element.innerText;
     document.getElementById(`ar-qalam-${leafId}`).innerHTML =
       convertBuckwalterToQalam(buckwalter);
     document.getElementById(`ar-monospace-${leafId}`).innerHTML =

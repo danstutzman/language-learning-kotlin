@@ -22,7 +22,7 @@ fun GetArNonverbs(nonverbRows: List<ArNonverb>): String {
     html.append("  <tr>\n")
     html.append("    <td>${row.leafId}</td>\n")
     html.append("    <td>${row.en}</td>\n")
-    html.append("    <td class='ar-buckwalter' data-leaf-id='${row.leafId}'>${row.arBuckwalter}</td>\n")
+    html.append("    <td class='ar-buckwalter' data-leaf-id='${row.leafId}'>${escapeHTML(row.arBuckwalter)}</td>\n")
     html.append("    <td><div id='ar-qalam-${row.leafId}' class='ar-qalam'></td>\n")
     html.append("    <td><div id='ar-monospace-${row.leafId}' class='ar-monospace'></td>\n")
     html.append("    <td><div id='ar-middles-${row.leafId}' class='ar-middles'></td>\n")
