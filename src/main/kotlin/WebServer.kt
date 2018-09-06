@@ -3,6 +3,7 @@ package com.danstutzman
 import com.danstutzman.bank.Bank
 import com.danstutzman.db.Db
 import com.danstutzman.routes.GetApi
+import com.danstutzman.routes.GetArNonverbs
 import com.danstutzman.routes.GetEsInfinitives
 import com.danstutzman.routes.GetEsNonverbs
 import com.danstutzman.routes.GetEsStemChanges
@@ -15,6 +16,7 @@ import com.danstutzman.routes.GetParagraph
 import com.danstutzman.routes.GetParagraphs
 import com.danstutzman.routes.GetRoot
 import com.danstutzman.routes.PostApi
+import com.danstutzman.routes.PostArNonverbs
 import com.danstutzman.routes.PostEsInfinitives
 import com.danstutzman.routes.PostEsNonverbs
 import com.danstutzman.routes.PostEsStemChanges
@@ -116,6 +118,14 @@ fun main(args: Array<String>) {
     res.redirect("/fr/infinitives")
   }
 
+  service.get("/ar/nonverbs") { _: Request, _: Response -> GetArNonverbs(db) }
+  service.post("/ar/nonverbs") { req: Request, res: Response ->
+    PostArNonverbs(db, extractLeafIdsToDelete(req),
+      req.queryParams("newNonverb") != null,
+      normalize(req.queryParams("en"))!!,
+      normalize(req.queryParams("ar_buckwalter"))!!)
+    res.redirect("/ar/nonverbs")
+  }
   service.get("/es/nonverbs") { _: Request, _: Response -> GetEsNonverbs(db) }
   service.post("/es/nonverbs") { req: Request, res: Response ->
     PostEsNonverbs(db, extractLeafIdsToDelete(req),

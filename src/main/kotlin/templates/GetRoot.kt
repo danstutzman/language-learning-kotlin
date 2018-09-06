@@ -4,6 +4,9 @@ fun GetRoot(): String {
   val html = StringBuilder()
   html.append(OPEN_BODY_TAG)
 
+  html.append("<h2>Arabic</h2>\n")
+  html.append("<li><a href='/ar/nonverbs'>Nonverbs</a></li>\n")
+
   html.append("<h2>French</h2>\n")
   html.append("<li><a href='/fr/infinitives'>Infinitives</a></li>\n")
   html.append("<li><a href='/fr/nonverbs'>Nonverbs</a></li>\n")

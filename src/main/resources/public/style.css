@@ -38,3 +38,32 @@ th {
 .goal-es-multiple-words.stage4 {
   border-bottom: #080 solid 2px;
 }
+
+.ar-buckwalter {
+  font-family: monospace;
+  font-size: 14pt;
+}
+input.ar-buckwalter {
+  font-family: monospace;
+  font-size: 14pt;
+  height: 60px;
+  width: 200px;
+}
+.ar-monospace {
+  font-family: "Kawkab Mono Light";
+  font-weight: 100;
+  font-size: 14pt;
+}
+.ar-middles {
+  font-family: "Kawkab Mono Light";
+  font-weight: 100;
+  font-size: 14pt;
+  letter-spacing: 3px;
+}
+input.ar-monospace {
+  font-family: "Kawkab Mono Light";
+  font-weight: 100;
+  font-size: 14pt;
+  height: 60px;
+  width: 200px;
+}
