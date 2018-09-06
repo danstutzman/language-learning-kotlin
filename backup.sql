@@ -1869,6 +1869,32 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 651	ArNonverb	\N	baker	\N	\N	\N	\N	\N	\N	2018-09-05 20:37:09.541727-06	\N	\N	xab~Az
 655	ArNonverb	\N	God	\N	\N	\N	\N	\N	\N	2018-09-05 21:02:40.168287-06	\N	\N	{ll~`h
 656	ArNonverb	\N	goodbye	\N	\N	\N	\N	\N	\N	2018-09-05 21:48:53.079363-06	\N	\N	maEa {ls~alAamap
+657	ArNonverb	\N	Afghanistan	\N	\N	\N	\N	\N	\N	2018-09-05 22:12:06.113727-06	\N	\N	>afogaAnisotaAn
+658	ArNonverb	\N	Kabul	\N	\N	\N	\N	\N	\N	2018-09-05 22:15:53.692597-06	\N	\N	kaAbuwl
+659	ArNonverb	\N	Bahrain	\N	\N	\N	\N	\N	\N	2018-09-05 22:16:45.136059-06	\N	\N	AlobaHorayon
+660	ArNonverb	\N	Bhutan	\N	\N	\N	\N	\N	\N	2018-09-05 22:17:29.612904-06	\N	\N	buwtaAn
+661	ArNonverb	\N	Canada	\N	\N	\N	\N	\N	\N	2018-09-05 22:18:21.383591-06	\N	\N	kanadaA
+662	ArNonverb	\N	Chad	\N	\N	\N	\N	\N	\N	2018-09-05 22:18:59.374424-06	\N	\N	to$aAd
+663	ArNonverb	\N	Djibouti	\N	\N	\N	\N	\N	\N	2018-09-05 22:19:46.475391-06	\N	\N	jiybuwtiy
+664	ArNonverb	\N	France	\N	\N	\N	\N	\N	\N	2018-09-05 22:20:49.750387-06	\N	\N	faranosaA
+665	ArNonverb	\N	Paris	\N	\N	\N	\N	\N	\N	2018-09-05 22:21:15.531061-06	\N	\N	baAriys
+666	ArNonverb	\N	Tehran	\N	\N	\N	\N	\N	\N	2018-09-05 22:22:05.82156-06	\N	\N	TahoraAn
+667	ArNonverb	\N	Iran	\N	\N	\N	\N	\N	\N	2018-09-05 22:22:28.033201-06	\N	\N	<iyraAn
+668	ArNonverb	\N	Iraq	\N	\N	\N	\N	\N	\N	2018-09-05 22:22:57.182804-06	\N	\N	AloEiraAq
+669	ArNonverb	\N	Bagdad	\N	\N	\N	\N	\N	\N	2018-09-05 22:23:16.163002-06	\N	\N	bagodaAd
+670	ArNonverb	\N	Israel	\N	\N	\N	\N	\N	\N	2018-09-05 22:23:41.305808-06	\N	\N	<isoraA}iyl
+673	ArNonverb	\N	Tel Aviv	\N	\N	\N	\N	\N	\N	2018-09-05 22:26:07.214289-06	\N	\N	tal~ >abiyb
+674	ArNonverb	\N	Italy	\N	\N	\N	\N	\N	\N	2018-09-05 22:26:26.299435-06	\N	\N	<iyTaAliyaA
+675	ArNonverb	\N	Rome	\N	\N	\N	\N	\N	\N	2018-09-05 22:26:44.288779-06	\N	\N	ruwmaA
+676	ArNonverb	\N	Kazakhstan	\N	\N	\N	\N	\N	\N	2018-09-05 22:27:16.644943-06	\N	\N	kaAzaAxisotaAn
+677	ArNonverb	\N	Kenya	\N	\N	\N	\N	\N	\N	2018-09-05 22:27:45.115008-06	\N	\N	kiyniyaA
+678	ArNonverb	\N	Kuwait	\N	\N	\N	\N	\N	\N	2018-09-05 22:28:25.839436-06	\N	\N	Alokuwayot
+679	ArNonverb	\N	Kyrgyzstan	\N	\N	\N	\N	\N	\N	2018-09-05 22:28:50.873644-06	\N	\N	qiyrogiyzisotaAn
+680	ArNonverb	\N	Lebanon	\N	\N	\N	\N	\N	\N	2018-09-05 22:29:12.752997-06	\N	\N	libonAn
+681	ArNonverb	\N	Beirut	\N	\N	\N	\N	\N	\N	2018-09-05 22:29:31.995497-06	\N	\N	bayoruwt
+682	ArNonverb	\N	Libya	\N	\N	\N	\N	\N	\N	2018-09-05 22:29:54.155753-06	\N	\N	liybiyaA
+683	ArNonverb	\N	Malawi	\N	\N	\N	\N	\N	\N	2018-09-05 22:30:27.905264-06	\N	\N	maAlaAwiy
+684	ArNonverb	\N	Malaysia	\N	\N	\N	\N	\N	\N	2018-09-05 22:30:51.754102-06	\N	\N	maAlayoziyaA
 \.
 
 
@@ -1876,7 +1902,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 656, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 684, true);
 
 
 --
