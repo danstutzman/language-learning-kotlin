@@ -165,7 +165,7 @@ const BUCKWALTER_TO_QALAM = {
   '}': "y'", //?
   '|': '~aa', //?
   '{': 'a', // alif al-wasla indicates word is connected to previous word
-  '`': 'aa', //?
+  '`': 'a', //?
   ' ': ' ',
 };
 
