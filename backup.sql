@@ -1862,13 +1862,13 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 645	FrNonverb	\N	good	\N	\N	\N	\N	\N	\N	2018-09-03 10:53:12.935056-06	\N	bonne	\N
 646	FrNonverb	\N	day	\N	\N	\N	\N	\N	\N	2018-09-03 10:53:12.93673-06	\N	journée	\N
 647	ArNonverb	\N	book	\N	\N	\N	\N	\N	\N	2018-09-05 18:39:15.038859-06	\N	\N	kitAb
-652	ArNonverb	\N	goodbye	\N	\N	\N	\N	\N	\N	2018-09-05 20:43:56.066319-06	\N	\N	maEa Als~alAmp
 653	ArNonverb	\N	you drink	\N	\N	\N	\N	\N	\N	2018-09-05 20:47:47.900079-06	\N	\N	ta$rab
 648	ArNonverb	\N	Ramadan	\N	\N	\N	\N	\N	\N	2018-09-05 19:56:46.940322-06	\N	\N	ramaDAn
 649	ArNonverb	\N	sugar	\N	\N	\N	\N	\N	\N	2018-09-05 20:02:33.713172-06	\N	\N	sukar
 650	ArNonverb	\N	thirsty	\N	\N	\N	\N	\N	\N	2018-09-05 20:06:25.526182-06	\N	\N	EaTo$An
 651	ArNonverb	\N	baker	\N	\N	\N	\N	\N	\N	2018-09-05 20:37:09.541727-06	\N	\N	xab~Az
 655	ArNonverb	\N	God	\N	\N	\N	\N	\N	\N	2018-09-05 21:02:40.168287-06	\N	\N	{ll~`h
+656	ArNonverb	\N	goodbye	\N	\N	\N	\N	\N	\N	2018-09-05 21:48:53.079363-06	\N	\N	maEa {ls~alAamap
 \.
 
 
@@ -1876,7 +1876,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 655, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 656, true);
 
 
 --
