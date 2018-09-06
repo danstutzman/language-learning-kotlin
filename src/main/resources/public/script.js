@@ -120,6 +120,55 @@ const BUCKWALTER_TO_MIDDLES = {
   ' ': ' ',
 };
 
+const BUCKWALTER_TO_QALAM = {
+  A: 'a', //?
+  D: 'D',
+  E: '`',
+  F: 'aN', //?
+  H: 'H',
+  K: 'iN', //?
+  N: 'uN', //?
+  S: 'S',
+  T: 'T',
+  Y: 'ae',
+  Z: 'Z',
+  a: 'a',
+  b: 'b',
+  d: 'd',
+  f: 'f',
+  g: 'gh',
+  h: 'h',
+  k: 'k',
+  i: 'i',
+  j: 'j',
+  l: 'l',
+  m: 'm',
+  n: 'n',
+  o: '-',
+  p: '', // ta marbuta is not usually pronounced
+  q: 'q',
+  r: 'r',
+  s: 's',
+  t: 't',
+  u: 'u',
+  v: 'th',
+  w: 'w',
+  x: 'kh',
+  y: 'y',
+  z: 'z',
+  '*': 'dh',
+  '$': 'sh',
+  "'": "'",
+  '>': "'a", //?
+  '<': "'i", //?
+  '&': "w'", //?
+  '}': "y'", //?
+  '|': '~aa', //?
+  '{': 'a', // alif al-wasla indicates word is connected to previous word
+  '`': 'aa', //?
+  ' ': ' ',
+};
+
 const ARABIC_TO_BUCKWALTER = {};
 for (const key in BUCKWALTER_TO_ARABIC) {
   ARABIC_TO_BUCKWALTER[BUCKWALTER_TO_ARABIC[key]] = key;
@@ -149,30 +198,46 @@ function convertBuckwalterToMiddles(buckwalter) {
     .join('');
 }
 
+function convertBuckwalterToQalam(buckwalter) {
+  return buckwalter
+    .trim()
+    .split('')
+    .map(function (c) { return BUCKWALTER_TO_QALAM[c] })
+    .join('');
+}
+
 function onLoad() {
   for (const element of document.getElementsByClassName('ar-buckwalter')) {
     const leafId = element.getAttribute('data-leaf-id');
 
+    const buckwalter = element.innerHTML;
+    document.getElementById(`ar-qalam-${leafId}`).innerHTML =
+      convertBuckwalterToQalam(buckwalter);
     document.getElementById(`ar-monospace-${leafId}`).innerHTML =
-      convertBuckwalterToArabic(element.innerHTML);
+      convertBuckwalterToArabic(buckwalter);
     document.getElementById(`ar-middles-${leafId}`).innerHTML =
-      convertBuckwalterToMiddles(element.innerHTML);
+      convertBuckwalterToMiddles(buckwalter);
 
     element.addEventListener('input', function (e) {
+      const buckwalter = e.target.value;
+      document.getElementById(`ar-qalam-${leafId}`).value =
+        convertBuckwalterToQalam(buckwalter);
       document.getElementById(`ar-monospace-${leafId}`).value =
-        convertBuckwalterToArabic(e.target.value);
+        convertBuckwalterToArabic(buckwalter);
       document.getElementById(`ar-middles-${leafId}`).value =
-        convertBuckwalterToMiddles(e.target.value);
+        convertBuckwalterToMiddles(buckwalter);
     })
   }
 
   document.getElementById('ar-monospace-new').addEventListener('input', function (e) {
-    document.getElementById('ar-buckwalter-new').value =
-      convertArabicToBuckwalter(e.target.value);
+    const buckwalter = convertArabicToBuckwalter(e.target.value);
+    document.getElementById('ar-buckwalter-new').value = buckwalter;
+    document.getElementById('ar-qalam-new').value =
+      convertBuckwalterToQalam(buckwalter);
     document.getElementById('ar-monospace-new').value =
-      convertBuckwalterToArabic(convertArabicToBuckwalter(e.target.value));
+      convertBuckwalterToArabic(buckwalter);
     document.getElementById('ar-middles-new').value =
-      convertBuckwalterToMiddles(convertArabicToBuckwalter(e.target.value));
+      convertBuckwalterToMiddles(buckwalter);
   });
 }
 
