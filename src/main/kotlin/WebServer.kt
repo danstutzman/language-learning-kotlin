@@ -4,6 +4,7 @@ import com.danstutzman.bank.Bank
 import com.danstutzman.db.Db
 import com.danstutzman.routes.GetApi
 import com.danstutzman.routes.GetArNonverbs
+import com.danstutzman.routes.GetArVerbRoots
 import com.danstutzman.routes.GetEsInfinitives
 import com.danstutzman.routes.GetEsNonverbs
 import com.danstutzman.routes.GetEsStemChanges
@@ -17,6 +18,7 @@ import com.danstutzman.routes.GetParagraphs
 import com.danstutzman.routes.GetRoot
 import com.danstutzman.routes.PostApi
 import com.danstutzman.routes.PostArNonverbs
+import com.danstutzman.routes.PostArVerbRoots
 import com.danstutzman.routes.PostEsInfinitives
 import com.danstutzman.routes.PostEsNonverbs
 import com.danstutzman.routes.PostEsStemChanges
@@ -237,6 +239,18 @@ fun main(args: Array<String>) {
       req.queryParams("person")!!.toInt(),
       req.queryParams("tense")!!)
     res.redirect("/fr/unique-conjugations")
+  }
+
+  service.get("/ar/verb-roots") { _: Request, _: Response ->
+    GetArVerbRoots(db) }
+  service.post("/ar/verb-roots") { req: Request, res: Response ->
+    PostArVerbRoots(db, extractLeafIdsToDelete(req),
+      req.queryParams("newVerbRoot") != null,
+      normalize(req.queryParams("en"))!!,
+      normalize(req.queryParams("en_past"))!!,
+      normalize(req.queryParams("ar_buckwalter"))!!,
+      normalize(req.queryParams("ar_pres_middle_vowel_buckwalter"))!!)
+    res.redirect("/ar/verb-roots")
   }
 
   service.get("/es/api") { _: Request, res: Response ->

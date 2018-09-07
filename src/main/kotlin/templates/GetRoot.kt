@@ -6,6 +6,7 @@ fun GetRoot(): String {
 
   html.append("<h2>Arabic</h2>\n")
   html.append("<li><a href='/ar/nonverbs'>Nonverbs</a></li>\n")
+  html.append("<li><a href='/ar/verb-roots'>Verb Roots</a></li>\n")
 
   html.append("<h2>French</h2>\n")
   html.append("<li><a href='/fr/infinitives'>Infinitives</a></li>\n")

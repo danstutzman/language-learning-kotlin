@@ -210,6 +210,7 @@ function convertBuckwalterToQalam(buckwalter) {
 function onLoad() {
   for (const element of document.getElementsByClassName('ar-buckwalter')) {
     const leafId = element.getAttribute('data-leaf-id');
+    if (leafId === null) continue;
 
     const buckwalter = element.innerText;
     document.getElementById(`ar-qalam-${leafId}`).innerHTML =
