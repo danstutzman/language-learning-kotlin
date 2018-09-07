@@ -69,6 +69,7 @@ class EsInfinitivesTable (
         LEAFS.ES_MIXED)
       .from(LEAFS)
       .where(LEAFS.ES_MIXED.eq(esMixed))
+      .and(LEAFS.LEAF_TYPE.eq(ES_INFINITIVE_TYPE))
       .fetchOne()
       ?.let { EsInfinitive(
         it.getValue(LEAFS.LEAF_ID),

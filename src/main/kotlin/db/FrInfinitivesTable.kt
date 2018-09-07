@@ -63,6 +63,7 @@ class FrInfinitivesTable (
         LEAFS.FR_MIXED)
       .from(LEAFS)
       .where(LEAFS.FR_MIXED.eq(frMixed))
+      .and(LEAFS.LEAF_TYPE.eq(FR_INFINITIVE_TYPE))
       .fetchOne()
       ?.let { FrInfinitive(
         it.getValue(LEAFS.LEAF_ID),
