@@ -9,6 +9,10 @@ fun PostParagraphDisambiguateGoal(db: Db, lang: String, paragraphId: Int,
   val words = bank.splitL2Phrase(lang, l2)
   val interpretationsByWordNum = words.map { bank.interpretL2Word(lang, it) }
 
+  if (en == "") {
+    throw RuntimeException("En param can't be blank")
+  }
+
   return com.danstutzman.templates.PostParagraphDisambiguateGoal(
     lang, paragraphId, en, l2, words, interpretationsByWordNum)
 }
