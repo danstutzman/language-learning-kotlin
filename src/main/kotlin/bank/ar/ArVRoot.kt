@@ -11,7 +11,7 @@ data class ArVRoot (
   val arBuckwalter: String,
   val arPresMiddleVowelBuckwalter: String
 ): CardCreator, V {
-  private val ROOT_REGEX = "^([^aeiou])([^aeiou])([i])?([^aeiou])$".toRegex()
+  private val ROOT_REGEX = "^([^aeiou])([^aeiou])([iA])?([^aeiou])$".toRegex()
 
   val c1: String
   val c2: String

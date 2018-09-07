@@ -213,8 +213,10 @@ function onLoad() {
     if (rowId === null) continue;
 
     const buckwalter = element.innerText;
-    document.getElementById(`ar-qalam-${rowId}`).innerHTML =
-      convertBuckwalterToQalam(buckwalter);
+    if (document.getElementById(`ar-qalam-${rowId}`) != null) {
+      document.getElementById(`ar-qalam-${rowId}`).innerHTML =
+        convertBuckwalterToQalam(buckwalter);
+    }
     document.getElementById(`ar-monospace-${rowId}`).innerHTML =
       convertBuckwalterToArabic(buckwalter);
     if (document.getElementById(`ar-middles-${rowId}`) !== null) {
@@ -224,8 +226,10 @@ function onLoad() {
 
     element.addEventListener('input', function (e) {
       const buckwalter = e.target.value;
-      document.getElementById(`ar-qalam-${rowId}`).value =
-        convertBuckwalterToQalam(buckwalter);
+      if (document.getElementById(`ar-qalam-${rowId}`) != null) {
+        document.getElementById(`ar-qalam-${rowId}`).value =
+          convertBuckwalterToQalam(buckwalter);
+      }
       document.getElementById(`ar-monospace-${rowId}`).value =
         convertBuckwalterToArabic(buckwalter);
       if (document.getElementById(`ar-middles-${rowId}`) !== null) {
@@ -240,8 +244,10 @@ function onLoad() {
     arMonospaceNew.addEventListener('input', function (e) {
       const buckwalter = convertArabicToBuckwalter(e.target.value);
       document.getElementById('ar-buckwalter-new').value = buckwalter;
-      document.getElementById('ar-qalam-new').value =
-        convertBuckwalterToQalam(buckwalter);
+      if (document.getElementById('ar-qalam-new') != null) {
+        document.getElementById('ar-qalam-new').value =
+          convertBuckwalterToQalam(buckwalter);
+      }
       arMonospaceNew.value = convertBuckwalterToArabic(buckwalter);
       document.getElementById('ar-middles-new').value =
         convertBuckwalterToMiddles(buckwalter);

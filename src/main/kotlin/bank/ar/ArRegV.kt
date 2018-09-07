@@ -5,7 +5,7 @@ import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.V
 import com.danstutzman.bank.en.EnVerbs
 
-data class ArV (
+data class ArRegV (
   val root: ArVRoot,
   val pattern: ArVPattern
 ): CardCreator, V {

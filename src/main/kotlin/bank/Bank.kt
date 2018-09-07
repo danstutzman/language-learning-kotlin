@@ -3,9 +3,10 @@ package com.danstutzman.bank
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.GlossRows
 import com.danstutzman.bank.ar.ArNonverbList
+import com.danstutzman.bank.ar.ArStemChangeList
 import com.danstutzman.bank.ar.ArVCloud
-import com.danstutzman.bank.ar.ArVRootList
 import com.danstutzman.bank.ar.ArVPatternList
+import com.danstutzman.bank.ar.ArVRootList
 import com.danstutzman.bank.en.EnPronouns
 import com.danstutzman.bank.en.EnVerbs
 import com.danstutzman.bank.es.GENDER_TO_DESCRIPTION
@@ -57,7 +58,9 @@ class Bank(
   val logger: Logger = LoggerFactory.getLogger("Bank.kt")
 
   val arNonverbList = ArNonverbList(db)
-  val arVCloud      = ArVCloud(ArVRootList(db), ArVPatternList())
+  val arRootList = ArVRootList(db)
+  val arVCloud      = ArVCloud(arRootList, ArVPatternList(),
+    ArStemChangeList(arRootList, db))
   val esInfList     = com.danstutzman.bank.es.InfList(db)
   val esNonverbList = com.danstutzman.bank.es.NonverbList(db)
   val esVCloud      = com.danstutzman.bank.es.VCloud(

@@ -4,6 +4,7 @@ import com.danstutzman.bank.Bank
 import com.danstutzman.db.Db
 import com.danstutzman.routes.GetApi
 import com.danstutzman.routes.GetArNonverbs
+import com.danstutzman.routes.GetArStemChanges
 import com.danstutzman.routes.GetArVerbRoots
 import com.danstutzman.routes.GetEsInfinitives
 import com.danstutzman.routes.GetEsNonverbs
@@ -18,6 +19,7 @@ import com.danstutzman.routes.GetParagraphs
 import com.danstutzman.routes.GetRoot
 import com.danstutzman.routes.PostApi
 import com.danstutzman.routes.PostArNonverbs
+import com.danstutzman.routes.PostArStemChanges
 import com.danstutzman.routes.PostArVerbRoots
 import com.danstutzman.routes.PostEsInfinitives
 import com.danstutzman.routes.PostEsNonverbs
@@ -188,6 +190,18 @@ fun main(args: Array<String>) {
     res.redirect("/${lang}/paragraphs/${paragraphId}")
   }
 
+  service.get("/ar/stem-changes") { _: Request, _: Response ->
+    GetArStemChanges(db) }
+  service.post("/ar/stem-changes") { req: Request, res: Response ->
+    PostArStemChanges(db, extractLeafIdsToDelete(req),
+      req.queryParams("newStemChange") != null,
+      normalize(req.queryParams("root_ar_buckwalter"))!!,
+      normalize(req.queryParams("ar_buckwalter"))!!,
+      req.queryParams("tense")!!,
+      normalize(req.queryParams("en"))!!,
+      req.queryParams("persons_csv")!!)
+    res.redirect("/ar/stem-changes")
+  }
   service.get("/es/stem-changes") { _: Request, _: Response ->
     GetEsStemChanges(db) }
   service.post("/es/stem-changes") { req: Request, res: Response ->

@@ -41,6 +41,44 @@ class ArVerbRootsTable (
         it.getValue(LEAFS.AR_PRES_MIDDLE_VOWEL_BUCKWALTER)
       )}
 
+  fun selectWithLeafIdIn(leafIds: List<Int>): List<ArVerbRoot> =
+    create.select(
+        LEAFS.LEAF_ID,
+        LEAFS.EN,
+        LEAFS.EN_PAST,
+        LEAFS.AR_BUCKWALTER,
+        LEAFS.AR_PRES_MIDDLE_VOWEL_BUCKWALTER)
+      .from(LEAFS)
+      .where(LEAFS.LEAF_TYPE.eq(AR_VERB_ROOT_TYPE))
+      .and(LEAFS.LEAF_ID.`in`(leafIds))
+      .fetch()
+      .map { ArVerbRoot(
+        it.getValue(LEAFS.LEAF_ID),
+        it.getValue(LEAFS.EN),
+        it.getValue(LEAFS.EN_PAST),
+        it.getValue(LEAFS.AR_BUCKWALTER),
+        it.getValue(LEAFS.AR_PRES_MIDDLE_VOWEL_BUCKWALTER)
+      )}
+
+  fun findByArBuckwalter(arBuckwalter: String): ArVerbRoot? =
+    create.select(
+        LEAFS.LEAF_ID,
+        LEAFS.EN,
+        LEAFS.EN_PAST,
+        LEAFS.AR_BUCKWALTER,
+        LEAFS.AR_PRES_MIDDLE_VOWEL_BUCKWALTER)
+      .from(LEAFS)
+      .where(LEAFS.AR_BUCKWALTER.eq(arBuckwalter))
+      .and(LEAFS.LEAF_TYPE.eq(AR_VERB_ROOT_TYPE))
+      .fetchOne()
+      ?.let { ArVerbRoot(
+        it.getValue(LEAFS.LEAF_ID),
+        it.getValue(LEAFS.EN),
+        it.getValue(LEAFS.EN_PAST),
+        it.getValue(LEAFS.AR_BUCKWALTER),
+        it.getValue(LEAFS.AR_PRES_MIDDLE_VOWEL_BUCKWALTER)
+      )}
+
   fun insert(verbRoot: ArVerbRoot): ArVerbRoot =
     create.insertInto(LEAFS,
         LEAFS.LEAF_TYPE,
