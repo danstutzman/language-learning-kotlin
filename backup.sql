@@ -991,6 +991,78 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 2791	1198	1200	1	1
 2794	1201	1202	0	0
 2795	1201	1203	1	1
+2798	1204	1205	0	0
+2799	1204	1206	1	3
+2800	1204	1207	2	2
+2803	1206	1207	1	1
+2808	1209	1207	1	1
+2809	1211	1207	0	0
+2810	1209	1210	0	0
+2811	1209	1211	1	2
+2818	1214	1207	1	1
+2819	1216	1207	0	0
+2822	1214	1215	0	0
+2823	1214	1216	1	2
+2830	1219	1207	1	1
+2831	1221	1207	0	0
+2836	1219	1220	0	0
+2837	1219	1221	1	2
+2844	1224	1207	1	1
+2845	1226	1207	0	0
+2852	1224	1225	0	0
+2853	1224	1226	1	2
+2860	1229	1207	1	1
+2861	1231	1207	0	0
+2870	1229	1230	0	0
+2871	1229	1231	1	2
+2878	1234	1207	1	1
+2879	1236	1207	0	0
+2890	1234	1235	0	0
+2891	1234	1236	1	2
+2898	1239	1207	1	1
+2899	1241	1207	0	0
+2912	1239	1240	0	0
+2913	1239	1241	1	2
+2920	1244	1207	1	1
+2921	1246	1207	0	0
+2936	1244	1245	0	0
+2937	1244	1246	1	2
+2944	1249	1207	1	1
+2945	1251	1207	0	0
+2962	1249	1250	0	0
+2963	1249	1251	1	2
+2970	1254	1205	0	0
+2972	1254	1207	2	2
+2973	1256	1207	1	1
+2993	1254	1256	1	3
+2999	1259	1207	2	2
+3000	1261	1207	1	1
+3003	1259	1210	0	0
+3024	1259	1261	1	3
+3030	1264	1207	2	2
+3031	1266	1207	1	1
+3036	1264	1215	0	0
+3057	1264	1266	1	3
+3063	1269	1207	2	2
+3064	1271	1207	1	1
+3071	1269	1220	0	0
+3092	1269	1271	1	3
+3098	1274	1207	2	2
+3099	1276	1207	1	1
+3112	1274	1235	0	0
+3129	1274	1276	1	3
+3135	1279	1207	2	2
+3136	1281	1207	1	1
+3151	1279	1240	0	0
+3168	1279	1281	1	3
+3174	1284	1207	2	2
+3175	1286	1207	1	1
+3192	1284	1245	0	0
+3209	1284	1286	1	3
+3215	1289	1207	2	2
+3216	1291	1207	1	1
+3235	1289	1250	0	0
+3252	1289	1291	1	3
 \.
 
 
@@ -998,7 +1070,7 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 -- Name: card_embeddings_card_embedding_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 2797, true);
+SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 3255, true);
 
 
 --
@@ -1328,6 +1400,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 1067	[{"leafId":613,"en":"call","l2":"appell-"},{"leafId":-101,"en":"(I)","l2":"-e"}]	\N	613,-101	(I) call	0		2018-09-03 01:58:13.571453-06	2018-09-03 01:58:13.568-06
 1071	[{"leafId":595,"en":"they (masc.)","l2":"ils"},{"leafId":613,"en":"call","l2":"appell-"},{"leafId":-106,"en":"(they)","l2":"-ent"}]	\N	595,613,-106	They call.	0		2018-09-03 02:03:42.540446-06	2018-09-03 02:03:42.533-06
 1073	[{"leafId":613,"en":"call","l2":"appell-"},{"leafId":-106,"en":"(they)","l2":"-ent"}]	\N	613,-106	(they) call	0		2018-09-03 02:03:42.540446-06	2018-09-03 02:03:42.535-06
+1248	[{"leafId":-208,"en":"wrote","l2":"katab-"},{"leafId":-208,"en":"(they)","l2":"-uwA"}]	\N	-208,-208	(they wrote)	0		2018-09-07 14:00:24.824393-06	2018-09-07 14:00:24.823-06
 1077	[{"leafId":605,"en":"it","l2":"ça"},{"leafId":600,"en":"goes","l2":"va"},{"leafId":608,"en":"thanks","l2":"merci"}]	\N	605,600,608	It's going well, thanks.	0		2018-09-03 07:40:24.725002-06	2018-09-03 07:40:24.72-06
 1082	[{"leafId":604,"en":"how","l2":"comment"},{"leafId":594,"en":"you all","l2":"vous"},{"leafId":611,"en":"call","l2":"appel-"},{"leafId":-105,"en":"(we)","l2":"-ez"},{"leafId":594,"en":"you all","l2":"vous"}]	\N	604,594,611,-105,594	What do you call yourself?	0		2018-09-03 07:40:54.242283-06	2018-09-03 07:40:54.239-06
 1085	[{"leafId":611,"en":"call","l2":"appel-"},{"leafId":-105,"en":"(we)","l2":"-ez"}]	\N	611,-105	(we) call	0		2018-09-03 07:40:54.242283-06	2018-09-03 07:40:54.239-06
@@ -1385,6 +1458,70 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 1201	[{"leafId":645,"en":"good","l2":"bonne"},{"leafId":646,"en":"day","l2":"journée"}]	\N	645,646	Good day!	0		2018-09-03 10:53:12.939458-06	2018-09-03 10:53:12.938-06
 1202	[{"leafId":645,"en":"good","l2":"bonne"}]	\N	645	good	1		2018-09-03 10:53:12.939458-06	2018-09-03 10:53:12.938-06
 1203	[{"leafId":646,"en":"day","l2":"journée"}]	\N	646	day	1		2018-09-03 10:53:12.939458-06	2018-09-03 10:53:12.938-06
+1204	[{"leafId":731,"en":"","l2":">nA"},{"leafId":-225,"en":"(we)","l2":"na-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-225,"en":"(we)","l2":"-u"}]	\N	731,-225,729,-225	I wrote.	0		2018-09-07 13:58:35.727558-06	2018-09-07 13:58:35.724-06
+1205	[{"leafId":731,"en":"","l2":">nA"}]	\N	731		1		2018-09-07 13:58:35.727558-06	2018-09-07 13:58:35.725-06
+1206	[{"leafId":-225,"en":"(we)","l2":"na-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-225,"en":"(we)","l2":"-u"}]	\N	-225,729,-225	(we) write	0		2018-09-07 13:58:35.727558-06	2018-09-07 13:58:35.725-06
+1207	[{"leafId":729,"en":"write","l2":"ktb"}]	\N	729	to write	1		2018-09-07 13:58:35.727558-06	2018-09-07 13:58:35.725-06
+1208	[{"leafId":-225,"en":"(we)","l2":"na-"},{"leafId":-225,"en":"write","l2":"ktub-"},{"leafId":-225,"en":"(we)","l2":"-u"}]	\N	-225,-225,-225	(we write)	0		2018-09-07 13:58:35.727558-06	2018-09-07 13:58:35.725-06
+1209	[{"leafId":732,"en":"","l2":">anota"},{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-201,"en":"(you)","l2":"-ota"}]	\N	732,729,-201	You (masc.) wrote.	0		2018-09-07 13:58:47.792271-06	2018-09-07 13:58:47.789-06
+1210	[{"leafId":732,"en":"","l2":">anota"}]	\N	732		1		2018-09-07 13:58:47.792271-06	2018-09-07 13:58:47.789-06
+1211	[{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-201,"en":"(you)","l2":"-ota"}]	\N	729,-201	(you) wrote	0		2018-09-07 13:58:47.792271-06	2018-09-07 13:58:47.789-06
+1213	[{"leafId":-201,"en":"wrote","l2":"katab-"},{"leafId":-201,"en":"(you)","l2":"-ota"}]	\N	-201,-201	(you wrote)	0		2018-09-07 13:58:47.792271-06	2018-09-07 13:58:47.79-06
+1214	[{"leafId":733,"en":"","l2":">anoti"},{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-202,"en":"(you)","l2":"-oti"}]	\N	733,729,-202	You (fem.) wrote.	0		2018-09-07 13:59:01.390127-06	2018-09-07 13:59:01.388-06
+1215	[{"leafId":733,"en":"","l2":">anoti"}]	\N	733		1		2018-09-07 13:59:01.390127-06	2018-09-07 13:59:01.388-06
+1216	[{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-202,"en":"(you)","l2":"-oti"}]	\N	729,-202	(you) wrote	0		2018-09-07 13:59:01.390127-06	2018-09-07 13:59:01.388-06
+1218	[{"leafId":-202,"en":"wrote","l2":"katab-"},{"leafId":-202,"en":"(you)","l2":"-oti"}]	\N	-202,-202	(you wrote)	0		2018-09-07 13:59:01.390127-06	2018-09-07 13:59:01.388-06
+1219	[{"leafId":734,"en":"","l2":"huwa"},{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-203,"en":"(he/she)","l2":"-a"}]	\N	734,729,-203	He wrote.	0		2018-09-07 13:59:11.719467-06	2018-09-07 13:59:11.717-06
+1220	[{"leafId":734,"en":"","l2":"huwa"}]	\N	734		1		2018-09-07 13:59:11.719467-06	2018-09-07 13:59:11.717-06
+1221	[{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-203,"en":"(he/she)","l2":"-a"}]	\N	729,-203	(he/she) wrote	0		2018-09-07 13:59:11.719467-06	2018-09-07 13:59:11.717-06
+1223	[{"leafId":-203,"en":"wrote","l2":"katab-"},{"leafId":-203,"en":"(he/she)","l2":"-a"}]	\N	-203,-203	(he/she wrote)	0		2018-09-07 13:59:11.719467-06	2018-09-07 13:59:11.717-06
+1224	[{"leafId":735,"en":"","l2":"hiya"},{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-204,"en":"(he/she)","l2":"-ato"}]	\N	735,729,-204	She wrote.	0		2018-09-07 13:59:25.61129-06	2018-09-07 13:59:25.608-06
+1225	[{"leafId":735,"en":"","l2":"hiya"}]	\N	735		1		2018-09-07 13:59:25.61129-06	2018-09-07 13:59:25.608-06
+1226	[{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-204,"en":"(he/she)","l2":"-ato"}]	\N	729,-204	(he/she) wrote	0		2018-09-07 13:59:25.61129-06	2018-09-07 13:59:25.608-06
+1228	[{"leafId":-204,"en":"wrote","l2":"katab-"},{"leafId":-204,"en":"(he/she)","l2":"-ato"}]	\N	-204,-204	(he/she wrote)	0		2018-09-07 13:59:25.61129-06	2018-09-07 13:59:25.608-06
+1229	[{"leafId":736,"en":"","l2":"naHonu"},{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-205,"en":"(we)","l2":"-onaA"}]	\N	736,729,-205	We wrote.	0		2018-09-07 13:59:37.266768-06	2018-09-07 13:59:37.265-06
+1230	[{"leafId":736,"en":"","l2":"naHonu"}]	\N	736		1		2018-09-07 13:59:37.266768-06	2018-09-07 13:59:37.265-06
+1231	[{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-205,"en":"(we)","l2":"-onaA"}]	\N	729,-205	(we) wrote	0		2018-09-07 13:59:37.266768-06	2018-09-07 13:59:37.265-06
+1233	[{"leafId":-205,"en":"wrote","l2":"katab-"},{"leafId":-205,"en":"(we)","l2":"-onaA"}]	\N	-205,-205	(we wrote)	0		2018-09-07 13:59:37.266768-06	2018-09-07 13:59:37.265-06
+1234	[{"leafId":737,"en":"","l2":">anotumo"},{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-206,"en":"(you)","l2":"-otumo"}]	\N	737,729,-206	You (masc. pl.) wrote.	0		2018-09-07 13:59:55.987489-06	2018-09-07 13:59:55.985-06
+1235	[{"leafId":737,"en":"","l2":">anotumo"}]	\N	737		1		2018-09-07 13:59:55.987489-06	2018-09-07 13:59:55.985-06
+1236	[{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-206,"en":"(you)","l2":"-otumo"}]	\N	729,-206	(you) wrote	0		2018-09-07 13:59:55.987489-06	2018-09-07 13:59:55.986-06
+1238	[{"leafId":-206,"en":"wrote","l2":"katab-"},{"leafId":-206,"en":"(you)","l2":"-otumo"}]	\N	-206,-206	(you wrote)	0		2018-09-07 13:59:55.987489-06	2018-09-07 13:59:55.986-06
+1239	[{"leafId":738,"en":"","l2":">anotun~a"},{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-207,"en":"(you)","l2":"-otun~a"}]	\N	738,729,-207	You (fem. pl.) wrote.	0		2018-09-07 14:00:12.411998-06	2018-09-07 14:00:12.411-06
+1240	[{"leafId":738,"en":"","l2":">anotun~a"}]	\N	738		1		2018-09-07 14:00:12.411998-06	2018-09-07 14:00:12.411-06
+1241	[{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-207,"en":"(you)","l2":"-otun~a"}]	\N	729,-207	(you) wrote	0		2018-09-07 14:00:12.411998-06	2018-09-07 14:00:12.411-06
+1243	[{"leafId":-207,"en":"wrote","l2":"katab-"},{"leafId":-207,"en":"(you)","l2":"-otun~a"}]	\N	-207,-207	(you wrote)	0		2018-09-07 14:00:12.411998-06	2018-09-07 14:00:12.411-06
+1244	[{"leafId":739,"en":"","l2":"humo"},{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-208,"en":"(they)","l2":"-uwA"}]	\N	739,729,-208	They (masc.) wrote.	0		2018-09-07 14:00:24.824393-06	2018-09-07 14:00:24.823-06
+1245	[{"leafId":739,"en":"","l2":"humo"}]	\N	739		1		2018-09-07 14:00:24.824393-06	2018-09-07 14:00:24.823-06
+1246	[{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-208,"en":"(they)","l2":"-uwA"}]	\N	729,-208	(they) wrote	0		2018-09-07 14:00:24.824393-06	2018-09-07 14:00:24.823-06
+1249	[{"leafId":740,"en":"","l2":"hun~a"},{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-209,"en":"(they)","l2":"-ona"}]	\N	740,729,-209	They (fem.) wrote.	0		2018-09-07 14:00:41.274739-06	2018-09-07 14:00:41.273-06
+1250	[{"leafId":740,"en":"","l2":"hun~a"}]	\N	740		1		2018-09-07 14:00:41.274739-06	2018-09-07 14:00:41.273-06
+1251	[{"leafId":729,"en":"wrote","l2":"katab-"},{"leafId":-209,"en":"(they)","l2":"-ona"}]	\N	729,-209	(they) wrote	0		2018-09-07 14:00:41.274739-06	2018-09-07 14:00:41.274-06
+1253	[{"leafId":-209,"en":"wrote","l2":"katab-"},{"leafId":-209,"en":"(they)","l2":"-ona"}]	\N	-209,-209	(they wrote)	0		2018-09-07 14:00:41.274739-06	2018-09-07 14:00:41.274-06
+1254	[{"leafId":731,"en":"","l2":">nA"},{"leafId":-220,"en":"(I)","l2":">a-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-220,"en":"(I)","l2":"-u"}]	\N	731,-220,729,-220	I write.	0		2018-09-07 14:00:59.731476-06	2018-09-07 14:00:59.73-06
+1256	[{"leafId":-220,"en":"(I)","l2":">a-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-220,"en":"(I)","l2":"-u"}]	\N	-220,729,-220	(I) write	0		2018-09-07 14:00:59.731476-06	2018-09-07 14:00:59.73-06
+1258	[{"leafId":-220,"en":"(I)","l2":">a-"},{"leafId":-220,"en":"write","l2":"ktub-"},{"leafId":-220,"en":"(I)","l2":"-u"}]	\N	-220,-220,-220	(I write)	0		2018-09-07 14:00:59.731476-06	2018-09-07 14:00:59.73-06
+1259	[{"leafId":732,"en":"","l2":">anota"},{"leafId":-221,"en":"(you)","l2":"ta-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-221,"en":"(you)","l2":"-u"}]	\N	732,-221,729,-221	You (masc.) write.	0		2018-09-07 14:01:26.347053-06	2018-09-07 14:01:26.346-06
+1261	[{"leafId":-221,"en":"(you)","l2":"ta-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-221,"en":"(you)","l2":"-u"}]	\N	-221,729,-221	(you) write	0		2018-09-07 14:01:26.347053-06	2018-09-07 14:01:26.346-06
+1263	[{"leafId":-221,"en":"(you)","l2":"ta-"},{"leafId":-221,"en":"write","l2":"ktub-"},{"leafId":-221,"en":"(you)","l2":"-u"}]	\N	-221,-221,-221	(you write)	0		2018-09-07 14:01:26.347053-06	2018-09-07 14:01:26.346-06
+1264	[{"leafId":733,"en":"","l2":">anoti"},{"leafId":-222,"en":"(you)","l2":"ta-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-222,"en":"(you)","l2":"-iyna"}]	\N	733,-222,729,-222	You (fem.) write.	0		2018-09-07 14:01:41.57602-06	2018-09-07 14:01:41.574-06
+1266	[{"leafId":-222,"en":"(you)","l2":"ta-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-222,"en":"(you)","l2":"-iyna"}]	\N	-222,729,-222	(you) write	0		2018-09-07 14:01:41.57602-06	2018-09-07 14:01:41.574-06
+1268	[{"leafId":-222,"en":"(you)","l2":"ta-"},{"leafId":-222,"en":"write","l2":"ktub-"},{"leafId":-222,"en":"(you)","l2":"-iyna"}]	\N	-222,-222,-222	(you write)	0		2018-09-07 14:01:41.57602-06	2018-09-07 14:01:41.575-06
+1269	[{"leafId":734,"en":"","l2":"huwa"},{"leafId":-223,"en":"(he/she)","l2":"ya-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-223,"en":"(he/she)","l2":"-u"}]	\N	734,-223,729,-223	He writes.	0		2018-09-07 14:01:51.375131-06	2018-09-07 14:01:51.374-06
+1271	[{"leafId":-223,"en":"(he/she)","l2":"ya-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-223,"en":"(he/she)","l2":"-u"}]	\N	-223,729,-223	(he/she) writes	0		2018-09-07 14:01:51.375131-06	2018-09-07 14:01:51.374-06
+1273	[{"leafId":-223,"en":"(he/she)","l2":"ya-"},{"leafId":-223,"en":"writes","l2":"ktub-"},{"leafId":-223,"en":"(he/she)","l2":"-u"}]	\N	-223,-223,-223	(he/she writes)	0		2018-09-07 14:01:51.375131-06	2018-09-07 14:01:51.374-06
+1274	[{"leafId":737,"en":"","l2":">anotumo"},{"leafId":-226,"en":"(you)","l2":"ta-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-226,"en":"(you)","l2":"-uwna"}]	\N	737,-226,729,-226	You (masc. pl.) write.	0		2018-09-07 14:02:08.430259-06	2018-09-07 14:02:08.429-06
+1276	[{"leafId":-226,"en":"(you)","l2":"ta-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-226,"en":"(you)","l2":"-uwna"}]	\N	-226,729,-226	(you) write	0		2018-09-07 14:02:08.430259-06	2018-09-07 14:02:08.429-06
+1278	[{"leafId":-226,"en":"(you)","l2":"ta-"},{"leafId":-226,"en":"write","l2":"ktub-"},{"leafId":-226,"en":"(you)","l2":"-uwna"}]	\N	-226,-226,-226	(you write)	0		2018-09-07 14:02:08.430259-06	2018-09-07 14:02:08.429-06
+1279	[{"leafId":738,"en":"","l2":">anotun~a"},{"leafId":-227,"en":"(you)","l2":"ta-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-227,"en":"(you)","l2":"-ona"}]	\N	738,-227,729,-227	You (fem. pl.) write.	0		2018-09-07 14:02:27.747514-06	2018-09-07 14:02:27.746-06
+1281	[{"leafId":-227,"en":"(you)","l2":"ta-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-227,"en":"(you)","l2":"-ona"}]	\N	-227,729,-227	(you) write	0		2018-09-07 14:02:27.747514-06	2018-09-07 14:02:27.746-06
+1283	[{"leafId":-227,"en":"(you)","l2":"ta-"},{"leafId":-227,"en":"write","l2":"ktub-"},{"leafId":-227,"en":"(you)","l2":"-ona"}]	\N	-227,-227,-227	(you write)	0		2018-09-07 14:02:27.747514-06	2018-09-07 14:02:27.746-06
+1284	[{"leafId":739,"en":"","l2":"humo"},{"leafId":-228,"en":"(they)","l2":"ya-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-228,"en":"(they)","l2":"-uwna"}]	\N	739,-228,729,-228	They (masc.) write.	0		2018-09-07 14:02:40.402859-06	2018-09-07 14:02:40.4-06
+1286	[{"leafId":-228,"en":"(they)","l2":"ya-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-228,"en":"(they)","l2":"-uwna"}]	\N	-228,729,-228	(they) write	0		2018-09-07 14:02:40.402859-06	2018-09-07 14:02:40.4-06
+1288	[{"leafId":-228,"en":"(they)","l2":"ya-"},{"leafId":-228,"en":"write","l2":"ktub-"},{"leafId":-228,"en":"(they)","l2":"-uwna"}]	\N	-228,-228,-228	(they write)	0		2018-09-07 14:02:40.402859-06	2018-09-07 14:02:40.4-06
+1289	[{"leafId":740,"en":"","l2":"hun~a"},{"leafId":-229,"en":"(they)","l2":"ya-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-229,"en":"(they)","l2":"-ona"}]	\N	740,-229,729,-229	They (fem.) write.	0		2018-09-07 14:02:54.445406-06	2018-09-07 14:02:54.444-06
+1291	[{"leafId":-229,"en":"(they)","l2":"ya-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-229,"en":"(they)","l2":"-ona"}]	\N	-229,729,-229	(they) write	0		2018-09-07 14:02:54.445406-06	2018-09-07 14:02:54.444-06
+1293	[{"leafId":-229,"en":"(they)","l2":"ya-"},{"leafId":-229,"en":"write","l2":"ktub-"},{"leafId":-229,"en":"(they)","l2":"-ona"}]	\N	-229,-229,-229	(they write)	0		2018-09-07 14:02:54.445406-06	2018-09-07 14:02:54.444-06
 \.
 
 
@@ -1392,7 +1529,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 -- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('cards_card_id_seq', 1203, true);
+SELECT pg_catalog.setval('cards_card_id_seq', 1293, true);
 
 
 --
@@ -1528,6 +1665,24 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 210	Me too.	Moi aussi.	2018-09-03 10:50:39.900853-06	2018-09-03 10:50:39.9-06	1195	9
 211	Goodbye!	Au revoir!	2018-09-03 10:52:25.904307-06	2018-09-03 10:52:25.903-06	1198	9
 212	Good day!	Bonne journée!	2018-09-03 10:53:12.948423-06	2018-09-03 10:53:12.947-06	1201	9
+213	I wrote.	>nA nakotubu	2018-09-07 13:58:35.798015-06	2018-09-07 13:58:35.797-06	1204	10
+214	You (masc.) wrote.	>anota katabota	2018-09-07 13:58:47.806918-06	2018-09-07 13:58:47.805-06	1209	10
+215	You (fem.) wrote.	>anoti kataboti	2018-09-07 13:59:01.404397-06	2018-09-07 13:59:01.403-06	1214	10
+216	He wrote.	huwa kataba	2018-09-07 13:59:11.736283-06	2018-09-07 13:59:11.735-06	1219	10
+217	She wrote.	hiya katabato	2018-09-07 13:59:25.622427-06	2018-09-07 13:59:25.621-06	1224	10
+218	We wrote.	naHonu katabonaA	2018-09-07 13:59:37.28073-06	2018-09-07 13:59:37.279-06	1229	10
+219	You (masc. pl.) wrote.	>anotumo katabotumo	2018-09-07 13:59:56.002312-06	2018-09-07 13:59:56.001-06	1234	10
+220	You (fem. pl.) wrote.	>anotun~a katabotun~a	2018-09-07 14:00:12.421191-06	2018-09-07 14:00:12.42-06	1239	10
+221	They (masc.) wrote.	humo katabuwA	2018-09-07 14:00:24.838875-06	2018-09-07 14:00:24.838-06	1244	10
+222	They (fem.) wrote.	hun~a katabona	2018-09-07 14:00:41.292526-06	2018-09-07 14:00:41.291-06	1249	10
+223	I write.	>nA >akotubu	2018-09-07 14:00:59.746726-06	2018-09-07 14:00:59.746-06	1254	10
+224	You (masc.) write.	>anota takotubu	2018-09-07 14:01:26.36215-06	2018-09-07 14:01:26.361-06	1259	10
+225	You (fem.) write.	>anoti takotubiyna	2018-09-07 14:01:41.586342-06	2018-09-07 14:01:41.585-06	1264	10
+226	He writes.	huwa yakotubu	2018-09-07 14:01:51.391214-06	2018-09-07 14:01:51.39-06	1269	10
+227	You (masc. pl.) write.	>anotumo takotubuwna	2018-09-07 14:02:08.45161-06	2018-09-07 14:02:08.45-06	1274	10
+228	You (fem. pl.) write.	>anotun~a takotubona	2018-09-07 14:02:27.766485-06	2018-09-07 14:02:27.765-06	1279	10
+229	They (masc.) write.	humo yakotubuwna	2018-09-07 14:02:40.421748-06	2018-09-07 14:02:40.421-06	1284	10
+230	They (fem.) write.	hun~a yakotubona	2018-09-07 14:02:54.460258-06	2018-09-07 14:02:54.459-06	1289	10
 \.
 
 
@@ -1535,7 +1690,7 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 -- Name: goals_goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('goals_goal_id_seq', 212, true);
+SELECT pg_catalog.setval('goals_goal_id_seq', 230, true);
 
 
 --
@@ -1941,6 +2096,16 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 728	ArNonverb	\N	Mahmoud Abbas	\N	\N	\N	\N	\N	\N	2018-09-05 23:45:04.596028-06	\N	\N	maHomuwd Eaba~As	\N
 729	ArVRoot	\N	write	\N	\N	wrote	\N	\N	\N	2018-09-07 10:26:56.175701-06	\N	\N	ktb	u
 730	ArVRoot	\N	drink	\N	\N	drank	\N	\N	\N	2018-09-07 10:27:14.594876-06	\N	\N	$rib	a
+731	ArNonverb	\N		\N	\N	\N	\N	\N	\N	2018-09-07 13:58:35.672884-06	\N	\N	>nA	\N
+732	ArNonverb	\N		\N	\N	\N	\N	\N	\N	2018-09-07 13:58:47.781191-06	\N	\N	>anota	\N
+733	ArNonverb	\N		\N	\N	\N	\N	\N	\N	2018-09-07 13:59:01.383694-06	\N	\N	>anoti	\N
+734	ArNonverb	\N		\N	\N	\N	\N	\N	\N	2018-09-07 13:59:11.711905-06	\N	\N	huwa	\N
+735	ArNonverb	\N		\N	\N	\N	\N	\N	\N	2018-09-07 13:59:25.599617-06	\N	\N	hiya	\N
+736	ArNonverb	\N		\N	\N	\N	\N	\N	\N	2018-09-07 13:59:37.256893-06	\N	\N	naHonu	\N
+737	ArNonverb	\N		\N	\N	\N	\N	\N	\N	2018-09-07 13:59:55.977431-06	\N	\N	>anotumo	\N
+738	ArNonverb	\N		\N	\N	\N	\N	\N	\N	2018-09-07 14:00:12.407077-06	\N	\N	>anotun~a	\N
+739	ArNonverb	\N		\N	\N	\N	\N	\N	\N	2018-09-07 14:00:24.815863-06	\N	\N	humo	\N
+740	ArNonverb	\N		\N	\N	\N	\N	\N	\N	2018-09-07 14:00:41.266117-06	\N	\N	hun~a	\N
 \.
 
 
@@ -1948,7 +2113,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 730, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 740, true);
 
 
 --
@@ -1964,6 +2129,7 @@ COPY paragraphs (paragraph_id, topic, created_at, updated_at, enabled, lang) FRO
 8	Pimsleur 1.3	2018-09-01 17:07:43.000326-06	2018-09-01 17:07:42.999-06	t	es
 2	software	2018-06-28 11:09:42.833001-06	2018-07-17 08:58:30.411-06	f	es
 9	Greetings	2018-09-02 15:37:04.777894-06	2018-09-02 15:37:04.745-06	t	fr
+10	Verb conjugations	2018-09-07 13:58:23.971876-06	2018-09-07 13:58:23.968-06	t	ar
 \.
 
 
@@ -1971,7 +2137,7 @@ COPY paragraphs (paragraph_id, topic, created_at, updated_at, enabled, lang) FRO
 -- Name: paragraphs_paragraph_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dan
 --
 
-SELECT pg_catalog.setval('paragraphs_paragraph_id_seq', 9, true);
+SELECT pg_catalog.setval('paragraphs_paragraph_id_seq', 10, true);
 
 
 --

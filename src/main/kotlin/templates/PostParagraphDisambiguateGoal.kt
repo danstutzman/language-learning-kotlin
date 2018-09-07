@@ -39,7 +39,10 @@ fun PostParagraphDisambiguateGoal(
         html.append("<input type='radio' name='word.${wordNum}' value='${interpretationNum}' ${checked}>")
         html.append("<input type='hidden' name='word.${wordNum}.${interpretationNum}.exists' value='false'>")
         html.append("Add new ${interpretation.type}")
-        if (interpretation.type == "EsNonverb") {
+        if (interpretation.type == "ArNonverb") {
+          html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.arBuckwalter' value='${escapeHTML(word)}'>")
+          html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.en' placeholder='English'>")
+        } else if (interpretation.type == "EsNonverb") {
           html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.es' value='${escapeHTML(word)}'> (check case)")
           html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.en' placeholder='English'>")
           html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.enDisambiguation' placeholder='English disambiguation (optional)'>")

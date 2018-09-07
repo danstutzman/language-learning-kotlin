@@ -209,38 +209,44 @@ function convertBuckwalterToQalam(buckwalter) {
 
 function onLoad() {
   for (const element of document.getElementsByClassName('ar-buckwalter')) {
-    const leafId = element.getAttribute('data-leaf-id');
-    if (leafId === null) continue;
+    const rowId = element.getAttribute('data-row-id');
+    if (rowId === null) continue;
 
     const buckwalter = element.innerText;
-    document.getElementById(`ar-qalam-${leafId}`).innerHTML =
+    document.getElementById(`ar-qalam-${rowId}`).innerHTML =
       convertBuckwalterToQalam(buckwalter);
-    document.getElementById(`ar-monospace-${leafId}`).innerHTML =
+    document.getElementById(`ar-monospace-${rowId}`).innerHTML =
       convertBuckwalterToArabic(buckwalter);
-    document.getElementById(`ar-middles-${leafId}`).innerHTML =
-      convertBuckwalterToMiddles(buckwalter);
+    if (document.getElementById(`ar-middles-${rowId}`) !== null) {
+      document.getElementById(`ar-middles-${rowId}`).innerHTML =
+        convertBuckwalterToMiddles(buckwalter);
+    }
 
     element.addEventListener('input', function (e) {
       const buckwalter = e.target.value;
-      document.getElementById(`ar-qalam-${leafId}`).value =
+      document.getElementById(`ar-qalam-${rowId}`).value =
         convertBuckwalterToQalam(buckwalter);
-      document.getElementById(`ar-monospace-${leafId}`).value =
+      document.getElementById(`ar-monospace-${rowId}`).value =
         convertBuckwalterToArabic(buckwalter);
-      document.getElementById(`ar-middles-${leafId}`).value =
-        convertBuckwalterToMiddles(buckwalter);
+      if (document.getElementById(`ar-middles-${rowId}`) !== null) {
+        document.getElementById(`ar-middles-${rowId}`).value =
+          convertBuckwalterToMiddles(buckwalter);
+      }
     })
   }
 
-  document.getElementById('ar-monospace-new').addEventListener('input', function (e) {
-    const buckwalter = convertArabicToBuckwalter(e.target.value);
-    document.getElementById('ar-buckwalter-new').value = buckwalter;
-    document.getElementById('ar-qalam-new').value =
-      convertBuckwalterToQalam(buckwalter);
-    document.getElementById('ar-monospace-new').value =
-      convertBuckwalterToArabic(buckwalter);
-    document.getElementById('ar-middles-new').value =
-      convertBuckwalterToMiddles(buckwalter);
-  });
+  const arMonospaceNew = document.getElementById('ar-monospace-new');
+  if (arMonospaceNew !== null) {
+    arMonospaceNew.addEventListener('input', function (e) {
+      const buckwalter = convertArabicToBuckwalter(e.target.value);
+      document.getElementById('ar-buckwalter-new').value = buckwalter;
+      document.getElementById('ar-qalam-new').value =
+        convertBuckwalterToQalam(buckwalter);
+      arMonospaceNew.value = convertBuckwalterToArabic(buckwalter);
+      document.getElementById('ar-middles-new').value =
+        convertBuckwalterToMiddles(buckwalter);
+    });
+  }
 }
 
-document.addEventListener('DOMContentLoaded', onLoad)
+document.addEventListener('DOMContentLoaded', onLoad);

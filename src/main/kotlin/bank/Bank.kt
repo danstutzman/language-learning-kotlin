@@ -2,6 +2,10 @@ package com.danstutzman.bank
 
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.GlossRows
+import com.danstutzman.bank.ar.ArNonverbList
+import com.danstutzman.bank.ar.ArVCloud
+import com.danstutzman.bank.ar.ArVRootList
+import com.danstutzman.bank.ar.ArVPatternList
 import com.danstutzman.bank.en.EnPronouns
 import com.danstutzman.bank.en.EnVerbs
 import com.danstutzman.bank.es.GENDER_TO_DESCRIPTION
@@ -52,6 +56,8 @@ class Bank(
 ) {
   val logger: Logger = LoggerFactory.getLogger("Bank.kt")
 
+  val arNonverbList = ArNonverbList(db)
+  val arVCloud      = ArVCloud(ArVRootList(db), ArVPatternList())
   val esInfList     = com.danstutzman.bank.es.InfList(db)
   val esNonverbList = com.danstutzman.bank.es.NonverbList(db)
   val esVCloud      = com.danstutzman.bank.es.VCloud(
@@ -101,6 +107,9 @@ class Bank(
 
   fun splitL2Phrase(lang: String, l2Phrase: String): List<String> =
     when(lang) {
+      "ar" -> l2Phrase
+        .split(Regex("[ ]+"))
+        .filterNot { it == "" }
       "es" -> l2Phrase
         .split(Regex("[ .,;$?!\u00BF\u00A1()'\"-]+"))
         .filterNot { it == "" }
@@ -117,7 +126,10 @@ class Bank(
     }
 
   fun interpretL2Word(lang: String, word: String): List<Interpretation> =
-    if (lang == "es")
+    if (lang == "ar")
+      arNonverbList.interpretArBuckwalter(word) +
+      arVCloud.interpretArBuckwalter(word)
+    else if (lang == "es")
       esNonverbList.interpretEsLower(word.toLowerCase()) +
       esVCloud.interpretEsLower(word.toLowerCase())
     else if (lang == "fr")

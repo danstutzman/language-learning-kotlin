@@ -62,7 +62,8 @@ fun extractWordDisambiguations(req: Request): List<WordDisambiguation> {
       normalize(req.queryParams("word.${wordNum}.${interpretationNum}.enDisambiguation")),
       normalize(req.queryParams("word.${wordNum}.${interpretationNum}.enPlural")),
       normalize(req.queryParams("word.${wordNum}.${interpretationNum}.es")),
-      normalize(req.queryParams("word.${wordNum}.${interpretationNum}.frMixed"))
+      normalize(req.queryParams("word.${wordNum}.${interpretationNum}.frMixed")),
+      normalize(req.queryParams("word.${wordNum}.${interpretationNum}.arBuckwalter"))
     ))
   }
   return wordDisambiguations

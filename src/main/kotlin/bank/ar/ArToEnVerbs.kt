@@ -1,9 +1,9 @@
-package com.danstutzman.bank.en
+package com.danstutzman.bank.ar
 
-import com.danstutzman.bank.es.Inf
-import com.danstutzman.bank.es.EsTense
+import com.danstutzman.bank.ar.ArTense
+import com.danstutzman.bank.ar.ArVRoot
 
-class EnVerbs {
+class ArToEnVerbs {
   companion object {
     val NUMBER_AND_PERSON_TO_EN_VERB_SUFFIX = linkedMapOf(
       Pair(1, 1) to "",
@@ -17,13 +17,13 @@ class EnVerbs {
       Pair(3, 3) to ""
     )
 
-    fun getEnVerbFor(inf: Inf, number: Int, person: Int, tense: EsTense):
+    fun getEnVerbFor(root: ArVRoot, number: Int, person: Int, tense: ArTense):
       String =
       when (tense) {
-        EsTense.PRES ->
-          inf.enPresent +
+        ArTense.PAST -> root.enPast
+        ArTense.PRES ->
+          root.enPresent +
           NUMBER_AND_PERSON_TO_EN_VERB_SUFFIX[Pair(number, person)]!!
-        EsTense.PRET -> inf.enPast
-      } + if (inf.enDisambiguation != null) " (${inf.enDisambiguation})" else ""
+      }
   }
 }

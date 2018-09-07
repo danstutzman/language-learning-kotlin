@@ -2,7 +2,9 @@ package com.danstutzman.routes
 
 import com.danstutzman.bank.Bank
 import com.danstutzman.bank.CardCreator
+import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.Interpretation
+import com.danstutzman.db.ArNonverb
 import com.danstutzman.db.Db
 import com.danstutzman.db.CardEmbedding
 import com.danstutzman.db.CardRow
@@ -23,8 +25,18 @@ data class WordDisambiguation (
   val enDisambiguation: String?,
   val enPlural: String?,
   val es: String?,
-  val frMixed: String?
+  val frMixed: String?,
+  val arBuckwalter: String?
 )
+
+private val gsonBuilder = GsonBuilder().create()
+
+private fun convertGlossRowsToJson(glossRows: List<GlossRow>): String =
+  gsonBuilder.toJson(glossRows)
+    .replace("\\u003e", ">")
+    .replace("\\u003c", "<")
+    .replace("\\u0027", "'")
+    .replace("\\u0026", "&")
 
 fun PostParagraphAddGoal(db: Db, lang: String, paragraphId: Int, goalEn: String,
   goalL2: String, wordDisambiguations: List<WordDisambiguation>) {
@@ -45,7 +57,12 @@ fun PostParagraphAddGoal(db: Db, lang: String, paragraphId: Int, goalEn: String,
           "Can't find ${disambiguation.type} with ${disambiguation.leafIds}")
       cardCreators.add(interpretation.cardCreator!!)
     } else {
-      if (disambiguation.type == "EsNonverb") {
+      if (disambiguation.type == "ArNonverb") {
+        val row = db.arNonverbsTable.insert(ArNonverb(
+          0, disambiguation.en!!, disambiguation.arBuckwalter!!))
+        cardCreators.add(com.danstutzman.bank.ar.ArNonverb(
+          row.leafId, row.arBuckwalter, row.en))
+      } else if (disambiguation.type == "EsNonverb") {
         val row = db.esNonverbsTable.insert(EsNonverb(
           0, disambiguation.en!!, disambiguation.enDisambiguation!!,
           blankToNull(disambiguation.enPlural!!), disambiguation.es!!))
@@ -68,13 +85,12 @@ fun PostParagraphAddGoal(db: Db, lang: String, paragraphId: Int, goalEn: String,
 
 private fun createGoal(goalL2:String, cardCreators: List<CardCreator>,
   goalEn: String, db:Db, paragraphId:Int) {
-  val gsonBuilder = GsonBuilder().create()
   if (cardCreators.size > 0) {
     val cardRowsForWords = cardCreators.map { cardCreator ->
       val glossRows = cardCreator.getGlossRows()
       CardRow(
         cardId = 0,
-        glossRowsJson = gsonBuilder.toJson(glossRows),
+        glossRowsJson = convertGlossRowsToJson(glossRows),
         lastSeenAt = null,
         leafIdsCsv = glossRows.map { it.leafId }.joinToString(","),
         mnemonic = "",
@@ -91,7 +107,7 @@ private fun createGoal(goalL2:String, cardCreators: List<CardCreator>,
         val glossRows = cardCreator.getGlossRows()
         CardRow(
           cardId = 0,
-          glossRowsJson = gsonBuilder.toJson(glossRows),
+          glossRowsJson = convertGlossRowsToJson(glossRows),
           lastSeenAt = null,
           leafIdsCsv = glossRows.map { it.leafId }.joinToString(","),
           mnemonic = "",
@@ -103,7 +119,7 @@ private fun createGoal(goalL2:String, cardCreators: List<CardCreator>,
     val glossRows = cardCreators.flatMap { it.getGlossRows() }
     val cardRowForGoal = CardRow(
       cardId = 0,
-      glossRowsJson = gsonBuilder.toJson(glossRows),
+      glossRowsJson = convertGlossRowsToJson(glossRows),
       lastSeenAt = null,
       leafIdsCsv = glossRows.map { it.leafId }.joinToString(","),
       mnemonic = "",
