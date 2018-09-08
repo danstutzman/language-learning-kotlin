@@ -38,10 +38,12 @@ fun getGlossRowsHtml(
   val glossRowsHtml = StringBuilder()
   for (i in 0..glossRows.size - 1) {
     val l2 = glossRows[i].l2
+    val nextL2 = if (i < glossRows.size - 1) glossRows[i + 1].l2 else ""
+
     glossRowsHtml.append(openTagsByGlossRowIndex[i].joinToString(""))
     glossRowsHtml.append(l2.replace("-", ""))
     glossRowsHtml.append(closeTagsByGlossRowIndex[i].joinToString(""))
-    if (!l2.endsWith("-")) {
+    if (!l2.endsWith("-") && !nextL2.startsWith("-")) {
       glossRowsHtml.append(" ")
     }
   }
