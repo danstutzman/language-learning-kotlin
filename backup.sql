@@ -1152,6 +1152,45 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 3503	1410	1408	1	1
 3508	1414	1205	0	0
 3516	1414	1407	1	1
+3522	1421	1376	2	2
+3523	1423	1376	1	1
+3525	1421	1363	0	0
+3527	1373	1426	2	2
+3530	1381	1426	3	3
+3533	1421	1423	1	3
+3534	1421	1424	1	1
+3536	1421	1426	3	3
+3538	1423	1424	0	0
+3540	1423	1426	2	2
+3545	1427	1376	2	2
+3546	1429	1376	1	1
+3548	1427	1363	0	0
+3551	1377	1432	2	2
+3554	1386	1432	3	3
+3560	1427	1424	1	1
+3561	1429	1424	0	0
+3563	1427	1429	1	3
+3566	1427	1432	3	3
+3570	1429	1432	2	2
+3573	1433	1376	2	2
+3574	1435	1376	1	1
+3581	1433	1382	0	0
+3588	1433	1426	3	3
+3589	1435	1426	2	2
+3593	1433	1435	1	3
+3594	1433	1436	1	1
+3598	1435	1436	0	0
+3603	1439	1376	2	2
+3604	1441	1376	1	1
+3610	1439	1382	0	0
+3620	1439	1432	3	3
+3621	1441	1432	2	2
+3627	1439	1436	1	1
+3628	1441	1436	0	0
+3630	1439	1441	1	3
+3638	1445	1447	1	1
+3641	1449	1451	1	1
+3644	1453	1455	1	1
 \.
 
 
@@ -1159,7 +1198,7 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 -- Name: card_embeddings_card_embedding_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 3521, true);
+SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 3646, true);
 
 
 --
@@ -1578,6 +1617,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 595	[{"leafId":467,"en":"have","l2":"tengo"},{"leafId":392,"en":"a","l2":"una"},{"leafId":424,"en":"application","l2":"aplicación"}]	\N	467,392,424	I have an app.	0		2018-07-17 08:26:28.978076-06	2018-07-17 08:26:28.975-06
 600	[{"leafId":392,"en":"a","l2":"una"},{"leafId":424,"en":"application","l2":"aplicación"},{"leafId":421,"en":"for","l2":"para"},{"leafId":526,"en":"practice","l2":"practicar"},{"leafId":380,"en":"Spanish","l2":"español"}]	\N	392,424,421,526,380	an app to practice Spanish	0		2018-07-17 08:27:37.719766-06	2018-07-17 08:27:37.718-06
 1279	[{"leafId":738,"en":"you (fem. pl.)","l2":">anotun~a"},{"leafId":-227,"en":"(you)","l2":"ta-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-227,"en":"(you)","l2":"-ona"}]	\N	738,-227,729,-227	You (fem. pl.) write.	0		2018-09-07 14:02:27.747514-06	2018-09-07 14:02:27.746-06
+1376	[{"leafId":-240,"en":"nominative","l2":"-u"}]	\N	-240	Case ending for nominative	1		2018-09-07 21:04:13.854143-06	2018-09-07 21:04:13.85-06
 1281	[{"leafId":-227,"en":"(you)","l2":"ta-"},{"leafId":729,"en":"write","l2":"kotub-"},{"leafId":-227,"en":"(you)","l2":"-ona"}]	\N	-227,729,-227	(you) write	0		2018-09-07 14:02:27.747514-06	2018-09-07 14:02:27.746-06
 1283	[{"leafId":-227,"en":"(you)","l2":"ta-"},{"leafId":-227,"en":"write","l2":"ktub-"},{"leafId":-227,"en":"(you)","l2":"-ona"}]	\N	-227,-227,-227	(you write)	0		2018-09-07 14:02:27.747514-06	2018-09-07 14:02:27.746-06
 1294	[{"leafId":732,"en":"you (masc.)","l2":">anota"},{"leafId":-222,"en":"(you)","l2":"ta-"},{"leafId":742,"en":"sit","l2":"jolis-"},{"leafId":-222,"en":"(you)","l2":"-iyna"}]	\N	732,-222,742,-222	You (fem.) sit.	0		2018-09-07 14:11:56.437662-06	2018-09-07 14:11:56.434-06
@@ -1663,7 +1703,6 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 1370	[{"leafId":-223,"en":"(he/she)","l2":"ya-"},{"leafId":777,"en":"mean","l2":"Eoniy-"},{"leafId":-223,"en":"(he/she)","l2":"-u"}]	\N	-223,777,-223	(he/she) means	0		2018-09-07 18:42:49.155584-06	2018-09-07 18:42:49.153-06
 1371	[{"leafId":777,"en":"mean","l2":"Eny"}]	\N	777	to mean	1		2018-09-07 18:42:49.155584-06	2018-09-07 18:42:49.153-06
 1375	[{"leafId":780,"en":"name","l2":"Aisom"}]	\N	780	name	1		2018-09-07 21:04:13.854143-06	2018-09-07 21:04:13.85-06
-1376	[{"leafId":-240,"en":"nominative","l2":"-u"}]	\N	-240	Case ending for nominative	1		2018-09-07 21:04:13.854143-06	2018-09-07 21:04:13.85-06
 1373	[{"leafId":780,"en":"name","l2":"Aisom"},{"leafId":-240,"en":"nominative","l2":"-u"},{"leafId":-251,"en":"your","l2":"-ka"}]	\N	780,-240,-251	your (masc.) name	0		2018-09-07 21:04:13.854143-06	2018-09-07 21:04:13.849-06
 1377	[{"leafId":780,"en":"name","l2":"Aisom"},{"leafId":-240,"en":"nominative","l2":"-u"},{"leafId":-252,"en":"your","l2":"-ki"}]	\N	780,-240,-252	your (fem.) name	0		2018-09-07 21:06:11.467701-06	2018-09-07 21:06:11.465-06
 1381	[{"leafId":784,"en":"what","l2":"maA"},{"leafId":780,"en":"name","l2":"Aisom"},{"leafId":-240,"en":"nominative","l2":"-u"},{"leafId":-251,"en":"your","l2":"-ka"}]	\N	784,780,-240,-251	What is your (masc.) name?	0		2018-09-07 21:07:10.850238-06	2018-09-07 21:07:10.847-06
@@ -1685,6 +1724,24 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 1410	[{"leafId":788,"en":"from","l2":"mino"},{"leafId":789,"en":"where","l2":">ayona"},{"leafId":733,"en":"you (fem.)","l2":">anoti"}]	\N	788,789,733	From where are you (fem.)?	0		2018-09-07 21:51:39.52394-06	2018-09-07 21:51:39.521-06
 1414	[{"leafId":731,"en":"I","l2":">nA"},{"leafId":788,"en":"from","l2":"mino"}]	\N	731,788	I am from ...	0		2018-09-07 21:52:26.202082-06	2018-09-07 21:52:26.2-06
 1417	[{"leafId":790,"en":"yes","l2":"naEamo"}]	\N	790	Yes!	1		2018-09-07 21:53:30.258984-06	2018-09-07 21:53:30.257-06
+1421	[{"leafId":775,"en":"how","l2":"kayofa"},{"leafId":791,"en":"condition","l2":"HaAl"},{"leafId":-240,"en":"nominative","l2":"-u"},{"leafId":-251,"en":"your","l2":"-ka"}]	\N	775,791,-240,-251	How is your (masc.) condition?	0		2018-09-07 22:01:18.504865-06	2018-09-07 22:01:18.502-06
+1423	[{"leafId":791,"en":"condition","l2":"HaAl"},{"leafId":-240,"en":"nominative","l2":"-u"},{"leafId":-251,"en":"your","l2":"-ka"}]	\N	791,-240,-251	condition (nominative) (your)	0		2018-09-07 22:01:18.504865-06	2018-09-07 22:01:18.503-06
+1424	[{"leafId":791,"en":"condition","l2":"HaAl"}]	\N	791	condition	1		2018-09-07 22:01:18.504865-06	2018-09-07 22:01:18.503-06
+1426	[{"leafId":-251,"en":"your","l2":"-ka"}]	\N	-251	Suffix pronoun for your	1		2018-09-07 22:01:18.504865-06	2018-09-07 22:01:18.503-06
+1427	[{"leafId":775,"en":"how","l2":"kayofa"},{"leafId":791,"en":"condition","l2":"HaAl"},{"leafId":-240,"en":"nominative","l2":"-u"},{"leafId":-252,"en":"your","l2":"-ki"}]	\N	775,791,-240,-252	How is your (fem.) condition?	0		2018-09-07 22:01:46.001556-06	2018-09-07 22:01:45.999-06
+1429	[{"leafId":791,"en":"condition","l2":"HaAl"},{"leafId":-240,"en":"nominative","l2":"-u"},{"leafId":-252,"en":"your","l2":"-ki"}]	\N	791,-240,-252	condition (nominative) (your)	0		2018-09-07 22:01:46.001556-06	2018-09-07 22:01:45.999-06
+1432	[{"leafId":-252,"en":"your","l2":"-ki"}]	\N	-252	Suffix pronoun for your	1		2018-09-07 22:01:46.001556-06	2018-09-07 22:01:45.999-06
+1433	[{"leafId":784,"en":"what","l2":"maA"},{"leafId":792,"en":"news","l2":">axobaAr"},{"leafId":-240,"en":"nominative","l2":"-u"},{"leafId":-251,"en":"your","l2":"-ka"}]	\N	784,792,-240,-251	What is your (masc.) news?	0		2018-09-07 22:04:09.79551-06	2018-09-07 22:04:09.793-06
+1435	[{"leafId":792,"en":"news","l2":">axobaAr"},{"leafId":-240,"en":"nominative","l2":"-u"},{"leafId":-251,"en":"your","l2":"-ka"}]	\N	792,-240,-251	news (nominative) (your)	0		2018-09-07 22:04:09.79551-06	2018-09-07 22:04:09.793-06
+1436	[{"leafId":792,"en":"news","l2":">axobaAr"}]	\N	792	news	1		2018-09-07 22:04:09.79551-06	2018-09-07 22:04:09.793-06
+1439	[{"leafId":784,"en":"what","l2":"maA"},{"leafId":792,"en":"news","l2":">axobaAr"},{"leafId":-240,"en":"nominative","l2":"-u"},{"leafId":-252,"en":"your","l2":"-ki"}]	\N	784,792,-240,-252	What is your (fem.) news?	0		2018-09-07 22:04:23.891977-06	2018-09-07 22:04:23.889-06
+1441	[{"leafId":792,"en":"news","l2":">axobaAr"},{"leafId":-240,"en":"nominative","l2":"-u"},{"leafId":-252,"en":"your","l2":"-ki"}]	\N	792,-240,-252	news (nominative) (your)	0		2018-09-07 22:04:23.891977-06	2018-09-07 22:04:23.889-06
+1445	[{"leafId":-220,"en":"(I)","l2":">a-"},{"leafId":797,"en":"study","l2":"dorus-"},{"leafId":-220,"en":"(I)","l2":"-u"}]	\N	-220,797,-220	I study ...	0		2018-09-07 22:25:52.204767-06	2018-09-07 22:25:52.203-06
+1447	[{"leafId":797,"en":"study","l2":"drs"}]	\N	797	to study	1		2018-09-07 22:25:52.204767-06	2018-09-07 22:25:52.203-06
+1449	[{"leafId":-220,"en":"(I)","l2":">a-"},{"leafId":798,"en":"live","l2":"sokun-"},{"leafId":-220,"en":"(I)","l2":"-u"}]	\N	-220,798,-220	I live ...	0		2018-09-07 22:27:41.030558-06	2018-09-07 22:27:41.029-06
+1451	[{"leafId":798,"en":"live","l2":"skn"}]	\N	798	to live	1		2018-09-07 22:27:41.030558-06	2018-09-07 22:27:41.03-06
+1453	[{"leafId":-220,"en":"(I)","l2":">a-"},{"leafId":799,"en":"work","l2":"Eomal-"},{"leafId":-220,"en":"(I)","l2":"-u"}]	\N	-220,799,-220	I work ...	0		2018-09-07 22:28:53.283689-06	2018-09-07 22:28:53.283-06
+1455	[{"leafId":799,"en":"work","l2":"Eml"}]	\N	799	to work	1		2018-09-07 22:28:53.283689-06	2018-09-07 22:28:53.283-06
 \.
 
 
@@ -1692,7 +1749,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 -- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('cards_card_id_seq', 1420, true);
+SELECT pg_catalog.setval('cards_card_id_seq', 1456, true);
 
 
 --
@@ -1871,6 +1928,13 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 254	I am from ...	>nA mino 	2018-09-07 21:52:26.221799-06	2018-09-07 21:52:26.221-06	1414	12
 255	Yes!	naEamo	2018-09-07 21:53:30.26645-06	2018-09-07 21:53:30.264-06	1417	12
 256	No!	laA	2018-09-07 21:53:50.931538-06	2018-09-07 21:53:50.93-06	1402	12
+257	How is your (masc.) condition?	kayofa HaAluka	2018-09-07 22:01:18.523566-06	2018-09-07 22:01:18.522-06	1421	13
+258	How is your (fem.) condition?	kayofa HaAluki	2018-09-07 22:01:46.01816-06	2018-09-07 22:01:46.017-06	1427	13
+259	What is your (masc.) news?	maA >axobaAruka	2018-09-07 22:04:09.81005-06	2018-09-07 22:04:09.809-06	1433	13
+260	What is your (fem.) news?	maA >axobaAruki	2018-09-07 22:04:23.913715-06	2018-09-07 22:04:23.913-06	1439	13
+261	I study ...	>adorusu	2018-09-07 22:25:52.225971-06	2018-09-07 22:25:52.225-06	1445	14
+262	I live ...	>asokunu	2018-09-07 22:27:41.039585-06	2018-09-07 22:27:41.039-06	1449	14
+263	I work ...	>aEomalu	2018-09-07 22:28:53.29411-06	2018-09-07 22:28:53.293-06	1453	14
 \.
 
 
@@ -1878,7 +1942,7 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 -- Name: goals_goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('goals_goal_id_seq', 256, true);
+SELECT pg_catalog.setval('goals_goal_id_seq', 263, true);
 
 
 --
@@ -2339,6 +2403,15 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 788	ArNonverb	\N	from	\N	\N	\N	\N	\N	\N	2018-09-07 21:51:18.205031-06	\N	\N	mino	\N	\N	\N
 789	ArNonverb	\N	where	\N	\N	\N	\N	\N	\N	2018-09-07 21:51:18.218558-06	\N	\N	>ayona	\N	\N	\N
 790	ArNonverb	\N	yes	\N	\N	\N	\N	\N	\N	2018-09-07 21:53:30.255282-06	\N	\N	naEamo	\N	\N	\N
+791	ArNoun	\N	condition	\N	\N	\N	\N	\N	\N	2018-09-07 22:01:13.371085-06	\N	\N	HaAl	\N	\N	M
+792	ArNoun	\N	news	\N	\N	\N	\N	\N	\N	2018-09-07 22:03:13.955925-06	\N	\N	>axobaAr	\N	\N	M
+793	ArNoun	\N	praise	\N	\N	\N	\N	\N	\N	2018-09-07 22:09:28.115164-06	\N	\N	Hamod	\N	\N	M
+794	ArNoun	\N	goodness	\N	\N	\N	\N	\N	\N	2018-09-07 22:12:05.852325-06	\N	\N	xayor	\N	\N	M
+795	ArNonverb	\N	thanks	\N	\N	\N	\N	\N	\N	2018-09-07 22:14:28.36809-06	\N	\N	$ukorFA	\N	\N	\N
+796	ArNonverb	\N	excuse me	\N	\N	\N	\N	\N	\N	2018-09-07 22:18:34.348136-06	\N	\N	EafowFA	\N	\N	\N
+797	ArVRoot	\N	study	\N	\N	studied	\N	\N	\N	2018-09-07 22:24:24.072574-06	\N	\N	drs	u	\N	\N
+798	ArVRoot	\N	live	\N	\N	lived	\N	\N	\N	2018-09-07 22:27:31.134482-06	\N	\N	skn	u	\N	\N
+799	ArVRoot	\N	work	\N	\N	worked	\N	\N	\N	2018-09-07 22:28:30.467462-06	\N	\N	Eml	a	\N	\N
 \.
 
 
@@ -2346,7 +2419,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 790, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 799, true);
 
 
 --
@@ -2365,6 +2438,8 @@ COPY paragraphs (paragraph_id, topic, created_at, updated_at, enabled, lang) FRO
 10	Verb conjugations	2018-09-07 13:58:23.971876-06	2018-09-07 13:58:23.968-06	t	ar
 11	Alif Baa Unit 2	2018-09-07 18:28:21.029119-06	2018-09-07 18:28:21.026-06	t	ar
 12	Alif Baaa Unit 4-5	2018-09-07 21:38:43.582374-06	2018-09-07 21:38:43.58-06	t	ar
+13	Alif Baa Unit 3	2018-09-07 22:00:32.699487-06	2018-09-07 22:00:32.698-06	t	ar
+14	Aliff Baa Unit 6-8	2018-09-07 22:25:25.720979-06	2018-09-07 22:25:25.72-06	t	ar
 \.
 
 
@@ -2372,7 +2447,7 @@ COPY paragraphs (paragraph_id, topic, created_at, updated_at, enabled, lang) FRO
 -- Name: paragraphs_paragraph_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dan
 --
 
-SELECT pg_catalog.setval('paragraphs_paragraph_id_seq', 12, true);
+SELECT pg_catalog.setval('paragraphs_paragraph_id_seq', 14, true);
 
 
 --
