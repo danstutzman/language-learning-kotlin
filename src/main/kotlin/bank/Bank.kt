@@ -2,8 +2,12 @@ package com.danstutzman.bank
 
 import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.GlossRows
+import com.danstutzman.bank.ar.ArCompoundNounCloud
 import com.danstutzman.bank.ar.ArNonverbList
+import com.danstutzman.bank.ar.ArNounCaseList
+import com.danstutzman.bank.ar.ArNounList
 import com.danstutzman.bank.ar.ArStemChangeList
+import com.danstutzman.bank.ar.ArSuffixPronounList
 import com.danstutzman.bank.ar.ArUniqVList
 import com.danstutzman.bank.ar.ArVCloud
 import com.danstutzman.bank.ar.ArVPatternList
@@ -59,6 +63,9 @@ class Bank(
   val logger: Logger = LoggerFactory.getLogger("Bank.kt")
 
   val arNonverbList = ArNonverbList(db)
+  val arNounList    = ArNounList(db)
+  val arCompoundNounCloud = ArCompoundNounCloud(arNounList, ArNounCaseList(),
+    ArSuffixPronounList())
   val arRootList = ArVRootList(db)
   val arVCloud      = ArVCloud(arRootList, ArVPatternList(),
     ArStemChangeList(arRootList, db), ArUniqVList(arRootList, db))
@@ -132,6 +139,7 @@ class Bank(
   fun interpretL2Word(lang: String, word: String): List<Interpretation> =
     if (lang == "ar")
       arNonverbList.interpretArBuckwalter(word) +
+      arCompoundNounCloud.interpretArBuckwalter(word) +
       arVCloud.interpretArBuckwalter(word)
     else if (lang == "es")
       esNonverbList.interpretEsLower(word.toLowerCase()) +

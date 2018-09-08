@@ -1121,6 +1121,25 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 3395	1368	1370	1	3
 3396	1368	1371	2	2
 3399	1370	1371	1	1
+3402	1373	1375	0	0
+3403	1373	1376	1	1
+3408	1377	1375	0	0
+3410	1377	1376	1	1
+3416	1381	1375	1	1
+3418	1381	1376	2	2
+3420	1381	1373	1	3
+3425	1381	1382	0	0
+3430	1386	1375	1	1
+3432	1386	1376	2	2
+3436	1386	1377	1	3
+3442	1386	1382	0	0
+3448	1392	1375	0	0
+3463	1396	1375	0	0
+3464	1397	1375	0	0
+3470	1396	1393	2	2
+3471	1396	1397	0	1
+3474	1396	1400	1	1
+3477	1397	1400	1	1
 \.
 
 
@@ -1128,7 +1147,7 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 -- Name: card_embeddings_card_embedding_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 3401, true);
+SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 3479, true);
 
 
 --
@@ -1631,6 +1650,19 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 1369	[{"leafId":778,"en":"what","l2":"maA*aA"}]	\N	778	what	1		2018-09-07 18:42:49.155584-06	2018-09-07 18:42:49.153-06
 1370	[{"leafId":-223,"en":"(he/she)","l2":"ya-"},{"leafId":777,"en":"mean","l2":"Eoniy-"},{"leafId":-223,"en":"(he/she)","l2":"-u"}]	\N	-223,777,-223	(he/she) means	0		2018-09-07 18:42:49.155584-06	2018-09-07 18:42:49.153-06
 1371	[{"leafId":777,"en":"mean","l2":"Eny"}]	\N	777	to mean	1		2018-09-07 18:42:49.155584-06	2018-09-07 18:42:49.153-06
+1375	[{"leafId":780,"en":"name","l2":"Aisom"}]	\N	780	name	1		2018-09-07 21:04:13.854143-06	2018-09-07 21:04:13.85-06
+1376	[{"leafId":-240,"en":"nominative","l2":"-u"}]	\N	-240	Case ending for nominative	1		2018-09-07 21:04:13.854143-06	2018-09-07 21:04:13.85-06
+1373	[{"leafId":780,"en":"name","l2":"Aisom"},{"leafId":-240,"en":"nominative","l2":"-u"},{"leafId":-251,"en":"your","l2":"-ka"}]	\N	780,-240,-251	your (masc.) name	0		2018-09-07 21:04:13.854143-06	2018-09-07 21:04:13.849-06
+1377	[{"leafId":780,"en":"name","l2":"Aisom"},{"leafId":-240,"en":"nominative","l2":"-u"},{"leafId":-252,"en":"your","l2":"-ki"}]	\N	780,-240,-252	your (fem.) name	0		2018-09-07 21:06:11.467701-06	2018-09-07 21:06:11.465-06
+1381	[{"leafId":784,"en":"what","l2":"maA"},{"leafId":780,"en":"name","l2":"Aisom"},{"leafId":-240,"en":"nominative","l2":"-u"},{"leafId":-251,"en":"your","l2":"-ka"}]	\N	784,780,-240,-251	What is your (masc.) name?	0		2018-09-07 21:07:10.850238-06	2018-09-07 21:07:10.847-06
+1382	[{"leafId":784,"en":"what","l2":"maA"}]	\N	784	what	1		2018-09-07 21:07:10.850238-06	2018-09-07 21:07:10.848-06
+1386	[{"leafId":784,"en":"what","l2":"maA"},{"leafId":780,"en":"name","l2":"Aisom"},{"leafId":-240,"en":"nominative","l2":"-u"},{"leafId":-252,"en":"your","l2":"-ki"}]	\N	784,780,-240,-252	What is your (fem.) name?	0		2018-09-07 21:07:24.057689-06	2018-09-07 21:07:24.055-06
+1392	[{"leafId":780,"en":"name","l2":"Aisom"},{"leafId":-242,"en":"genitive","l2":"-i"}]	\N	780,-242	name (genitive)	0		2018-09-07 21:09:15.567728-06	2018-09-07 21:09:15.565-06
+1393	[{"leafId":785,"en":"Daniel","l2":"daAniyaAl"}]	\N	785	Daniel	1		2018-09-07 21:09:15.567728-06	2018-09-07 21:09:15.565-06
+1395	[{"leafId":-242,"en":"genitive","l2":"-i"}]	\N	-242	Case ending for genitive	1		2018-09-07 21:09:15.567728-06	2018-09-07 21:09:15.566-06
+1396	[{"leafId":780,"en":"name","l2":"Aisom"},{"leafId":-250,"en":"my","l2":"-iy"},{"leafId":785,"en":"Daniel","l2":"daAniyaAl"}]	\N	780,-250,785	My name is Daniel.	0		2018-09-07 21:31:36.915244-06	2018-09-07 21:31:36.909-06
+1397	[{"leafId":780,"en":"name","l2":"Aisom"},{"leafId":-250,"en":"my","l2":"-iy"}]	\N	780,-250	name (my)	0		2018-09-07 21:31:36.915244-06	2018-09-07 21:31:36.91-06
+1400	[{"leafId":-250,"en":"my","l2":"-iy"}]	\N	-250	Suffix pronoun for my	1		2018-09-07 21:31:36.915244-06	2018-09-07 21:31:36.91-06
 \.
 
 
@@ -1638,7 +1670,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 -- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('cards_card_id_seq', 1372, true);
+SELECT pg_catalog.setval('cards_card_id_seq', 1400, true);
 
 
 --
@@ -1806,6 +1838,11 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 242	He complained.	huwa $akaA	2018-09-07 18:25:50.839769-06	2018-09-07 18:25:50.838-06	1358	10
 243	How do we say...	kayofa naquwlu	2018-09-07 18:33:21.540067-06	2018-09-07 18:33:21.539-06	1362	11
 244	What does ... mean?	maA*aA yaEoniyu	2018-09-07 18:42:49.170495-06	2018-09-07 18:42:49.169-06	1368	11
+245	your (masc.) name	Aisomuka	2018-09-07 21:04:13.918393-06	2018-09-07 21:04:13.915-06	1373	11
+246	your (fem.) name	Aisomuki	2018-09-07 21:06:11.485074-06	2018-09-07 21:06:11.483-06	1377	11
+247	What is your (masc.) name?	maA Aisomuka	2018-09-07 21:07:10.868857-06	2018-09-07 21:07:10.867-06	1381	11
+248	What is your (fem.) name?	maA Aisomuki	2018-09-07 21:07:24.069246-06	2018-09-07 21:07:24.068-06	1386	11
+250	My name is Daniel.	Aisomiy daAniyaAl	2018-09-07 21:31:36.973458-06	2018-09-07 21:31:36.972-06	1396	11
 \.
 
 
@@ -1813,7 +1850,7 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 -- Name: goals_goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('goals_goal_id_seq', 244, true);
+SELECT pg_catalog.setval('goals_goal_id_seq', 250, true);
 
 
 --
@@ -2267,6 +2304,8 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 781	ArNoun	\N	book	\N	\N	\N	\N	\N	\N	2018-09-07 19:59:37.977729-06	\N	\N	kitaAb	\N	\N	M
 782	ArNoun	\N	sugar	\N	\N	\N	\N	\N	\N	2018-09-07 20:00:51.328353-06	\N	\N	suka~r	\N	\N	M
 783	ArNoun	\N	baker	\N	\N	\N	\N	\N	\N	2018-09-07 20:01:25.395921-06	\N	\N	xaba~Az	\N	\N	M
+784	ArNonverb	\N	what	\N	\N	\N	\N	\N	\N	2018-09-07 21:07:10.840683-06	\N	\N	maA	\N	\N	\N
+785	ArNonverb	\N	Daniel	\N	\N	\N	\N	\N	\N	2018-09-07 21:09:15.563016-06	\N	\N	daAniyaAl	\N	\N	\N
 \.
 
 
@@ -2274,7 +2313,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 783, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 785, true);
 
 
 --

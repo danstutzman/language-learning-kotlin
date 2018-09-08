@@ -1,0 +1,3 @@
+ArVPatternList      reserves -200 to -229
+ArNounCaseList      reserves -240 to -242
+ArSuffixPronounList reserves -250 to -262

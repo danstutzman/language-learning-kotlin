@@ -1,5 +1,6 @@
 package com.danstutzman.bank.ar
 
+// Please update NEGATIVE_LEAF_IDS if you edit these leafIds
 class ArVPatternList {
   val patterns = listOf(
     ArVPattern( -200, null,       1, 1, ArTense.PAST, null, "-otu"),
