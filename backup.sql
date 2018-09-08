@@ -2265,6 +2265,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 775	ArNonverb	\N	how	\N	\N	\N	\N	\N	\N	2018-09-07 18:33:21.462052-06	\N	\N	kayofa	\N	\N	\N
 777	ArVRoot	\N	mean	\N	\N	meant	\N	\N	\N	2018-09-07 18:39:16.32222-06	\N	\N	Eny	i	\N	\N
 778	ArNonverb	\N	what	\N	\N	\N	\N	\N	\N	2018-09-07 18:42:49.1375-06	\N	\N	maA*aA	\N	\N	\N
+779	ArVRoot	\N	rank high	\N	\N	ranked high	\N	\N	\N	2018-09-07 19:01:14.801916-06	\N	\N	$rf	?	\N	\N
 \.
 
 
@@ -2272,7 +2273,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 778, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 779, true);
 
 
 --
