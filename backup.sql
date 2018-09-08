@@ -1113,6 +1113,14 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 3372	1353	1355	1	2
 3378	1358	1220	0	0
 3384	1358	1360	1	1
+3386	1362	1363	0	0
+3387	1362	1364	1	3
+3388	1362	1365	2	2
+3391	1364	1365	1	1
+3394	1368	1369	0	0
+3395	1368	1370	1	3
+3396	1368	1371	2	2
+3399	1370	1371	1	1
 \.
 
 
@@ -1120,7 +1128,7 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 -- Name: card_embeddings_card_embedding_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 3385, true);
+SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 3401, true);
 
 
 --
@@ -1614,6 +1622,15 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 1355	[{"leafId":766,"en":"complained","l2":"$akaw-"},{"leafId":-200,"en":"(I)","l2":"-otu"}]	\N	766,-200	(I) complained	0		2018-09-07 17:36:04.178508-06	2018-09-07 17:36:04.176-06
 1358	[{"leafId":734,"en":"he","l2":"huwa"},{"leafId":772,"en":"complained","l2":"$akaA"}]	\N	734,772	He complained.	0		2018-09-07 18:25:50.796681-06	2018-09-07 18:25:50.791-06
 1360	[{"leafId":772,"en":"complained","l2":"$akaA"}]	\N	772	he/she complained	1		2018-09-07 18:25:50.796681-06	2018-09-07 18:25:50.792-06
+1362	[{"leafId":775,"en":"how","l2":"kayofa"},{"leafId":-225,"en":"(we)","l2":"na-"},{"leafId":774,"en":"said","l2":"quwl-"},{"leafId":-225,"en":"(we)","l2":"-u"}]	\N	775,-225,774,-225	How do we say...	0		2018-09-07 18:33:21.50024-06	2018-09-07 18:33:21.497-06
+1363	[{"leafId":775,"en":"how","l2":"kayofa"}]	\N	775	how	1		2018-09-07 18:33:21.50024-06	2018-09-07 18:33:21.497-06
+1364	[{"leafId":-225,"en":"(we)","l2":"na-"},{"leafId":774,"en":"said","l2":"quwl-"},{"leafId":-225,"en":"(we)","l2":"-u"}]	\N	-225,774,-225	(we) say	0		2018-09-07 18:33:21.50024-06	2018-09-07 18:33:21.497-06
+1365	[{"leafId":774,"en":"said","l2":"quwl-"}]	\N	774	Stem change for qwl in PRES for persons [1, 2, 3]	1		2018-09-07 18:33:21.50024-06	2018-09-07 18:33:21.497-06
+1367	[{"leafId":773,"en":"say","l2":"qwl"}]	\N	773	to say	1		2018-09-07 18:33:21.50024-06	2018-09-07 18:33:21.497-06
+1368	[{"leafId":778,"en":"what","l2":"maA*aA"},{"leafId":-223,"en":"(he/she)","l2":"ya-"},{"leafId":777,"en":"mean","l2":"Eoniy-"},{"leafId":-223,"en":"(he/she)","l2":"-u"}]	\N	778,-223,777,-223	What does ... mean?	0		2018-09-07 18:42:49.155584-06	2018-09-07 18:42:49.153-06
+1369	[{"leafId":778,"en":"what","l2":"maA*aA"}]	\N	778	what	1		2018-09-07 18:42:49.155584-06	2018-09-07 18:42:49.153-06
+1370	[{"leafId":-223,"en":"(he/she)","l2":"ya-"},{"leafId":777,"en":"mean","l2":"Eoniy-"},{"leafId":-223,"en":"(he/she)","l2":"-u"}]	\N	-223,777,-223	(he/she) means	0		2018-09-07 18:42:49.155584-06	2018-09-07 18:42:49.153-06
+1371	[{"leafId":777,"en":"mean","l2":"Eny"}]	\N	777	to mean	1		2018-09-07 18:42:49.155584-06	2018-09-07 18:42:49.153-06
 \.
 
 
@@ -1621,7 +1638,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 -- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('cards_card_id_seq', 1361, true);
+SELECT pg_catalog.setval('cards_card_id_seq', 1372, true);
 
 
 --
@@ -1787,6 +1804,8 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 240	She walked.	hiya ma$ato	2018-09-07 17:31:02.824177-06	2018-09-07 17:31:02.823-06	1347	10
 241	I complained.	>nA $akawotu	2018-09-07 17:36:04.305703-06	2018-09-07 17:36:04.305-06	1353	10
 242	He complained.	huwa $akaA	2018-09-07 18:25:50.839769-06	2018-09-07 18:25:50.838-06	1358	10
+243	How do we say...	kayofa naquwlu	2018-09-07 18:33:21.540067-06	2018-09-07 18:33:21.539-06	1362	11
+244	What does ... mean?	maA*aA yaEoniyu	2018-09-07 18:42:49.170495-06	2018-09-07 18:42:49.169-06	1368	11
 \.
 
 
@@ -1794,7 +1813,7 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 -- Name: goals_goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('goals_goal_id_seq', 242, true);
+SELECT pg_catalog.setval('goals_goal_id_seq', 244, true);
 
 
 --
@@ -2241,6 +2260,11 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 769	ArStemChange	\N	walked	\N	\N	\N	\N	\N	PAST	2018-09-07 17:26:01.372287-06	768	\N	ma$-	\N	3	\N
 767	ArStemChange	\N	complained	\N	\N	\N	\N	\N	PAST	2018-09-07 17:24:47.196191-06	766	\N	$ak-	\N	3	\N
 772	ArUniqV	\N	complained	\N	\N	\N	1	3	PAST	2018-09-07 18:18:40.855669-06	766	\N	$akaA	\N	\N	M
+773	ArVRoot	\N	say	\N	\N	said	\N	\N	\N	2018-09-07 18:31:27.111684-06	\N	\N	qwl	?	\N	\N
+774	ArStemChange	\N	said	\N	\N	\N	\N	\N	PRES	2018-09-07 18:32:14.877264-06	773	\N	quwl-	\N	1,2,3	\N
+775	ArNonverb	\N	how	\N	\N	\N	\N	\N	\N	2018-09-07 18:33:21.462052-06	\N	\N	kayofa	\N	\N	\N
+777	ArVRoot	\N	mean	\N	\N	meant	\N	\N	\N	2018-09-07 18:39:16.32222-06	\N	\N	Eny	i	\N	\N
+778	ArNonverb	\N	what	\N	\N	\N	\N	\N	\N	2018-09-07 18:42:49.1375-06	\N	\N	maA*aA	\N	\N	\N
 \.
 
 
@@ -2248,7 +2272,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 772, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 778, true);
 
 
 --
@@ -2265,6 +2289,7 @@ COPY paragraphs (paragraph_id, topic, created_at, updated_at, enabled, lang) FRO
 2	software	2018-06-28 11:09:42.833001-06	2018-07-17 08:58:30.411-06	f	es
 9	Greetings	2018-09-02 15:37:04.777894-06	2018-09-02 15:37:04.745-06	t	fr
 10	Verb conjugations	2018-09-07 13:58:23.971876-06	2018-09-07 13:58:23.968-06	t	ar
+11	Alif Baa Unit 2	2018-09-07 18:28:21.029119-06	2018-09-07 18:28:21.026-06	t	ar
 \.
 
 
@@ -2272,7 +2297,7 @@ COPY paragraphs (paragraph_id, topic, created_at, updated_at, enabled, lang) FRO
 -- Name: paragraphs_paragraph_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dan
 --
 
-SELECT pg_catalog.setval('paragraphs_paragraph_id_seq', 10, true);
+SELECT pg_catalog.setval('paragraphs_paragraph_id_seq', 11, true);
 
 
 --
