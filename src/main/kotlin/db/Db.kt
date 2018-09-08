@@ -6,6 +6,7 @@ class Db(
   private val conn: Connection
 ) {
   val arNonverbsTable = ArNonverbsTable(conn)
+  val arNounsTable = ArNounsTable(conn)
   val arStemChangesTable = ArStemChangesTable(conn)
   val arUniqueConjugationsTable = ArUniqueConjugationsTable(conn)
   val arVRootsTable = ArVerbRootsTable(conn)

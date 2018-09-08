@@ -6,6 +6,7 @@ fun GetRoot(): String {
 
   html.append("<h2>Arabic</h2>\n")
   html.append("<li><a href='/ar/nonverbs'>Nonverbs</a></li>\n")
+  html.append("<li><a href='/ar/nouns'>Nouns</a></li>\n")
   html.append("<li><a href='/ar/paragraphs'>Paragraphs</a></li>\n")
   html.append("<li><a href='/ar/stem-changes'>Stem Changes</a></li>\n")
   html.append("<li><a href='/ar/unique-conjugations'>Unique Conjugations</a></li>\n")

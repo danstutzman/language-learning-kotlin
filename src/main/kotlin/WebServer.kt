@@ -4,6 +4,7 @@ import com.danstutzman.bank.Bank
 import com.danstutzman.db.Db
 import com.danstutzman.routes.GetApi
 import com.danstutzman.routes.GetArNonverbs
+import com.danstutzman.routes.GetArNouns
 import com.danstutzman.routes.GetArStemChanges
 import com.danstutzman.routes.GetArUniqueConjugations
 import com.danstutzman.routes.GetArVerbRoots
@@ -20,6 +21,7 @@ import com.danstutzman.routes.GetParagraphs
 import com.danstutzman.routes.GetRoot
 import com.danstutzman.routes.PostApi
 import com.danstutzman.routes.PostArNonverbs
+import com.danstutzman.routes.PostArNouns
 import com.danstutzman.routes.PostArStemChanges
 import com.danstutzman.routes.PostArUniqueConjugations
 import com.danstutzman.routes.PostArVerbRoots
@@ -150,6 +152,16 @@ fun main(args: Array<String>) {
       normalize(req.queryParams("en"))!!,
       normalize(req.queryParams("fr_mixed"))!!)
     res.redirect("/fr/nonverbs")
+  }
+
+  service.get("/ar/nouns") { _: Request, _: Response -> GetArNouns(db) }
+  service.post("/ar/nouns") { req: Request, res: Response ->
+    PostArNouns(db, extractLeafIdsToDelete(req),
+      req.queryParams("newNoun") != null,
+      normalize(req.queryParams("en"))!!,
+      normalize(req.queryParams("ar_buckwalter"))!!,
+      req.queryParams("gender")!!)
+    res.redirect("/ar/nouns")
   }
 
   service.get("/:lang/paragraphs") { req: Request, _: Response ->

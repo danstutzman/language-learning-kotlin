@@ -220,16 +220,16 @@ CREATE TABLE leafs (
     ar_pres_middle_vowel_buckwalter text,
     persons_csv text,
     gender text,
-    CONSTRAINT leafs_ar_buckwalter_check CHECK ((((leaf_type = ANY (ARRAY['ArNonverb'::text, 'ArVRoot'::text, 'ArStemChange'::text, 'ArUniqV'::text])) AND (ar_buckwalter IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['ArNonverb'::text, 'ArVRoot'::text, 'ArStemChange'::text, 'ArUniqV'::text])) AND (ar_buckwalter IS NULL)))),
+    CONSTRAINT leafs_ar_buckwalter_check CHECK ((((leaf_type = ANY (ARRAY['ArNonverb'::text, 'ArVRoot'::text, 'ArStemChange'::text, 'ArUniqV'::text, 'ArNoun'::text])) AND (ar_buckwalter IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['ArNonverb'::text, 'ArVRoot'::text, 'ArStemChange'::text, 'ArUniqV'::text, 'ArNoun'::text])) AND (ar_buckwalter IS NULL)))),
     CONSTRAINT leafs_ar_pres_middle_vowel_buckwalter_check CHECK ((((leaf_type = 'ArVRoot'::text) AND (ar_pres_middle_vowel_buckwalter = ANY (ARRAY['a'::text, 'i'::text, 'u'::text, 'o'::text, '?'::text]))) OR ((leaf_type <> 'ArVRoot'::text) AND (ar_pres_middle_vowel_buckwalter IS NULL)))),
     CONSTRAINT leafs_en_disambiguation_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'EsNonverb'::text, 'EsInf'::text])) AND (en_disambiguation IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'EsNonverb'::text, 'EsInf'::text])) AND (en_disambiguation IS NULL)))),
     CONSTRAINT leafs_en_past_check CHECK ((((leaf_type = ANY (ARRAY['EsInf'::text, 'EsStemChange'::text, 'FrInf'::text, 'FrStemChange'::text, 'ArVRoot'::text])) AND (en_past IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsInf'::text, 'EsStemChange'::text, 'FrInf'::text, 'FrStemChange'::text, 'ArVRoot'::text])) AND (en_past IS NULL)))),
     CONSTRAINT leafs_en_plural_check CHECK (((leaf_type = 'EsNonverb'::text) OR ((leaf_type <> 'EsNonverb'::text) AND (en_plural IS NULL)))),
     CONSTRAINT leafs_es_mixed_check CHECK ((((leaf_type = ANY (ARRAY['EsInf'::text, 'EsStemChange'::text, 'EsUniqV'::text, 'EsNonverb'::text])) AND (es_mixed IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsInf'::text, 'EsStemChange'::text, 'EsUniqV'::text, 'EsNonverb'::text])) AND (es_mixed IS NULL)))),
     CONSTRAINT leafs_fr_mixed_check CHECK ((((leaf_type = ANY (ARRAY['FrInf'::text, 'FrUniqV'::text, 'FrNonverb'::text, 'FrStemChange'::text])) AND (fr_mixed IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['FrInf'::text, 'FrUniqV'::text, 'FrNonverb'::text, 'FrStemChange'::text])) AND (fr_mixed IS NULL)))),
-    CONSTRAINT leafs_gender_check CHECK ((((leaf_type = 'ArUniqV'::text) AND (gender = ANY (ARRAY[''::text, 'M'::text, 'F'::text]))) OR ((leaf_type <> 'ArUniqV'::text) AND (gender IS NULL)))),
+    CONSTRAINT leafs_gender_check CHECK ((((leaf_type = 'ArUniqV'::text) AND (gender = ANY (ARRAY[''::text, 'M'::text, 'F'::text]))) OR ((leaf_type = 'ArNoun'::text) AND (gender = ANY (ARRAY['M'::text, 'F'::text]))) OR ((leaf_type <> ALL (ARRAY['ArUniqV'::text, 'ArNoun'::text])) AND (gender IS NULL)))),
     CONSTRAINT leafs_infinitive_leaf_id_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text, 'FrStemChange'::text, 'ArStemChange'::text, 'ArUniqV'::text])) AND (infinitive_leaf_id IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text, 'FrStemChange'::text, 'ArStemChange'::text, 'ArUniqV'::text])) AND (infinitive_leaf_id IS NULL)))),
-    CONSTRAINT leafs_leaf_type_check CHECK ((leaf_type = ANY (ARRAY['EsInf'::text, 'EsNonverb'::text, 'EsStemChange'::text, 'EsUniqV'::text, 'FrNonverb'::text, 'FrInf'::text, 'FrUniqV'::text, 'FrStemChange'::text, 'ArNonverb'::text, 'ArVRoot'::text, 'ArStemChange'::text, 'ArUniqV'::text]))),
+    CONSTRAINT leafs_leaf_type_check CHECK ((leaf_type = ANY (ARRAY['EsInf'::text, 'EsNonverb'::text, 'EsStemChange'::text, 'EsUniqV'::text, 'FrNonverb'::text, 'FrInf'::text, 'FrUniqV'::text, 'FrStemChange'::text, 'ArNonverb'::text, 'ArVRoot'::text, 'ArStemChange'::text, 'ArUniqV'::text, 'ArNoun'::text]))),
     CONSTRAINT leafs_number_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'FrUniqV'::text, 'ArUniqV'::text])) AND (number = ANY (ARRAY[1, 2]))) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'FrUniqV'::text, 'ArUniqV'::text])) AND (number IS NULL)))),
     CONSTRAINT leafs_person_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'FrUniqV'::text, 'ArUniqV'::text])) AND (person = ANY (ARRAY[1, 2, 3]))) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'FrUniqV'::text, 'ArUniqV'::text])) AND (person IS NULL)))),
     CONSTRAINT leafs_persons_csv_check CHECK ((((leaf_type = 'ArStemChange'::text) AND (persons_csv = ANY (ARRAY['1,2'::text, '3'::text, '1,2,3'::text]))) OR ((leaf_type <> 'ArStemChange'::text) AND (persons_csv IS NULL)))),
@@ -2141,12 +2141,9 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 644	FrNonverb	\N	seeing again	\N	\N	\N	\N	\N	\N	2018-09-03 10:52:25.89043-06	\N	revoir	\N	\N	\N	\N
 645	FrNonverb	\N	good	\N	\N	\N	\N	\N	\N	2018-09-03 10:53:12.935056-06	\N	bonne	\N	\N	\N	\N
 646	FrNonverb	\N	day	\N	\N	\N	\N	\N	\N	2018-09-03 10:53:12.93673-06	\N	journée	\N	\N	\N	\N
-647	ArNonverb	\N	book	\N	\N	\N	\N	\N	\N	2018-09-05 18:39:15.038859-06	\N	\N	kitAb	\N	\N	\N
 653	ArNonverb	\N	you drink	\N	\N	\N	\N	\N	\N	2018-09-05 20:47:47.900079-06	\N	\N	ta$rab	\N	\N	\N
 648	ArNonverb	\N	Ramadan	\N	\N	\N	\N	\N	\N	2018-09-05 19:56:46.940322-06	\N	\N	ramaDAn	\N	\N	\N
-649	ArNonverb	\N	sugar	\N	\N	\N	\N	\N	\N	2018-09-05 20:02:33.713172-06	\N	\N	sukar	\N	\N	\N
 650	ArNonverb	\N	thirsty	\N	\N	\N	\N	\N	\N	2018-09-05 20:06:25.526182-06	\N	\N	EaTo$An	\N	\N	\N
-651	ArNonverb	\N	baker	\N	\N	\N	\N	\N	\N	2018-09-05 20:37:09.541727-06	\N	\N	xab~Az	\N	\N	\N
 655	ArNonverb	\N	God	\N	\N	\N	\N	\N	\N	2018-09-05 21:02:40.168287-06	\N	\N	{ll~`h	\N	\N	\N
 656	ArNonverb	\N	goodbye	\N	\N	\N	\N	\N	\N	2018-09-05 21:48:53.079363-06	\N	\N	maEa {ls~alAamap	\N	\N	\N
 657	ArNonverb	\N	Afghanistan	\N	\N	\N	\N	\N	\N	2018-09-05 22:12:06.113727-06	\N	\N	>afogaAnisotaAn	\N	\N	\N
@@ -2266,6 +2263,10 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 777	ArVRoot	\N	mean	\N	\N	meant	\N	\N	\N	2018-09-07 18:39:16.32222-06	\N	\N	Eny	i	\N	\N
 778	ArNonverb	\N	what	\N	\N	\N	\N	\N	\N	2018-09-07 18:42:49.1375-06	\N	\N	maA*aA	\N	\N	\N
 779	ArVRoot	\N	rank high	\N	\N	ranked high	\N	\N	\N	2018-09-07 19:01:14.801916-06	\N	\N	$rf	?	\N	\N
+780	ArNoun	\N	name	\N	\N	\N	\N	\N	\N	2018-09-07 19:58:27.601448-06	\N	\N	Aisom	\N	\N	M
+781	ArNoun	\N	book	\N	\N	\N	\N	\N	\N	2018-09-07 19:59:37.977729-06	\N	\N	kitaAb	\N	\N	M
+782	ArNoun	\N	sugar	\N	\N	\N	\N	\N	\N	2018-09-07 20:00:51.328353-06	\N	\N	suka~r	\N	\N	M
+783	ArNoun	\N	baker	\N	\N	\N	\N	\N	\N	2018-09-07 20:01:25.395921-06	\N	\N	xaba~Az	\N	\N	M
 \.
 
 
@@ -2273,7 +2274,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 779, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 783, true);
 
 
 --
@@ -2316,6 +2317,7 @@ COPY schema_version (installed_rank, version, description, type, script, checksu
 8	8	add arabic verb roots	SQL	V8__add_arabic_verb_roots.sql	-82587003	postgres	2018-09-07 10:21:35.115419	28	t
 9	9	add arabic stem changes	SQL	V9__add_arabic_stem_changes.sql	-174351429	postgres	2018-09-07 15:42:49.611614	18	t
 10	10	add arabic unique conjugations	SQL	V10__add_arabic_unique_conjugations.sql	1328814492	postgres	2018-09-07 18:18:30.616128	41	t
+11	11	add arabic nouns	SQL	V11__add_arabic_nouns.sql	-187805131	postgres	2018-09-07 19:47:13.859369	22	t
 \.
 
 
