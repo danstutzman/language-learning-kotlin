@@ -7,6 +7,7 @@ class Db(
 ) {
   val arNonverbsTable = ArNonverbsTable(conn)
   val arStemChangesTable = ArStemChangesTable(conn)
+  val arUniqueConjugationsTable = ArUniqueConjugationsTable(conn)
   val arVRootsTable = ArVerbRootsTable(conn)
   val cardsTable = CardsTable(conn)
   val cardEmbeddingsTable = CardEmbeddingsTable(conn)

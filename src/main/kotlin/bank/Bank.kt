@@ -4,6 +4,7 @@ import com.danstutzman.bank.GlossRow
 import com.danstutzman.bank.GlossRows
 import com.danstutzman.bank.ar.ArNonverbList
 import com.danstutzman.bank.ar.ArStemChangeList
+import com.danstutzman.bank.ar.ArUniqVList
 import com.danstutzman.bank.ar.ArVCloud
 import com.danstutzman.bank.ar.ArVPatternList
 import com.danstutzman.bank.ar.ArVRootList
@@ -60,7 +61,7 @@ class Bank(
   val arNonverbList = ArNonverbList(db)
   val arRootList = ArVRootList(db)
   val arVCloud      = ArVCloud(arRootList, ArVPatternList(),
-    ArStemChangeList(arRootList, db))
+    ArStemChangeList(arRootList, db), ArUniqVList(arRootList, db))
   val esInfList     = com.danstutzman.bank.es.InfList(db)
   val esNonverbList = com.danstutzman.bank.es.NonverbList(db)
   val esVCloud      = com.danstutzman.bank.es.VCloud(

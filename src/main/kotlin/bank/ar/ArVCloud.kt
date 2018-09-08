@@ -6,12 +6,15 @@ import com.danstutzman.bank.Interpretation
 class ArVCloud(
   val vRootList: ArVRootList,
   val vPatternList: ArVPatternList,
-  val stemChangeList: ArStemChangeList
+  val stemChangeList: ArStemChangeList,
+  val uniqVList: ArUniqVList
 ) {
   fun interpretArBuckwalter(arBuckwalter: String): List<Interpretation> {
     val interpretations = mutableListOf<Interpretation>()
 
     interpretations.addAll(vRootList.interpretArBuckwalter(arBuckwalter))
+
+    interpretations.addAll(uniqVList.interpretArBuckwalter(arBuckwalter))
 
     // TODO narrow down search based on word's prefix!
     val possibleRoots = vRootList.vRoots

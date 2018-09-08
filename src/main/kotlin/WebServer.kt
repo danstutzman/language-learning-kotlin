@@ -5,6 +5,7 @@ import com.danstutzman.db.Db
 import com.danstutzman.routes.GetApi
 import com.danstutzman.routes.GetArNonverbs
 import com.danstutzman.routes.GetArStemChanges
+import com.danstutzman.routes.GetArUniqueConjugations
 import com.danstutzman.routes.GetArVerbRoots
 import com.danstutzman.routes.GetEsInfinitives
 import com.danstutzman.routes.GetEsNonverbs
@@ -20,6 +21,7 @@ import com.danstutzman.routes.GetRoot
 import com.danstutzman.routes.PostApi
 import com.danstutzman.routes.PostArNonverbs
 import com.danstutzman.routes.PostArStemChanges
+import com.danstutzman.routes.PostArUniqueConjugations
 import com.danstutzman.routes.PostArVerbRoots
 import com.danstutzman.routes.PostEsInfinitives
 import com.danstutzman.routes.PostEsNonverbs
@@ -228,6 +230,20 @@ fun main(args: Array<String>) {
     res.redirect("/fr/stem-changes")
   }
 
+  service.get("/ar/unique-conjugations") { _: Request, _: Response ->
+    GetArUniqueConjugations(db) }
+  service.post("/ar/unique-conjugations") { req: Request, res: Response ->
+    PostArUniqueConjugations(db, extractLeafIdsToDelete(req),
+      req.queryParams("newUniqueConjugation") != null,
+      normalize(req.queryParams("root_ar_buckwalter"))!!,
+      normalize(req.queryParams("ar_buckwalter"))!!,
+      normalize(req.queryParams("en"))!!,
+      req.queryParams("gender")!!,
+      req.queryParams("number")!!.toInt(),
+      req.queryParams("person")!!.toInt(),
+      req.queryParams("tense")!!)
+    res.redirect("/ar/unique-conjugations")
+  }
   service.get("/es/unique-conjugations") { _: Request, _: Response ->
     GetEsUniqueConjugations(db) }
   service.post("/es/unique-conjugations") { req: Request, res: Response ->

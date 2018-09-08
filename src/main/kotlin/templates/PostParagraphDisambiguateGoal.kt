@@ -42,6 +42,8 @@ fun PostParagraphDisambiguateGoal(
         if (interpretation.type == "ArNonverb") {
           html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.arBuckwalter' value='${escapeHTML(word)}'>")
           html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.en' placeholder='English'>")
+        } else if (interpretation.type == "ArUniqV") {
+          html.append(" (manual only for now)")
         } else if (interpretation.type == "EsNonverb") {
           html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.es' value='${escapeHTML(word)}'> (check case)")
           html.append("<input type='text' name='word.${wordNum}.${interpretationNum}.en' placeholder='English'>")

@@ -219,19 +219,21 @@ CREATE TABLE leafs (
     ar_buckwalter text,
     ar_pres_middle_vowel_buckwalter text,
     persons_csv text,
-    CONSTRAINT leafs_ar_buckwalter_check CHECK ((((leaf_type = ANY (ARRAY['ArNonverb'::text, 'ArVRoot'::text, 'ArStemChange'::text])) AND (ar_buckwalter IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['ArNonverb'::text, 'ArVRoot'::text, 'ArStemChange'::text])) AND (ar_buckwalter IS NULL)))),
+    gender text,
+    CONSTRAINT leafs_ar_buckwalter_check CHECK ((((leaf_type = ANY (ARRAY['ArNonverb'::text, 'ArVRoot'::text, 'ArStemChange'::text, 'ArUniqV'::text])) AND (ar_buckwalter IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['ArNonverb'::text, 'ArVRoot'::text, 'ArStemChange'::text, 'ArUniqV'::text])) AND (ar_buckwalter IS NULL)))),
     CONSTRAINT leafs_ar_pres_middle_vowel_buckwalter_check CHECK ((((leaf_type = 'ArVRoot'::text) AND (ar_pres_middle_vowel_buckwalter = ANY (ARRAY['a'::text, 'i'::text, 'u'::text, 'o'::text, '?'::text]))) OR ((leaf_type <> 'ArVRoot'::text) AND (ar_pres_middle_vowel_buckwalter IS NULL)))),
     CONSTRAINT leafs_en_disambiguation_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'EsNonverb'::text, 'EsInf'::text])) AND (en_disambiguation IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'EsNonverb'::text, 'EsInf'::text])) AND (en_disambiguation IS NULL)))),
     CONSTRAINT leafs_en_past_check CHECK ((((leaf_type = ANY (ARRAY['EsInf'::text, 'EsStemChange'::text, 'FrInf'::text, 'FrStemChange'::text, 'ArVRoot'::text])) AND (en_past IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsInf'::text, 'EsStemChange'::text, 'FrInf'::text, 'FrStemChange'::text, 'ArVRoot'::text])) AND (en_past IS NULL)))),
     CONSTRAINT leafs_en_plural_check CHECK (((leaf_type = 'EsNonverb'::text) OR ((leaf_type <> 'EsNonverb'::text) AND (en_plural IS NULL)))),
     CONSTRAINT leafs_es_mixed_check CHECK ((((leaf_type = ANY (ARRAY['EsInf'::text, 'EsStemChange'::text, 'EsUniqV'::text, 'EsNonverb'::text])) AND (es_mixed IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsInf'::text, 'EsStemChange'::text, 'EsUniqV'::text, 'EsNonverb'::text])) AND (es_mixed IS NULL)))),
     CONSTRAINT leafs_fr_mixed_check CHECK ((((leaf_type = ANY (ARRAY['FrInf'::text, 'FrUniqV'::text, 'FrNonverb'::text, 'FrStemChange'::text])) AND (fr_mixed IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['FrInf'::text, 'FrUniqV'::text, 'FrNonverb'::text, 'FrStemChange'::text])) AND (fr_mixed IS NULL)))),
-    CONSTRAINT leafs_infinitive_leaf_id_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text, 'FrStemChange'::text, 'ArStemChange'::text])) AND (infinitive_leaf_id IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text, 'FrStemChange'::text, 'ArStemChange'::text])) AND (infinitive_leaf_id IS NULL)))),
-    CONSTRAINT leafs_leaf_type_check CHECK ((leaf_type = ANY (ARRAY['EsInf'::text, 'EsNonverb'::text, 'EsStemChange'::text, 'EsUniqV'::text, 'FrNonverb'::text, 'FrInf'::text, 'FrUniqV'::text, 'FrStemChange'::text, 'ArNonverb'::text, 'ArVRoot'::text, 'ArStemChange'::text]))),
-    CONSTRAINT leafs_number_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'FrUniqV'::text])) AND (number = ANY (ARRAY[1, 2]))) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'FrUniqV'::text])) AND (number IS NULL)))),
-    CONSTRAINT leafs_person_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'FrUniqV'::text])) AND (person = ANY (ARRAY[1, 2, 3]))) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'FrUniqV'::text])) AND (person IS NULL)))),
+    CONSTRAINT leafs_gender_check CHECK ((((leaf_type = 'ArUniqV'::text) AND (gender = ANY (ARRAY[''::text, 'M'::text, 'F'::text]))) OR ((leaf_type <> 'ArUniqV'::text) AND (gender IS NULL)))),
+    CONSTRAINT leafs_infinitive_leaf_id_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text, 'FrStemChange'::text, 'ArStemChange'::text, 'ArUniqV'::text])) AND (infinitive_leaf_id IS NOT NULL)) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text, 'FrStemChange'::text, 'ArStemChange'::text, 'ArUniqV'::text])) AND (infinitive_leaf_id IS NULL)))),
+    CONSTRAINT leafs_leaf_type_check CHECK ((leaf_type = ANY (ARRAY['EsInf'::text, 'EsNonverb'::text, 'EsStemChange'::text, 'EsUniqV'::text, 'FrNonverb'::text, 'FrInf'::text, 'FrUniqV'::text, 'FrStemChange'::text, 'ArNonverb'::text, 'ArVRoot'::text, 'ArStemChange'::text, 'ArUniqV'::text]))),
+    CONSTRAINT leafs_number_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'FrUniqV'::text, 'ArUniqV'::text])) AND (number = ANY (ARRAY[1, 2]))) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'FrUniqV'::text, 'ArUniqV'::text])) AND (number IS NULL)))),
+    CONSTRAINT leafs_person_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'FrUniqV'::text, 'ArUniqV'::text])) AND (person = ANY (ARRAY[1, 2, 3]))) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'FrUniqV'::text, 'ArUniqV'::text])) AND (person IS NULL)))),
     CONSTRAINT leafs_persons_csv_check CHECK ((((leaf_type = 'ArStemChange'::text) AND (persons_csv = ANY (ARRAY['1,2'::text, '3'::text, '1,2,3'::text]))) OR ((leaf_type <> 'ArStemChange'::text) AND (persons_csv IS NULL)))),
-    CONSTRAINT leafs_tense_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text])) AND (tense = ANY (ARRAY['PRES'::text, 'PRET'::text]))) OR ((leaf_type = ANY (ARRAY['FrUniqV'::text, 'FrStemChange'::text])) AND (tense = 'PRES'::text)) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text, 'FrStemChange'::text])) AND (person IS NULL))))
+    CONSTRAINT leafs_tense_check CHECK ((((leaf_type = ANY (ARRAY['EsUniqV'::text, 'EsStemChange'::text])) AND (tense = ANY (ARRAY['PRES'::text, 'PRET'::text]))) OR ((leaf_type = ANY (ARRAY['FrUniqV'::text, 'FrStemChange'::text])) AND (tense = 'PRES'::text)) OR ((leaf_type = ANY (ARRAY['ArStemChange'::text, 'ArUniqV'::text])) AND (tense = ANY (ARRAY['PAST'::text, 'PRES'::text]))) OR ((leaf_type <> ALL (ARRAY['EsUniqV'::text, 'EsStemChange'::text, 'FrUniqV'::text, 'FrStemChange'::text, 'ArStemChange'::text, 'ArUniqV'::text])) AND (tense IS NULL))))
 );
 
 
@@ -1109,6 +1111,8 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 3369	1353	1346	1	1
 3370	1355	1346	0	0
 3372	1353	1355	1	2
+3378	1358	1220	0	0
+3384	1358	1360	1	1
 \.
 
 
@@ -1116,7 +1120,7 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 -- Name: card_embeddings_card_embedding_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 3375, true);
+SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 3385, true);
 
 
 --
@@ -1608,6 +1612,8 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 1352	[{"leafId":768,"en":"walk","l2":"m$y"}]	\N	768	to walk	1		2018-09-07 17:31:02.808728-06	2018-09-07 17:31:02.807-06
 1353	[{"leafId":731,"en":"I","l2":">nA"},{"leafId":766,"en":"complained","l2":"$akaw-"},{"leafId":-200,"en":"(I)","l2":"-otu"}]	\N	731,766,-200	I complained.	0		2018-09-07 17:36:04.178508-06	2018-09-07 17:36:04.176-06
 1355	[{"leafId":766,"en":"complained","l2":"$akaw-"},{"leafId":-200,"en":"(I)","l2":"-otu"}]	\N	766,-200	(I) complained	0		2018-09-07 17:36:04.178508-06	2018-09-07 17:36:04.176-06
+1358	[{"leafId":734,"en":"he","l2":"huwa"},{"leafId":772,"en":"complained","l2":"$akaA"}]	\N	734,772	He complained.	0		2018-09-07 18:25:50.796681-06	2018-09-07 18:25:50.791-06
+1360	[{"leafId":772,"en":"complained","l2":"$akaA"}]	\N	772	he/she complained	1		2018-09-07 18:25:50.796681-06	2018-09-07 18:25:50.792-06
 \.
 
 
@@ -1615,7 +1621,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 -- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('cards_card_id_seq', 1357, true);
+SELECT pg_catalog.setval('cards_card_id_seq', 1361, true);
 
 
 --
@@ -1780,6 +1786,7 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 239	She complained.	hiya $akato	2018-09-07 17:30:25.517612-06	2018-09-07 17:30:25.517-06	1341	10
 240	She walked.	hiya ma$ato	2018-09-07 17:31:02.824177-06	2018-09-07 17:31:02.823-06	1347	10
 241	I complained.	>nA $akawotu	2018-09-07 17:36:04.305703-06	2018-09-07 17:36:04.305-06	1353	10
+242	He complained.	huwa $akaA	2018-09-07 18:25:50.839769-06	2018-09-07 18:25:50.838-06	1358	10
 \.
 
 
@@ -1787,452 +1794,453 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 -- Name: goals_goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('goals_goal_id_seq', 241, true);
+SELECT pg_catalog.setval('goals_goal_id_seq', 242, true);
 
 
 --
 -- Data for Name: leafs; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_past, number, person, tense, created_at, infinitive_leaf_id, fr_mixed, ar_buckwalter, ar_pres_middle_vowel_buckwalter, persons_csv) FROM stdin;
-581	FrNonverb	\N	hello	\N	\N	\N	\N	\N	\N	2018-09-02 15:44:30.654025-06	\N	Bonjour	\N	\N	\N
-315	EsInf	andar	walk		\N	walked	\N	\N	\N	2018-06-24 09:57:33.983446-06	\N	\N	\N	\N	\N
-316	EsInf	aprender	learn		\N	learned	\N	\N	\N	2018-06-24 09:57:33.984734-06	\N	\N	\N	\N	\N
-317	EsInf	comer	eat		\N	ate	\N	\N	\N	2018-06-24 09:57:33.985347-06	\N	\N	\N	\N	\N
-319	EsInf	contar	tell		\N	told	\N	\N	\N	2018-06-24 09:57:33.98678-06	\N	\N	\N	\N	\N
-320	EsInf	dar	give		\N	gave	\N	\N	\N	2018-06-24 09:57:33.987309-06	\N	\N	\N	\N	\N
-321	EsInf	decir	say		\N	said	\N	\N	\N	2018-06-24 09:57:33.987899-06	\N	\N	\N	\N	\N
-322	EsInf	empezar	start		\N	started	\N	\N	\N	2018-06-24 09:57:33.988574-06	\N	\N	\N	\N	\N
-323	EsInf	encontrar	find		\N	found	\N	\N	\N	2018-06-24 09:57:33.994568-06	\N	\N	\N	\N	\N
-324	EsInf	entender	understand		\N	understood	\N	\N	\N	2018-06-24 09:57:34.000548-06	\N	\N	\N	\N	\N
-325	EsInf	enviar	send		\N	sent	\N	\N	\N	2018-06-24 09:57:34.006513-06	\N	\N	\N	\N	\N
-327	EsInf	hablar	speak		\N	spoke	\N	\N	\N	2018-06-24 09:57:34.017548-06	\N	\N	\N	\N	\N
-328	EsInf	hacer	do		\N	did	\N	\N	\N	2018-06-24 09:57:34.018056-06	\N	\N	\N	\N	\N
-329	EsInf	ir	go		\N	went	\N	\N	\N	2018-06-24 09:57:34.018688-06	\N	\N	\N	\N	\N
-330	EsInf	parecer	seem		\N	seemed	\N	\N	\N	2018-06-24 09:57:34.019227-06	\N	\N	\N	\N	\N
-331	EsInf	pedir	request		\N	requested	\N	\N	\N	2018-06-24 09:57:34.019677-06	\N	\N	\N	\N	\N
-332	EsInf	pensar	think		\N	thought	\N	\N	\N	2018-06-24 09:57:34.020182-06	\N	\N	\N	\N	\N
-333	EsInf	poder	can		\N	could	\N	\N	\N	2018-06-24 09:57:34.020785-06	\N	\N	\N	\N	\N
-334	EsInf	poner	put		\N	put	\N	\N	\N	2018-06-24 09:57:34.021223-06	\N	\N	\N	\N	\N
-335	EsInf	preguntar	ask		\N	asked	\N	\N	\N	2018-06-24 09:57:34.021846-06	\N	\N	\N	\N	\N
-336	EsInf	querer	want		\N	wanted	\N	\N	\N	2018-06-24 09:57:34.022716-06	\N	\N	\N	\N	\N
-337	EsInf	recordar	remember		\N	remembered	\N	\N	\N	2018-06-24 09:57:34.023446-06	\N	\N	\N	\N	\N
-339	EsInf	salir	go out		\N	went out	\N	\N	\N	2018-06-24 09:57:34.02479-06	\N	\N	\N	\N	\N
-340	EsInf	seguir	follow		\N	followed	\N	\N	\N	2018-06-24 09:57:34.025256-06	\N	\N	\N	\N	\N
-341	EsInf	sentir	feel		\N	felt	\N	\N	\N	2018-06-24 09:57:34.026079-06	\N	\N	\N	\N	\N
-343	EsInf	tener	have		\N	had	\N	\N	\N	2018-06-24 09:57:34.027222-06	\N	\N	\N	\N	\N
-344	EsInf	trabajar	work		\N	worked	\N	\N	\N	2018-06-24 09:57:34.027967-06	\N	\N	\N	\N	\N
-345	EsInf	ver	see		\N	saw	\N	\N	\N	2018-06-24 09:57:34.028806-06	\N	\N	\N	\N	\N
-346	EsInf	venir	come		\N	came	\N	\N	\N	2018-06-24 09:57:34.029696-06	\N	\N	\N	\N	\N
-347	EsInf	visitar	visit		\N	visited	\N	\N	\N	2018-06-24 09:57:34.030334-06	\N	\N	\N	\N	\N
-348	EsInf	volver	return		\N	returned	\N	\N	\N	2018-06-24 09:57:34.031357-06	\N	\N	\N	\N	\N
-349	EsInf	vivir	live		\N	lived	\N	\N	\N	2018-06-24 10:12:18.679112-06	\N	\N	\N	\N	\N
-350	EsInf	asistir	attend		\N	attended	\N	\N	\N	2018-06-24 10:15:03.427516-06	\N	\N	\N	\N	\N
-351	EsInf	mudar	move		\N	moved	\N	\N	\N	2018-06-24 10:16:29.743042-06	\N	\N	\N	\N	\N
-352	EsInf	crear	create		\N	created	\N	\N	\N	2018-06-24 10:17:19.293622-06	\N	\N	\N	\N	\N
-353	EsInf	estudiar	study		\N	studied	\N	\N	\N	2018-06-24 10:21:48.839702-06	\N	\N	\N	\N	\N
-326	EsInf	estar	be	how	\N	was	\N	\N	\N	2018-06-24 09:57:34.012434-06	\N	\N	\N	\N	\N
-318	EsInf	conocer	know	someone	\N	knew	\N	\N	\N	2018-06-24 09:57:33.986019-06	\N	\N	\N	\N	\N
-338	EsInf	saber	know	something	\N	knew	\N	\N	\N	2018-06-24 09:57:34.024181-06	\N	\N	\N	\N	\N
-342	EsInf	ser	be	what	\N	was	\N	\N	\N	2018-06-24 09:57:34.026682-06	\N	\N	\N	\N	\N
-504	EsInf	vender	sell		\N	sold	\N	\N	\N	2018-06-27 16:05:02.651479-06	\N	\N	\N	\N	\N
-509	EsInf	correr	run		\N	ran	\N	\N	\N	2018-06-27 16:13:24.686094-06	\N	\N	\N	\N	\N
-510	EsInf	afuera	outside		\N		\N	\N	\N	2018-06-27 16:13:41.673097-06	\N	\N	\N	\N	\N
-513	EsInf	crecer	grow up		\N	grew up	\N	\N	\N	2018-06-27 16:16:00.615531-06	\N	\N	\N	\N	\N
-526	EsInf	practicar	practice		\N	practiced	\N	\N	\N	2018-07-17 08:27:34.682383-06	\N	\N	\N	\N	\N
-527	EsInf	revisar	review		\N	reviewed	\N	\N	\N	2018-07-17 08:29:02.066228-06	\N	\N	\N	\N	\N
-538	EsInf	haber	be	exist	\N	existed	\N	\N	\N	2018-07-17 08:44:14.793496-06	\N	\N	\N	\N	\N
-544	EsInf	escuchar	listen		\N	listened	\N	\N	\N	2018-07-17 08:50:59.808615-06	\N	\N	\N	\N	\N
-547	EsInf	necesitar	need		\N	needed	\N	\N	\N	2018-07-17 08:52:50.335987-06	\N	\N	\N	\N	\N
-549	EsInf	usar	use		\N	used	\N	\N	\N	2018-07-17 08:54:22.907576-06	\N	\N	\N	\N	\N
-554	EsInf	pertenecer	belong		\N	belonged	\N	\N	\N	2018-07-17 08:58:24.780015-06	\N	\N	\N	\N	\N
-383	EsNonverb	tarde	afternoon		afternoons	\N	\N	\N	\N	2018-06-24 09:42:32.325038-06	\N	\N	\N	\N	\N
-354	EsNonverb	brazo	arm		arms	\N	\N	\N	\N	2018-06-24 09:42:32.310062-06	\N	\N	\N	\N	\N
-355	EsNonverb	pierna	leg		legs	\N	\N	\N	\N	2018-06-24 09:42:32.31134-06	\N	\N	\N	\N	\N
-356	EsNonverb	corazón	heart		hearts	\N	\N	\N	\N	2018-06-24 09:42:32.311925-06	\N	\N	\N	\N	\N
-357	EsNonverb	estómago	stomach		stomachs	\N	\N	\N	\N	2018-06-24 09:42:32.312547-06	\N	\N	\N	\N	\N
-358	EsNonverb	ojo	eye		eyes	\N	\N	\N	\N	2018-06-24 09:42:32.313039-06	\N	\N	\N	\N	\N
-359	EsNonverb	nariz	nose		noses	\N	\N	\N	\N	2018-06-24 09:42:32.313538-06	\N	\N	\N	\N	\N
-360	EsNonverb	boca	mouth		mouths	\N	\N	\N	\N	2018-06-24 09:42:32.31404-06	\N	\N	\N	\N	\N
-361	EsNonverb	oreja	ear		ears	\N	\N	\N	\N	2018-06-24 09:42:32.314516-06	\N	\N	\N	\N	\N
-362	EsNonverb	cara	face		faces	\N	\N	\N	\N	2018-06-24 09:42:32.314983-06	\N	\N	\N	\N	\N
-363	EsNonverb	cuello	neck		necks	\N	\N	\N	\N	2018-06-24 09:42:32.315436-06	\N	\N	\N	\N	\N
-364	EsNonverb	dedo	finger		fingers	\N	\N	\N	\N	2018-06-24 09:42:32.315907-06	\N	\N	\N	\N	\N
-365	EsNonverb	pie	foot		feet	\N	\N	\N	\N	2018-06-24 09:42:32.316363-06	\N	\N	\N	\N	\N
-366	EsNonverb	muslo	thigh		thighs	\N	\N	\N	\N	2018-06-24 09:42:32.316797-06	\N	\N	\N	\N	\N
-367	EsNonverb	tobillo	ankle		ankles	\N	\N	\N	\N	2018-06-24 09:42:32.317247-06	\N	\N	\N	\N	\N
-368	EsNonverb	codo	elbow		elbows	\N	\N	\N	\N	2018-06-24 09:42:32.317698-06	\N	\N	\N	\N	\N
-369	EsNonverb	muñeca	wrist		wrists	\N	\N	\N	\N	2018-06-24 09:42:32.318139-06	\N	\N	\N	\N	\N
-370	EsNonverb	cuerpo	body		bodies	\N	\N	\N	\N	2018-06-24 09:42:32.318608-06	\N	\N	\N	\N	\N
-371	EsNonverb	diente	tooth		tooths	\N	\N	\N	\N	2018-06-24 09:42:32.319075-06	\N	\N	\N	\N	\N
-372	EsNonverb	mano	hand		hands	\N	\N	\N	\N	2018-06-24 09:42:32.319518-06	\N	\N	\N	\N	\N
-373	EsNonverb	espalda	back		backs	\N	\N	\N	\N	2018-06-24 09:42:32.31995-06	\N	\N	\N	\N	\N
-374	EsNonverb	cadera	hip		hips	\N	\N	\N	\N	2018-06-24 09:42:32.320412-06	\N	\N	\N	\N	\N
-375	EsNonverb	mandíbula	jaw		jaws	\N	\N	\N	\N	2018-06-24 09:42:32.320864-06	\N	\N	\N	\N	\N
-376	EsNonverb	hombro	shoulder		shoulders	\N	\N	\N	\N	2018-06-24 09:42:32.321315-06	\N	\N	\N	\N	\N
-377	EsNonverb	pulgar	thumb		thumbs	\N	\N	\N	\N	2018-06-24 09:42:32.321761-06	\N	\N	\N	\N	\N
-378	EsNonverb	lengua	tongue		tongues	\N	\N	\N	\N	2018-06-24 09:42:32.322202-06	\N	\N	\N	\N	\N
-379	EsNonverb	garganta	throat		throats	\N	\N	\N	\N	2018-06-24 09:42:32.322985-06	\N	\N	\N	\N	\N
-380	EsNonverb	español	Spanish		\N	\N	\N	\N	\N	2018-06-24 09:42:32.323407-06	\N	\N	\N	\N	\N
-381	EsNonverb	inglés	English		\N	\N	\N	\N	\N	2018-06-24 09:42:32.323906-06	\N	\N	\N	\N	\N
-382	EsNonverb	día	day		days	\N	\N	\N	\N	2018-06-24 09:42:32.324572-06	\N	\N	\N	\N	\N
-384	EsNonverb	ingeniero	engineer		engineers	\N	\N	\N	\N	2018-06-24 09:42:32.325593-06	\N	\N	\N	\N	\N
-385	EsNonverb	lista	list		lists	\N	\N	\N	\N	2018-06-24 09:42:32.326072-06	\N	\N	\N	\N	\N
-386	EsNonverb	oración	sentence		sentences	\N	\N	\N	\N	2018-06-24 09:42:32.326465-06	\N	\N	\N	\N	\N
-387	EsNonverb	bueno	good	masc.	good	\N	\N	\N	\N	2018-06-24 09:42:32.326926-06	\N	\N	\N	\N	\N
-388	EsNonverb	buena	good	fem.	good	\N	\N	\N	\N	2018-06-24 09:42:32.327412-06	\N	\N	\N	\N	\N
-389	EsNonverb	el	the	masc.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.327897-06	\N	\N	\N	\N	\N
-390	EsNonverb	la	the	fem.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.32839-06	\N	\N	\N	\N	\N
-391	EsNonverb	un	a	masc.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.328869-06	\N	\N	\N	\N	\N
-392	EsNonverb	una	a	fem.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.329419-06	\N	\N	\N	\N	\N
-393	EsNonverb	mi	my		\N	\N	\N	\N	\N	2018-06-24 09:42:32.329823-06	\N	\N	\N	\N	\N
-394	EsNonverb	este	this	masc.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.330276-06	\N	\N	\N	\N	\N
-395	EsNonverb	esta	this	fem.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33074-06	\N	\N	\N	\N	\N
-396	EsNonverb	cada	every		\N	\N	\N	\N	\N	2018-06-24 09:42:32.331212-06	\N	\N	\N	\N	\N
-397	EsNonverb	cómo	how		\N	\N	\N	\N	\N	2018-06-24 09:42:32.331646-06	\N	\N	\N	\N	\N
-398	EsNonverb	bien	well		\N	\N	\N	\N	\N	2018-06-24 09:42:32.332094-06	\N	\N	\N	\N	\N
-399	EsNonverb	yo	I		\N	\N	\N	\N	\N	2018-06-24 09:42:32.332558-06	\N	\N	\N	\N	\N
-400	EsNonverb	tú	you	pronoun	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33304-06	\N	\N	\N	\N	\N
-401	EsNonverb	él	he		\N	\N	\N	\N	\N	2018-06-24 09:42:32.33464-06	\N	\N	\N	\N	\N
-402	EsNonverb	ella	she		\N	\N	\N	\N	\N	2018-06-24 09:42:32.335082-06	\N	\N	\N	\N	\N
-403	EsNonverb	nosotros	we	masc.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.335483-06	\N	\N	\N	\N	\N
-404	EsNonverb	nosotras	we	fem.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.335885-06	\N	\N	\N	\N	\N
-405	EsNonverb	ellos	they	masc.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33628-06	\N	\N	\N	\N	\N
-406	EsNonverb	ellas	they	fem.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.336675-06	\N	\N	\N	\N	\N
-407	EsNonverb	qué	what		\N	\N	\N	\N	\N	2018-06-24 09:42:32.337066-06	\N	\N	\N	\N	\N
-408	EsNonverb	hola	hello		\N	\N	\N	\N	\N	2018-06-24 09:42:32.337468-06	\N	\N	\N	\N	\N
-409	EsNonverb	de	of		\N	\N	\N	\N	\N	2018-06-24 09:42:32.337867-06	\N	\N	\N	\N	\N
-410	EsNonverb	dónde	where	question	\N	\N	\N	\N	\N	2018-06-24 09:42:32.338256-06	\N	\N	\N	\N	\N
-411	EsNonverb	donde	where	relative	\N	\N	\N	\N	\N	2018-06-24 09:42:32.338645-06	\N	\N	\N	\N	\N
-412	EsNonverb	software	software		\N	\N	\N	\N	\N	2018-06-24 09:42:32.339084-06	\N	\N	\N	\N	\N
-413	EsNonverb	con	with		\N	\N	\N	\N	\N	2018-06-24 09:42:32.339496-06	\N	\N	\N	\N	\N
-414	EsNonverb	quién	who		\N	\N	\N	\N	\N	2018-06-24 09:42:32.339963-06	\N	\N	\N	\N	\N
-416	EsNonverb	te	you	direct/indirect object	\N	\N	\N	\N	\N	2018-06-24 09:42:32.340855-06	\N	\N	\N	\N	\N
-417	EsNonverb	Longmont	Longmont		\N	\N	\N	\N	\N	2018-06-24 10:12:57.81832-06	\N	\N	\N	\N	\N
-418	EsNonverb	Cuba	Cuba		\N	\N	\N	\N	\N	2018-06-24 10:14:14.159249-06	\N	\N	\N	\N	\N
-420	EsNonverb	por	for	on behalf of	\N	\N	\N	\N	\N	2018-06-24 10:18:21.748271-06	\N	\N	\N	\N	\N
-421	EsNonverb	para	for	in order to	\N	\N	\N	\N	\N	2018-06-24 10:18:37.720114-06	\N	\N	\N	\N	\N
-422	EsNonverb	clase	class		classes	\N	\N	\N	\N	2018-06-24 10:18:54.790579-06	\N	\N	\N	\N	\N
-423	EsNonverb	enero	January		\N	\N	\N	\N	\N	2018-06-24 10:19:36.45117-06	\N	\N	\N	\N	\N
-424	EsNonverb	aplicación	application		applications	\N	\N	\N	\N	2018-06-24 10:19:47.157449-06	\N	\N	\N	\N	\N
-425	EsNonverb	unos	some	masc.	\N	\N	\N	\N	\N	2018-06-24 10:20:00.535063-06	\N	\N	\N	\N	\N
-426	EsNonverb	unas	some	fem.	\N	\N	\N	\N	\N	2018-06-24 10:20:07.365061-06	\N	\N	\N	\N	\N
-427	EsNonverb	móvil	mobile phone		mobile phones	\N	\N	\N	\N	2018-06-24 10:20:48.975803-06	\N	\N	\N	\N	\N
-428	EsNonverb	semana	week		weeks	\N	\N	\N	\N	2018-06-24 10:21:05.140751-06	\N	\N	\N	\N	\N
-497	EsNonverb	piel	skin		\N	\N	\N	\N	\N	2018-06-26 20:37:34.949585-06	\N	\N	\N	\N	\N
-419	EsNonverb	a	to	toward	\N	\N	\N	\N	\N	2018-06-24 10:16:56.797247-06	\N	\N	\N	\N	\N
-415	EsNonverb	me	me	to me	\N	\N	\N	\N	\N	2018-06-24 09:42:32.340438-06	\N	\N	\N	\N	\N
-498	EsNonverb	en	in/on		\N	\N	\N	\N	\N	2018-06-27 13:09:57.624981-06	\N	\N	\N	\N	\N
-499	EsNonverb	prueba	test		tests	\N	\N	\N	\N	2018-06-27 15:35:58.629886-06	\N	\N	\N	\N	\N
-500	EsNonverb	feliz	happy		\N	\N	\N	\N	\N	2018-06-27 16:00:33.653382-06	\N	\N	\N	\N	\N
-501	EsNonverb	solo	alone		\N	\N	\N	\N	\N	2018-06-27 16:01:16.754582-06	\N	\N	\N	\N	\N
-502	EsNonverb	triste	sad		\N	\N	\N	\N	\N	2018-06-27 16:02:01.449627-06	\N	\N	\N	\N	\N
-503	EsNonverb	ya	yet		\N	\N	\N	\N	\N	2018-06-27 16:04:47.506244-06	\N	\N	\N	\N	\N
-505	EsNonverb	casa	house		houses	\N	\N	\N	\N	2018-06-27 16:06:23.119046-06	\N	\N	\N	\N	\N
-506	EsNonverb	almuerzo	lunch		lunches	\N	\N	\N	\N	2018-06-27 16:10:03.657745-06	\N	\N	\N	\N	\N
-507	EsNonverb	hoy	today		\N	\N	\N	\N	\N	2018-06-27 16:10:22.676819-06	\N	\N	\N	\N	\N
-508	EsNonverb	demasiado	too much		\N	\N	\N	\N	\N	2018-06-27 16:11:43.342318-06	\N	\N	\N	\N	\N
-511	EsNonverb	porqué	why		\N	\N	\N	\N	\N	2018-06-27 16:14:22.939146-06	\N	\N	\N	\N	\N
-512	EsNonverb	Pennsylvania	Pennsylvania		\N	\N	\N	\N	\N	2018-06-27 16:15:45.409633-06	\N	\N	\N	\N	\N
-514	EsNonverb	aquí	here		\N	\N	\N	\N	\N	2018-06-27 16:17:37.925483-06	\N	\N	\N	\N	\N
-515	EsNonverb	lo	him		\N	\N	\N	\N	\N	2018-06-27 16:21:02.916295-06	\N	\N	\N	\N	\N
-516	EsNonverb	esa	that	fem.	\N	\N	\N	\N	\N	2018-06-27 16:34:31.058747-06	\N	\N	\N	\N	\N
-517	EsNonverb	cuenta	account		accounts	\N	\N	\N	\N	2018-06-27 16:34:39.097297-06	\N	\N	\N	\N	\N
-518	EsNonverb	no	not		\N	\N	\N	\N	\N	2018-06-27 16:35:32.851134-06	\N	\N	\N	\N	\N
-519	EsNonverb	juego	game		games	\N	\N	\N	\N	2018-06-27 16:36:31.585454-06	\N	\N	\N	\N	\N
-520	EsNonverb	que	that		\N	\N	\N	\N	\N	2018-06-27 16:36:37.387123-06	\N	\N	\N	\N	\N
-521	EsNonverb	perfil	profile		profiles	\N	\N	\N	\N	2018-06-27 16:38:19.183428-06	\N	\N	\N	\N	\N
-522	EsNonverb	tres	three		\N	\N	\N	\N	\N	2018-06-27 16:41:20.489311-06	\N	\N	\N	\N	\N
-523	EsNonverb	vez	time	occasion	times	\N	\N	\N	\N	2018-06-27 16:42:00.67647-06	\N	\N	\N	\N	\N
-524	EsNonverb	programa	program		programs	\N	\N	\N	\N	2018-07-17 08:24:58.585589-06	\N	\N	\N	\N	\N
-525	EsNonverb	proyecto	project		projects	\N	\N	\N	\N	2018-07-17 08:26:04.045616-06	\N	\N	\N	\N	\N
-528	EsNonverb	memoria	memory		memories	\N	\N	\N	\N	2018-07-17 08:29:22.454611-06	\N	\N	\N	\N	\N
-529	EsNonverb	tarjeta	card		cards	\N	\N	\N	\N	2018-07-17 08:29:33.244463-06	\N	\N	\N	\N	\N
-530	EsNonverb	diferente	different		\N	\N	\N	\N	\N	2018-07-17 08:30:09.528205-06	\N	\N	\N	\N	\N
-531	EsNonverb	las	the	fem. pl.	\N	\N	\N	\N	\N	2018-07-17 08:32:06.026733-06	\N	\N	\N	\N	\N
-532	EsNonverb	los	the	masc. pl.	\N	\N	\N	\N	\N	2018-07-17 08:32:19.32709-06	\N	\N	\N	\N	\N
-534	EsNonverb	otra	other	fem.	others	\N	\N	\N	\N	2018-07-17 08:33:31.661991-06	\N	\N	\N	\N	\N
-533	EsNonverb	otro	other	masc.	others	\N	\N	\N	\N	2018-07-17 08:32:38.307387-06	\N	\N	\N	\N	\N
-535	EsNonverb	persona	person		persons	\N	\N	\N	\N	2018-07-17 08:35:10.365693-06	\N	\N	\N	\N	\N
-536	EsNonverb	aprendizaje	learning		learnings	\N	\N	\N	\N	2018-07-17 08:40:55.205649-06	\N	\N	\N	\N	\N
-542	EsNonverb	mucho	many		many	\N	\N	\N	\N	2018-07-17 08:48:32.554069-06	\N	\N	\N	\N	\N
-543	EsNonverb	idioma	language		languages	\N	\N	\N	\N	2018-07-17 08:49:33.488019-06	\N	\N	\N	\N	\N
-546	EsNonverb	ejemplo	example		examples	\N	\N	\N	\N	2018-07-17 08:51:50.906959-06	\N	\N	\N	\N	\N
-548	EsNonverb	se	itself		\N	\N	\N	\N	\N	2018-07-17 08:54:04.413751-06	\N	\N	\N	\N	\N
-550	EsNonverb	palabra	word		words	\N	\N	\N	\N	2018-07-17 08:54:42.693204-06	\N	\N	\N	\N	\N
-551	EsNonverb	cuál	which		\N	\N	\N	\N	\N	2018-07-17 08:55:57.61761-06	\N	\N	\N	\N	\N
-552	EsNonverb	contexto	context		contexts	\N	\N	\N	\N	2018-07-17 08:56:04.870809-06	\N	\N	\N	\N	\N
-555	EsNonverb	perdón	pardon		pardons	\N	\N	\N	\N	2018-08-31 19:08:04.939549-06	\N	\N	\N	\N	\N
-557	EsNonverb	usted	you	formal	you all	\N	\N	\N	\N	2018-08-31 19:10:16.458494-06	\N	\N	\N	\N	\N
-559	EsNonverb	sí	yes		\N	\N	\N	\N	\N	2018-08-31 19:12:58.323924-06	\N	\N	\N	\N	\N
-561	EsNonverb	muy	very		\N	\N	\N	\N	\N	2018-08-31 19:14:08.859179-06	\N	\N	\N	\N	\N
-562	EsNonverb	gracias	thanks		\N	\N	\N	\N	\N	2018-08-31 19:15:21.864223-06	\N	\N	\N	\N	\N
-563	EsNonverb	adiós	bye		\N	\N	\N	\N	\N	2018-08-31 19:16:02.683832-06	\N	\N	\N	\N	\N
-564	EsNonverb	señorita	miss		\N	\N	\N	\N	\N	2018-08-31 19:16:19.062648-06	\N	\N	\N	\N	\N
-560	EsNonverb	poco	little bit		\N	\N	\N	\N	\N	2018-08-31 19:13:10.526737-06	\N	\N	\N	\N	\N
-565	EsNonverb	castellano	Castilian		Castilians	\N	\N	\N	\N	2018-09-01 16:35:55.371716-06	\N	\N	\N	\N	\N
-558	EsNonverb	norteamericano	American	masc.	Americans	\N	\N	\N	\N	2018-08-31 19:11:52.624789-06	\N	\N	\N	\N	\N
-566	EsNonverb	norteamericana	American	fem.	Americans	\N	\N	\N	\N	2018-09-01 16:49:51.953022-06	\N	\N	\N	\N	\N
-567	EsNonverb	Chicago	Chicago		\N	\N	\N	\N	\N	2018-09-01 17:09:14.52525-06	\N	\N	\N	\N	\N
-568	EsNonverb	señor	gentleman		gentlemen	\N	\N	\N	\N	2018-09-01 17:12:59.624633-06	\N	\N	\N	\N	\N
-556	EsNonverb	señora	lady, ma'am, Mrs.		\N	\N	\N	\N	\N	2018-08-31 19:09:02.783478-06	\N	\N	\N	\N	\N
-569	EsNonverb	noche	night		nights	\N	\N	\N	\N	2018-09-01 17:18:56.997228-06	\N	\N	\N	\N	\N
-570	EsNonverb	México	Mexico		Mexicos	\N	\N	\N	\N	2018-09-01 17:20:15.384115-06	\N	\N	\N	\N	\N
-571	EsNonverb	Norteamérica	America		Americas	\N	\N	\N	\N	2018-09-01 17:20:47.315399-06	\N	\N	\N	\N	\N
-572	EsNonverb	Bolivia	Bolivia		Bolivias	\N	\N	\N	\N	2018-09-01 17:21:09.264117-06	\N	\N	\N	\N	\N
-573	EsNonverb	García	Garcia		Garcias	\N	\N	\N	\N	2018-09-01 17:21:42.800262-06	\N	\N	\N	\N	\N
-574	EsNonverb	Jones	Jones		\N	\N	\N	\N	\N	2018-09-01 17:22:05.963736-06	\N	\N	\N	\N	\N
-575	EsNonverb	angel	angel		angels	\N	\N	\N	\N	2018-09-01 17:24:16.356883-06	\N	\N	\N	\N	\N
-429	EsStemChange	pued-	can		\N	could	\N	\N	PRES	2018-06-24 11:26:43.651439-06	333	\N	\N	\N	\N
-430	EsStemChange	tien-	have		\N	had	\N	\N	PRES	2018-06-24 11:26:43.803834-06	343	\N	\N	\N	\N
-431	EsStemChange	quier-	want		\N	wanted	\N	\N	PRES	2018-06-24 11:26:43.804733-06	336	\N	\N	\N	\N
-432	EsStemChange	sig-	follow		\N	followed	\N	\N	PRES	2018-06-24 11:26:43.805456-06	340	\N	\N	\N	\N
-433	EsStemChange	encuentr-	find		\N	found	\N	\N	PRES	2018-06-24 11:26:43.806086-06	323	\N	\N	\N	\N
-434	EsStemChange	vien-	come		\N	came	\N	\N	PRES	2018-06-24 11:26:43.806698-06	346	\N	\N	\N	\N
-435	EsStemChange	piens-	think		\N	thought	\N	\N	PRES	2018-06-24 11:26:43.807283-06	332	\N	\N	\N	\N
-436	EsStemChange	vuelv-	return		\N	returned	\N	\N	PRES	2018-06-24 11:26:43.807795-06	348	\N	\N	\N	\N
-437	EsStemChange	sient-	feel		\N	felt	\N	\N	PRES	2018-06-24 11:26:43.808329-06	341	\N	\N	\N	\N
-438	EsStemChange	cuent-	tell		\N	told	\N	\N	PRES	2018-06-24 11:26:43.808861-06	319	\N	\N	\N	\N
-439	EsStemChange	empiez-	start		\N	started	\N	\N	PRES	2018-06-24 11:26:43.809358-06	322	\N	\N	\N	\N
-440	EsStemChange	dic-	say		\N	said	\N	\N	PRES	2018-06-24 11:26:43.809844-06	321	\N	\N	\N	\N
-441	EsStemChange	recuerd-	remember		\N	remembered	\N	\N	PRES	2018-06-24 11:26:43.810424-06	337	\N	\N	\N	\N
-442	EsStemChange	pid-	request		\N	requested	\N	\N	PRES	2018-06-24 11:26:43.81091-06	331	\N	\N	\N	\N
-443	EsStemChange	entiend-	understand		\N	understood	\N	\N	PRES	2018-06-24 11:26:43.811642-06	324	\N	\N	\N	\N
-444	EsStemChange	anduv-	walk		\N	walked	\N	\N	PRET	2018-06-24 11:26:43.812328-06	315	\N	\N	\N	\N
-445	EsStemChange	sup-	know		\N	knew	\N	\N	PRET	2018-06-24 11:26:43.812976-06	338	\N	\N	\N	\N
-446	EsStemChange	quis-	want		\N	wanted	\N	\N	PRET	2018-06-24 11:26:43.81373-06	336	\N	\N	\N	\N
-447	EsStemChange	pus-	put		\N	put	\N	\N	PRET	2018-06-24 11:26:43.814224-06	334	\N	\N	\N	\N
-448	EsStemChange	vin-	come		\N	came	\N	\N	PRET	2018-06-24 11:26:43.814936-06	346	\N	\N	\N	\N
-449	EsStemChange	dij-	say		\N	said	\N	\N	PRET	2018-06-24 11:26:43.815792-06	321	\N	\N	\N	\N
-450	EsStemChange	tuv-	have		\N	had	\N	\N	PRET	2018-06-24 11:26:43.816356-06	343	\N	\N	\N	\N
-451	EsStemChange	hic-	do		\N	did	\N	\N	PRET	2018-06-24 11:26:43.816942-06	328	\N	\N	\N	\N
-452	EsStemChange	pud-	can		\N	could	\N	\N	PRET	2018-06-24 11:26:43.817449-06	333	\N	\N	\N	\N
-467	EsUniqV	tengo	have		\N	\N	1	1	PRES	2018-06-24 10:53:11.341841-06	343	\N	\N	\N	\N
-468	EsUniqV	hago	do		\N	\N	1	1	PRES	2018-06-24 10:53:11.342385-06	328	\N	\N	\N	\N
-469	EsUniqV	digo	say		\N	\N	1	1	PRES	2018-06-24 10:53:11.34283-06	321	\N	\N	\N	\N
-470	EsUniqV	dijeron	said		\N	\N	2	3	PRET	2018-06-24 10:53:11.343357-06	321	\N	\N	\N	\N
-471	EsUniqV	voy	go		\N	\N	1	1	PRES	2018-06-24 10:53:11.343851-06	329	\N	\N	\N	\N
-472	EsUniqV	vas	go		\N	\N	1	2	PRES	2018-06-24 10:53:11.344385-06	329	\N	\N	\N	\N
-473	EsUniqV	va	goes		\N	\N	1	3	PRES	2018-06-24 10:53:11.34485-06	329	\N	\N	\N	\N
-474	EsUniqV	vamos	go		\N	\N	2	1	PRES	2018-06-24 10:53:11.345309-06	329	\N	\N	\N	\N
-475	EsUniqV	van	go		\N	\N	2	3	PRES	2018-06-24 10:53:11.345931-06	329	\N	\N	\N	\N
-476	EsUniqV	veo	see		\N	\N	1	1	PRES	2018-06-24 10:53:11.346443-06	345	\N	\N	\N	\N
-477	EsUniqV	vi	saw		\N	\N	1	1	PRET	2018-06-24 10:53:11.346938-06	345	\N	\N	\N	\N
-478	EsUniqV	vio	saw		\N	\N	1	3	PRET	2018-06-24 10:53:11.347455-06	345	\N	\N	\N	\N
-479	EsUniqV	vimos	saw		\N	\N	2	1	PRET	2018-06-24 10:53:11.347861-06	345	\N	\N	\N	\N
-480	EsUniqV	doy	give		\N	\N	1	1	PRES	2018-06-24 10:53:11.348332-06	320	\N	\N	\N	\N
-481	EsUniqV	di	gave		\N	\N	1	1	PRET	2018-06-24 10:53:11.348782-06	320	\N	\N	\N	\N
-482	EsUniqV	diste	gave		\N	\N	1	2	PRET	2018-06-24 10:53:11.349211-06	320	\N	\N	\N	\N
-483	EsUniqV	dio	gave		\N	\N	1	3	PRET	2018-06-24 10:53:11.349614-06	320	\N	\N	\N	\N
-484	EsUniqV	dimos	gave		\N	\N	2	1	PRET	2018-06-24 10:53:11.349999-06	320	\N	\N	\N	\N
-485	EsUniqV	dieron	gave		\N	\N	2	3	PRET	2018-06-24 10:53:11.350387-06	320	\N	\N	\N	\N
-486	EsUniqV	sé	know		\N	\N	1	1	PRES	2018-06-24 10:53:11.350775-06	338	\N	\N	\N	\N
-487	EsUniqV	pongo	put		\N	\N	1	1	PRES	2018-06-24 10:53:11.351199-06	334	\N	\N	\N	\N
-488	EsUniqV	vengo	come		\N	\N	1	1	PRES	2018-06-24 10:53:11.351597-06	346	\N	\N	\N	\N
-489	EsUniqV	salgo	go out		\N	\N	1	1	PRES	2018-06-24 10:53:11.351985-06	339	\N	\N	\N	\N
-490	EsUniqV	parezco	look like		\N	\N	1	1	PRES	2018-06-24 10:53:11.352406-06	330	\N	\N	\N	\N
-491	EsUniqV	conozco	know		\N	\N	1	1	PRES	2018-06-24 10:53:11.352811-06	318	\N	\N	\N	\N
-492	EsUniqV	empecé	started		\N	\N	1	1	PRET	2018-06-24 10:53:11.353348-06	322	\N	\N	\N	\N
-493	EsUniqV	envío	sent		\N	\N	1	1	PRES	2018-06-24 10:53:11.354736-06	325	\N	\N	\N	\N
-494	EsUniqV	envías	sent		\N	\N	1	2	PRES	2018-06-24 10:53:11.355389-06	325	\N	\N	\N	\N
-495	EsUniqV	envía	sent		\N	\N	1	3	PRES	2018-06-24 10:53:11.355845-06	325	\N	\N	\N	\N
-496	EsUniqV	envían	sent		\N	\N	2	1	PRES	2018-06-24 10:53:11.356343-06	325	\N	\N	\N	\N
-453	EsUniqV	soy	am	what	\N	\N	1	1	PRES	2018-06-24 10:53:11.331513-06	342	\N	\N	\N	\N
-454	EsUniqV	eres	are	what	\N	\N	1	2	PRES	2018-06-24 10:53:11.334102-06	342	\N	\N	\N	\N
-455	EsUniqV	es	is	what	\N	\N	1	3	PRES	2018-06-24 10:53:11.334799-06	342	\N	\N	\N	\N
-456	EsUniqV	somos	are	what	\N	\N	2	1	PRES	2018-06-24 10:53:11.335596-06	342	\N	\N	\N	\N
-457	EsUniqV	son	are	what	\N	\N	2	3	PRES	2018-06-24 10:53:11.336235-06	342	\N	\N	\N	\N
-458	EsUniqV	fui	was	what	\N	\N	1	1	PRET	2018-06-24 10:53:11.336833-06	342	\N	\N	\N	\N
-459	EsUniqV	fuiste	were	what	\N	\N	1	2	PRET	2018-06-24 10:53:11.337566-06	342	\N	\N	\N	\N
-460	EsUniqV	fue	was	what	\N	\N	1	3	PRET	2018-06-24 10:53:11.338114-06	342	\N	\N	\N	\N
-461	EsUniqV	fuimos	were	what	\N	\N	2	1	PRET	2018-06-24 10:53:11.338658-06	342	\N	\N	\N	\N
-462	EsUniqV	fueron	were	what	\N	\N	2	3	PRET	2018-06-24 10:53:11.339177-06	342	\N	\N	\N	\N
-463	EsUniqV	estoy	am	how	\N	\N	1	1	PRES	2018-06-24 10:53:11.339723-06	326	\N	\N	\N	\N
-464	EsUniqV	estás	are	how	\N	\N	1	2	PRES	2018-06-24 10:53:11.340233-06	326	\N	\N	\N	\N
-465	EsUniqV	está	is	how	\N	\N	1	3	PRES	2018-06-24 10:53:11.340796-06	326	\N	\N	\N	\N
-466	EsUniqV	están	are	how	\N	\N	2	3	PRES	2018-06-24 10:53:11.341339-06	326	\N	\N	\N	\N
-539	EsUniqV	hay	is	exists	\N	\N	1	3	PRES	2018-07-17 08:45:19.386968-06	538	\N	\N	\N	\N
-582	FrInf	\N	be	\N	\N	was	\N	\N	\N	2018-09-02 16:18:34.96525-06	\N	être	\N	\N	\N
-583	FrUniqV	\N	am	\N	\N	\N	1	1	PRES	2018-09-02 16:18:57.751959-06	582	suis	\N	\N	\N
-584	FrUniqV	\N	are	\N	\N	\N	1	2	PRES	2018-09-02 16:19:23.37562-06	582	es	\N	\N	\N
-585	FrUniqV	\N	is	\N	\N	\N	1	3	PRES	2018-09-02 16:19:36.769782-06	582	est	\N	\N	\N
-586	FrUniqV	\N	are	\N	\N	\N	2	1	PRES	2018-09-02 16:20:04.263868-06	582	sommes	\N	\N	\N
-587	FrUniqV	\N	are	\N	\N	\N	2	2	PRES	2018-09-02 16:20:16.369155-06	582	êtes	\N	\N	\N
-588	FrUniqV	\N	are	\N	\N	\N	2	3	PRES	2018-09-02 16:20:32.375836-06	582	sont	\N	\N	\N
-589	FrNonverb	\N	I/me	\N	\N	\N	\N	\N	\N	2018-09-02 16:46:53.784662-06	\N	je	\N	\N	\N
-590	FrNonverb	\N	you	\N	\N	\N	\N	\N	\N	2018-09-02 16:48:08.846709-06	\N	tu	\N	\N	\N
-591	FrNonverb	\N	he	\N	\N	\N	\N	\N	\N	2018-09-02 16:48:38.39048-06	\N	il	\N	\N	\N
-592	FrNonverb	\N	she	\N	\N	\N	\N	\N	\N	2018-09-02 16:48:59.888882-06	\N	elle	\N	\N	\N
-593	FrNonverb	\N	we	\N	\N	\N	\N	\N	\N	2018-09-02 16:49:20.063779-06	\N	nous	\N	\N	\N
-594	FrNonverb	\N	you all	\N	\N	\N	\N	\N	\N	2018-09-02 16:49:52.683555-06	\N	vous	\N	\N	\N
-595	FrNonverb	\N	they (masc.)	\N	\N	\N	\N	\N	\N	2018-09-02 16:50:59.541744-06	\N	ils	\N	\N	\N
-596	FrNonverb	\N	they (fem.)	\N	\N	\N	\N	\N	\N	2018-09-02 16:51:13.343919-06	\N	elles	\N	\N	\N
-597	FrInf	\N	go	\N	\N	went	\N	\N	\N	2018-09-02 16:51:54.849762-06	\N	aller	\N	\N	\N
-598	FrUniqV	\N	go	\N	\N	\N	1	1	PRES	2018-09-02 16:52:10.070708-06	597	vais	\N	\N	\N
-599	FrUniqV	\N	go	\N	\N	\N	1	2	PRES	2018-09-02 16:52:24.04008-06	597	vas	\N	\N	\N
-600	FrUniqV	\N	goes	\N	\N	\N	1	3	PRES	2018-09-02 16:53:00.013994-06	597	va	\N	\N	\N
-601	FrUniqV	\N	go	\N	\N	\N	2	1	PRES	2018-09-02 16:53:22.421248-06	597	allons	\N	\N	\N
-602	FrUniqV	\N	go	\N	\N	\N	2	2	PRES	2018-09-02 16:53:32.464416-06	597	allez	\N	\N	\N
-603	FrUniqV	\N	go	\N	\N	\N	2	3	PRES	2018-09-02 16:53:42.408866-06	597	vont	\N	\N	\N
-604	FrNonverb	\N	how	\N	\N	\N	\N	\N	\N	2018-09-02 16:54:37.497641-06	\N	comment	\N	\N	\N
-605	FrNonverb	\N	it	\N	\N	\N	\N	\N	\N	2018-09-02 16:54:37.500128-06	\N	ça	\N	\N	\N
-606	FrNonverb	\N	very	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:18.434126-06	\N	très	\N	\N	\N
-607	FrNonverb	\N	well	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:18.441939-06	\N	bien	\N	\N	\N
-608	FrNonverb	\N	thanks	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:18.4482-06	\N	merci	\N	\N	\N
-609	FrNonverb	\N	and	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:45.691008-06	\N	et	\N	\N	\N
-610	FrInf	\N	speak	\N	\N	spoke	\N	\N	\N	2018-09-02 17:17:28.346519-06	\N	parler	\N	\N	\N
-611	FrInf	\N	call	\N	\N	called	\N	\N	\N	2018-09-03 01:26:22.431007-06	\N	appeler	\N	\N	\N
-613	FrStemChange	\N	call	\N	\N	called	\N	\N	PRES	2018-09-03 01:31:58.545072-06	611	appell-	\N	\N	\N
-614	FrNonverb	\N	me	\N	\N	\N	\N	\N	\N	2018-09-03 09:03:17.7684-06	\N	me	\N	\N	\N
-615	FrNonverb	\N	Pat	\N	\N	\N	\N	\N	\N	2018-09-03 09:03:17.81668-06	\N	Pat	\N	\N	\N
-616	FrNonverb	\N	me	\N	\N	\N	\N	\N	\N	2018-09-03 09:06:47.13204-06	\N	m'	\N	\N	\N
-617	FrNonverb	\N	enchanted	\N	\N	\N	\N	\N	\N	2018-09-03 10:13:44.461449-06	\N	enchanté	\N	\N	\N
-618	FrInf	\N	come	\N	\N	came	\N	\N	\N	2018-09-03 10:15:07.839627-06	\N	venir	\N	\N	\N
-619	FrStemChange	\N	come	\N	\N	came	\N	\N	PRES	2018-09-03 10:15:30.875707-06	618	vien-	\N	\N	\N
-620	FrNonverb	\N	from	\N	\N	\N	\N	\N	\N	2018-09-03 10:38:12.118663-06	\N	d'	\N	\N	\N
-621	FrNonverb	\N	where	\N	\N	\N	\N	\N	\N	2018-09-03 10:38:12.144859-06	\N	où	\N	\N	\N
-623	FrNonverb	\N	from	\N	\N	\N	\N	\N	\N	2018-09-03 10:42:20.240474-06	\N	de	\N	\N	\N
-624	FrNonverb	\N	France	\N	\N	\N	\N	\N	\N	2018-09-03 10:42:20.25281-06	\N	France	\N	\N	\N
-625	FrNonverb	\N	French	\N	\N	\N	\N	\N	\N	2018-09-03 10:42:42.683836-06	\N	français	\N	\N	\N
-626	FrNonverb	\N	from	\N	\N	\N	\N	\N	\N	2018-09-03 10:44:02.877696-06	\N	des	\N	\N	\N
-627	FrNonverb	\N	states	\N	\N	\N	\N	\N	\N	2018-09-03 10:44:02.884474-06	\N	états	\N	\N	\N
-628	FrNonverb	\N	united	\N	\N	\N	\N	\N	\N	2018-09-03 10:44:02.886831-06	\N	unis	\N	\N	\N
-629	FrNonverb	\N	American	\N	\N	\N	\N	\N	\N	2018-09-03 10:44:28.940238-06	\N	américain	\N	\N	\N
-630	FrNonverb	\N	exactly	\N	\N	\N	\N	\N	\N	2018-09-03 10:44:59.567957-06	\N	exactement	\N	\N	\N
-631	FrNonverb	\N	Boston	\N	\N	\N	\N	\N	\N	2018-09-03 10:45:39.660305-06	\N	Boston	\N	\N	\N
-632	FrNonverb	\N	student	\N	\N	\N	\N	\N	\N	2018-09-03 10:46:05.007854-06	\N	étudiant	\N	\N	\N
-633	FrNonverb	\N	professor	\N	\N	\N	\N	\N	\N	2018-09-03 10:47:02.821171-06	\N	professeur	\N	\N	\N
-634	FrNonverb	\N	English	\N	\N	\N	\N	\N	\N	2018-09-03 10:47:02.828475-06	\N	anglais	\N	\N	\N
-635	FrNonverb	\N	yes	\N	\N	\N	\N	\N	\N	2018-09-03 10:47:45.258482-06	\N	oui	\N	\N	\N
-636	FrNonverb	\N	a	\N	\N	\N	\N	\N	\N	2018-09-03 10:48:55.30511-06	\N	un	\N	\N	\N
-637	FrNonverb	\N	little	\N	\N	\N	\N	\N	\N	2018-09-03 10:48:55.308051-06	\N	petit	\N	\N	\N
-638	FrNonverb	\N	bit	\N	\N	\N	\N	\N	\N	2018-09-03 10:48:55.310823-06	\N	peu	\N	\N	\N
-639	FrNonverb	\N	home	\N	\N	\N	\N	\N	\N	2018-09-03 10:50:14.122687-06	\N	chez	\N	\N	\N
-640	FrNonverb	\N	my	\N	\N	\N	\N	\N	\N	2018-09-03 10:50:14.124387-06	\N	moi	\N	\N	\N
-641	FrNonverb	\N	now	\N	\N	\N	\N	\N	\N	2018-09-03 10:50:14.125663-06	\N	maintenant	\N	\N	\N
-642	FrNonverb	\N	also	\N	\N	\N	\N	\N	\N	2018-09-03 10:50:39.872063-06	\N	aussi	\N	\N	\N
-643	FrNonverb	\N	to the	\N	\N	\N	\N	\N	\N	2018-09-03 10:52:25.886468-06	\N	Au	\N	\N	\N
-644	FrNonverb	\N	seeing again	\N	\N	\N	\N	\N	\N	2018-09-03 10:52:25.89043-06	\N	revoir	\N	\N	\N
-645	FrNonverb	\N	good	\N	\N	\N	\N	\N	\N	2018-09-03 10:53:12.935056-06	\N	bonne	\N	\N	\N
-646	FrNonverb	\N	day	\N	\N	\N	\N	\N	\N	2018-09-03 10:53:12.93673-06	\N	journée	\N	\N	\N
-647	ArNonverb	\N	book	\N	\N	\N	\N	\N	\N	2018-09-05 18:39:15.038859-06	\N	\N	kitAb	\N	\N
-653	ArNonverb	\N	you drink	\N	\N	\N	\N	\N	\N	2018-09-05 20:47:47.900079-06	\N	\N	ta$rab	\N	\N
-648	ArNonverb	\N	Ramadan	\N	\N	\N	\N	\N	\N	2018-09-05 19:56:46.940322-06	\N	\N	ramaDAn	\N	\N
-649	ArNonverb	\N	sugar	\N	\N	\N	\N	\N	\N	2018-09-05 20:02:33.713172-06	\N	\N	sukar	\N	\N
-650	ArNonverb	\N	thirsty	\N	\N	\N	\N	\N	\N	2018-09-05 20:06:25.526182-06	\N	\N	EaTo$An	\N	\N
-651	ArNonverb	\N	baker	\N	\N	\N	\N	\N	\N	2018-09-05 20:37:09.541727-06	\N	\N	xab~Az	\N	\N
-655	ArNonverb	\N	God	\N	\N	\N	\N	\N	\N	2018-09-05 21:02:40.168287-06	\N	\N	{ll~`h	\N	\N
-656	ArNonverb	\N	goodbye	\N	\N	\N	\N	\N	\N	2018-09-05 21:48:53.079363-06	\N	\N	maEa {ls~alAamap	\N	\N
-657	ArNonverb	\N	Afghanistan	\N	\N	\N	\N	\N	\N	2018-09-05 22:12:06.113727-06	\N	\N	>afogaAnisotaAn	\N	\N
-658	ArNonverb	\N	Kabul	\N	\N	\N	\N	\N	\N	2018-09-05 22:15:53.692597-06	\N	\N	kaAbuwl	\N	\N
-659	ArNonverb	\N	Bahrain	\N	\N	\N	\N	\N	\N	2018-09-05 22:16:45.136059-06	\N	\N	AlobaHorayon	\N	\N
-660	ArNonverb	\N	Bhutan	\N	\N	\N	\N	\N	\N	2018-09-05 22:17:29.612904-06	\N	\N	buwtaAn	\N	\N
-661	ArNonverb	\N	Canada	\N	\N	\N	\N	\N	\N	2018-09-05 22:18:21.383591-06	\N	\N	kanadaA	\N	\N
-662	ArNonverb	\N	Chad	\N	\N	\N	\N	\N	\N	2018-09-05 22:18:59.374424-06	\N	\N	to$aAd	\N	\N
-663	ArNonverb	\N	Djibouti	\N	\N	\N	\N	\N	\N	2018-09-05 22:19:46.475391-06	\N	\N	jiybuwtiy	\N	\N
-664	ArNonverb	\N	France	\N	\N	\N	\N	\N	\N	2018-09-05 22:20:49.750387-06	\N	\N	faranosaA	\N	\N
-665	ArNonverb	\N	Paris	\N	\N	\N	\N	\N	\N	2018-09-05 22:21:15.531061-06	\N	\N	baAriys	\N	\N
-666	ArNonverb	\N	Tehran	\N	\N	\N	\N	\N	\N	2018-09-05 22:22:05.82156-06	\N	\N	TahoraAn	\N	\N
-667	ArNonverb	\N	Iran	\N	\N	\N	\N	\N	\N	2018-09-05 22:22:28.033201-06	\N	\N	<iyraAn	\N	\N
-668	ArNonverb	\N	Iraq	\N	\N	\N	\N	\N	\N	2018-09-05 22:22:57.182804-06	\N	\N	AloEiraAq	\N	\N
-669	ArNonverb	\N	Bagdad	\N	\N	\N	\N	\N	\N	2018-09-05 22:23:16.163002-06	\N	\N	bagodaAd	\N	\N
-670	ArNonverb	\N	Israel	\N	\N	\N	\N	\N	\N	2018-09-05 22:23:41.305808-06	\N	\N	<isoraA}iyl	\N	\N
-673	ArNonverb	\N	Tel Aviv	\N	\N	\N	\N	\N	\N	2018-09-05 22:26:07.214289-06	\N	\N	tal~ >abiyb	\N	\N
-674	ArNonverb	\N	Italy	\N	\N	\N	\N	\N	\N	2018-09-05 22:26:26.299435-06	\N	\N	<iyTaAliyaA	\N	\N
-675	ArNonverb	\N	Rome	\N	\N	\N	\N	\N	\N	2018-09-05 22:26:44.288779-06	\N	\N	ruwmaA	\N	\N
-676	ArNonverb	\N	Kazakhstan	\N	\N	\N	\N	\N	\N	2018-09-05 22:27:16.644943-06	\N	\N	kaAzaAxisotaAn	\N	\N
-677	ArNonverb	\N	Kenya	\N	\N	\N	\N	\N	\N	2018-09-05 22:27:45.115008-06	\N	\N	kiyniyaA	\N	\N
-678	ArNonverb	\N	Kuwait	\N	\N	\N	\N	\N	\N	2018-09-05 22:28:25.839436-06	\N	\N	Alokuwayot	\N	\N
-679	ArNonverb	\N	Kyrgyzstan	\N	\N	\N	\N	\N	\N	2018-09-05 22:28:50.873644-06	\N	\N	qiyrogiyzisotaAn	\N	\N
-680	ArNonverb	\N	Lebanon	\N	\N	\N	\N	\N	\N	2018-09-05 22:29:12.752997-06	\N	\N	libonAn	\N	\N
-681	ArNonverb	\N	Beirut	\N	\N	\N	\N	\N	\N	2018-09-05 22:29:31.995497-06	\N	\N	bayoruwt	\N	\N
-682	ArNonverb	\N	Libya	\N	\N	\N	\N	\N	\N	2018-09-05 22:29:54.155753-06	\N	\N	liybiyaA	\N	\N
-683	ArNonverb	\N	Malawi	\N	\N	\N	\N	\N	\N	2018-09-05 22:30:27.905264-06	\N	\N	maAlaAwiy	\N	\N
-684	ArNonverb	\N	Malaysia	\N	\N	\N	\N	\N	\N	2018-09-05 22:30:51.754102-06	\N	\N	maAlayoziyaA	\N	\N
-685	ArNonverb	\N	Ali	\N	\N	\N	\N	\N	\N	2018-09-05 23:03:09.294198-06	\N	\N	EAly	\N	\N
-686	ArNonverb	\N	Amir	\N	\N	\N	\N	\N	\N	2018-09-05 23:03:31.51387-06	\N	\N	EAmr	\N	\N
-687	ArNonverb	\N	Adam	\N	\N	\N	\N	\N	\N	2018-09-05 23:04:30.824261-06	\N	\N	|dm	\N	\N
-688	ArNonverb	\N	Barack	\N	\N	\N	\N	\N	\N	2018-09-05 23:05:39.427498-06	\N	\N	bArAk	\N	\N
-689	ArNonverb	\N	Hussein	\N	\N	\N	\N	\N	\N	2018-09-05 23:07:31.256917-06	\N	\N	Hsyn	\N	\N
-690	ArNonverb	\N	imam	\N	\N	\N	\N	\N	\N	2018-09-05 23:08:04.692543-06	\N	\N	<mAm	\N	\N
-691	ArNonverb	\N	Islam	\N	\N	\N	\N	\N	\N	2018-09-05 23:08:21.156435-06	\N	\N	<slAm	\N	\N
-692	ArNonverb	\N	Jamal	\N	\N	\N	\N	\N	\N	2018-09-05 23:08:45.45169-06	\N	\N	jmAl	\N	\N
-694	ArNonverb	\N	Muhammad	\N	\N	\N	\N	\N	\N	2018-09-05 23:10:02.221466-06	\N	\N	mHm~d	\N	\N
-695	ArNonverb	\N	Omar	\N	\N	\N	\N	\N	\N	2018-09-05 23:10:35.791887-06	\N	\N	Emr	\N	\N
-696	ArNonverb	\N	Saddam	\N	\N	\N	\N	\N	\N	2018-09-05 23:11:15.077444-06	\N	\N	Sd~Am	\N	\N
-697	ArNonverb	\N	Shakira	\N	\N	\N	\N	\N	\N	2018-09-05 23:11:42.464971-06	\N	\N	$Akrp	\N	\N
-698	ArNonverb	\N	ayatollah	\N	\N	\N	\N	\N	\N	2018-09-05 23:14:39.804042-06	\N	\N	|yap Allh	\N	\N
-699	ArNonverb	\N	caliphate	\N	\N	\N	\N	\N	\N	2018-09-05 23:15:28.90548-06	\N	\N	xalyfp	\N	\N
-700	ArNonverb	\N	fatwa	\N	\N	\N	\N	\N	\N	2018-09-05 23:15:57.530548-06	\N	\N	ftwY	\N	\N
-701	ArNonverb	\N	hadith	\N	\N	\N	\N	\N	\N	2018-09-05 23:16:14.43252-06	\N	\N	Hdyv	\N	\N
-702	ArNonverb	\N	Hajj	\N	\N	\N	\N	\N	\N	2018-09-05 23:16:38.176596-06	\N	\N	Haj~	\N	\N
-703	ArNonverb	\N	jihad	\N	\N	\N	\N	\N	\N	2018-09-05 23:17:02.051567-06	\N	\N	jhAd	\N	\N
-704	ArNonverb	\N	Quran	\N	\N	\N	\N	\N	\N	2018-09-05 23:17:27.428895-06	\N	\N	Alqr|n	\N	\N
-705	ArNonverb	\N	Sharia	\N	\N	\N	\N	\N	\N	2018-09-05 23:18:17.046085-06	\N	\N	$ryEp	\N	\N
-706	ArNonverb	\N	Shia	\N	\N	\N	\N	\N	\N	2018-09-05 23:18:45.925244-06	\N	\N	$yEp	\N	\N
-707	ArNonverb	\N	Sufi	\N	\N	\N	\N	\N	\N	2018-09-05 23:19:18.7801-06	\N	\N	Suwfiy~	\N	\N
-709	ArNonverb	\N	shah	\N	\N	\N	\N	\N	\N	2018-09-05 23:21:30.051582-06	\N	\N	$Ah	\N	\N
-710	ArNonverb	\N	God is great	\N	\N	\N	\N	\N	\N	2018-09-05 23:23:42.109949-06	\N	\N	Allh >kbr	\N	\N
-711	ArNonverb	\N	halal	\N	\N	\N	\N	\N	\N	2018-09-05 23:24:56.921142-06	\N	\N	HlAl	\N	\N
-712	ArNonverb	\N	if God wills	\N	\N	\N	\N	\N	\N	2018-09-05 23:25:41.976384-06	\N	\N	<n $A' Allh	\N	\N
-713	ArNonverb	\N	madrasah	\N	\N	\N	\N	\N	\N	2018-09-05 23:26:31.651612-06	\N	\N	mdrsp	\N	\N
-714	ArNonverb	\N	Sunni	\N	\N	\N	\N	\N	\N	2018-09-05 23:28:58.477545-06	\N	\N	sn~y	\N	\N
-715	ArNonverb	\N	burqa	\N	\N	\N	\N	\N	\N	2018-09-05 23:30:16.091452-06	\N	\N	brqE	\N	\N
-716	ArNonverb	\N	hijab	\N	\N	\N	\N	\N	\N	2018-09-05 23:30:47.489298-06	\N	\N	HjAb	\N	\N
-717	ArNonverb	\N	couscous	\N	\N	\N	\N	\N	\N	2018-09-05 23:32:32.150726-06	\N	\N	kusokus	\N	\N
-718	ArNonverb	\N	Al Jazeera	\N	\N	\N	\N	\N	\N	2018-09-05 23:34:57.952292-06	\N	\N	Aljzyrp	\N	\N
-719	ArNonverb	\N	Barack Hussein Obama	\N	\N	\N	\N	\N	\N	2018-09-05 23:37:38.638441-06	\N	\N	bArAk Hsyn >wbAmA	\N	\N
-720	ArNonverb	\N	Kareem Abdul-Jabbar	\N	\N	\N	\N	\N	\N	2018-09-05 23:38:24.147108-06	\N	\N	krym Ebd AljbAr	\N	\N
-721	ArNonverb	\N	Hamid Karzai	\N	\N	\N	\N	\N	\N	2018-09-05 23:40:21.46567-06	\N	\N	HAmd krzAy	\N	\N
-722	ArNonverb	\N	Muhammad Ali	\N	\N	\N	\N	\N	\N	2018-09-05 23:40:54.272101-06	\N	\N	mHmd Ely	\N	\N
-723	ArNonverb	\N	Rihanna	\N	\N	\N	\N	\N	\N	2018-09-05 23:41:31.925495-06	\N	\N	ryhAnA	\N	\N
-724	ArNonverb	\N	Shaquille O’Neal	\N	\N	\N	\N	\N	\N	2018-09-05 23:42:07.107402-06	\N	\N	$Akyl Awnyl	\N	\N
-725	ArNonverb	\N	Tupac Shakur	\N	\N	\N	\N	\N	\N	2018-09-05 23:42:38.620662-06	\N	\N	twbAk $Akwr	\N	\N
-726	ArNonverb	\N	Saddam Hussein	\N	\N	\N	\N	\N	\N	2018-09-05 23:44:09.882005-06	\N	\N	SdAm Hsyn	\N	\N
-727	ArNonverb	\N	Mahmoud Ahmadinejad	\N	\N	\N	\N	\N	\N	2018-09-05 23:44:41.363239-06	\N	\N	mHmwd AHmdynjAd	\N	\N
-728	ArNonverb	\N	Mahmoud Abbas	\N	\N	\N	\N	\N	\N	2018-09-05 23:45:04.596028-06	\N	\N	maHomuwd Eaba~As	\N	\N
-729	ArVRoot	\N	write	\N	\N	wrote	\N	\N	\N	2018-09-07 10:26:56.175701-06	\N	\N	ktb	u	\N
-730	ArVRoot	\N	drink	\N	\N	drank	\N	\N	\N	2018-09-07 10:27:14.594876-06	\N	\N	$rib	a	\N
-742	ArVRoot	\N	sit	\N	\N	sat	\N	\N	\N	2018-09-07 14:10:54.230746-06	\N	\N	jlis	i	\N
-731	ArNonverb	\N	I	\N	\N	\N	\N	\N	\N	2018-09-07 13:58:35.672884-06	\N	\N	>nA	\N	\N
-732	ArNonverb	\N	you (masc.)	\N	\N	\N	\N	\N	\N	2018-09-07 13:58:47.781191-06	\N	\N	>anota	\N	\N
-733	ArNonverb	\N	you (fem.)	\N	\N	\N	\N	\N	\N	2018-09-07 13:59:01.383694-06	\N	\N	>anoti	\N	\N
-734	ArNonverb	\N	he	\N	\N	\N	\N	\N	\N	2018-09-07 13:59:11.711905-06	\N	\N	huwa	\N	\N
-735	ArNonverb	\N	she	\N	\N	\N	\N	\N	\N	2018-09-07 13:59:25.599617-06	\N	\N	hiya	\N	\N
-736	ArNonverb	\N	we	\N	\N	\N	\N	\N	\N	2018-09-07 13:59:37.256893-06	\N	\N	naHonu	\N	\N
-737	ArNonverb	\N	you (masc. pl.)	\N	\N	\N	\N	\N	\N	2018-09-07 13:59:55.977431-06	\N	\N	>anotumo	\N	\N
-738	ArNonverb	\N	you (fem. pl.)	\N	\N	\N	\N	\N	\N	2018-09-07 14:00:12.407077-06	\N	\N	>anotun~a	\N	\N
-739	ArNonverb	\N	they (masc.)	\N	\N	\N	\N	\N	\N	2018-09-07 14:00:24.815863-06	\N	\N	humo	\N	\N
-740	ArNonverb	\N	they (fem.)	\N	\N	\N	\N	\N	\N	2018-09-07 14:00:41.266117-06	\N	\N	hun~a	\N	\N
-743	ArVRoot	\N	arrive	\N	\N	arrived	\N	\N	\N	2018-09-07 16:07:23.468821-06	\N	\N	wSl	i	\N
-745	ArVRoot	\N	find	\N	\N	found	\N	\N	\N	2018-09-07 16:13:17.918298-06	\N	\N	wjd	i	\N
-746	ArVRoot	\N	put	\N	\N	put	\N	\N	\N	2018-09-07 16:14:35.095171-06	\N	\N	wDE	a	\N
-749	ArVRoot	\N	is	\N	\N	was	\N	\N	\N	2018-09-07 16:39:17.431475-06	\N	\N	kwn	o	\N
-744	ArStemChange	\N	arrive	\N	\N	\N	\N	\N	PRES	2018-09-07 16:11:15.058908-06	743	\N	Sil-	\N	1,2,3
-747	ArStemChange	\N	find	\N	\N	\N	\N	\N	PRES	2018-09-07 16:17:02.152475-06	745	\N	jid-	\N	1,2,3
-748	ArStemChange	\N	put	\N	\N	\N	\N	\N	PRES	2018-09-07 16:19:28.65242-06	746	\N	DaE-	\N	1,2,3
-750	ArStemChange	\N	was	\N	\N	\N	\N	\N	PAST	2018-09-07 16:56:36.745251-06	749	\N	kaAn-	\N	3
-751	ArVRoot	\N	visit	\N	\N	visited	\N	\N	\N	2018-09-07 16:57:48.308585-06	\N	\N	zwr	?	\N
-752	ArStemChange	\N	visited	\N	\N	\N	\N	\N	PAST	2018-09-07 16:59:03.631104-06	751	\N	zaAr-	\N	3
-753	ArVRoot	\N	sell	\N	\N	sold	\N	\N	\N	2018-09-07 16:59:53.253586-06	\N	\N	byE	?	\N
-755	ArVRoot	\N	fly	\N	\N	flew	\N	\N	\N	2018-09-07 17:01:58.684766-06	\N	\N	Tyr	?	\N
-757	ArStemChange	\N	was	\N	\N	\N	\N	\N	PAST	2018-09-07 17:03:47.015038-06	749	\N	kun-	\N	1,2
-758	ArStemChange	\N	visited	\N	\N	\N	\N	\N	PAST	2018-09-07 17:04:24.868021-06	751	\N	zur-	\N	1,2
-759	ArStemChange	\N	sold	\N	\N	\N	\N	\N	PAST	2018-09-07 17:05:04.304094-06	753	\N	biE-	\N	1,2
-760	ArStemChange	\N	flew	\N	\N	\N	\N	\N	PAST	2018-09-07 17:06:09.633942-06	755	\N	Tir-	\N	1,2
-754	ArStemChange	\N	sold	\N	\N	\N	\N	\N	PAST	2018-09-07 17:01:22.332139-06	753	\N	baAE-	\N	3
-756	ArStemChange	\N	flew	\N	\N	\N	\N	\N	PAST	2018-09-07 17:02:49.332723-06	755	\N	TaAra-	\N	3
-762	ArStemChange	\N	sell	\N	\N	\N	\N	\N	PRES	2018-09-07 17:12:20.13693-06	753	\N	biyE-	\N	1,2,3
-761	ArStemChange	\N	visit	\N	\N	\N	\N	\N	PRES	2018-09-07 17:10:56.985087-06	751	\N	zuwr-	\N	1,2,3
-763	ArVRoot	\N	sleep	\N	\N	slept	\N	\N	\N	2018-09-07 17:14:14.825214-06	\N	\N	ynAm	?	\N
-764	ArStemChange	\N	sleep	\N	\N	\N	\N	\N	PRES	2018-09-07 17:15:07.828448-06	763	\N	naAm-	\N	1,2,3
-765	ArStemChange	\N	fly	\N	\N	\N	\N	\N	PRES	2018-09-07 17:19:25.685692-06	755	\N	Tiyr-	\N	1,2,3
-766	ArVRoot	\N	complain	\N	\N	complained	\N	\N	\N	2018-09-07 17:22:08.182334-06	\N	\N	$kw	?	\N
-768	ArVRoot	\N	walk	\N	\N	walked	\N	\N	\N	2018-09-07 17:25:24.568517-06	\N	\N	m$y	?	\N
-770	ArVRoot	\N	forget	\N	\N	forgot	\N	\N	\N	2018-09-07 17:33:12.042642-06	\N	\N	nsiy	?	\N
-771	ArVRoot	\N	meet	\N	\N	met	\N	\N	\N	2018-09-07 17:33:52.838919-06	\N	\N	lqiy	?	\N
-769	ArStemChange	\N	walked	\N	\N	\N	\N	\N	PAST	2018-09-07 17:26:01.372287-06	768	\N	ma$-	\N	3
-767	ArStemChange	\N	complained	\N	\N	\N	\N	\N	PAST	2018-09-07 17:24:47.196191-06	766	\N	$ak-	\N	3
+COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_past, number, person, tense, created_at, infinitive_leaf_id, fr_mixed, ar_buckwalter, ar_pres_middle_vowel_buckwalter, persons_csv, gender) FROM stdin;
+581	FrNonverb	\N	hello	\N	\N	\N	\N	\N	\N	2018-09-02 15:44:30.654025-06	\N	Bonjour	\N	\N	\N	\N
+315	EsInf	andar	walk		\N	walked	\N	\N	\N	2018-06-24 09:57:33.983446-06	\N	\N	\N	\N	\N	\N
+316	EsInf	aprender	learn		\N	learned	\N	\N	\N	2018-06-24 09:57:33.984734-06	\N	\N	\N	\N	\N	\N
+317	EsInf	comer	eat		\N	ate	\N	\N	\N	2018-06-24 09:57:33.985347-06	\N	\N	\N	\N	\N	\N
+319	EsInf	contar	tell		\N	told	\N	\N	\N	2018-06-24 09:57:33.98678-06	\N	\N	\N	\N	\N	\N
+320	EsInf	dar	give		\N	gave	\N	\N	\N	2018-06-24 09:57:33.987309-06	\N	\N	\N	\N	\N	\N
+321	EsInf	decir	say		\N	said	\N	\N	\N	2018-06-24 09:57:33.987899-06	\N	\N	\N	\N	\N	\N
+322	EsInf	empezar	start		\N	started	\N	\N	\N	2018-06-24 09:57:33.988574-06	\N	\N	\N	\N	\N	\N
+323	EsInf	encontrar	find		\N	found	\N	\N	\N	2018-06-24 09:57:33.994568-06	\N	\N	\N	\N	\N	\N
+324	EsInf	entender	understand		\N	understood	\N	\N	\N	2018-06-24 09:57:34.000548-06	\N	\N	\N	\N	\N	\N
+325	EsInf	enviar	send		\N	sent	\N	\N	\N	2018-06-24 09:57:34.006513-06	\N	\N	\N	\N	\N	\N
+327	EsInf	hablar	speak		\N	spoke	\N	\N	\N	2018-06-24 09:57:34.017548-06	\N	\N	\N	\N	\N	\N
+328	EsInf	hacer	do		\N	did	\N	\N	\N	2018-06-24 09:57:34.018056-06	\N	\N	\N	\N	\N	\N
+329	EsInf	ir	go		\N	went	\N	\N	\N	2018-06-24 09:57:34.018688-06	\N	\N	\N	\N	\N	\N
+330	EsInf	parecer	seem		\N	seemed	\N	\N	\N	2018-06-24 09:57:34.019227-06	\N	\N	\N	\N	\N	\N
+331	EsInf	pedir	request		\N	requested	\N	\N	\N	2018-06-24 09:57:34.019677-06	\N	\N	\N	\N	\N	\N
+332	EsInf	pensar	think		\N	thought	\N	\N	\N	2018-06-24 09:57:34.020182-06	\N	\N	\N	\N	\N	\N
+333	EsInf	poder	can		\N	could	\N	\N	\N	2018-06-24 09:57:34.020785-06	\N	\N	\N	\N	\N	\N
+334	EsInf	poner	put		\N	put	\N	\N	\N	2018-06-24 09:57:34.021223-06	\N	\N	\N	\N	\N	\N
+335	EsInf	preguntar	ask		\N	asked	\N	\N	\N	2018-06-24 09:57:34.021846-06	\N	\N	\N	\N	\N	\N
+336	EsInf	querer	want		\N	wanted	\N	\N	\N	2018-06-24 09:57:34.022716-06	\N	\N	\N	\N	\N	\N
+337	EsInf	recordar	remember		\N	remembered	\N	\N	\N	2018-06-24 09:57:34.023446-06	\N	\N	\N	\N	\N	\N
+339	EsInf	salir	go out		\N	went out	\N	\N	\N	2018-06-24 09:57:34.02479-06	\N	\N	\N	\N	\N	\N
+340	EsInf	seguir	follow		\N	followed	\N	\N	\N	2018-06-24 09:57:34.025256-06	\N	\N	\N	\N	\N	\N
+341	EsInf	sentir	feel		\N	felt	\N	\N	\N	2018-06-24 09:57:34.026079-06	\N	\N	\N	\N	\N	\N
+343	EsInf	tener	have		\N	had	\N	\N	\N	2018-06-24 09:57:34.027222-06	\N	\N	\N	\N	\N	\N
+344	EsInf	trabajar	work		\N	worked	\N	\N	\N	2018-06-24 09:57:34.027967-06	\N	\N	\N	\N	\N	\N
+345	EsInf	ver	see		\N	saw	\N	\N	\N	2018-06-24 09:57:34.028806-06	\N	\N	\N	\N	\N	\N
+346	EsInf	venir	come		\N	came	\N	\N	\N	2018-06-24 09:57:34.029696-06	\N	\N	\N	\N	\N	\N
+347	EsInf	visitar	visit		\N	visited	\N	\N	\N	2018-06-24 09:57:34.030334-06	\N	\N	\N	\N	\N	\N
+348	EsInf	volver	return		\N	returned	\N	\N	\N	2018-06-24 09:57:34.031357-06	\N	\N	\N	\N	\N	\N
+349	EsInf	vivir	live		\N	lived	\N	\N	\N	2018-06-24 10:12:18.679112-06	\N	\N	\N	\N	\N	\N
+350	EsInf	asistir	attend		\N	attended	\N	\N	\N	2018-06-24 10:15:03.427516-06	\N	\N	\N	\N	\N	\N
+351	EsInf	mudar	move		\N	moved	\N	\N	\N	2018-06-24 10:16:29.743042-06	\N	\N	\N	\N	\N	\N
+352	EsInf	crear	create		\N	created	\N	\N	\N	2018-06-24 10:17:19.293622-06	\N	\N	\N	\N	\N	\N
+353	EsInf	estudiar	study		\N	studied	\N	\N	\N	2018-06-24 10:21:48.839702-06	\N	\N	\N	\N	\N	\N
+326	EsInf	estar	be	how	\N	was	\N	\N	\N	2018-06-24 09:57:34.012434-06	\N	\N	\N	\N	\N	\N
+318	EsInf	conocer	know	someone	\N	knew	\N	\N	\N	2018-06-24 09:57:33.986019-06	\N	\N	\N	\N	\N	\N
+338	EsInf	saber	know	something	\N	knew	\N	\N	\N	2018-06-24 09:57:34.024181-06	\N	\N	\N	\N	\N	\N
+342	EsInf	ser	be	what	\N	was	\N	\N	\N	2018-06-24 09:57:34.026682-06	\N	\N	\N	\N	\N	\N
+504	EsInf	vender	sell		\N	sold	\N	\N	\N	2018-06-27 16:05:02.651479-06	\N	\N	\N	\N	\N	\N
+509	EsInf	correr	run		\N	ran	\N	\N	\N	2018-06-27 16:13:24.686094-06	\N	\N	\N	\N	\N	\N
+510	EsInf	afuera	outside		\N		\N	\N	\N	2018-06-27 16:13:41.673097-06	\N	\N	\N	\N	\N	\N
+513	EsInf	crecer	grow up		\N	grew up	\N	\N	\N	2018-06-27 16:16:00.615531-06	\N	\N	\N	\N	\N	\N
+526	EsInf	practicar	practice		\N	practiced	\N	\N	\N	2018-07-17 08:27:34.682383-06	\N	\N	\N	\N	\N	\N
+527	EsInf	revisar	review		\N	reviewed	\N	\N	\N	2018-07-17 08:29:02.066228-06	\N	\N	\N	\N	\N	\N
+538	EsInf	haber	be	exist	\N	existed	\N	\N	\N	2018-07-17 08:44:14.793496-06	\N	\N	\N	\N	\N	\N
+544	EsInf	escuchar	listen		\N	listened	\N	\N	\N	2018-07-17 08:50:59.808615-06	\N	\N	\N	\N	\N	\N
+547	EsInf	necesitar	need		\N	needed	\N	\N	\N	2018-07-17 08:52:50.335987-06	\N	\N	\N	\N	\N	\N
+549	EsInf	usar	use		\N	used	\N	\N	\N	2018-07-17 08:54:22.907576-06	\N	\N	\N	\N	\N	\N
+554	EsInf	pertenecer	belong		\N	belonged	\N	\N	\N	2018-07-17 08:58:24.780015-06	\N	\N	\N	\N	\N	\N
+383	EsNonverb	tarde	afternoon		afternoons	\N	\N	\N	\N	2018-06-24 09:42:32.325038-06	\N	\N	\N	\N	\N	\N
+354	EsNonverb	brazo	arm		arms	\N	\N	\N	\N	2018-06-24 09:42:32.310062-06	\N	\N	\N	\N	\N	\N
+355	EsNonverb	pierna	leg		legs	\N	\N	\N	\N	2018-06-24 09:42:32.31134-06	\N	\N	\N	\N	\N	\N
+356	EsNonverb	corazón	heart		hearts	\N	\N	\N	\N	2018-06-24 09:42:32.311925-06	\N	\N	\N	\N	\N	\N
+357	EsNonverb	estómago	stomach		stomachs	\N	\N	\N	\N	2018-06-24 09:42:32.312547-06	\N	\N	\N	\N	\N	\N
+358	EsNonverb	ojo	eye		eyes	\N	\N	\N	\N	2018-06-24 09:42:32.313039-06	\N	\N	\N	\N	\N	\N
+359	EsNonverb	nariz	nose		noses	\N	\N	\N	\N	2018-06-24 09:42:32.313538-06	\N	\N	\N	\N	\N	\N
+360	EsNonverb	boca	mouth		mouths	\N	\N	\N	\N	2018-06-24 09:42:32.31404-06	\N	\N	\N	\N	\N	\N
+361	EsNonverb	oreja	ear		ears	\N	\N	\N	\N	2018-06-24 09:42:32.314516-06	\N	\N	\N	\N	\N	\N
+362	EsNonverb	cara	face		faces	\N	\N	\N	\N	2018-06-24 09:42:32.314983-06	\N	\N	\N	\N	\N	\N
+363	EsNonverb	cuello	neck		necks	\N	\N	\N	\N	2018-06-24 09:42:32.315436-06	\N	\N	\N	\N	\N	\N
+364	EsNonverb	dedo	finger		fingers	\N	\N	\N	\N	2018-06-24 09:42:32.315907-06	\N	\N	\N	\N	\N	\N
+365	EsNonverb	pie	foot		feet	\N	\N	\N	\N	2018-06-24 09:42:32.316363-06	\N	\N	\N	\N	\N	\N
+366	EsNonverb	muslo	thigh		thighs	\N	\N	\N	\N	2018-06-24 09:42:32.316797-06	\N	\N	\N	\N	\N	\N
+367	EsNonverb	tobillo	ankle		ankles	\N	\N	\N	\N	2018-06-24 09:42:32.317247-06	\N	\N	\N	\N	\N	\N
+368	EsNonverb	codo	elbow		elbows	\N	\N	\N	\N	2018-06-24 09:42:32.317698-06	\N	\N	\N	\N	\N	\N
+369	EsNonverb	muñeca	wrist		wrists	\N	\N	\N	\N	2018-06-24 09:42:32.318139-06	\N	\N	\N	\N	\N	\N
+370	EsNonverb	cuerpo	body		bodies	\N	\N	\N	\N	2018-06-24 09:42:32.318608-06	\N	\N	\N	\N	\N	\N
+371	EsNonverb	diente	tooth		tooths	\N	\N	\N	\N	2018-06-24 09:42:32.319075-06	\N	\N	\N	\N	\N	\N
+372	EsNonverb	mano	hand		hands	\N	\N	\N	\N	2018-06-24 09:42:32.319518-06	\N	\N	\N	\N	\N	\N
+373	EsNonverb	espalda	back		backs	\N	\N	\N	\N	2018-06-24 09:42:32.31995-06	\N	\N	\N	\N	\N	\N
+374	EsNonverb	cadera	hip		hips	\N	\N	\N	\N	2018-06-24 09:42:32.320412-06	\N	\N	\N	\N	\N	\N
+375	EsNonverb	mandíbula	jaw		jaws	\N	\N	\N	\N	2018-06-24 09:42:32.320864-06	\N	\N	\N	\N	\N	\N
+376	EsNonverb	hombro	shoulder		shoulders	\N	\N	\N	\N	2018-06-24 09:42:32.321315-06	\N	\N	\N	\N	\N	\N
+377	EsNonverb	pulgar	thumb		thumbs	\N	\N	\N	\N	2018-06-24 09:42:32.321761-06	\N	\N	\N	\N	\N	\N
+378	EsNonverb	lengua	tongue		tongues	\N	\N	\N	\N	2018-06-24 09:42:32.322202-06	\N	\N	\N	\N	\N	\N
+379	EsNonverb	garganta	throat		throats	\N	\N	\N	\N	2018-06-24 09:42:32.322985-06	\N	\N	\N	\N	\N	\N
+380	EsNonverb	español	Spanish		\N	\N	\N	\N	\N	2018-06-24 09:42:32.323407-06	\N	\N	\N	\N	\N	\N
+381	EsNonverb	inglés	English		\N	\N	\N	\N	\N	2018-06-24 09:42:32.323906-06	\N	\N	\N	\N	\N	\N
+382	EsNonverb	día	day		days	\N	\N	\N	\N	2018-06-24 09:42:32.324572-06	\N	\N	\N	\N	\N	\N
+384	EsNonverb	ingeniero	engineer		engineers	\N	\N	\N	\N	2018-06-24 09:42:32.325593-06	\N	\N	\N	\N	\N	\N
+385	EsNonverb	lista	list		lists	\N	\N	\N	\N	2018-06-24 09:42:32.326072-06	\N	\N	\N	\N	\N	\N
+386	EsNonverb	oración	sentence		sentences	\N	\N	\N	\N	2018-06-24 09:42:32.326465-06	\N	\N	\N	\N	\N	\N
+387	EsNonverb	bueno	good	masc.	good	\N	\N	\N	\N	2018-06-24 09:42:32.326926-06	\N	\N	\N	\N	\N	\N
+388	EsNonverb	buena	good	fem.	good	\N	\N	\N	\N	2018-06-24 09:42:32.327412-06	\N	\N	\N	\N	\N	\N
+389	EsNonverb	el	the	masc.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.327897-06	\N	\N	\N	\N	\N	\N
+390	EsNonverb	la	the	fem.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.32839-06	\N	\N	\N	\N	\N	\N
+391	EsNonverb	un	a	masc.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.328869-06	\N	\N	\N	\N	\N	\N
+392	EsNonverb	una	a	fem.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.329419-06	\N	\N	\N	\N	\N	\N
+393	EsNonverb	mi	my		\N	\N	\N	\N	\N	2018-06-24 09:42:32.329823-06	\N	\N	\N	\N	\N	\N
+394	EsNonverb	este	this	masc.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.330276-06	\N	\N	\N	\N	\N	\N
+395	EsNonverb	esta	this	fem.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33074-06	\N	\N	\N	\N	\N	\N
+396	EsNonverb	cada	every		\N	\N	\N	\N	\N	2018-06-24 09:42:32.331212-06	\N	\N	\N	\N	\N	\N
+397	EsNonverb	cómo	how		\N	\N	\N	\N	\N	2018-06-24 09:42:32.331646-06	\N	\N	\N	\N	\N	\N
+398	EsNonverb	bien	well		\N	\N	\N	\N	\N	2018-06-24 09:42:32.332094-06	\N	\N	\N	\N	\N	\N
+399	EsNonverb	yo	I		\N	\N	\N	\N	\N	2018-06-24 09:42:32.332558-06	\N	\N	\N	\N	\N	\N
+400	EsNonverb	tú	you	pronoun	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33304-06	\N	\N	\N	\N	\N	\N
+401	EsNonverb	él	he		\N	\N	\N	\N	\N	2018-06-24 09:42:32.33464-06	\N	\N	\N	\N	\N	\N
+402	EsNonverb	ella	she		\N	\N	\N	\N	\N	2018-06-24 09:42:32.335082-06	\N	\N	\N	\N	\N	\N
+403	EsNonverb	nosotros	we	masc.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.335483-06	\N	\N	\N	\N	\N	\N
+404	EsNonverb	nosotras	we	fem.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.335885-06	\N	\N	\N	\N	\N	\N
+405	EsNonverb	ellos	they	masc.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.33628-06	\N	\N	\N	\N	\N	\N
+406	EsNonverb	ellas	they	fem.	\N	\N	\N	\N	\N	2018-06-24 09:42:32.336675-06	\N	\N	\N	\N	\N	\N
+407	EsNonverb	qué	what		\N	\N	\N	\N	\N	2018-06-24 09:42:32.337066-06	\N	\N	\N	\N	\N	\N
+408	EsNonverb	hola	hello		\N	\N	\N	\N	\N	2018-06-24 09:42:32.337468-06	\N	\N	\N	\N	\N	\N
+409	EsNonverb	de	of		\N	\N	\N	\N	\N	2018-06-24 09:42:32.337867-06	\N	\N	\N	\N	\N	\N
+410	EsNonverb	dónde	where	question	\N	\N	\N	\N	\N	2018-06-24 09:42:32.338256-06	\N	\N	\N	\N	\N	\N
+411	EsNonverb	donde	where	relative	\N	\N	\N	\N	\N	2018-06-24 09:42:32.338645-06	\N	\N	\N	\N	\N	\N
+412	EsNonverb	software	software		\N	\N	\N	\N	\N	2018-06-24 09:42:32.339084-06	\N	\N	\N	\N	\N	\N
+413	EsNonverb	con	with		\N	\N	\N	\N	\N	2018-06-24 09:42:32.339496-06	\N	\N	\N	\N	\N	\N
+414	EsNonverb	quién	who		\N	\N	\N	\N	\N	2018-06-24 09:42:32.339963-06	\N	\N	\N	\N	\N	\N
+416	EsNonverb	te	you	direct/indirect object	\N	\N	\N	\N	\N	2018-06-24 09:42:32.340855-06	\N	\N	\N	\N	\N	\N
+417	EsNonverb	Longmont	Longmont		\N	\N	\N	\N	\N	2018-06-24 10:12:57.81832-06	\N	\N	\N	\N	\N	\N
+418	EsNonverb	Cuba	Cuba		\N	\N	\N	\N	\N	2018-06-24 10:14:14.159249-06	\N	\N	\N	\N	\N	\N
+420	EsNonverb	por	for	on behalf of	\N	\N	\N	\N	\N	2018-06-24 10:18:21.748271-06	\N	\N	\N	\N	\N	\N
+421	EsNonverb	para	for	in order to	\N	\N	\N	\N	\N	2018-06-24 10:18:37.720114-06	\N	\N	\N	\N	\N	\N
+422	EsNonverb	clase	class		classes	\N	\N	\N	\N	2018-06-24 10:18:54.790579-06	\N	\N	\N	\N	\N	\N
+423	EsNonverb	enero	January		\N	\N	\N	\N	\N	2018-06-24 10:19:36.45117-06	\N	\N	\N	\N	\N	\N
+424	EsNonverb	aplicación	application		applications	\N	\N	\N	\N	2018-06-24 10:19:47.157449-06	\N	\N	\N	\N	\N	\N
+425	EsNonverb	unos	some	masc.	\N	\N	\N	\N	\N	2018-06-24 10:20:00.535063-06	\N	\N	\N	\N	\N	\N
+426	EsNonverb	unas	some	fem.	\N	\N	\N	\N	\N	2018-06-24 10:20:07.365061-06	\N	\N	\N	\N	\N	\N
+427	EsNonverb	móvil	mobile phone		mobile phones	\N	\N	\N	\N	2018-06-24 10:20:48.975803-06	\N	\N	\N	\N	\N	\N
+428	EsNonverb	semana	week		weeks	\N	\N	\N	\N	2018-06-24 10:21:05.140751-06	\N	\N	\N	\N	\N	\N
+497	EsNonverb	piel	skin		\N	\N	\N	\N	\N	2018-06-26 20:37:34.949585-06	\N	\N	\N	\N	\N	\N
+419	EsNonverb	a	to	toward	\N	\N	\N	\N	\N	2018-06-24 10:16:56.797247-06	\N	\N	\N	\N	\N	\N
+415	EsNonverb	me	me	to me	\N	\N	\N	\N	\N	2018-06-24 09:42:32.340438-06	\N	\N	\N	\N	\N	\N
+498	EsNonverb	en	in/on		\N	\N	\N	\N	\N	2018-06-27 13:09:57.624981-06	\N	\N	\N	\N	\N	\N
+499	EsNonverb	prueba	test		tests	\N	\N	\N	\N	2018-06-27 15:35:58.629886-06	\N	\N	\N	\N	\N	\N
+500	EsNonverb	feliz	happy		\N	\N	\N	\N	\N	2018-06-27 16:00:33.653382-06	\N	\N	\N	\N	\N	\N
+501	EsNonverb	solo	alone		\N	\N	\N	\N	\N	2018-06-27 16:01:16.754582-06	\N	\N	\N	\N	\N	\N
+502	EsNonverb	triste	sad		\N	\N	\N	\N	\N	2018-06-27 16:02:01.449627-06	\N	\N	\N	\N	\N	\N
+503	EsNonverb	ya	yet		\N	\N	\N	\N	\N	2018-06-27 16:04:47.506244-06	\N	\N	\N	\N	\N	\N
+505	EsNonverb	casa	house		houses	\N	\N	\N	\N	2018-06-27 16:06:23.119046-06	\N	\N	\N	\N	\N	\N
+506	EsNonverb	almuerzo	lunch		lunches	\N	\N	\N	\N	2018-06-27 16:10:03.657745-06	\N	\N	\N	\N	\N	\N
+507	EsNonverb	hoy	today		\N	\N	\N	\N	\N	2018-06-27 16:10:22.676819-06	\N	\N	\N	\N	\N	\N
+508	EsNonverb	demasiado	too much		\N	\N	\N	\N	\N	2018-06-27 16:11:43.342318-06	\N	\N	\N	\N	\N	\N
+511	EsNonverb	porqué	why		\N	\N	\N	\N	\N	2018-06-27 16:14:22.939146-06	\N	\N	\N	\N	\N	\N
+512	EsNonverb	Pennsylvania	Pennsylvania		\N	\N	\N	\N	\N	2018-06-27 16:15:45.409633-06	\N	\N	\N	\N	\N	\N
+514	EsNonverb	aquí	here		\N	\N	\N	\N	\N	2018-06-27 16:17:37.925483-06	\N	\N	\N	\N	\N	\N
+515	EsNonverb	lo	him		\N	\N	\N	\N	\N	2018-06-27 16:21:02.916295-06	\N	\N	\N	\N	\N	\N
+516	EsNonverb	esa	that	fem.	\N	\N	\N	\N	\N	2018-06-27 16:34:31.058747-06	\N	\N	\N	\N	\N	\N
+517	EsNonverb	cuenta	account		accounts	\N	\N	\N	\N	2018-06-27 16:34:39.097297-06	\N	\N	\N	\N	\N	\N
+518	EsNonverb	no	not		\N	\N	\N	\N	\N	2018-06-27 16:35:32.851134-06	\N	\N	\N	\N	\N	\N
+519	EsNonverb	juego	game		games	\N	\N	\N	\N	2018-06-27 16:36:31.585454-06	\N	\N	\N	\N	\N	\N
+520	EsNonverb	que	that		\N	\N	\N	\N	\N	2018-06-27 16:36:37.387123-06	\N	\N	\N	\N	\N	\N
+521	EsNonverb	perfil	profile		profiles	\N	\N	\N	\N	2018-06-27 16:38:19.183428-06	\N	\N	\N	\N	\N	\N
+522	EsNonverb	tres	three		\N	\N	\N	\N	\N	2018-06-27 16:41:20.489311-06	\N	\N	\N	\N	\N	\N
+523	EsNonverb	vez	time	occasion	times	\N	\N	\N	\N	2018-06-27 16:42:00.67647-06	\N	\N	\N	\N	\N	\N
+524	EsNonverb	programa	program		programs	\N	\N	\N	\N	2018-07-17 08:24:58.585589-06	\N	\N	\N	\N	\N	\N
+525	EsNonverb	proyecto	project		projects	\N	\N	\N	\N	2018-07-17 08:26:04.045616-06	\N	\N	\N	\N	\N	\N
+528	EsNonverb	memoria	memory		memories	\N	\N	\N	\N	2018-07-17 08:29:22.454611-06	\N	\N	\N	\N	\N	\N
+529	EsNonverb	tarjeta	card		cards	\N	\N	\N	\N	2018-07-17 08:29:33.244463-06	\N	\N	\N	\N	\N	\N
+530	EsNonverb	diferente	different		\N	\N	\N	\N	\N	2018-07-17 08:30:09.528205-06	\N	\N	\N	\N	\N	\N
+531	EsNonverb	las	the	fem. pl.	\N	\N	\N	\N	\N	2018-07-17 08:32:06.026733-06	\N	\N	\N	\N	\N	\N
+532	EsNonverb	los	the	masc. pl.	\N	\N	\N	\N	\N	2018-07-17 08:32:19.32709-06	\N	\N	\N	\N	\N	\N
+534	EsNonverb	otra	other	fem.	others	\N	\N	\N	\N	2018-07-17 08:33:31.661991-06	\N	\N	\N	\N	\N	\N
+533	EsNonverb	otro	other	masc.	others	\N	\N	\N	\N	2018-07-17 08:32:38.307387-06	\N	\N	\N	\N	\N	\N
+535	EsNonverb	persona	person		persons	\N	\N	\N	\N	2018-07-17 08:35:10.365693-06	\N	\N	\N	\N	\N	\N
+536	EsNonverb	aprendizaje	learning		learnings	\N	\N	\N	\N	2018-07-17 08:40:55.205649-06	\N	\N	\N	\N	\N	\N
+542	EsNonverb	mucho	many		many	\N	\N	\N	\N	2018-07-17 08:48:32.554069-06	\N	\N	\N	\N	\N	\N
+543	EsNonverb	idioma	language		languages	\N	\N	\N	\N	2018-07-17 08:49:33.488019-06	\N	\N	\N	\N	\N	\N
+546	EsNonverb	ejemplo	example		examples	\N	\N	\N	\N	2018-07-17 08:51:50.906959-06	\N	\N	\N	\N	\N	\N
+548	EsNonverb	se	itself		\N	\N	\N	\N	\N	2018-07-17 08:54:04.413751-06	\N	\N	\N	\N	\N	\N
+550	EsNonverb	palabra	word		words	\N	\N	\N	\N	2018-07-17 08:54:42.693204-06	\N	\N	\N	\N	\N	\N
+551	EsNonverb	cuál	which		\N	\N	\N	\N	\N	2018-07-17 08:55:57.61761-06	\N	\N	\N	\N	\N	\N
+552	EsNonverb	contexto	context		contexts	\N	\N	\N	\N	2018-07-17 08:56:04.870809-06	\N	\N	\N	\N	\N	\N
+555	EsNonverb	perdón	pardon		pardons	\N	\N	\N	\N	2018-08-31 19:08:04.939549-06	\N	\N	\N	\N	\N	\N
+557	EsNonverb	usted	you	formal	you all	\N	\N	\N	\N	2018-08-31 19:10:16.458494-06	\N	\N	\N	\N	\N	\N
+559	EsNonverb	sí	yes		\N	\N	\N	\N	\N	2018-08-31 19:12:58.323924-06	\N	\N	\N	\N	\N	\N
+561	EsNonverb	muy	very		\N	\N	\N	\N	\N	2018-08-31 19:14:08.859179-06	\N	\N	\N	\N	\N	\N
+562	EsNonverb	gracias	thanks		\N	\N	\N	\N	\N	2018-08-31 19:15:21.864223-06	\N	\N	\N	\N	\N	\N
+563	EsNonverb	adiós	bye		\N	\N	\N	\N	\N	2018-08-31 19:16:02.683832-06	\N	\N	\N	\N	\N	\N
+564	EsNonverb	señorita	miss		\N	\N	\N	\N	\N	2018-08-31 19:16:19.062648-06	\N	\N	\N	\N	\N	\N
+560	EsNonverb	poco	little bit		\N	\N	\N	\N	\N	2018-08-31 19:13:10.526737-06	\N	\N	\N	\N	\N	\N
+565	EsNonverb	castellano	Castilian		Castilians	\N	\N	\N	\N	2018-09-01 16:35:55.371716-06	\N	\N	\N	\N	\N	\N
+558	EsNonverb	norteamericano	American	masc.	Americans	\N	\N	\N	\N	2018-08-31 19:11:52.624789-06	\N	\N	\N	\N	\N	\N
+566	EsNonverb	norteamericana	American	fem.	Americans	\N	\N	\N	\N	2018-09-01 16:49:51.953022-06	\N	\N	\N	\N	\N	\N
+567	EsNonverb	Chicago	Chicago		\N	\N	\N	\N	\N	2018-09-01 17:09:14.52525-06	\N	\N	\N	\N	\N	\N
+568	EsNonverb	señor	gentleman		gentlemen	\N	\N	\N	\N	2018-09-01 17:12:59.624633-06	\N	\N	\N	\N	\N	\N
+556	EsNonverb	señora	lady, ma'am, Mrs.		\N	\N	\N	\N	\N	2018-08-31 19:09:02.783478-06	\N	\N	\N	\N	\N	\N
+569	EsNonverb	noche	night		nights	\N	\N	\N	\N	2018-09-01 17:18:56.997228-06	\N	\N	\N	\N	\N	\N
+570	EsNonverb	México	Mexico		Mexicos	\N	\N	\N	\N	2018-09-01 17:20:15.384115-06	\N	\N	\N	\N	\N	\N
+571	EsNonverb	Norteamérica	America		Americas	\N	\N	\N	\N	2018-09-01 17:20:47.315399-06	\N	\N	\N	\N	\N	\N
+572	EsNonverb	Bolivia	Bolivia		Bolivias	\N	\N	\N	\N	2018-09-01 17:21:09.264117-06	\N	\N	\N	\N	\N	\N
+573	EsNonverb	García	Garcia		Garcias	\N	\N	\N	\N	2018-09-01 17:21:42.800262-06	\N	\N	\N	\N	\N	\N
+574	EsNonverb	Jones	Jones		\N	\N	\N	\N	\N	2018-09-01 17:22:05.963736-06	\N	\N	\N	\N	\N	\N
+575	EsNonverb	angel	angel		angels	\N	\N	\N	\N	2018-09-01 17:24:16.356883-06	\N	\N	\N	\N	\N	\N
+429	EsStemChange	pued-	can		\N	could	\N	\N	PRES	2018-06-24 11:26:43.651439-06	333	\N	\N	\N	\N	\N
+430	EsStemChange	tien-	have		\N	had	\N	\N	PRES	2018-06-24 11:26:43.803834-06	343	\N	\N	\N	\N	\N
+431	EsStemChange	quier-	want		\N	wanted	\N	\N	PRES	2018-06-24 11:26:43.804733-06	336	\N	\N	\N	\N	\N
+432	EsStemChange	sig-	follow		\N	followed	\N	\N	PRES	2018-06-24 11:26:43.805456-06	340	\N	\N	\N	\N	\N
+433	EsStemChange	encuentr-	find		\N	found	\N	\N	PRES	2018-06-24 11:26:43.806086-06	323	\N	\N	\N	\N	\N
+434	EsStemChange	vien-	come		\N	came	\N	\N	PRES	2018-06-24 11:26:43.806698-06	346	\N	\N	\N	\N	\N
+435	EsStemChange	piens-	think		\N	thought	\N	\N	PRES	2018-06-24 11:26:43.807283-06	332	\N	\N	\N	\N	\N
+436	EsStemChange	vuelv-	return		\N	returned	\N	\N	PRES	2018-06-24 11:26:43.807795-06	348	\N	\N	\N	\N	\N
+437	EsStemChange	sient-	feel		\N	felt	\N	\N	PRES	2018-06-24 11:26:43.808329-06	341	\N	\N	\N	\N	\N
+438	EsStemChange	cuent-	tell		\N	told	\N	\N	PRES	2018-06-24 11:26:43.808861-06	319	\N	\N	\N	\N	\N
+439	EsStemChange	empiez-	start		\N	started	\N	\N	PRES	2018-06-24 11:26:43.809358-06	322	\N	\N	\N	\N	\N
+440	EsStemChange	dic-	say		\N	said	\N	\N	PRES	2018-06-24 11:26:43.809844-06	321	\N	\N	\N	\N	\N
+441	EsStemChange	recuerd-	remember		\N	remembered	\N	\N	PRES	2018-06-24 11:26:43.810424-06	337	\N	\N	\N	\N	\N
+442	EsStemChange	pid-	request		\N	requested	\N	\N	PRES	2018-06-24 11:26:43.81091-06	331	\N	\N	\N	\N	\N
+443	EsStemChange	entiend-	understand		\N	understood	\N	\N	PRES	2018-06-24 11:26:43.811642-06	324	\N	\N	\N	\N	\N
+444	EsStemChange	anduv-	walk		\N	walked	\N	\N	PRET	2018-06-24 11:26:43.812328-06	315	\N	\N	\N	\N	\N
+445	EsStemChange	sup-	know		\N	knew	\N	\N	PRET	2018-06-24 11:26:43.812976-06	338	\N	\N	\N	\N	\N
+446	EsStemChange	quis-	want		\N	wanted	\N	\N	PRET	2018-06-24 11:26:43.81373-06	336	\N	\N	\N	\N	\N
+447	EsStemChange	pus-	put		\N	put	\N	\N	PRET	2018-06-24 11:26:43.814224-06	334	\N	\N	\N	\N	\N
+448	EsStemChange	vin-	come		\N	came	\N	\N	PRET	2018-06-24 11:26:43.814936-06	346	\N	\N	\N	\N	\N
+449	EsStemChange	dij-	say		\N	said	\N	\N	PRET	2018-06-24 11:26:43.815792-06	321	\N	\N	\N	\N	\N
+450	EsStemChange	tuv-	have		\N	had	\N	\N	PRET	2018-06-24 11:26:43.816356-06	343	\N	\N	\N	\N	\N
+451	EsStemChange	hic-	do		\N	did	\N	\N	PRET	2018-06-24 11:26:43.816942-06	328	\N	\N	\N	\N	\N
+452	EsStemChange	pud-	can		\N	could	\N	\N	PRET	2018-06-24 11:26:43.817449-06	333	\N	\N	\N	\N	\N
+467	EsUniqV	tengo	have		\N	\N	1	1	PRES	2018-06-24 10:53:11.341841-06	343	\N	\N	\N	\N	\N
+468	EsUniqV	hago	do		\N	\N	1	1	PRES	2018-06-24 10:53:11.342385-06	328	\N	\N	\N	\N	\N
+469	EsUniqV	digo	say		\N	\N	1	1	PRES	2018-06-24 10:53:11.34283-06	321	\N	\N	\N	\N	\N
+470	EsUniqV	dijeron	said		\N	\N	2	3	PRET	2018-06-24 10:53:11.343357-06	321	\N	\N	\N	\N	\N
+471	EsUniqV	voy	go		\N	\N	1	1	PRES	2018-06-24 10:53:11.343851-06	329	\N	\N	\N	\N	\N
+472	EsUniqV	vas	go		\N	\N	1	2	PRES	2018-06-24 10:53:11.344385-06	329	\N	\N	\N	\N	\N
+473	EsUniqV	va	goes		\N	\N	1	3	PRES	2018-06-24 10:53:11.34485-06	329	\N	\N	\N	\N	\N
+474	EsUniqV	vamos	go		\N	\N	2	1	PRES	2018-06-24 10:53:11.345309-06	329	\N	\N	\N	\N	\N
+475	EsUniqV	van	go		\N	\N	2	3	PRES	2018-06-24 10:53:11.345931-06	329	\N	\N	\N	\N	\N
+476	EsUniqV	veo	see		\N	\N	1	1	PRES	2018-06-24 10:53:11.346443-06	345	\N	\N	\N	\N	\N
+477	EsUniqV	vi	saw		\N	\N	1	1	PRET	2018-06-24 10:53:11.346938-06	345	\N	\N	\N	\N	\N
+478	EsUniqV	vio	saw		\N	\N	1	3	PRET	2018-06-24 10:53:11.347455-06	345	\N	\N	\N	\N	\N
+479	EsUniqV	vimos	saw		\N	\N	2	1	PRET	2018-06-24 10:53:11.347861-06	345	\N	\N	\N	\N	\N
+480	EsUniqV	doy	give		\N	\N	1	1	PRES	2018-06-24 10:53:11.348332-06	320	\N	\N	\N	\N	\N
+481	EsUniqV	di	gave		\N	\N	1	1	PRET	2018-06-24 10:53:11.348782-06	320	\N	\N	\N	\N	\N
+482	EsUniqV	diste	gave		\N	\N	1	2	PRET	2018-06-24 10:53:11.349211-06	320	\N	\N	\N	\N	\N
+483	EsUniqV	dio	gave		\N	\N	1	3	PRET	2018-06-24 10:53:11.349614-06	320	\N	\N	\N	\N	\N
+484	EsUniqV	dimos	gave		\N	\N	2	1	PRET	2018-06-24 10:53:11.349999-06	320	\N	\N	\N	\N	\N
+485	EsUniqV	dieron	gave		\N	\N	2	3	PRET	2018-06-24 10:53:11.350387-06	320	\N	\N	\N	\N	\N
+486	EsUniqV	sé	know		\N	\N	1	1	PRES	2018-06-24 10:53:11.350775-06	338	\N	\N	\N	\N	\N
+487	EsUniqV	pongo	put		\N	\N	1	1	PRES	2018-06-24 10:53:11.351199-06	334	\N	\N	\N	\N	\N
+488	EsUniqV	vengo	come		\N	\N	1	1	PRES	2018-06-24 10:53:11.351597-06	346	\N	\N	\N	\N	\N
+489	EsUniqV	salgo	go out		\N	\N	1	1	PRES	2018-06-24 10:53:11.351985-06	339	\N	\N	\N	\N	\N
+490	EsUniqV	parezco	look like		\N	\N	1	1	PRES	2018-06-24 10:53:11.352406-06	330	\N	\N	\N	\N	\N
+491	EsUniqV	conozco	know		\N	\N	1	1	PRES	2018-06-24 10:53:11.352811-06	318	\N	\N	\N	\N	\N
+492	EsUniqV	empecé	started		\N	\N	1	1	PRET	2018-06-24 10:53:11.353348-06	322	\N	\N	\N	\N	\N
+493	EsUniqV	envío	sent		\N	\N	1	1	PRES	2018-06-24 10:53:11.354736-06	325	\N	\N	\N	\N	\N
+494	EsUniqV	envías	sent		\N	\N	1	2	PRES	2018-06-24 10:53:11.355389-06	325	\N	\N	\N	\N	\N
+495	EsUniqV	envía	sent		\N	\N	1	3	PRES	2018-06-24 10:53:11.355845-06	325	\N	\N	\N	\N	\N
+496	EsUniqV	envían	sent		\N	\N	2	1	PRES	2018-06-24 10:53:11.356343-06	325	\N	\N	\N	\N	\N
+453	EsUniqV	soy	am	what	\N	\N	1	1	PRES	2018-06-24 10:53:11.331513-06	342	\N	\N	\N	\N	\N
+454	EsUniqV	eres	are	what	\N	\N	1	2	PRES	2018-06-24 10:53:11.334102-06	342	\N	\N	\N	\N	\N
+455	EsUniqV	es	is	what	\N	\N	1	3	PRES	2018-06-24 10:53:11.334799-06	342	\N	\N	\N	\N	\N
+456	EsUniqV	somos	are	what	\N	\N	2	1	PRES	2018-06-24 10:53:11.335596-06	342	\N	\N	\N	\N	\N
+457	EsUniqV	son	are	what	\N	\N	2	3	PRES	2018-06-24 10:53:11.336235-06	342	\N	\N	\N	\N	\N
+458	EsUniqV	fui	was	what	\N	\N	1	1	PRET	2018-06-24 10:53:11.336833-06	342	\N	\N	\N	\N	\N
+459	EsUniqV	fuiste	were	what	\N	\N	1	2	PRET	2018-06-24 10:53:11.337566-06	342	\N	\N	\N	\N	\N
+460	EsUniqV	fue	was	what	\N	\N	1	3	PRET	2018-06-24 10:53:11.338114-06	342	\N	\N	\N	\N	\N
+461	EsUniqV	fuimos	were	what	\N	\N	2	1	PRET	2018-06-24 10:53:11.338658-06	342	\N	\N	\N	\N	\N
+462	EsUniqV	fueron	were	what	\N	\N	2	3	PRET	2018-06-24 10:53:11.339177-06	342	\N	\N	\N	\N	\N
+463	EsUniqV	estoy	am	how	\N	\N	1	1	PRES	2018-06-24 10:53:11.339723-06	326	\N	\N	\N	\N	\N
+464	EsUniqV	estás	are	how	\N	\N	1	2	PRES	2018-06-24 10:53:11.340233-06	326	\N	\N	\N	\N	\N
+465	EsUniqV	está	is	how	\N	\N	1	3	PRES	2018-06-24 10:53:11.340796-06	326	\N	\N	\N	\N	\N
+466	EsUniqV	están	are	how	\N	\N	2	3	PRES	2018-06-24 10:53:11.341339-06	326	\N	\N	\N	\N	\N
+539	EsUniqV	hay	is	exists	\N	\N	1	3	PRES	2018-07-17 08:45:19.386968-06	538	\N	\N	\N	\N	\N
+582	FrInf	\N	be	\N	\N	was	\N	\N	\N	2018-09-02 16:18:34.96525-06	\N	être	\N	\N	\N	\N
+583	FrUniqV	\N	am	\N	\N	\N	1	1	PRES	2018-09-02 16:18:57.751959-06	582	suis	\N	\N	\N	\N
+584	FrUniqV	\N	are	\N	\N	\N	1	2	PRES	2018-09-02 16:19:23.37562-06	582	es	\N	\N	\N	\N
+585	FrUniqV	\N	is	\N	\N	\N	1	3	PRES	2018-09-02 16:19:36.769782-06	582	est	\N	\N	\N	\N
+586	FrUniqV	\N	are	\N	\N	\N	2	1	PRES	2018-09-02 16:20:04.263868-06	582	sommes	\N	\N	\N	\N
+587	FrUniqV	\N	are	\N	\N	\N	2	2	PRES	2018-09-02 16:20:16.369155-06	582	êtes	\N	\N	\N	\N
+588	FrUniqV	\N	are	\N	\N	\N	2	3	PRES	2018-09-02 16:20:32.375836-06	582	sont	\N	\N	\N	\N
+589	FrNonverb	\N	I/me	\N	\N	\N	\N	\N	\N	2018-09-02 16:46:53.784662-06	\N	je	\N	\N	\N	\N
+590	FrNonverb	\N	you	\N	\N	\N	\N	\N	\N	2018-09-02 16:48:08.846709-06	\N	tu	\N	\N	\N	\N
+591	FrNonverb	\N	he	\N	\N	\N	\N	\N	\N	2018-09-02 16:48:38.39048-06	\N	il	\N	\N	\N	\N
+592	FrNonverb	\N	she	\N	\N	\N	\N	\N	\N	2018-09-02 16:48:59.888882-06	\N	elle	\N	\N	\N	\N
+593	FrNonverb	\N	we	\N	\N	\N	\N	\N	\N	2018-09-02 16:49:20.063779-06	\N	nous	\N	\N	\N	\N
+594	FrNonverb	\N	you all	\N	\N	\N	\N	\N	\N	2018-09-02 16:49:52.683555-06	\N	vous	\N	\N	\N	\N
+595	FrNonverb	\N	they (masc.)	\N	\N	\N	\N	\N	\N	2018-09-02 16:50:59.541744-06	\N	ils	\N	\N	\N	\N
+596	FrNonverb	\N	they (fem.)	\N	\N	\N	\N	\N	\N	2018-09-02 16:51:13.343919-06	\N	elles	\N	\N	\N	\N
+597	FrInf	\N	go	\N	\N	went	\N	\N	\N	2018-09-02 16:51:54.849762-06	\N	aller	\N	\N	\N	\N
+598	FrUniqV	\N	go	\N	\N	\N	1	1	PRES	2018-09-02 16:52:10.070708-06	597	vais	\N	\N	\N	\N
+599	FrUniqV	\N	go	\N	\N	\N	1	2	PRES	2018-09-02 16:52:24.04008-06	597	vas	\N	\N	\N	\N
+600	FrUniqV	\N	goes	\N	\N	\N	1	3	PRES	2018-09-02 16:53:00.013994-06	597	va	\N	\N	\N	\N
+601	FrUniqV	\N	go	\N	\N	\N	2	1	PRES	2018-09-02 16:53:22.421248-06	597	allons	\N	\N	\N	\N
+602	FrUniqV	\N	go	\N	\N	\N	2	2	PRES	2018-09-02 16:53:32.464416-06	597	allez	\N	\N	\N	\N
+603	FrUniqV	\N	go	\N	\N	\N	2	3	PRES	2018-09-02 16:53:42.408866-06	597	vont	\N	\N	\N	\N
+604	FrNonverb	\N	how	\N	\N	\N	\N	\N	\N	2018-09-02 16:54:37.497641-06	\N	comment	\N	\N	\N	\N
+605	FrNonverb	\N	it	\N	\N	\N	\N	\N	\N	2018-09-02 16:54:37.500128-06	\N	ça	\N	\N	\N	\N
+606	FrNonverb	\N	very	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:18.434126-06	\N	très	\N	\N	\N	\N
+607	FrNonverb	\N	well	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:18.441939-06	\N	bien	\N	\N	\N	\N
+608	FrNonverb	\N	thanks	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:18.4482-06	\N	merci	\N	\N	\N	\N
+609	FrNonverb	\N	and	\N	\N	\N	\N	\N	\N	2018-09-02 16:55:45.691008-06	\N	et	\N	\N	\N	\N
+610	FrInf	\N	speak	\N	\N	spoke	\N	\N	\N	2018-09-02 17:17:28.346519-06	\N	parler	\N	\N	\N	\N
+611	FrInf	\N	call	\N	\N	called	\N	\N	\N	2018-09-03 01:26:22.431007-06	\N	appeler	\N	\N	\N	\N
+613	FrStemChange	\N	call	\N	\N	called	\N	\N	PRES	2018-09-03 01:31:58.545072-06	611	appell-	\N	\N	\N	\N
+614	FrNonverb	\N	me	\N	\N	\N	\N	\N	\N	2018-09-03 09:03:17.7684-06	\N	me	\N	\N	\N	\N
+615	FrNonverb	\N	Pat	\N	\N	\N	\N	\N	\N	2018-09-03 09:03:17.81668-06	\N	Pat	\N	\N	\N	\N
+616	FrNonverb	\N	me	\N	\N	\N	\N	\N	\N	2018-09-03 09:06:47.13204-06	\N	m'	\N	\N	\N	\N
+617	FrNonverb	\N	enchanted	\N	\N	\N	\N	\N	\N	2018-09-03 10:13:44.461449-06	\N	enchanté	\N	\N	\N	\N
+618	FrInf	\N	come	\N	\N	came	\N	\N	\N	2018-09-03 10:15:07.839627-06	\N	venir	\N	\N	\N	\N
+619	FrStemChange	\N	come	\N	\N	came	\N	\N	PRES	2018-09-03 10:15:30.875707-06	618	vien-	\N	\N	\N	\N
+620	FrNonverb	\N	from	\N	\N	\N	\N	\N	\N	2018-09-03 10:38:12.118663-06	\N	d'	\N	\N	\N	\N
+621	FrNonverb	\N	where	\N	\N	\N	\N	\N	\N	2018-09-03 10:38:12.144859-06	\N	où	\N	\N	\N	\N
+623	FrNonverb	\N	from	\N	\N	\N	\N	\N	\N	2018-09-03 10:42:20.240474-06	\N	de	\N	\N	\N	\N
+624	FrNonverb	\N	France	\N	\N	\N	\N	\N	\N	2018-09-03 10:42:20.25281-06	\N	France	\N	\N	\N	\N
+625	FrNonverb	\N	French	\N	\N	\N	\N	\N	\N	2018-09-03 10:42:42.683836-06	\N	français	\N	\N	\N	\N
+626	FrNonverb	\N	from	\N	\N	\N	\N	\N	\N	2018-09-03 10:44:02.877696-06	\N	des	\N	\N	\N	\N
+627	FrNonverb	\N	states	\N	\N	\N	\N	\N	\N	2018-09-03 10:44:02.884474-06	\N	états	\N	\N	\N	\N
+628	FrNonverb	\N	united	\N	\N	\N	\N	\N	\N	2018-09-03 10:44:02.886831-06	\N	unis	\N	\N	\N	\N
+629	FrNonverb	\N	American	\N	\N	\N	\N	\N	\N	2018-09-03 10:44:28.940238-06	\N	américain	\N	\N	\N	\N
+630	FrNonverb	\N	exactly	\N	\N	\N	\N	\N	\N	2018-09-03 10:44:59.567957-06	\N	exactement	\N	\N	\N	\N
+631	FrNonverb	\N	Boston	\N	\N	\N	\N	\N	\N	2018-09-03 10:45:39.660305-06	\N	Boston	\N	\N	\N	\N
+632	FrNonverb	\N	student	\N	\N	\N	\N	\N	\N	2018-09-03 10:46:05.007854-06	\N	étudiant	\N	\N	\N	\N
+633	FrNonverb	\N	professor	\N	\N	\N	\N	\N	\N	2018-09-03 10:47:02.821171-06	\N	professeur	\N	\N	\N	\N
+634	FrNonverb	\N	English	\N	\N	\N	\N	\N	\N	2018-09-03 10:47:02.828475-06	\N	anglais	\N	\N	\N	\N
+635	FrNonverb	\N	yes	\N	\N	\N	\N	\N	\N	2018-09-03 10:47:45.258482-06	\N	oui	\N	\N	\N	\N
+636	FrNonverb	\N	a	\N	\N	\N	\N	\N	\N	2018-09-03 10:48:55.30511-06	\N	un	\N	\N	\N	\N
+637	FrNonverb	\N	little	\N	\N	\N	\N	\N	\N	2018-09-03 10:48:55.308051-06	\N	petit	\N	\N	\N	\N
+638	FrNonverb	\N	bit	\N	\N	\N	\N	\N	\N	2018-09-03 10:48:55.310823-06	\N	peu	\N	\N	\N	\N
+639	FrNonverb	\N	home	\N	\N	\N	\N	\N	\N	2018-09-03 10:50:14.122687-06	\N	chez	\N	\N	\N	\N
+640	FrNonverb	\N	my	\N	\N	\N	\N	\N	\N	2018-09-03 10:50:14.124387-06	\N	moi	\N	\N	\N	\N
+641	FrNonverb	\N	now	\N	\N	\N	\N	\N	\N	2018-09-03 10:50:14.125663-06	\N	maintenant	\N	\N	\N	\N
+642	FrNonverb	\N	also	\N	\N	\N	\N	\N	\N	2018-09-03 10:50:39.872063-06	\N	aussi	\N	\N	\N	\N
+643	FrNonverb	\N	to the	\N	\N	\N	\N	\N	\N	2018-09-03 10:52:25.886468-06	\N	Au	\N	\N	\N	\N
+644	FrNonverb	\N	seeing again	\N	\N	\N	\N	\N	\N	2018-09-03 10:52:25.89043-06	\N	revoir	\N	\N	\N	\N
+645	FrNonverb	\N	good	\N	\N	\N	\N	\N	\N	2018-09-03 10:53:12.935056-06	\N	bonne	\N	\N	\N	\N
+646	FrNonverb	\N	day	\N	\N	\N	\N	\N	\N	2018-09-03 10:53:12.93673-06	\N	journée	\N	\N	\N	\N
+647	ArNonverb	\N	book	\N	\N	\N	\N	\N	\N	2018-09-05 18:39:15.038859-06	\N	\N	kitAb	\N	\N	\N
+653	ArNonverb	\N	you drink	\N	\N	\N	\N	\N	\N	2018-09-05 20:47:47.900079-06	\N	\N	ta$rab	\N	\N	\N
+648	ArNonverb	\N	Ramadan	\N	\N	\N	\N	\N	\N	2018-09-05 19:56:46.940322-06	\N	\N	ramaDAn	\N	\N	\N
+649	ArNonverb	\N	sugar	\N	\N	\N	\N	\N	\N	2018-09-05 20:02:33.713172-06	\N	\N	sukar	\N	\N	\N
+650	ArNonverb	\N	thirsty	\N	\N	\N	\N	\N	\N	2018-09-05 20:06:25.526182-06	\N	\N	EaTo$An	\N	\N	\N
+651	ArNonverb	\N	baker	\N	\N	\N	\N	\N	\N	2018-09-05 20:37:09.541727-06	\N	\N	xab~Az	\N	\N	\N
+655	ArNonverb	\N	God	\N	\N	\N	\N	\N	\N	2018-09-05 21:02:40.168287-06	\N	\N	{ll~`h	\N	\N	\N
+656	ArNonverb	\N	goodbye	\N	\N	\N	\N	\N	\N	2018-09-05 21:48:53.079363-06	\N	\N	maEa {ls~alAamap	\N	\N	\N
+657	ArNonverb	\N	Afghanistan	\N	\N	\N	\N	\N	\N	2018-09-05 22:12:06.113727-06	\N	\N	>afogaAnisotaAn	\N	\N	\N
+658	ArNonverb	\N	Kabul	\N	\N	\N	\N	\N	\N	2018-09-05 22:15:53.692597-06	\N	\N	kaAbuwl	\N	\N	\N
+659	ArNonverb	\N	Bahrain	\N	\N	\N	\N	\N	\N	2018-09-05 22:16:45.136059-06	\N	\N	AlobaHorayon	\N	\N	\N
+660	ArNonverb	\N	Bhutan	\N	\N	\N	\N	\N	\N	2018-09-05 22:17:29.612904-06	\N	\N	buwtaAn	\N	\N	\N
+661	ArNonverb	\N	Canada	\N	\N	\N	\N	\N	\N	2018-09-05 22:18:21.383591-06	\N	\N	kanadaA	\N	\N	\N
+662	ArNonverb	\N	Chad	\N	\N	\N	\N	\N	\N	2018-09-05 22:18:59.374424-06	\N	\N	to$aAd	\N	\N	\N
+663	ArNonverb	\N	Djibouti	\N	\N	\N	\N	\N	\N	2018-09-05 22:19:46.475391-06	\N	\N	jiybuwtiy	\N	\N	\N
+664	ArNonverb	\N	France	\N	\N	\N	\N	\N	\N	2018-09-05 22:20:49.750387-06	\N	\N	faranosaA	\N	\N	\N
+665	ArNonverb	\N	Paris	\N	\N	\N	\N	\N	\N	2018-09-05 22:21:15.531061-06	\N	\N	baAriys	\N	\N	\N
+666	ArNonverb	\N	Tehran	\N	\N	\N	\N	\N	\N	2018-09-05 22:22:05.82156-06	\N	\N	TahoraAn	\N	\N	\N
+667	ArNonverb	\N	Iran	\N	\N	\N	\N	\N	\N	2018-09-05 22:22:28.033201-06	\N	\N	<iyraAn	\N	\N	\N
+668	ArNonverb	\N	Iraq	\N	\N	\N	\N	\N	\N	2018-09-05 22:22:57.182804-06	\N	\N	AloEiraAq	\N	\N	\N
+669	ArNonverb	\N	Bagdad	\N	\N	\N	\N	\N	\N	2018-09-05 22:23:16.163002-06	\N	\N	bagodaAd	\N	\N	\N
+670	ArNonverb	\N	Israel	\N	\N	\N	\N	\N	\N	2018-09-05 22:23:41.305808-06	\N	\N	<isoraA}iyl	\N	\N	\N
+673	ArNonverb	\N	Tel Aviv	\N	\N	\N	\N	\N	\N	2018-09-05 22:26:07.214289-06	\N	\N	tal~ >abiyb	\N	\N	\N
+674	ArNonverb	\N	Italy	\N	\N	\N	\N	\N	\N	2018-09-05 22:26:26.299435-06	\N	\N	<iyTaAliyaA	\N	\N	\N
+675	ArNonverb	\N	Rome	\N	\N	\N	\N	\N	\N	2018-09-05 22:26:44.288779-06	\N	\N	ruwmaA	\N	\N	\N
+676	ArNonverb	\N	Kazakhstan	\N	\N	\N	\N	\N	\N	2018-09-05 22:27:16.644943-06	\N	\N	kaAzaAxisotaAn	\N	\N	\N
+677	ArNonverb	\N	Kenya	\N	\N	\N	\N	\N	\N	2018-09-05 22:27:45.115008-06	\N	\N	kiyniyaA	\N	\N	\N
+678	ArNonverb	\N	Kuwait	\N	\N	\N	\N	\N	\N	2018-09-05 22:28:25.839436-06	\N	\N	Alokuwayot	\N	\N	\N
+679	ArNonverb	\N	Kyrgyzstan	\N	\N	\N	\N	\N	\N	2018-09-05 22:28:50.873644-06	\N	\N	qiyrogiyzisotaAn	\N	\N	\N
+680	ArNonverb	\N	Lebanon	\N	\N	\N	\N	\N	\N	2018-09-05 22:29:12.752997-06	\N	\N	libonAn	\N	\N	\N
+681	ArNonverb	\N	Beirut	\N	\N	\N	\N	\N	\N	2018-09-05 22:29:31.995497-06	\N	\N	bayoruwt	\N	\N	\N
+682	ArNonverb	\N	Libya	\N	\N	\N	\N	\N	\N	2018-09-05 22:29:54.155753-06	\N	\N	liybiyaA	\N	\N	\N
+683	ArNonverb	\N	Malawi	\N	\N	\N	\N	\N	\N	2018-09-05 22:30:27.905264-06	\N	\N	maAlaAwiy	\N	\N	\N
+684	ArNonverb	\N	Malaysia	\N	\N	\N	\N	\N	\N	2018-09-05 22:30:51.754102-06	\N	\N	maAlayoziyaA	\N	\N	\N
+685	ArNonverb	\N	Ali	\N	\N	\N	\N	\N	\N	2018-09-05 23:03:09.294198-06	\N	\N	EAly	\N	\N	\N
+686	ArNonverb	\N	Amir	\N	\N	\N	\N	\N	\N	2018-09-05 23:03:31.51387-06	\N	\N	EAmr	\N	\N	\N
+687	ArNonverb	\N	Adam	\N	\N	\N	\N	\N	\N	2018-09-05 23:04:30.824261-06	\N	\N	|dm	\N	\N	\N
+688	ArNonverb	\N	Barack	\N	\N	\N	\N	\N	\N	2018-09-05 23:05:39.427498-06	\N	\N	bArAk	\N	\N	\N
+689	ArNonverb	\N	Hussein	\N	\N	\N	\N	\N	\N	2018-09-05 23:07:31.256917-06	\N	\N	Hsyn	\N	\N	\N
+690	ArNonverb	\N	imam	\N	\N	\N	\N	\N	\N	2018-09-05 23:08:04.692543-06	\N	\N	<mAm	\N	\N	\N
+691	ArNonverb	\N	Islam	\N	\N	\N	\N	\N	\N	2018-09-05 23:08:21.156435-06	\N	\N	<slAm	\N	\N	\N
+692	ArNonverb	\N	Jamal	\N	\N	\N	\N	\N	\N	2018-09-05 23:08:45.45169-06	\N	\N	jmAl	\N	\N	\N
+694	ArNonverb	\N	Muhammad	\N	\N	\N	\N	\N	\N	2018-09-05 23:10:02.221466-06	\N	\N	mHm~d	\N	\N	\N
+695	ArNonverb	\N	Omar	\N	\N	\N	\N	\N	\N	2018-09-05 23:10:35.791887-06	\N	\N	Emr	\N	\N	\N
+696	ArNonverb	\N	Saddam	\N	\N	\N	\N	\N	\N	2018-09-05 23:11:15.077444-06	\N	\N	Sd~Am	\N	\N	\N
+697	ArNonverb	\N	Shakira	\N	\N	\N	\N	\N	\N	2018-09-05 23:11:42.464971-06	\N	\N	$Akrp	\N	\N	\N
+698	ArNonverb	\N	ayatollah	\N	\N	\N	\N	\N	\N	2018-09-05 23:14:39.804042-06	\N	\N	|yap Allh	\N	\N	\N
+699	ArNonverb	\N	caliphate	\N	\N	\N	\N	\N	\N	2018-09-05 23:15:28.90548-06	\N	\N	xalyfp	\N	\N	\N
+700	ArNonverb	\N	fatwa	\N	\N	\N	\N	\N	\N	2018-09-05 23:15:57.530548-06	\N	\N	ftwY	\N	\N	\N
+701	ArNonverb	\N	hadith	\N	\N	\N	\N	\N	\N	2018-09-05 23:16:14.43252-06	\N	\N	Hdyv	\N	\N	\N
+702	ArNonverb	\N	Hajj	\N	\N	\N	\N	\N	\N	2018-09-05 23:16:38.176596-06	\N	\N	Haj~	\N	\N	\N
+703	ArNonverb	\N	jihad	\N	\N	\N	\N	\N	\N	2018-09-05 23:17:02.051567-06	\N	\N	jhAd	\N	\N	\N
+704	ArNonverb	\N	Quran	\N	\N	\N	\N	\N	\N	2018-09-05 23:17:27.428895-06	\N	\N	Alqr|n	\N	\N	\N
+705	ArNonverb	\N	Sharia	\N	\N	\N	\N	\N	\N	2018-09-05 23:18:17.046085-06	\N	\N	$ryEp	\N	\N	\N
+706	ArNonverb	\N	Shia	\N	\N	\N	\N	\N	\N	2018-09-05 23:18:45.925244-06	\N	\N	$yEp	\N	\N	\N
+707	ArNonverb	\N	Sufi	\N	\N	\N	\N	\N	\N	2018-09-05 23:19:18.7801-06	\N	\N	Suwfiy~	\N	\N	\N
+709	ArNonverb	\N	shah	\N	\N	\N	\N	\N	\N	2018-09-05 23:21:30.051582-06	\N	\N	$Ah	\N	\N	\N
+710	ArNonverb	\N	God is great	\N	\N	\N	\N	\N	\N	2018-09-05 23:23:42.109949-06	\N	\N	Allh >kbr	\N	\N	\N
+711	ArNonverb	\N	halal	\N	\N	\N	\N	\N	\N	2018-09-05 23:24:56.921142-06	\N	\N	HlAl	\N	\N	\N
+712	ArNonverb	\N	if God wills	\N	\N	\N	\N	\N	\N	2018-09-05 23:25:41.976384-06	\N	\N	<n $A' Allh	\N	\N	\N
+713	ArNonverb	\N	madrasah	\N	\N	\N	\N	\N	\N	2018-09-05 23:26:31.651612-06	\N	\N	mdrsp	\N	\N	\N
+714	ArNonverb	\N	Sunni	\N	\N	\N	\N	\N	\N	2018-09-05 23:28:58.477545-06	\N	\N	sn~y	\N	\N	\N
+715	ArNonverb	\N	burqa	\N	\N	\N	\N	\N	\N	2018-09-05 23:30:16.091452-06	\N	\N	brqE	\N	\N	\N
+716	ArNonverb	\N	hijab	\N	\N	\N	\N	\N	\N	2018-09-05 23:30:47.489298-06	\N	\N	HjAb	\N	\N	\N
+717	ArNonverb	\N	couscous	\N	\N	\N	\N	\N	\N	2018-09-05 23:32:32.150726-06	\N	\N	kusokus	\N	\N	\N
+718	ArNonverb	\N	Al Jazeera	\N	\N	\N	\N	\N	\N	2018-09-05 23:34:57.952292-06	\N	\N	Aljzyrp	\N	\N	\N
+719	ArNonverb	\N	Barack Hussein Obama	\N	\N	\N	\N	\N	\N	2018-09-05 23:37:38.638441-06	\N	\N	bArAk Hsyn >wbAmA	\N	\N	\N
+720	ArNonverb	\N	Kareem Abdul-Jabbar	\N	\N	\N	\N	\N	\N	2018-09-05 23:38:24.147108-06	\N	\N	krym Ebd AljbAr	\N	\N	\N
+721	ArNonverb	\N	Hamid Karzai	\N	\N	\N	\N	\N	\N	2018-09-05 23:40:21.46567-06	\N	\N	HAmd krzAy	\N	\N	\N
+722	ArNonverb	\N	Muhammad Ali	\N	\N	\N	\N	\N	\N	2018-09-05 23:40:54.272101-06	\N	\N	mHmd Ely	\N	\N	\N
+723	ArNonverb	\N	Rihanna	\N	\N	\N	\N	\N	\N	2018-09-05 23:41:31.925495-06	\N	\N	ryhAnA	\N	\N	\N
+724	ArNonverb	\N	Shaquille O’Neal	\N	\N	\N	\N	\N	\N	2018-09-05 23:42:07.107402-06	\N	\N	$Akyl Awnyl	\N	\N	\N
+725	ArNonverb	\N	Tupac Shakur	\N	\N	\N	\N	\N	\N	2018-09-05 23:42:38.620662-06	\N	\N	twbAk $Akwr	\N	\N	\N
+726	ArNonverb	\N	Saddam Hussein	\N	\N	\N	\N	\N	\N	2018-09-05 23:44:09.882005-06	\N	\N	SdAm Hsyn	\N	\N	\N
+727	ArNonverb	\N	Mahmoud Ahmadinejad	\N	\N	\N	\N	\N	\N	2018-09-05 23:44:41.363239-06	\N	\N	mHmwd AHmdynjAd	\N	\N	\N
+728	ArNonverb	\N	Mahmoud Abbas	\N	\N	\N	\N	\N	\N	2018-09-05 23:45:04.596028-06	\N	\N	maHomuwd Eaba~As	\N	\N	\N
+729	ArVRoot	\N	write	\N	\N	wrote	\N	\N	\N	2018-09-07 10:26:56.175701-06	\N	\N	ktb	u	\N	\N
+730	ArVRoot	\N	drink	\N	\N	drank	\N	\N	\N	2018-09-07 10:27:14.594876-06	\N	\N	$rib	a	\N	\N
+742	ArVRoot	\N	sit	\N	\N	sat	\N	\N	\N	2018-09-07 14:10:54.230746-06	\N	\N	jlis	i	\N	\N
+731	ArNonverb	\N	I	\N	\N	\N	\N	\N	\N	2018-09-07 13:58:35.672884-06	\N	\N	>nA	\N	\N	\N
+732	ArNonverb	\N	you (masc.)	\N	\N	\N	\N	\N	\N	2018-09-07 13:58:47.781191-06	\N	\N	>anota	\N	\N	\N
+733	ArNonverb	\N	you (fem.)	\N	\N	\N	\N	\N	\N	2018-09-07 13:59:01.383694-06	\N	\N	>anoti	\N	\N	\N
+734	ArNonverb	\N	he	\N	\N	\N	\N	\N	\N	2018-09-07 13:59:11.711905-06	\N	\N	huwa	\N	\N	\N
+735	ArNonverb	\N	she	\N	\N	\N	\N	\N	\N	2018-09-07 13:59:25.599617-06	\N	\N	hiya	\N	\N	\N
+736	ArNonverb	\N	we	\N	\N	\N	\N	\N	\N	2018-09-07 13:59:37.256893-06	\N	\N	naHonu	\N	\N	\N
+737	ArNonverb	\N	you (masc. pl.)	\N	\N	\N	\N	\N	\N	2018-09-07 13:59:55.977431-06	\N	\N	>anotumo	\N	\N	\N
+738	ArNonverb	\N	you (fem. pl.)	\N	\N	\N	\N	\N	\N	2018-09-07 14:00:12.407077-06	\N	\N	>anotun~a	\N	\N	\N
+739	ArNonverb	\N	they (masc.)	\N	\N	\N	\N	\N	\N	2018-09-07 14:00:24.815863-06	\N	\N	humo	\N	\N	\N
+740	ArNonverb	\N	they (fem.)	\N	\N	\N	\N	\N	\N	2018-09-07 14:00:41.266117-06	\N	\N	hun~a	\N	\N	\N
+743	ArVRoot	\N	arrive	\N	\N	arrived	\N	\N	\N	2018-09-07 16:07:23.468821-06	\N	\N	wSl	i	\N	\N
+745	ArVRoot	\N	find	\N	\N	found	\N	\N	\N	2018-09-07 16:13:17.918298-06	\N	\N	wjd	i	\N	\N
+746	ArVRoot	\N	put	\N	\N	put	\N	\N	\N	2018-09-07 16:14:35.095171-06	\N	\N	wDE	a	\N	\N
+749	ArVRoot	\N	is	\N	\N	was	\N	\N	\N	2018-09-07 16:39:17.431475-06	\N	\N	kwn	o	\N	\N
+744	ArStemChange	\N	arrive	\N	\N	\N	\N	\N	PRES	2018-09-07 16:11:15.058908-06	743	\N	Sil-	\N	1,2,3	\N
+747	ArStemChange	\N	find	\N	\N	\N	\N	\N	PRES	2018-09-07 16:17:02.152475-06	745	\N	jid-	\N	1,2,3	\N
+748	ArStemChange	\N	put	\N	\N	\N	\N	\N	PRES	2018-09-07 16:19:28.65242-06	746	\N	DaE-	\N	1,2,3	\N
+750	ArStemChange	\N	was	\N	\N	\N	\N	\N	PAST	2018-09-07 16:56:36.745251-06	749	\N	kaAn-	\N	3	\N
+751	ArVRoot	\N	visit	\N	\N	visited	\N	\N	\N	2018-09-07 16:57:48.308585-06	\N	\N	zwr	?	\N	\N
+752	ArStemChange	\N	visited	\N	\N	\N	\N	\N	PAST	2018-09-07 16:59:03.631104-06	751	\N	zaAr-	\N	3	\N
+753	ArVRoot	\N	sell	\N	\N	sold	\N	\N	\N	2018-09-07 16:59:53.253586-06	\N	\N	byE	?	\N	\N
+755	ArVRoot	\N	fly	\N	\N	flew	\N	\N	\N	2018-09-07 17:01:58.684766-06	\N	\N	Tyr	?	\N	\N
+757	ArStemChange	\N	was	\N	\N	\N	\N	\N	PAST	2018-09-07 17:03:47.015038-06	749	\N	kun-	\N	1,2	\N
+758	ArStemChange	\N	visited	\N	\N	\N	\N	\N	PAST	2018-09-07 17:04:24.868021-06	751	\N	zur-	\N	1,2	\N
+759	ArStemChange	\N	sold	\N	\N	\N	\N	\N	PAST	2018-09-07 17:05:04.304094-06	753	\N	biE-	\N	1,2	\N
+760	ArStemChange	\N	flew	\N	\N	\N	\N	\N	PAST	2018-09-07 17:06:09.633942-06	755	\N	Tir-	\N	1,2	\N
+754	ArStemChange	\N	sold	\N	\N	\N	\N	\N	PAST	2018-09-07 17:01:22.332139-06	753	\N	baAE-	\N	3	\N
+756	ArStemChange	\N	flew	\N	\N	\N	\N	\N	PAST	2018-09-07 17:02:49.332723-06	755	\N	TaAra-	\N	3	\N
+762	ArStemChange	\N	sell	\N	\N	\N	\N	\N	PRES	2018-09-07 17:12:20.13693-06	753	\N	biyE-	\N	1,2,3	\N
+761	ArStemChange	\N	visit	\N	\N	\N	\N	\N	PRES	2018-09-07 17:10:56.985087-06	751	\N	zuwr-	\N	1,2,3	\N
+763	ArVRoot	\N	sleep	\N	\N	slept	\N	\N	\N	2018-09-07 17:14:14.825214-06	\N	\N	ynAm	?	\N	\N
+764	ArStemChange	\N	sleep	\N	\N	\N	\N	\N	PRES	2018-09-07 17:15:07.828448-06	763	\N	naAm-	\N	1,2,3	\N
+765	ArStemChange	\N	fly	\N	\N	\N	\N	\N	PRES	2018-09-07 17:19:25.685692-06	755	\N	Tiyr-	\N	1,2,3	\N
+766	ArVRoot	\N	complain	\N	\N	complained	\N	\N	\N	2018-09-07 17:22:08.182334-06	\N	\N	$kw	?	\N	\N
+768	ArVRoot	\N	walk	\N	\N	walked	\N	\N	\N	2018-09-07 17:25:24.568517-06	\N	\N	m$y	?	\N	\N
+770	ArVRoot	\N	forget	\N	\N	forgot	\N	\N	\N	2018-09-07 17:33:12.042642-06	\N	\N	nsiy	?	\N	\N
+771	ArVRoot	\N	meet	\N	\N	met	\N	\N	\N	2018-09-07 17:33:52.838919-06	\N	\N	lqiy	?	\N	\N
+769	ArStemChange	\N	walked	\N	\N	\N	\N	\N	PAST	2018-09-07 17:26:01.372287-06	768	\N	ma$-	\N	3	\N
+767	ArStemChange	\N	complained	\N	\N	\N	\N	\N	PAST	2018-09-07 17:24:47.196191-06	766	\N	$ak-	\N	3	\N
+772	ArUniqV	\N	complained	\N	\N	\N	1	3	PAST	2018-09-07 18:18:40.855669-06	766	\N	$akaA	\N	\N	M
 \.
 
 
@@ -2240,7 +2248,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 771, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 772, true);
 
 
 --
@@ -2281,6 +2289,7 @@ COPY schema_version (installed_rank, version, description, type, script, checksu
 7	7	add arabic nonverbs	SQL	V7__add_arabic_nonverbs.sql	507587595	postgres	2018-09-05 18:32:58.10174	36	t
 8	8	add arabic verb roots	SQL	V8__add_arabic_verb_roots.sql	-82587003	postgres	2018-09-07 10:21:35.115419	28	t
 9	9	add arabic stem changes	SQL	V9__add_arabic_stem_changes.sql	-174351429	postgres	2018-09-07 15:42:49.611614	18	t
+10	10	add arabic unique conjugations	SQL	V10__add_arabic_unique_conjugations.sql	1328814492	postgres	2018-09-07 18:18:30.616128	41	t
 \.
 
 
