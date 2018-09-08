@@ -1140,6 +1140,18 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 3471	1396	1397	0	1
 3474	1396	1400	1	1
 3477	1397	1400	1	1
+3480	1401	1402	0	0
+3481	1401	1403	1	3
+3482	1401	1404	2	2
+3485	1403	1404	1	1
+3489	1406	1210	2	2
+3492	1406	1407	0	0
+3493	1406	1408	1	1
+3498	1410	1215	2	2
+3502	1410	1407	0	0
+3503	1410	1408	1	1
+3508	1414	1205	0	0
+3516	1414	1407	1	1
 \.
 
 
@@ -1147,7 +1159,7 @@ COPY card_embeddings (card_embedding_id, longer_card_id, shorter_card_id, first_
 -- Name: card_embeddings_card_embedding_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 3479, true);
+SELECT pg_catalog.setval('card_embeddings_card_embedding_id_seq', 3521, true);
 
 
 --
@@ -1663,6 +1675,16 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 1396	[{"leafId":780,"en":"name","l2":"Aisom"},{"leafId":-250,"en":"my","l2":"-iy"},{"leafId":785,"en":"Daniel","l2":"daAniyaAl"}]	\N	780,-250,785	My name is Daniel.	0		2018-09-07 21:31:36.915244-06	2018-09-07 21:31:36.909-06
 1397	[{"leafId":780,"en":"name","l2":"Aisom"},{"leafId":-250,"en":"my","l2":"-iy"}]	\N	780,-250	name (my)	0		2018-09-07 21:31:36.915244-06	2018-09-07 21:31:36.91-06
 1400	[{"leafId":-250,"en":"my","l2":"-iy"}]	\N	-250	Suffix pronoun for my	1		2018-09-07 21:31:36.915244-06	2018-09-07 21:31:36.91-06
+1401	[{"leafId":787,"en":"no","l2":"laA"},{"leafId":-220,"en":"(I)","l2":">a-"},{"leafId":786,"en":"know","l2":"Eorif-"},{"leafId":-220,"en":"(I)","l2":"-u"}]	\N	787,-220,786,-220	I don't know.	0		2018-09-07 21:47:31.415893-06	2018-09-07 21:47:31.413-06
+1402	[{"leafId":787,"en":"no","l2":"laA"}]	\N	787	no	1		2018-09-07 21:47:31.415893-06	2018-09-07 21:47:31.413-06
+1403	[{"leafId":-220,"en":"(I)","l2":">a-"},{"leafId":786,"en":"know","l2":"Eorif-"},{"leafId":-220,"en":"(I)","l2":"-u"}]	\N	-220,786,-220	(I) know	0		2018-09-07 21:47:31.415893-06	2018-09-07 21:47:31.413-06
+1404	[{"leafId":786,"en":"know","l2":"Erf"}]	\N	786	to know	1		2018-09-07 21:47:31.415893-06	2018-09-07 21:47:31.413-06
+1406	[{"leafId":788,"en":"from","l2":"mino"},{"leafId":789,"en":"where","l2":">ayona"},{"leafId":732,"en":"you (masc.)","l2":">anota"}]	\N	788,789,732	From where are you (masc.)?	0		2018-09-07 21:51:18.233205-06	2018-09-07 21:51:18.231-06
+1407	[{"leafId":788,"en":"from","l2":"mino"}]	\N	788	from	1		2018-09-07 21:51:18.233205-06	2018-09-07 21:51:18.231-06
+1408	[{"leafId":789,"en":"where","l2":">ayona"}]	\N	789	where	1		2018-09-07 21:51:18.233205-06	2018-09-07 21:51:18.231-06
+1410	[{"leafId":788,"en":"from","l2":"mino"},{"leafId":789,"en":"where","l2":">ayona"},{"leafId":733,"en":"you (fem.)","l2":">anoti"}]	\N	788,789,733	From where are you (fem.)?	0		2018-09-07 21:51:39.52394-06	2018-09-07 21:51:39.521-06
+1414	[{"leafId":731,"en":"I","l2":">nA"},{"leafId":788,"en":"from","l2":"mino"}]	\N	731,788	I am from ...	0		2018-09-07 21:52:26.202082-06	2018-09-07 21:52:26.2-06
+1417	[{"leafId":790,"en":"yes","l2":"naEamo"}]	\N	790	Yes!	1		2018-09-07 21:53:30.258984-06	2018-09-07 21:53:30.257-06
 \.
 
 
@@ -1670,7 +1692,7 @@ COPY cards (card_id, gloss_rows_json, last_seen_at, leaf_ids_csv, prompt, stage,
 -- Name: cards_card_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('cards_card_id_seq', 1400, true);
+SELECT pg_catalog.setval('cards_card_id_seq', 1420, true);
 
 
 --
@@ -1843,6 +1865,12 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 247	What is your (masc.) name?	maA Aisomuka	2018-09-07 21:07:10.868857-06	2018-09-07 21:07:10.867-06	1381	11
 248	What is your (fem.) name?	maA Aisomuki	2018-09-07 21:07:24.069246-06	2018-09-07 21:07:24.068-06	1386	11
 250	My name is Daniel.	Aisomiy daAniyaAl	2018-09-07 21:31:36.973458-06	2018-09-07 21:31:36.972-06	1396	11
+251	I don't know.	laA >aEorifu	2018-09-07 21:47:31.45394-06	2018-09-07 21:47:31.453-06	1401	12
+252	From where are you (masc.)?	mino >ayona >anota	2018-09-07 21:51:18.248293-06	2018-09-07 21:51:18.247-06	1406	12
+253	From where are you (fem.)?	mino >ayona >anoti	2018-09-07 21:51:39.541426-06	2018-09-07 21:51:39.54-06	1410	12
+254	I am from ...	>nA mino 	2018-09-07 21:52:26.221799-06	2018-09-07 21:52:26.221-06	1414	12
+255	Yes!	naEamo	2018-09-07 21:53:30.26645-06	2018-09-07 21:53:30.264-06	1417	12
+256	No!	laA	2018-09-07 21:53:50.931538-06	2018-09-07 21:53:50.93-06	1402	12
 \.
 
 
@@ -1850,7 +1878,7 @@ COPY goals (goal_id, en, l2, created_at, updated_at, card_id, paragraph_id) FROM
 -- Name: goals_goal_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('goals_goal_id_seq', 250, true);
+SELECT pg_catalog.setval('goals_goal_id_seq', 256, true);
 
 
 --
@@ -2306,6 +2334,11 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 783	ArNoun	\N	baker	\N	\N	\N	\N	\N	\N	2018-09-07 20:01:25.395921-06	\N	\N	xaba~Az	\N	\N	M
 784	ArNonverb	\N	what	\N	\N	\N	\N	\N	\N	2018-09-07 21:07:10.840683-06	\N	\N	maA	\N	\N	\N
 785	ArNonverb	\N	Daniel	\N	\N	\N	\N	\N	\N	2018-09-07 21:09:15.563016-06	\N	\N	daAniyaAl	\N	\N	\N
+786	ArVRoot	\N	know	\N	\N	knew	\N	\N	\N	2018-09-07 21:38:26.97205-06	\N	\N	Erf	i	\N	\N
+787	ArNonverb	\N	no	\N	\N	\N	\N	\N	\N	2018-09-07 21:47:31.25279-06	\N	\N	laA	\N	\N	\N
+788	ArNonverb	\N	from	\N	\N	\N	\N	\N	\N	2018-09-07 21:51:18.205031-06	\N	\N	mino	\N	\N	\N
+789	ArNonverb	\N	where	\N	\N	\N	\N	\N	\N	2018-09-07 21:51:18.218558-06	\N	\N	>ayona	\N	\N	\N
+790	ArNonverb	\N	yes	\N	\N	\N	\N	\N	\N	2018-09-07 21:53:30.255282-06	\N	\N	naEamo	\N	\N	\N
 \.
 
 
@@ -2313,7 +2346,7 @@ COPY leafs (leaf_id, leaf_type, es_mixed, en, en_disambiguation, en_plural, en_p
 -- Name: leafs_leaf_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('leafs_leaf_id_seq', 785, true);
+SELECT pg_catalog.setval('leafs_leaf_id_seq', 790, true);
 
 
 --
@@ -2331,6 +2364,7 @@ COPY paragraphs (paragraph_id, topic, created_at, updated_at, enabled, lang) FRO
 9	Greetings	2018-09-02 15:37:04.777894-06	2018-09-02 15:37:04.745-06	t	fr
 10	Verb conjugations	2018-09-07 13:58:23.971876-06	2018-09-07 13:58:23.968-06	t	ar
 11	Alif Baa Unit 2	2018-09-07 18:28:21.029119-06	2018-09-07 18:28:21.026-06	t	ar
+12	Alif Baaa Unit 4-5	2018-09-07 21:38:43.582374-06	2018-09-07 21:38:43.58-06	t	ar
 \.
 
 
@@ -2338,7 +2372,7 @@ COPY paragraphs (paragraph_id, topic, created_at, updated_at, enabled, lang) FRO
 -- Name: paragraphs_paragraph_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dan
 --
 
-SELECT pg_catalog.setval('paragraphs_paragraph_id_seq', 11, true);
+SELECT pg_catalog.setval('paragraphs_paragraph_id_seq', 12, true);
 
 
 --
