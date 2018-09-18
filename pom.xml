@@ -95,6 +95,12 @@
             <artifactId>graphql-java-tools</artifactId>
             <version>3.2.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>se.romanredz.mouse</groupId>
+            <artifactId>mouse</artifactId>
+            <version>1.9.1</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -124,6 +130,7 @@
                             <sourceDirs>
                                 <sourceDir>src/main/kotlin</sourceDir>
                                 <sourceDir>target/generated-sources/jooq</sourceDir>
+                                <sourceDir>target/generated-sources/grammars</sourceDir>
                             </sourceDirs>
                         </configuration>
                     </execution>
@@ -294,6 +301,19 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>se.romanredz.mouse</groupId>
+                <artifactId>mouse-maven-plugin</artifactId>
+                <version>1.9.1</version>
+                <configuration>
+                  <mouseGrammar>src/main/resources/grammars/ArabicMorpheme.txt</mouseGrammar>
+                  <mouseDirectory>target/generated-sources/grammars/com/danstutzman/grammars</mouseDirectory>
+                  <mouseParser>ArabicMorphemeParser</mouseParser>
+                  <mouseSemantics>ArabicMorphemeSemantics</mouseSemantics>
+                  <mousePackage>com.danstutzman.grammars</mousePackage>
+                </configuration>
             </plugin>
 
         </plugins>

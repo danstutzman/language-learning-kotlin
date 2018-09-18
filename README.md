@@ -1,6 +1,9 @@
-`mvn compile`
+# How to run locally
 
-Afterwards you can just run `./fastbuild run`
+- First time only or after a clean:
+  - `mkdir -p target/generated-sources/grammars/com/danstutzman/grammars`
+  - `mvn mouse:generate compile`
+- Every time: `./fastbuild run`
 
 # How to delete database
 
@@ -15,3 +18,7 @@ Afterwards you can just run `./fastbuild run`
 `mvn test -Dtest=*`
 
 Or run `./fastbuild test`
+
+# How to regenerate MousePEG parser
+
+`mvn mouse:generate`

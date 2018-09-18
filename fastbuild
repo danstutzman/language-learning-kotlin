@@ -15,6 +15,25 @@ if [ pom.xml -nt .mvn-classpath ]; then
   mvn dependency:build-classpath -Dmdep.outputFile=.mvn-classpath
 fi
 
+for JAVA in `find target/generated-sources -name "*.java"`; do
+  CLASS=$JAVA
+
+  # replace target/generated-sources/grammars with target/classes
+  CLASS=${CLASS/target\/generated-sources\/grammars\//target\/classes\/}
+
+  CLASS=${CLASS/.java/.class}
+
+  if [[ $JAVA -nt $CLASS ]]; then
+    JAVAS="$JAVAS $JAVA"
+  fi
+done
+
+if [ "$JAVAS" != "" ]; then
+  echo "Compiling .java to .class"
+  echo $JAVAS
+  javac $JAVAS -d $PWD/target/classes -cp `cat .mvn-classpath`:target/classes
+fi
+
 for KT in `find src/main/kotlin -name "*.kt"` `find src/test/kotlin -name "*.kt"`; do
   CLASS=$KT
 
@@ -46,4 +65,3 @@ elif [ "$1" == "test" ]; then
   java -cp `cat .mvn-classpath`:target/classes org.junit.platform.console.ConsoleLauncher \
     --scan-classpath target/test-classes -cp target/test-classes
 fi
-
