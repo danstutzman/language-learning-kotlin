@@ -5,6 +5,8 @@ fun GetRoot(): String {
   html.append(OPEN_BODY_TAG)
 
   html.append("<h2>Arabic</h2>\n")
+  html.append("<li><a href='/ar/morphemes'>Morphemes</a></li>\n")
+  html.append("<li><a href='/ar/new-cards'>New Cards</a></li>\n")
   html.append("<li><a href='/ar/nonverbs'>Nonverbs</a></li>\n")
   html.append("<li><a href='/ar/nouns'>Nouns</a></li>\n")
   html.append("<li><a href='/ar/paragraphs'>Paragraphs</a></li>\n")

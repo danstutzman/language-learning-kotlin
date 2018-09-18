@@ -26,11 +26,15 @@ DROP INDEX public.idx_cards_leaf_ids_csv;
 DROP INDEX public.idx_card_embeddings;
 ALTER TABLE ONLY public.schema_version DROP CONSTRAINT schema_version_pk;
 ALTER TABLE ONLY public.paragraphs DROP CONSTRAINT paragraphs_pkey;
+ALTER TABLE ONLY public.new_cards DROP CONSTRAINT new_cards_pkey;
+ALTER TABLE ONLY public.morphemes DROP CONSTRAINT morphemes_pkey;
 ALTER TABLE ONLY public.leafs DROP CONSTRAINT leafs_pkey;
 ALTER TABLE ONLY public.goals DROP CONSTRAINT goals_pkey;
 ALTER TABLE ONLY public.cards DROP CONSTRAINT cards_pkey;
 ALTER TABLE ONLY public.card_embeddings DROP CONSTRAINT card_embeddings_pkey;
 ALTER TABLE public.paragraphs ALTER COLUMN paragraph_id DROP DEFAULT;
+ALTER TABLE public.new_cards ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE public.morphemes ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE public.leafs ALTER COLUMN leaf_id DROP DEFAULT;
 ALTER TABLE public.goals ALTER COLUMN goal_id DROP DEFAULT;
 ALTER TABLE public.cards ALTER COLUMN card_id DROP DEFAULT;
@@ -38,6 +42,10 @@ ALTER TABLE public.card_embeddings ALTER COLUMN card_embedding_id DROP DEFAULT;
 DROP TABLE public.schema_version;
 DROP SEQUENCE public.paragraphs_paragraph_id_seq;
 DROP TABLE public.paragraphs;
+DROP SEQUENCE public.new_cards_id_seq;
+DROP TABLE public.new_cards;
+DROP SEQUENCE public.morphemes_id_seq;
+DROP TABLE public.morphemes;
 DROP SEQUENCE public.leafs_leaf_id_seq;
 DROP TABLE public.leafs;
 DROP SEQUENCE public.goals_goal_id_seq;
@@ -261,6 +269,81 @@ ALTER SEQUENCE leafs_leaf_id_seq OWNED BY leafs.leaf_id;
 
 
 --
+-- Name: morphemes; Type: TABLE; Schema: public; Owner: dan
+--
+
+CREATE TABLE morphemes (
+    id integer NOT NULL,
+    lang text NOT NULL,
+    type text NOT NULL,
+    l2 text NOT NULL,
+    gloss text NOT NULL,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE morphemes OWNER TO dan;
+
+--
+-- Name: morphemes_id_seq; Type: SEQUENCE; Schema: public; Owner: dan
+--
+
+CREATE SEQUENCE morphemes_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE morphemes_id_seq OWNER TO dan;
+
+--
+-- Name: morphemes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: dan
+--
+
+ALTER SEQUENCE morphemes_id_seq OWNED BY morphemes.id;
+
+
+--
+-- Name: new_cards; Type: TABLE; Schema: public; Owner: dan
+--
+
+CREATE TABLE new_cards (
+    id integer NOT NULL,
+    lang text NOT NULL,
+    type text NOT NULL,
+    en_task text,
+    en_content text,
+    morpheme_ids_csv text,
+    created_at timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE new_cards OWNER TO dan;
+
+--
+-- Name: new_cards_id_seq; Type: SEQUENCE; Schema: public; Owner: dan
+--
+
+CREATE SEQUENCE new_cards_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE new_cards_id_seq OWNER TO dan;
+
+--
+-- Name: new_cards_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: dan
+--
+
+ALTER SEQUENCE new_cards_id_seq OWNED BY new_cards.id;
+
+
+--
 -- Name: paragraphs; Type: TABLE; Schema: public; Owner: dan
 --
 
@@ -343,6 +426,20 @@ ALTER TABLE ONLY goals ALTER COLUMN goal_id SET DEFAULT nextval('goals_goal_id_s
 --
 
 ALTER TABLE ONLY leafs ALTER COLUMN leaf_id SET DEFAULT nextval('leafs_leaf_id_seq'::regclass);
+
+
+--
+-- Name: morphemes id; Type: DEFAULT; Schema: public; Owner: dan
+--
+
+ALTER TABLE ONLY morphemes ALTER COLUMN id SET DEFAULT nextval('morphemes_id_seq'::regclass);
+
+
+--
+-- Name: new_cards id; Type: DEFAULT; Schema: public; Owner: dan
+--
+
+ALTER TABLE ONLY new_cards ALTER COLUMN id SET DEFAULT nextval('new_cards_id_seq'::regclass);
 
 
 --
@@ -2423,6 +2520,262 @@ SELECT pg_catalog.setval('leafs_leaf_id_seq', 799, true);
 
 
 --
+-- Data for Name: morphemes; Type: TABLE DATA; Schema: public; Owner: dan
+--
+
+COPY morphemes (id, lang, type, l2, gloss, created_at) FROM stdin;
+5	ar	PRO	>nA	I	2018-09-17 23:10:00.518506-06
+6	ar	CONJ	na-	I	2018-09-17 23:10:00.527942-06
+7	ar	V	kotub	wrote	2018-09-17 23:10:00.536188-06
+8	ar	CONJ	-u	I	2018-09-17 23:10:00.544327-06
+9	ar	PRO	>anota 	you-MASC	2018-09-17 23:11:15.982298-06
+10	ar	V	katab	wrote	2018-09-17 23:11:16.001554-06
+11	ar	CONJ	-ota	you-MASC	2018-09-17 23:11:16.007649-06
+12	ar	PRO	>anoti 	you-FEM	2018-09-17 23:12:11.203261-06
+14	ar	CONJ	-oti	you-FEM	2018-09-17 23:12:11.217232-06
+15	ar		huwa	he	2018-09-17 23:23:30.416933-06
+16	ar		katab	wrote	2018-09-17 23:23:30.435622-06
+17	ar		-a	he	2018-09-17 23:23:30.444173-06
+18	ar		hiya	she	2018-09-17 23:23:46.352488-06
+19	ar		-ato	she	2018-09-17 23:23:46.359604-06
+20	ar		naHonu	we	2018-09-17 23:24:03.288058-06
+21	ar		-onaA	we	2018-09-17 23:24:03.297399-06
+22	ar		>anotumo	you all MASC	2018-09-17 23:26:13.793235-06
+23	ar		-otumo	you all MASC	2018-09-17 23:26:13.806677-06
+24	ar		>anotun~a	you all FEM	2018-09-17 23:26:49.600276-06
+25	ar		-otun~a	you all FEM	2018-09-17 23:26:49.61013-06
+26	ar		humo	they MASC	2018-09-17 23:27:17.519086-06
+27	ar		-uwA	they MASC	2018-09-17 23:27:17.527958-06
+28	ar		hun~a	they FEM	2018-09-17 23:27:37.917288-06
+29	ar		-ona	they FEM	2018-09-17 23:27:37.926213-06
+30	ar		>nA	I	2018-09-17 23:28:03.254905-06
+31	ar		>a-	I	2018-09-17 23:28:03.262814-06
+32	ar		kotub	write	2018-09-17 23:28:03.270309-06
+33	ar		-u	I	2018-09-17 23:28:03.278278-06
+34	ar		>anota	you MASC	2018-09-17 23:28:31.402493-06
+35	ar		ta-	you MASC	2018-09-17 23:28:31.410046-06
+36	ar		-u	you MASC	2018-09-17 23:28:31.418736-06
+37	ar		>anoti	you FEM	2018-09-17 23:28:59.571763-06
+38	ar		ta-	you FEM	2018-09-17 23:28:59.579737-06
+39	ar		-ona	you FEM	2018-09-17 23:28:59.589652-06
+40	ar		ta-	you all MASC	2018-09-17 23:29:45.207678-06
+41	ar		-uwna	you all MASC	2018-09-17 23:29:45.209985-06
+42	ar		>anoti	you all FEM	2018-09-17 23:30:16.670474-06
+43	ar		ta-	you all FEM	2018-09-17 23:30:16.677856-06
+44	ar		iyna	you all FEM	2018-09-17 23:30:16.685607-06
+45	ar		ya-	he	2018-09-17 23:30:38.128904-06
+46	ar		kotub	writes	2018-09-17 23:30:38.135872-06
+47	ar		-iyna	he	2018-09-17 23:30:38.143999-06
+48	ar		-ona	you all FEM	2018-09-17 23:32:24.798245-06
+49	ar		ya-	they MASC	2018-09-17 23:32:48.798003-06
+50	ar		-uwna	they MASC	2018-09-17 23:32:48.80605-06
+51	ar		ya-	they FEM	2018-09-17 23:33:09.859495-06
+52	ar		kotub	wite	2018-09-17 23:33:09.866892-06
+53	ar		-uwna	they FEM	2018-09-17 23:33:09.874763-06
+54	ar		>anota	you FEM	2018-09-17 23:33:41.869636-06
+55	ar		jolis	sit	2018-09-17 23:33:41.883229-06
+56	ar		-iyna	you FEM	2018-09-17 23:33:41.890174-06
+57	ar		Sil	arrive	2018-09-17 23:34:09.163504-06
+58	ar		zur-	visited	2018-09-17 23:35:40.651633-06
+59	ar		-otu	I	2018-09-17 23:35:40.653401-06
+60	ar		Tir	flew	2018-09-17 23:35:56.243139-06
+61	ar		zuwr	visits	2018-09-17 23:36:12.782366-06
+62	ar		-u	he	2018-09-17 23:36:12.789814-06
+63	ar		biyE	sell	2018-09-17 23:37:15.760093-06
+64	ar		naAm	sleep	2018-09-17 23:37:33.847041-06
+65	ar		Tiyr	fly	2018-09-17 23:37:52.291929-06
+66	ar		$ak	complained	2018-09-17 23:38:10.735161-06
+67	ar		ma$	walked	2018-09-17 23:38:25.734858-06
+68	ar		$akaw	complained	2018-09-17 23:38:57.496828-06
+69	ar		$akaA	complained	2018-09-17 23:39:11.804714-06
+70	ar		kayofa	how	2018-09-17 23:40:42.362136-06
+71	ar		na-	we	2018-09-17 23:40:42.366339-06
+72	ar		quwl	say	2018-09-17 23:40:42.368233-06
+73	ar		-u	we	2018-09-17 23:40:42.36977-06
+74	ar		"yes"	yes	2018-09-17 23:40:42.371071-06
+75	ar		?	?	2018-09-17 23:40:42.374788-06
+76	ar		maA*aA	what	2018-09-17 23:41:58.156109-06
+77	ar		ya-	it	2018-09-17 23:41:58.157352-06
+78	ar		Eoniy	mean	2018-09-17 23:41:58.160883-06
+79	ar		-u	it	2018-09-17 23:41:58.162436-06
+80	ar		na'am	yes	2018-09-17 23:41:58.163705-06
+81	ar		Aisom	name	2018-09-17 23:42:40.436591-06
+82	ar		-u	NOM	2018-09-17 23:42:40.438254-06
+83	ar		-ka	your MASC	2018-09-17 23:42:40.439438-06
+84	ar		-ki	your FEM	2018-09-17 23:42:57.09164-06
+85	ar		maA	what	2018-09-17 23:43:23.675787-06
+86	ar		-iy	my	2018-09-17 23:44:13.208021-06
+87	ar		daAniyaAl	Daniel	2018-09-17 23:44:13.209675-06
+88	ar		.	.	2018-09-17 23:44:13.210791-06
+89	ar		laA	not	2018-09-17 23:44:44.089972-06
+90	ar		Eorif	know	2018-09-17 23:44:44.092066-06
+91	ar		naEamo	yes	2018-09-17 23:45:19.422335-06
+92	ar		!	!	2018-09-17 23:45:19.548181-06
+93	ar		laA	no	2018-09-17 23:45:33.474591-06
+94	ar		HaAl	condition	2018-09-17 23:46:13.210217-06
+95	ar		>axobaAr	news	2018-09-17 23:47:33.750076-06
+96	ar		dorus	study	2018-09-17 23:48:26.195959-06
+97	ar		sokun	live	2018-09-17 23:48:43.130929-06
+98	ar		Eomal	work	2018-09-17 23:49:02.916809-06
+99	ar		maroHabA	welcome	2018-09-17 23:50:52.676767-06
+100	ar		-F	?	2018-09-17 23:50:52.680618-06
+101	ar		Aals-	the	2018-09-17 23:51:51.329235-06
+102	ar		salaAm	peace	2018-09-17 23:51:51.336278-06
+103	ar		Ealayo	be unto	2018-09-17 23:51:51.343993-06
+104	ar		-kumo	you all	2018-09-17 23:51:51.351146-06
+105	ar		xuroTuwmo	hose	2018-09-17 23:52:05.68971-06
+106	ar		$amos	sun	2018-09-17 23:52:14.542132-06
+107	ar		gaA}imo	cloudy	2018-09-17 23:52:22.13595-06
+108	ar		>aholAF	familiarly	2018-09-17 23:53:57.805458-06
+109	ar		wa-	and	2018-09-17 23:54:37.066462-06
+110	ar		Ealayo	unto	2018-09-17 23:54:37.073203-06
+111	ar		-kum	you all MASC	2018-09-17 23:54:37.080467-06
+112	ar		Aal-	the	2018-09-17 23:54:37.087638-06
+113	ar		sa~laAm	peace	2018-09-17 23:54:37.093281-06
+114	ar		ta-	we-PAST	2018-09-17 23:55:34.43416-06
+115	ar		$ara~fo	honor	2018-09-17 23:55:34.441248-06
+116	ar		-naA	we-PAST	2018-09-17 23:55:34.44841-06
+117	ar		IilaY	to	2018-09-17 23:55:56.933165-06
+118	ar		Al-	the	2018-09-17 23:55:56.940894-06
+119	ar		li~qaA	encounter	2018-09-17 23:55:56.948296-06
+120	ar		maEo	with	2018-09-17 23:56:37.735472-06
+121	ar		sa~lAmap	peace	2018-09-17 23:56:37.744262-06
+122	ar		nizAro	the name Nizar	2018-09-17 23:57:09.456779-06
+123	ar		>adiyb	the name Adib	2018-09-17 23:57:33.627093-06
+124	ar		halaA	the name Hala	2018-09-17 23:57:47.858791-06
+125	ar		mykA}yl	Mikhail	2018-09-17 23:58:13.548422-06
+126	ar		sAly	the name Sali	2018-09-17 23:58:26.063264-06
+127	ar		SabaAH	morning	2018-09-17 23:59:33.955472-06
+128	ar		xayor	good	2018-09-17 23:59:33.963492-06
+129	ar		nuwr	light	2018-09-18 00:00:04.312556-06
+130	ar		Alo-	the	2018-09-18 00:01:33.935781-06
+131	ar		Hamod	praise	2018-09-18 00:01:33.943025-06
+132	ar		li-	belong to	2018-09-18 00:01:33.951231-06
+133	ar		l~`ah	God	2018-09-18 00:01:33.958082-06
+134	ar		bi-	by	2018-09-18 00:01:33.959204-06
+135	ar		-K	INDEF	2018-09-18 00:01:33.960463-06
+136	ar		mino	from	2018-09-18 00:13:29.204984-06
+137	ar		>ayona	where	2018-09-18 00:13:29.206767-06
+138	ar		faAso	Fez	2018-09-18 00:13:45.995762-06
+139	ar		tuwniso	Tunis	2018-09-18 00:14:01.480427-06
+140	ar		>anota	you	2018-09-18 00:14:53.95916-06
+141	ar		>anotumaA	you two	2018-09-18 00:15:37.116688-06
+142	ar		bayoruwto	Beirut	2018-09-18 00:15:37.12581-06
+143	ar		humaA	they both	2018-09-18 00:16:27.943911-06
+144	ar		AlqaAhirp	Cairo	2018-09-18 00:16:27.947237-06
+145	ar		huna~	they FEM	2018-09-18 00:17:11.997933-06
+146	ar		dima$oqo	Damascus	2018-09-18 00:17:11.999675-06
+147	ar		bagodAdo	Baghdad	2018-09-18 00:17:30.240541-06
+148	ar		fy	in	2018-09-18 00:18:21.257662-06
+149	ar		Almagrib	Morocco	2018-09-18 00:18:21.259485-06
+\.
+
+
+--
+-- Name: morphemes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dan
+--
+
+SELECT pg_catalog.setval('morphemes_id_seq', 149, true);
+
+
+--
+-- Data for Name: new_cards; Type: TABLE DATA; Schema: public; Owner: dan
+--
+
+COPY new_cards (id, lang, type, en_task, en_content, morpheme_ids_csv, created_at) FROM stdin;
+2	ar	PhraseCard		I wrote.	5,6,7,8	2018-09-17 23:10:00.54689-06
+3	ar	PhraseCard	Say to a man	You wrote.	9,10,11	2018-09-17 23:11:16.009092-06
+4	ar	PhraseCard	Say to a woman	You wrote.	12,10,14	2018-09-17 23:12:11.223863-06
+5	ar	PhraseCard	Say:	He wrote.	15,16,17	2018-09-17 23:23:30.452297-06
+6	ar	PhraseCard	Say	She wrote.	18,16,19	2018-09-17 23:23:46.369769-06
+7	ar	PhraseCard	Say	We wrote.	20,16,21	2018-09-17 23:24:03.309825-06
+8	ar	PhraseCard	Say to 3+ persons including a man	You wrote.	22,16,23	2018-09-17 23:26:13.816627-06
+9	ar	PhraseCard	Say to 3+ women	You wrote.	24,16,25	2018-09-17 23:26:49.617293-06
+10	ar	PhraseCard	Say of 3+ persons including a man	They wrote.	26,16,27	2018-09-17 23:27:17.53513-06
+11	ar	PhraseCard	Say of 3+ women	They wrote.	28,16,29	2018-09-17 23:27:37.93301-06
+12	ar	PhraseCard	Say	I write	30,31,32,33	2018-09-17 23:28:03.279709-06
+13	ar	PhraseCard	Say to a man	You write.	34,35,32,36	2018-09-17 23:28:31.425706-06
+14	ar	PhraseCard	Say to a woman	You write	37,38,32,39	2018-09-17 23:28:59.596347-06
+15	ar	PhraseCard	Say to 3+ persons including a man	You write.	22,40,32,41	2018-09-17 23:29:45.211073-06
+16	ar	PhraseCard	Say to 3+ women	You write.	42,43,32,44	2018-09-17 23:30:16.692335-06
+17	ar	PhraseCard	Say	He writes.	15,45,46,47	2018-09-17 23:30:38.150933-06
+18	ar	PhraseCard	Say to 3+ persons including a man	You write.	22,40,32,41	2018-09-17 23:31:45.690643-06
+19	ar	PhraseCard	Say to 3+ women	You write.	24,43,32,48	2018-09-17 23:32:24.80782-06
+20	ar	PhraseCard	Say of 3+ persons including a man	They write.	26,49,32,50	2018-09-17 23:32:48.813131-06
+21	ar	PhraseCard	Say of 3+ women	They write.	28,51,52,53	2018-09-17 23:33:09.886637-06
+22	ar	PhraseCard	Say to a woman	You sit.	54,38,55,56	2018-09-17 23:33:41.895764-06
+23	ar	PhraseCard	Say	I arrive.	30,31,57,33	2018-09-17 23:34:09.170603-06
+24	ar	PhraseCard	Say	I visited.	30,58,59	2018-09-17 23:35:40.654171-06
+25	ar	PhraseCard	Say	I flew.	30,60,59	2018-09-17 23:35:56.250694-06
+26	ar	PhraseCard	Say	He visits.	15,45,61,62	2018-09-17 23:36:12.796645-06
+27	ar	PhraseCard	Say of 3+ persons including a man:	They sell.	26,49,63,50	2018-09-17 23:37:15.772566-06
+28	ar	PhraseCard	Say	He sleeps.	15,45,64,62	2018-09-17 23:37:33.855113-06
+29	ar	PhraseCard	Say	I fly.	30,31,65,33	2018-09-17 23:37:52.299204-06
+30	ar	PhraseCard	Say	She complained.	18,66,19	2018-09-17 23:38:10.742412-06
+31	ar	PhraseCard	Say	She walked.	18,67,19	2018-09-17 23:38:25.743348-06
+32	ar	PhraseCard	Say	I complained.	30,68,59	2018-09-17 23:38:57.505502-06
+33	ar	PhraseCard	Say	He complained.	15,69	2018-09-17 23:39:11.811374-06
+34	ar	PhraseCard	Ask	How do we say "yes"?	70,71,72,73,74,75	2018-09-17 23:40:42.375897-06
+35	ar	PhraseCard	Ask	What does "na`am" mean?	76,77,78,79,80,75	2018-09-17 23:41:58.165542-06
+36	ar	PhraseCard	Say to a man	your name	81,82,83	2018-09-17 23:42:40.440283-06
+37	ar	PhraseCard	Say to a woman	your name	81,82,84	2018-09-17 23:42:57.092619-06
+38	ar	PhraseCard	Ask a man:	What is your name?	85,81,82,83,75	2018-09-17 23:43:23.684458-06
+39	ar	PhraseCard	Ask a woman	What is your name?	85,81,82,84,75	2018-09-17 23:43:46.292959-06
+40	ar	PhraseCard	Say	My name is Daniel.	81,86,87,88	2018-09-17 23:44:13.211382-06
+41	ar	PhraseCard	Say	I don't know.	89,31,90,33,88	2018-09-17 23:44:44.093606-06
+42	ar	PhraseCard	Say	Yes!	91,92	2018-09-17 23:45:19.548897-06
+43	ar	PhraseCard	Say	no	93	2018-09-17 23:45:33.475757-06
+44	ar	PhraseCard	Ask a man	How are you?	70,94,82,83,75	2018-09-17 23:46:13.212916-06
+45	ar	PhraseCard	Ask a woman	How are you?	70,94,82,84,75	2018-09-17 23:46:49.460194-06
+46	ar	PhraseCard	Ask a man	What's new for you?	85,95,82,83,75	2018-09-17 23:47:33.754762-06
+47	ar	PhraseCard	Ask a woman	What's new for you?	85,95,82,84,75	2018-09-17 23:48:08.536598-06
+48	ar	PhraseCard	Say	I study.	31,96,33,88	2018-09-17 23:48:26.197791-06
+49	ar	PhraseCard	Say	I live	31,97,33,88	2018-09-17 23:48:43.138611-06
+50	ar	PhraseCard	Say	I work.	31,98,33,88	2018-09-17 23:49:02.925891-06
+51	ar	PhraseCard	Say	Welcome!	99,100,92	2018-09-17 23:50:52.68272-06
+52	ar	PhraseCard	Say	Peace be unto you.	101,102,82,103,104,88	2018-09-17 23:51:51.357234-06
+53	ar	PhraseCard	Say	hose	105	2018-09-17 23:52:05.696374-06
+54	ar	PhraseCard	Say	sun	106	2018-09-17 23:52:14.548142-06
+55	ar	PhraseCard	Say	cloudy	107	2018-09-17 23:52:22.142297-06
+56	ar	PhraseCard	Say	familiarly	108	2018-09-17 23:53:57.823639-06
+57	ar	PhraseCard	Respond	And unto you peace.	109,110,111,82,112,113,82,88	2018-09-17 23:54:37.095621-06
+58	ar	PhraseCard	Respond	We're honored	114,115,116,88	2018-09-17 23:55:34.455789-06
+59	ar	PhraseCard	Say	See you later	117,118,119,88	2018-09-17 23:55:56.95575-06
+60	ar	PhraseCard	Say	(Go) with peace.	120,118,121,88	2018-09-17 23:56:37.751713-06
+61	ar	PhraseCard	Ask a man	Are you Nizar?	34,122,75	2018-09-17 23:57:09.463483-06
+62	ar	PhraseCard	Say	I'm Adib.	30,123,88	2018-09-17 23:57:33.634113-06
+63	ar	PhraseCard	Ask a woman	Are you Hala?	37,124,75	2018-09-17 23:57:47.866468-06
+64	ar	PhraseCard	Say	He is Mikhail	15,125,88	2018-09-17 23:58:13.558899-06
+65	ar	PhraseCard	Say	She is Sali.	18,126,88	2018-09-17 23:58:26.071554-06
+66	ar	PhraseCard	Say good morning		127,118,128,88	2018-09-17 23:59:33.970173-06
+67	ar	PhraseCard	Respond to being wished a good morning		127,118,129,88	2018-09-18 00:00:04.314366-06
+68	ar	PhraseCard	Ask	How are you?	70,118,94,75	2018-09-18 00:00:28.16745-06
+69	ar	PhraseCard	Respond	Praise be to God; good.	130,131,82,132,133,134,128,135,88	2018-09-18 00:01:33.961338-06
+70	ar	PhraseCard	Ask a woman	Where are you from?	136,137,37,75	2018-09-18 00:13:29.208705-06
+71	ar	PhraseCard	Answer	I'm from Fez.	30,136,138,88	2018-09-18 00:13:46.002731-06
+72	ar	PhraseCard	Say	He's from Tunis.	15,136,139,88	2018-09-18 00:14:01.482308-06
+73	ar	PhraseCard	Say	She's from Tunis.	18,136,139,88	2018-09-18 00:14:19.807317-06
+74	ar	PhraseCard	Say to a man	You're from Tunis.	140,136,139,88	2018-09-18 00:14:53.961112-06
+75	ar	PhraseCard	Say to a woman	You're from Tunis.	37,136,139,88	2018-09-18 00:15:10.939274-06
+76	ar	PhraseCard	Say to 2 persons	You're from Beirut.	141,136,142,88	2018-09-18 00:15:37.1272-06
+77	ar	PhraseCard	Say to 3+ persons including a man	You're from Beirut	22,136,142,88	2018-09-18 00:15:58.715973-06
+78	ar	PhraseCard	Say of 2 persons	They're from Cairo.	143,136,144,88	2018-09-18 00:16:27.948588-06
+79	ar	PhraseCard	Say of 3+ persons including a man	They're from Cairo.	26,136,144,88	2018-09-18 00:16:51.310507-06
+80	ar	PhraseCard	Say	They're from Damascus.	145,136,146,88	2018-09-18 00:17:12.00099-06
+81	ar	PhraseCard	Say	We're from Baghdad.	20,136,147,88	2018-09-18 00:17:30.242126-06
+82	ar	PhraseCard	Ask	Where is Fez?	137,138,75	2018-09-18 00:17:53.323723-06
+83	ar	PhraseCard	Answer	Fez is in Morocco.	138,148,149,88	2018-09-18 00:18:21.260845-06
+\.
+
+
+--
+-- Name: new_cards_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dan
+--
+
+SELECT pg_catalog.setval('new_cards_id_seq', 83, true);
+
+
+--
 -- Data for Name: paragraphs; Type: TABLE DATA; Schema: public; Owner: dan
 --
 
@@ -2466,6 +2819,7 @@ COPY schema_version (installed_rank, version, description, type, script, checksu
 9	9	add arabic stem changes	SQL	V9__add_arabic_stem_changes.sql	-174351429	postgres	2018-09-07 15:42:49.611614	18	t
 10	10	add arabic unique conjugations	SQL	V10__add_arabic_unique_conjugations.sql	1328814492	postgres	2018-09-07 18:18:30.616128	41	t
 11	11	add arabic nouns	SQL	V11__add_arabic_nouns.sql	-187805131	postgres	2018-09-07 19:47:13.859369	22	t
+12	12	create morphemes and new cards	SQL	V12__create_morphemes_and_new_cards.sql	208969610	postgres	2018-09-17 21:21:05.001337	152	t
 \.
 
 
@@ -2499,6 +2853,22 @@ ALTER TABLE ONLY goals
 
 ALTER TABLE ONLY leafs
     ADD CONSTRAINT leafs_pkey PRIMARY KEY (leaf_id);
+
+
+--
+-- Name: morphemes morphemes_pkey; Type: CONSTRAINT; Schema: public; Owner: dan
+--
+
+ALTER TABLE ONLY morphemes
+    ADD CONSTRAINT morphemes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: new_cards new_cards_pkey; Type: CONSTRAINT; Schema: public; Owner: dan
+--
+
+ALTER TABLE ONLY new_cards
+    ADD CONSTRAINT new_cards_pkey PRIMARY KEY (id);
 
 
 --

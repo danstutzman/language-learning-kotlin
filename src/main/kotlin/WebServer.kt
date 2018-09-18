@@ -16,6 +16,8 @@ import com.danstutzman.routes.GetFrInfinitives
 import com.danstutzman.routes.GetFrNonverbs
 import com.danstutzman.routes.GetFrStemChanges
 import com.danstutzman.routes.GetFrUniqueConjugations
+import com.danstutzman.routes.GetMorphemes
+import com.danstutzman.routes.GetNewCards
 import com.danstutzman.routes.GetParagraph
 import com.danstutzman.routes.GetParagraphs
 import com.danstutzman.routes.GetRoot
@@ -33,6 +35,8 @@ import com.danstutzman.routes.PostFrInfinitives
 import com.danstutzman.routes.PostFrNonverbs
 import com.danstutzman.routes.PostFrStemChanges
 import com.danstutzman.routes.PostFrUniqueConjugations
+import com.danstutzman.routes.PostMorphemes
+import com.danstutzman.routes.PostNewCards
 import com.danstutzman.routes.PostParagraph
 import com.danstutzman.routes.PostParagraphAddGoal
 import com.danstutzman.routes.PostParagraphDisambiguateGoal
@@ -54,6 +58,35 @@ fun extractLeafIdsToDelete(req: Request): List<Int> {
     val match = regex.find(paramName)
     if (match != null) match.groupValues[1].toInt() else null
   }.filterNotNull()
+}
+
+fun extractMorphemeIdsToDelete(req: Request): List<Int> {
+  val regex = "deleteMorpheme([0-9]+)".toRegex()
+  return req.queryParams().map { paramName ->
+    val match = regex.find(paramName)
+    if (match != null) match.groupValues[1].toInt() else null
+  }.filterNotNull()
+}
+
+fun extractNewCardIdsToDelete(req: Request): List<Int> {
+  val regex = "deleteNewCard([0-9]+)".toRegex()
+  return req.queryParams().map { paramName ->
+    val match = regex.find(paramName)
+    if (match != null) match.groupValues[1].toInt() else null
+  }.filterNotNull()
+}
+
+fun extractNewMorphemes(req: Request): List<NewMorpheme> {
+  val newMorphemes = mutableListOf<NewMorpheme>()
+  for (i in 0..1000) {
+    val l2 = req.queryParams("l2$i") ?: break
+    if (l2 == "") {
+      break
+    }
+    val gloss = normalize(req.queryParams("gloss$i"))!!
+    newMorphemes.add(NewMorpheme(l2, gloss))
+  }
+  return newMorphemes
 }
 
 fun extractWordDisambiguations(req: Request): List<WordDisambiguation> {
@@ -125,6 +158,33 @@ fun main(args: Array<String>) {
       normalize(req.queryParams("en_past"))!!,
       normalize(req.queryParams("fr_mixed"))!!)
     res.redirect("/fr/infinitives")
+  }
+
+  service.get("/:lang/morphemes") { req: Request, _: Response ->
+    val lang = req.params("lang")!!
+    GetMorphemes(db, lang)
+  }
+  service.post("/:lang/morphemes") { req: Request, res: Response ->
+    val lang = req.params("lang")!!
+    PostMorphemes(db, lang, extractMorphemeIdsToDelete(req),
+      req.queryParams("newMorpheme") != null,
+      normalize(req.queryParams("type"))!!,
+      normalize(req.queryParams("l2"))!!,
+      normalize(req.queryParams("gloss"))!!)
+    res.redirect("/$lang/morphemes")
+  }
+
+  service.get("/:lang/new-cards") { req: Request, _: Response ->
+    val lang = req.params("lang")!!
+    GetNewCards(db, lang)
+  }
+  service.post("/:lang/new-cards") { req: Request, res: Response ->
+    val lang = req.params("lang")!!
+    PostNewCards(db, lang, extractNewCardIdsToDelete(req),
+      normalize(req.queryParams("enTask"))!!,
+      normalize(req.queryParams("enContent"))!!,
+      extractNewMorphemes(req))
+    res.redirect("/$lang/new-cards")
   }
 
   service.get("/ar/nonverbs") { _: Request, _: Response -> GetArNonverbs(db) }

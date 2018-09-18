@@ -21,5 +21,7 @@ class Db(
   val frStemChangesTable = FrStemChangesTable(conn)
   val frUniqueConjugationsTable = FrUniqueConjugationsTable(conn)
   val goalsTable = GoalsTable(conn)
+  val morphemesTable = MorphemesTable(conn)
+  val newCardsTable = NewCardsTable(conn)
   val paragraphsTable = ParagraphsTable(conn)
 }
