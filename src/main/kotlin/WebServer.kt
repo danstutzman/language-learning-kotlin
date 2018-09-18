@@ -176,7 +176,13 @@ fun main(args: Array<String>) {
 
   service.get("/:lang/new-cards") { req: Request, _: Response ->
     val lang = req.params("lang")!!
-    GetNewCards(db, lang)
+    GetNewCards(db, lang, false)
+  }
+  service.get("/:lang/new-cards.json") { req: Request, res: Response ->
+    val lang = req.params("lang")!!
+    res.header("Access-Control-Allow-Origin", "*")
+    res.header("Content-Type", "application/json")
+    GetNewCards(db, lang, true)
   }
   service.post("/:lang/new-cards") { req: Request, res: Response ->
     val lang = req.params("lang")!!
