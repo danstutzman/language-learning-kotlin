@@ -115,7 +115,7 @@ fun main(args: Array<String>) {
   System.setProperty("org.jooq.no-logo", "true")
 
   val logger: Logger = LoggerFactory.getLogger("WebServer.kt")
-  val port = 3000
+  val port = 4000
   val jdbcUrl = "jdbc:postgresql://localhost:5432/language_learning_kotlin"
 
   val conn = DriverManager.getConnection(jdbcUrl, "postgres", "")
