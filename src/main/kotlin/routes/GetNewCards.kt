@@ -20,7 +20,7 @@ data class MorphemeJson(
   val id: Int,
   val l2: String,
   val gloss: String,
-  val syllables: List<List<String>>
+  val syllableTriplets: List<List<String>>
 )
 
 fun GetNewCards(db: Db, lang: String, asJson: Boolean): String {
@@ -42,9 +42,10 @@ fun GetNewCards(db: Db, lang: String, asJson: Boolean): String {
             id = morpheme.morphemeId,
             l2 = morpheme.l2,
             gloss = morpheme.gloss,
-            syllables = SplitArabicMorphemeIntoSyllables(morpheme.l2).map {
-              listOf(it.c1, it.v, it.c2)
-            }
+            syllableTriplets =
+              SplitArabicMorphemeIntoSyllables(morpheme.l2).map {
+                listOf(it.c1, it.v, it.c2)
+              }
           )
         }
       )
