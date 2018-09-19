@@ -2,7 +2,6 @@ package com.danstutzman
 
 import com.danstutzman.bank.Bank
 import com.danstutzman.db.Db
-import com.danstutzman.grammars.ArabicMorphemeParser
 import com.danstutzman.routes.GetApi
 import com.danstutzman.routes.GetArNonverbs
 import com.danstutzman.routes.GetArNouns
@@ -52,7 +51,6 @@ import java.io.File
 import java.io.FileReader
 import java.sql.DriverManager
 import java.text.Normalizer
-import mouse.runtime.SourceString
 
 fun extractLeafIdsToDelete(req: Request): List<Int> {
   val regex = "deleteLeaf([0-9]+)".toRegex()
@@ -377,7 +375,4 @@ fun main(args: Array<String>) {
   service.afterAfter { req, res ->
     logger.info("${req.requestMethod()} ${req.pathInfo()} ${res.status()}")
   }
-
-  val parser = ArabicMorphemeParser()
-  println(parser.parse(SourceString("2+3")))
 }

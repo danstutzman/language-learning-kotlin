@@ -1,5 +1,79 @@
-    
-   // Example 2
+Result = Syllables !_ {Result}
+  ;
 
-   Sum    = Number ("+" Number)* !_ {sum} ;
-   Number = [0-9]+ {number} ;
+Syllables
+  = [?!.,] {SyllablesPunctuation}
+  / "-" Vowel EndConsonant CVC* {SyllablesStartingWithDashVowelEndConsonant}
+  / "-" Vowel CVC* {SyllablesStartingWithDashVowel}
+  / "-" "o" CVC* {SyllablesStartingWithDashO}
+  / "-" EndConsonant CVC* {SyllablesStartingWithDashEndConsonant}
+  / "-" CVC* Suffix? {SyllablesStartingWithDash}
+  / First? CVC* Suffix? {SyllablesNotStartingWithDash}
+  ;
+
+First
+  = "{" "l" [rSdDs]     {First1}
+  / "{" "lo"            {First2}
+  / "{" "l"             {First3}
+  / "{" EndConsonant?   {First4}
+  / ">a" EndConsonant?  {First5}
+  / "<iy" & "y"         {First6}
+  / "<i"                {First7}
+  / "Aals" & [s-]       {First8}
+  / "Aalo"              {First9}
+  / "Aal"               {First10}
+  / "Ai" EndConsonant?  {First11}
+  / Vowel EndConsonant? {First12}
+  ;
+
+Suffix
+  = [FNK]
+  / "Y"
+  / "-"
+  ;
+
+CVC
+  = Consonant "ap" {CVCEndsWithAP}
+  / StartConsonant "-" !_ {CVCStartConsonantDash}
+  / StartConsonant Vowel EndConsonant {CVCWithEndConsonant}
+  / StartConsonant Vowel {CVCWithoutEndConsonant}
+  ;
+
+StartConsonant
+  = "ll" & "ah"
+  / "ll" & "`h"
+  / "}"
+  / Consonant
+  ;
+
+Vowel
+  = "Ai"
+  / "a`"
+  / "aA^"
+  / "aA"
+  / "ay" !"o"
+  / "iy" !"a"
+  / "uw" ![aA]
+  / "Aa" // after L
+  / "y" ![aA]
+  / [aiuA`]
+  ;
+
+EndConsonant
+  = Consonant "o" Consonant !_
+  / Consonant "o"
+  / ">o"
+  / "b" & "b"
+  / "d" & "d"
+  / "l" & "l"
+  / "m" & "m"
+  / "n" & "n"
+  / "r" & [rK]
+  / "w" & "w"
+  / Consonant "-"
+  / Consonant !_
+  ;
+
+Consonant
+  = [btvjHxd*rzs$SDTZEgfqklmnhwy]
+  ;

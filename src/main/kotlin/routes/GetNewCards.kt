@@ -2,6 +2,7 @@ package com.danstutzman.routes
 
 import com.danstutzman.db.Db
 import com.danstutzman.db.Morpheme
+import com.danstutzman.grammars.SplitArabicMorphemeIntoSyllables
 import com.google.gson.GsonBuilder
 
 data class ResponseJson(
@@ -18,7 +19,8 @@ data class NewCardJson(
 data class MorphemeJson(
   val id: Int,
   val l2: String,
-  val gloss: String
+  val gloss: String,
+  val syllables: List<List<String>>
 )
 
 fun GetNewCards(db: Db, lang: String, asJson: Boolean): String {
@@ -36,7 +38,14 @@ fun GetNewCards(db: Db, lang: String, asJson: Boolean): String {
         enContent = newCard.enContent,
         morphemes = newCard.morphemeIdsCsv.split(",").map { it.toInt() }.map {
           val morpheme = morphemeById[it]!!
-          MorphemeJson(morpheme.morphemeId, morpheme.l2, morpheme.gloss)
+          MorphemeJson(
+            id = morpheme.morphemeId,
+            l2 = morpheme.l2,
+            gloss = morpheme.gloss,
+            syllables = SplitArabicMorphemeIntoSyllables(morpheme.l2).map {
+              listOf(it.c1, it.v, it.c2)
+            }
+          )
         }
       )
     }

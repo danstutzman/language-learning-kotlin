@@ -2524,17 +2524,11 @@ SELECT pg_catalog.setval('leafs_leaf_id_seq', 799, true);
 --
 
 COPY morphemes (id, lang, type, l2, gloss, created_at) FROM stdin;
-5	ar	PRO	>nA	I	2018-09-17 23:10:00.518506-06
 6	ar	CONJ	na-	I	2018-09-17 23:10:00.527942-06
-7	ar	V	kotub	wrote	2018-09-17 23:10:00.536188-06
 8	ar	CONJ	-u	I	2018-09-17 23:10:00.544327-06
-9	ar	PRO	>anota 	you-MASC	2018-09-17 23:11:15.982298-06
-10	ar	V	katab	wrote	2018-09-17 23:11:16.001554-06
 11	ar	CONJ	-ota	you-MASC	2018-09-17 23:11:16.007649-06
-12	ar	PRO	>anoti 	you-FEM	2018-09-17 23:12:11.203261-06
 14	ar	CONJ	-oti	you-FEM	2018-09-17 23:12:11.217232-06
 15	ar		huwa	he	2018-09-17 23:23:30.416933-06
-16	ar		katab	wrote	2018-09-17 23:23:30.435622-06
 17	ar		-a	he	2018-09-17 23:23:30.444173-06
 18	ar		hiya	she	2018-09-17 23:23:46.352488-06
 19	ar		-ato	she	2018-09-17 23:23:46.359604-06
@@ -2548,9 +2542,7 @@ COPY morphemes (id, lang, type, l2, gloss, created_at) FROM stdin;
 27	ar		-uwA	they MASC	2018-09-17 23:27:17.527958-06
 28	ar		hun~a	they FEM	2018-09-17 23:27:37.917288-06
 29	ar		-ona	they FEM	2018-09-17 23:27:37.926213-06
-30	ar		>nA	I	2018-09-17 23:28:03.254905-06
 31	ar		>a-	I	2018-09-17 23:28:03.262814-06
-32	ar		kotub	write	2018-09-17 23:28:03.270309-06
 33	ar		-u	I	2018-09-17 23:28:03.278278-06
 34	ar		>anota	you MASC	2018-09-17 23:28:31.402493-06
 35	ar		ta-	you MASC	2018-09-17 23:28:31.410046-06
@@ -2564,41 +2556,28 @@ COPY morphemes (id, lang, type, l2, gloss, created_at) FROM stdin;
 43	ar		ta-	you all FEM	2018-09-17 23:30:16.677856-06
 44	ar		iyna	you all FEM	2018-09-17 23:30:16.685607-06
 45	ar		ya-	he	2018-09-17 23:30:38.128904-06
-46	ar		kotub	writes	2018-09-17 23:30:38.135872-06
 47	ar		-iyna	he	2018-09-17 23:30:38.143999-06
 48	ar		-ona	you all FEM	2018-09-17 23:32:24.798245-06
 49	ar		ya-	they MASC	2018-09-17 23:32:48.798003-06
 50	ar		-uwna	they MASC	2018-09-17 23:32:48.80605-06
 51	ar		ya-	they FEM	2018-09-17 23:33:09.859495-06
-52	ar		kotub	wite	2018-09-17 23:33:09.866892-06
 53	ar		-uwna	they FEM	2018-09-17 23:33:09.874763-06
 54	ar		>anota	you FEM	2018-09-17 23:33:41.869636-06
-55	ar		jolis	sit	2018-09-17 23:33:41.883229-06
 56	ar		-iyna	you FEM	2018-09-17 23:33:41.890174-06
 57	ar		Sil	arrive	2018-09-17 23:34:09.163504-06
 58	ar		zur-	visited	2018-09-17 23:35:40.651633-06
 59	ar		-otu	I	2018-09-17 23:35:40.653401-06
-60	ar		Tir	flew	2018-09-17 23:35:56.243139-06
-61	ar		zuwr	visits	2018-09-17 23:36:12.782366-06
 62	ar		-u	he	2018-09-17 23:36:12.789814-06
-63	ar		biyE	sell	2018-09-17 23:37:15.760093-06
 64	ar		naAm	sleep	2018-09-17 23:37:33.847041-06
-65	ar		Tiyr	fly	2018-09-17 23:37:52.291929-06
-66	ar		$ak	complained	2018-09-17 23:38:10.735161-06
-67	ar		ma$	walked	2018-09-17 23:38:25.734858-06
-68	ar		$akaw	complained	2018-09-17 23:38:57.496828-06
 69	ar		$akaA	complained	2018-09-17 23:39:11.804714-06
 70	ar		kayofa	how	2018-09-17 23:40:42.362136-06
 71	ar		na-	we	2018-09-17 23:40:42.366339-06
 72	ar		quwl	say	2018-09-17 23:40:42.368233-06
 73	ar		-u	we	2018-09-17 23:40:42.36977-06
-74	ar		"yes"	yes	2018-09-17 23:40:42.371071-06
 75	ar		?	?	2018-09-17 23:40:42.374788-06
 76	ar		maA*aA	what	2018-09-17 23:41:58.156109-06
 77	ar		ya-	it	2018-09-17 23:41:58.157352-06
-78	ar		Eoniy	mean	2018-09-17 23:41:58.160883-06
 79	ar		-u	it	2018-09-17 23:41:58.162436-06
-80	ar		na'am	yes	2018-09-17 23:41:58.163705-06
 81	ar		Aisom	name	2018-09-17 23:42:40.436591-06
 82	ar		-u	NOM	2018-09-17 23:42:40.438254-06
 83	ar		-ka	your MASC	2018-09-17 23:42:40.439438-06
@@ -2608,17 +2587,10 @@ COPY morphemes (id, lang, type, l2, gloss, created_at) FROM stdin;
 87	ar		daAniyaAl	Daniel	2018-09-17 23:44:13.209675-06
 88	ar		.	.	2018-09-17 23:44:13.210791-06
 89	ar		laA	not	2018-09-17 23:44:44.089972-06
-90	ar		Eorif	know	2018-09-17 23:44:44.092066-06
 91	ar		naEamo	yes	2018-09-17 23:45:19.422335-06
 92	ar		!	!	2018-09-17 23:45:19.548181-06
 93	ar		laA	no	2018-09-17 23:45:33.474591-06
 94	ar		HaAl	condition	2018-09-17 23:46:13.210217-06
-95	ar		>axobaAr	news	2018-09-17 23:47:33.750076-06
-96	ar		dorus	study	2018-09-17 23:48:26.195959-06
-97	ar		sokun	live	2018-09-17 23:48:43.130929-06
-98	ar		Eomal	work	2018-09-17 23:49:02.916809-06
-99	ar		maroHabA	welcome	2018-09-17 23:50:52.676767-06
-100	ar		-F	?	2018-09-17 23:50:52.680618-06
 101	ar		Aals-	the	2018-09-17 23:51:51.329235-06
 102	ar		salaAm	peace	2018-09-17 23:51:51.336278-06
 103	ar		Ealayo	be unto	2018-09-17 23:51:51.343993-06
@@ -2629,45 +2601,70 @@ COPY morphemes (id, lang, type, l2, gloss, created_at) FROM stdin;
 108	ar		>aholAF	familiarly	2018-09-17 23:53:57.805458-06
 109	ar		wa-	and	2018-09-17 23:54:37.066462-06
 110	ar		Ealayo	unto	2018-09-17 23:54:37.073203-06
-111	ar		-kum	you all MASC	2018-09-17 23:54:37.080467-06
 112	ar		Aal-	the	2018-09-17 23:54:37.087638-06
-113	ar		sa~laAm	peace	2018-09-17 23:54:37.093281-06
 114	ar		ta-	we-PAST	2018-09-17 23:55:34.43416-06
 115	ar		$ara~fo	honor	2018-09-17 23:55:34.441248-06
 116	ar		-naA	we-PAST	2018-09-17 23:55:34.44841-06
-117	ar		IilaY	to	2018-09-17 23:55:56.933165-06
 118	ar		Al-	the	2018-09-17 23:55:56.940894-06
-119	ar		li~qaA	encounter	2018-09-17 23:55:56.948296-06
 120	ar		maEo	with	2018-09-17 23:56:37.735472-06
-121	ar		sa~lAmap	peace	2018-09-17 23:56:37.744262-06
 122	ar		nizAro	the name Nizar	2018-09-17 23:57:09.456779-06
-123	ar		>adiyb	the name Adib	2018-09-17 23:57:33.627093-06
 124	ar		halaA	the name Hala	2018-09-17 23:57:47.858791-06
-125	ar		mykA}yl	Mikhail	2018-09-17 23:58:13.548422-06
 126	ar		sAly	the name Sali	2018-09-17 23:58:26.063264-06
-127	ar		SabaAH	morning	2018-09-17 23:59:33.955472-06
-128	ar		xayor	good	2018-09-17 23:59:33.963492-06
-129	ar		nuwr	light	2018-09-18 00:00:04.312556-06
 130	ar		Alo-	the	2018-09-18 00:01:33.935781-06
-131	ar		Hamod	praise	2018-09-18 00:01:33.943025-06
 132	ar		li-	belong to	2018-09-18 00:01:33.951231-06
-133	ar		l~`ah	God	2018-09-18 00:01:33.958082-06
 134	ar		bi-	by	2018-09-18 00:01:33.959204-06
-135	ar		-K	INDEF	2018-09-18 00:01:33.960463-06
 136	ar		mino	from	2018-09-18 00:13:29.204984-06
 137	ar		>ayona	where	2018-09-18 00:13:29.206767-06
 138	ar		faAso	Fez	2018-09-18 00:13:45.995762-06
 139	ar		tuwniso	Tunis	2018-09-18 00:14:01.480427-06
 140	ar		>anota	you	2018-09-18 00:14:53.95916-06
+10	ar	V	katab-	wrote	2018-09-17 23:11:16.001554-06
+16	ar		katab-	wrote	2018-09-17 23:23:30.435622-06
+7	ar	V	-kotub-	wrote	2018-09-17 23:10:00.536188-06
+32	ar		-kotub-	write	2018-09-17 23:28:03.270309-06
+9	ar	PRO	>anota	you-MASC	2018-09-17 23:11:15.982298-06
+12	ar	PRO	>anoti	you-FEM	2018-09-17 23:12:11.203261-06
+55	ar		-jolis-	sit	2018-09-17 23:33:41.883229-06
+60	ar		Tir-	flew	2018-09-17 23:35:56.243139-06
+61	ar		-zuwr-	visits	2018-09-17 23:36:12.782366-06
+63	ar		-biyE-	sell	2018-09-17 23:37:15.760093-06
+65	ar		Tiyr-	fly	2018-09-17 23:37:52.291929-06
+67	ar		-ma$-	walked	2018-09-17 23:38:25.734858-06
+66	ar		$ak-	complained	2018-09-17 23:38:10.735161-06
+68	ar		$akaw-	complained	2018-09-17 23:38:57.496828-06
+74	ar		kanadaA	Canada	2018-09-17 23:40:42.371071-06
+80	ar		naEamo	yes	2018-09-17 23:41:58.163705-06
+78	ar		-Eoniy	mean	2018-09-17 23:41:58.160883-06
+95	ar		>axobaAro	news	2018-09-17 23:47:33.750076-06
+90	ar		-Eorif-	know	2018-09-17 23:44:44.092066-06
+96	ar		-dorus-	study	2018-09-17 23:48:26.195959-06
+97	ar		-sokun-	live	2018-09-17 23:48:43.130929-06
+98	ar		-Eomal-	work	2018-09-17 23:49:02.916809-06
+99	ar		maroHabAF	welcome	2018-09-17 23:50:52.676767-06
+111	ar		-kumo	you all MASC	2018-09-17 23:54:37.080467-06
+117	ar		<ilaY	to	2018-09-17 23:55:56.933165-06
+119	ar		liqaA	encounter	2018-09-17 23:55:56.948296-06
+121	ar		salAmap	peace	2018-09-17 23:56:37.744262-06
+123	ar		>adiybo	the name Adib	2018-09-17 23:57:33.627093-06
+127	ar		SabaAHo	morning	2018-09-17 23:59:33.955472-06
+125	ar		mykA}yl	Mikhail	2018-09-17 23:58:13.548422-06
+129	ar		nuwro	light	2018-09-18 00:00:04.312556-06
+131	ar		Hamod-	praise	2018-09-18 00:01:33.943025-06
+128	ar		xayrK	good	2018-09-17 23:59:33.963492-06
+133	ar		l~`h	God	2018-09-18 00:01:33.958082-06
 141	ar		>anotumaA	you two	2018-09-18 00:15:37.116688-06
 142	ar		bayoruwto	Beirut	2018-09-18 00:15:37.12581-06
 143	ar		humaA	they both	2018-09-18 00:16:27.943911-06
-144	ar		AlqaAhirp	Cairo	2018-09-18 00:16:27.947237-06
 145	ar		huna~	they FEM	2018-09-18 00:17:11.997933-06
-146	ar		dima$oqo	Damascus	2018-09-18 00:17:11.999675-06
 147	ar		bagodAdo	Baghdad	2018-09-18 00:17:30.240541-06
 148	ar		fy	in	2018-09-18 00:18:21.257662-06
-149	ar		Almagrib	Morocco	2018-09-18 00:18:21.259485-06
+5	ar	PRO	>anA	I	2018-09-17 23:10:00.518506-06
+30	ar		>anA	I	2018-09-17 23:28:03.254905-06
+46	ar		-kotub-	writes	2018-09-17 23:30:38.135872-06
+52	ar		-kotub-	wite	2018-09-17 23:33:09.866892-06
+144	ar		AaloqaAhirap	Cairo	2018-09-18 00:16:27.947237-06
+146	ar		dima$oq	Damascus	2018-09-18 00:17:11.999675-06
+149	ar		Alomagorib	Morocco	2018-09-18 00:18:21.259485-06
 \.
 
 
@@ -2732,13 +2729,11 @@ COPY new_cards (id, lang, type, en_task, en_content, morpheme_ids_csv, created_a
 48	ar	PhraseCard	Say	I study.	31,96,33,88	2018-09-17 23:48:26.197791-06
 49	ar	PhraseCard	Say	I live	31,97,33,88	2018-09-17 23:48:43.138611-06
 50	ar	PhraseCard	Say	I work.	31,98,33,88	2018-09-17 23:49:02.925891-06
-51	ar	PhraseCard	Say	Welcome!	99,100,92	2018-09-17 23:50:52.68272-06
 52	ar	PhraseCard	Say	Peace be unto you.	101,102,82,103,104,88	2018-09-17 23:51:51.357234-06
 53	ar	PhraseCard	Say	hose	105	2018-09-17 23:52:05.696374-06
 54	ar	PhraseCard	Say	sun	106	2018-09-17 23:52:14.548142-06
 55	ar	PhraseCard	Say	cloudy	107	2018-09-17 23:52:22.142297-06
 56	ar	PhraseCard	Say	familiarly	108	2018-09-17 23:53:57.823639-06
-57	ar	PhraseCard	Respond	And unto you peace.	109,110,111,82,112,113,82,88	2018-09-17 23:54:37.095621-06
 58	ar	PhraseCard	Respond	We're honored	114,115,116,88	2018-09-17 23:55:34.455789-06
 59	ar	PhraseCard	Say	See you later	117,118,119,88	2018-09-17 23:55:56.95575-06
 60	ar	PhraseCard	Say	(Go) with peace.	120,118,121,88	2018-09-17 23:56:37.751713-06
@@ -2750,7 +2745,6 @@ COPY new_cards (id, lang, type, en_task, en_content, morpheme_ids_csv, created_a
 66	ar	PhraseCard	Say good morning		127,118,128,88	2018-09-17 23:59:33.970173-06
 67	ar	PhraseCard	Respond to being wished a good morning		127,118,129,88	2018-09-18 00:00:04.314366-06
 68	ar	PhraseCard	Ask	How are you?	70,118,94,75	2018-09-18 00:00:28.16745-06
-69	ar	PhraseCard	Respond	Praise be to God; good.	130,131,82,132,133,134,128,135,88	2018-09-18 00:01:33.961338-06
 70	ar	PhraseCard	Ask a woman	Where are you from?	136,137,37,75	2018-09-18 00:13:29.208705-06
 71	ar	PhraseCard	Answer	I'm from Fez.	30,136,138,88	2018-09-18 00:13:46.002731-06
 72	ar	PhraseCard	Say	He's from Tunis.	15,136,139,88	2018-09-18 00:14:01.482308-06
@@ -2765,6 +2759,9 @@ COPY new_cards (id, lang, type, en_task, en_content, morpheme_ids_csv, created_a
 81	ar	PhraseCard	Say	We're from Baghdad.	20,136,147,88	2018-09-18 00:17:30.242126-06
 82	ar	PhraseCard	Ask	Where is Fez?	137,138,75	2018-09-18 00:17:53.323723-06
 83	ar	PhraseCard	Answer	Fez is in Morocco.	138,148,149,88	2018-09-18 00:18:21.260845-06
+51	ar	PhraseCard	Say	Welcome!	99,92	2018-09-17 23:50:52.68272-06
+57	ar	PhraseCard	Respond	And unto you peace.	109,110,111,82,112,102,82,88	2018-09-17 23:54:37.095621-06
+69	ar	PhraseCard	Respond	Praise be to God; good.	130,131,82,132,133,134,128,88	2018-09-18 00:01:33.961338-06
 \.
 
 
