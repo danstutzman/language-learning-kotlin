@@ -372,6 +372,9 @@ fun main(args: Array<String>) {
     res.header("Content-Type", "application/json")
     PostApi(db, req.body())
   }
+  service.after { _: Request, res: Response ->
+    res.header("Content-Encoding", "gzip")
+  }
   service.afterAfter { req, res ->
     logger.info("${req.requestMethod()} ${req.pathInfo()} ${res.status()}")
   }
