@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 NAILGUN_DIR=../nailgun-nailgun-all-0.9.1
 KOTLINC_DIR=~/dev/kotlinc
 
@@ -15,11 +15,21 @@ if [ pom.xml -nt .mvn-classpath ]; then
   mvn dependency:build-classpath -Dmdep.outputFile=.mvn-classpath
 fi
 
+if [[ src/main/kotlin/grammars/ArabicMorphemeSemantics.kt -nt target/classes/com/danstutzman/grammars/ArabicMorphemeSemantics.class ]]; then
+  $NAILGUN_DIR/ng \
+    org.jetbrains.kotlin.preloading.Preloader \
+    org.jetbrains.kotlin.cli.jvm.K2JVMCompiler \
+    src/main/kotlin/grammars/ArabicMorphemeSemantics.kt \
+    -d $PWD/target/classes \
+    -cp `cat .mvn-classpath`:target/classes
+fi
+
 for JAVA in `find target/generated-sources -name "*.java"`; do
   CLASS=$JAVA
 
-  # replace target/generated-sources/grammars with target/classes
+  # replace target/generated-sources/* with target/classes
   CLASS=${CLASS/target\/generated-sources\/grammars\//target\/classes\/}
+  CLASS=${CLASS/target\/generated-sources\/jooq\//target\/classes\/}
 
   CLASS=${CLASS/.java/.class}
 
@@ -38,10 +48,10 @@ for KT in `find src/main/kotlin -name "*.kt"` `find src/test/kotlin -name "*.kt"
   CLASS=$KT
 
   # replace src/main/kotlin/ with target/classes
-  CLASS=${CLASS/src\/main\/kotlin\//target\/classes\/}
+  CLASS=${CLASS/src\/main\/kotlin\//target\/classes\/com\/danstutzman\/}
 
   # replace src/test/kotlin/ with target/classes
-  CLASS=${CLASS/src\/test\/kotlin\//target\/classes\/}
+  CLASS=${CLASS/src\/test\/kotlin\//target\/classes\/com\/danstutzman\/}
 
   if [[ $KT -nt ${CLASS/.kt/.class} && $KT -nt ${CLASS/.kt/Kt.class} ]]; then
     KTS="$KTS $KT"
