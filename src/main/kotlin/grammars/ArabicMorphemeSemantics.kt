@@ -16,8 +16,8 @@ class ArabicMorphemeSemantics: mouse.runtime.SemanticsBase() {
   }
 
   fun SyllablesPunctuation() {
-    val char = rhs(0).text()
-    lhs().put(listOf(CVC(c1 = "", v = "", c2 = char)))
+    val char = rhs(1).text()
+    lhs().put(listOf(CVC(c1 = "", v = "", c2 = "-" + char)))
   }
 
   // Syllables = "-" Vowel EndConsonant CVC* LastConsonant?

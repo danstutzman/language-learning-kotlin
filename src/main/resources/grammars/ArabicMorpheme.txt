@@ -2,7 +2,7 @@ Result = Syllables !_ {Result}
   ;
 
 Syllables
-  = [?!.,] {SyllablesPunctuation}
+  = "-" [?!.,] {SyllablesPunctuation}
   / "-" Vowel EndConsonant CVC* {SyllablesStartingWithDashVowelEndConsonant}
   / "-" Vowel CVC* {SyllablesStartingWithDashVowel}
   / "-" "o" CVC* {SyllablesStartingWithDashO}
