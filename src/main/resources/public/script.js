@@ -207,7 +207,34 @@ function convertBuckwalterToQalam(buckwalter) {
     .join('');
 }
 
+function convertQalamToBuckwalter(qalam) {
+  try {
+    return module.exports.parse(qalam);
+  } catch (e) {
+    return '';
+  }
+}
+
 function onLoad() {
+  for (const element of document.getElementsByClassName('ar-qalam')) {
+    const rowId = element.getAttribute('data-row-id');
+    if (rowId === null) continue;
+
+    const qalam = element.value;
+    if (document.getElementById(`ar-buckwalter-${rowId}`) != null) {
+      document.getElementById(`ar-buckwalter-${rowId}`).innerHTML =
+        convertQalamToBuckwalter(qalam);
+    }
+
+    element.addEventListener('input', function (e) {
+      const qalam = e.target.value;
+      if (document.getElementById(`ar-buckwalter-${rowId}`) != null) {
+        document.getElementById(`ar-buckwalter-${rowId}`).innerHTML =
+          convertQalamToBuckwalter(qalam);
+      }
+    })
+  }
+
   for (const element of document.getElementsByClassName('ar-buckwalter')) {
     const rowId = element.getAttribute('data-row-id');
     if (rowId === null) continue;

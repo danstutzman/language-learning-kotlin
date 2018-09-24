@@ -51,6 +51,7 @@ class MorphemesTable (
         MORPHEMES.GLOSS)
       .from(MORPHEMES)
       .where(MORPHEMES.LANG.eq(lang))
+      .orderBy(MORPHEMES.ID)
       .fetch()
       .map {
         Morpheme(
@@ -106,6 +107,12 @@ class MorphemesTable (
         it.getValue(MORPHEMES.GLOSS)
       )
     }
+
+  fun updateL2(morphemeId: Int, l2: String) =
+    create.update(MORPHEMES)
+      .set(MORPHEMES.L2, l2)
+      .where(MORPHEMES.ID.eq(morphemeId))
+      .execute()
 
   fun delete(morphemeId: Int) =
     create.delete(MORPHEMES)

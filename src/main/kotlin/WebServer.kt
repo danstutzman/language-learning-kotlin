@@ -68,6 +68,17 @@ fun extractMorphemeIdsToDelete(req: Request): List<Int> {
   }.filterNotNull()
 }
 
+fun extractMorphemeIdsToSave(req: Request): List<Pair<Int, String>> {
+  val regex = "l2([0-9]+)".toRegex()
+  val morphemeIds = req.queryParams().map { paramName ->
+    val match = regex.find(paramName)
+    if (match != null) match.groupValues[1].toInt() else null
+  }.filterNotNull()
+  return morphemeIds.map { morphemeId ->
+    Pair(morphemeId, normalize(req.queryParams("l2$morphemeId"))!!)
+  }
+}
+
 fun extractNewCardIdsToDelete(req: Request): List<Int> {
   val regex = "deleteNewCard([0-9]+)".toRegex()
   return req.queryParams().map { paramName ->
@@ -167,6 +178,7 @@ fun main(args: Array<String>) {
   service.post("/:lang/morphemes") { req: Request, res: Response ->
     val lang = req.params("lang")!!
     PostMorphemes(db, lang, extractMorphemeIdsToDelete(req),
+      extractMorphemeIdsToSave(req),
       req.queryParams("newMorpheme") != null,
       normalize(req.queryParams("type"))!!,
       normalize(req.queryParams("l2"))!!,
