@@ -87,6 +87,7 @@ if [ "$KTS" != "" ]; then
     $KTS \
     -d $PWD/target/test-classes \
     -cp `cat .mvn-classpath`:target/classes
+  cp -r src/test/resources/ target/test-classes
 fi
 
 if [ "$1" == "run" ]; then

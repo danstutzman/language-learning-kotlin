@@ -22,3 +22,5 @@ Or run `./fastbuild test`
 # How to regenerate MousePEG parser
 
 `mvn mouse:generate`
+
+If you get an error, you might need to run `rm target/generated-sources/grammars/com/danstutzman/arabic/BuckwalterToQalamParser.java`
