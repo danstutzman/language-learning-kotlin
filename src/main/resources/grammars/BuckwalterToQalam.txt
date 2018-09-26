@@ -1,11 +1,12 @@
 Start
-  = Only !_
-  / First? CVV* {Start}
+  = Only !_ {StartOnly}
+  / First? CVV* !_ {StartFirstCVV}
   ;
 
 Only
   = "ato" {Onlyatotoat}
-  / [aiu] // case endings
+  / [aiu] {Onlyaiu} // case endings
+  / [.?!] {OnlyPunctuation} // case endings
   / "yna" {Onlyynatoiina}
   / "y" {Onlyytoii}
   / "K" {OnlyKtoiN}
@@ -49,7 +50,7 @@ CVV
   ;
 
 C
-  = [DHSTZbdfjklmnqrstxyz]
+  = [DHSTZbdfjklmnqrstxyz] {C}
   ;
 
 VV
@@ -64,8 +65,8 @@ VV
   / "`&" {VVBacktickAmpersandtoAQuoteu}
   / "`" {VVBacktickToA}
   / "iy" "o"? ![Ay] {VViytoii}
-  / [aiu]
-  / "EMPTY?" {VVEMPTY}
+  / [aiu] {VVaiu}
+  / "EMPTY"? {VVEMPTY}
   ;
 
 Tanween
