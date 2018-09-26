@@ -60,7 +60,7 @@ fun addContextToAtoms(atomContext1s: List<AtomContext1>): List<AtomContext2> {
     val left2 = if (i > 1) atomContext1s[i - 2].atom else null
     val right2 = if (i < atomContext1s.size - 2) atomContext1s[i + 2].atom
       else null
-    val isLast = (i === atomContext1s.size - 1)
+    val isLast = (i == atomContext1s.size - 1)
 
     if (COUNTS_AS_CONSONANT.contains(atom)) {
       if (currentSyllableHasInitialConsonant) {
