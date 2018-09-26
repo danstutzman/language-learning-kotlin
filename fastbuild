@@ -44,11 +44,30 @@ if [ "$JAVAS" != "" ]; then
   javac $JAVAS -d $PWD/target/classes -cp `cat .mvn-classpath`:target/classes
 fi
 
-for KT in `find src/main/kotlin -name "*.kt"` `find src/test/kotlin -name "*.kt"`; do
+for KT in `find src/main/kotlin -name "*.kt"`; do
   CLASS=$KT
 
   # replace src/main/kotlin/ with target/classes
   CLASS=${CLASS/src\/main\/kotlin\//target\/classes\/com\/danstutzman\/}
+
+  if [[ $KT -nt ${CLASS/.kt/.class} && $KT -nt ${CLASS/.kt/Kt.class} ]]; then
+    KTS="$KTS $KT"
+  fi
+done
+
+if [ "$KTS" != "" ]; then
+  echo "Compiling .kt to .class"
+  echo $KTS
+  time $NAILGUN_DIR/ng \
+    org.jetbrains.kotlin.preloading.Preloader \
+    org.jetbrains.kotlin.cli.jvm.K2JVMCompiler \
+    $KTS \
+    -d $PWD/target/classes \
+    -cp `cat .mvn-classpath`:target/classes
+fi
+
+for KT in `find src/test/kotlin -name "*.kt"`; do
+  CLASS=$KT
 
   # replace src/test/kotlin/ with target/classes
   CLASS=${CLASS/src\/test\/kotlin\//target\/classes\/com\/danstutzman\/}
@@ -65,7 +84,7 @@ if [ "$KTS" != "" ]; then
     org.jetbrains.kotlin.preloading.Preloader \
     org.jetbrains.kotlin.cli.jvm.K2JVMCompiler \
     $KTS \
-    -d $PWD/target/classes \
+    -d $PWD/target/test-classes \
     -cp `cat .mvn-classpath`:target/classes
 fi
 
