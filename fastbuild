@@ -66,6 +66,7 @@ if [ "$KTS" != "" ]; then
     -cp `cat .mvn-classpath`:target/classes
 fi
 
+KTS=
 for KT in `find src/test/kotlin -name "*.kt"`; do
   CLASS=$KT
 
