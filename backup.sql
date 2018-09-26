@@ -2524,7 +2524,104 @@ SELECT pg_catalog.setval('leafs_leaf_id_seq', 799, true);
 --
 
 COPY morphemes (id, lang, type, l2, gloss, created_at) FROM stdin;
+150	ar		cinda	had	2018-09-26 09:58:30.386549-06
+151	ar		-ka	your	2018-09-26 09:58:30.529513-06
+152	ar		haatif	telephone	2018-09-26 09:58:30.533513-06
+153	ar		-ki	your	2018-09-26 09:59:23.094697-06
+154	ar		cinda	near/with	2018-09-26 10:00:29.688052-06
+155	ar		kiitaab	book	2018-09-26 10:01:20.624555-06
+156	ar		-hu	his	2018-09-26 10:01:50.073688-06
+157	ar		-haa	her	2018-09-26 10:02:13.945601-06
+158	ar		-humaa	their	2018-09-26 10:05:27.11258-06
+159	ar		saacah	watch	2018-09-26 10:05:27.120471-06
+160	ar		-kumaa	you	2018-09-26 10:07:07.161316-06
+161	ar		sayyaarah	car	2018-09-26 10:07:42.688567-06
+162	ar		-hum	their	2018-09-26 10:08:52.417507-06
+163	ar		-hunna	their	2018-09-26 10:09:29.753318-06
+164	ar		-kum	their	2018-09-26 10:10:12.938397-06
+165	ar		-naa	our	2018-09-26 10:15:37.631337-06
+166	ar		anaa	I	2018-09-26 10:21:23.859332-06
+167	ar		'amriikiyy	American	2018-09-26 10:21:23.866922-06
+168	ar		miSriyy	Egyptian	2018-09-26 10:22:03.385695-06
+169	ar		miSriyyah	Egyptian	2018-09-26 10:22:24.799641-06
+170	ar		'amriikiyyah	American	2018-09-26 10:22:44.011171-06
+171	ar		lubnaan‎iyyah	Lebanese	2018-09-26 10:23:05.377696-06
+172	ar		hAdhaa	this	2018-09-26 10:23:28.216358-06
+173	ar		baab	door	2018-09-26 10:24:00.100659-06
+174	ar		lawkH	blackboard	2018-09-26 10:24:18.831875-06
+175	ar		Kursii	chair	2018-09-26 10:24:38.692594-06
+176	ar		qalam	pen	2018-09-26 10:25:55.396357-06
+177	ar		hAdhihi	this	2018-09-26 10:26:14.111567-06
+178	ar		naafidhah	window	2018-09-26 10:26:14.119373-06
+179	ar		Taawilah	table	2018-09-26 10:26:30.973967-06
+180	ar		misTarah	ruler	2018-09-26 10:26:44.934528-06
+181	ar		haqiibah	bag	2018-09-26 10:26:57.710302-06
+182	ar		Soorah	picture	2018-09-26 10:27:10.920382-06
+183	ar		Haasibah	calculator	2018-09-26 10:27:26.979703-06
+184	ar		mimHaah	eraser	2018-09-26 10:27:41.839448-06
+185	ar		mubra'a	pencil sharpener	2018-09-26 10:27:58.709014-06
+186	ar		haalaah	Hala	2018-09-26 10:46:28.259511-06
+187	ar		bustaanii	Bustani	2018-09-26 10:46:28.267916-06
+188	ar		TaalibaahN	student	2018-09-26 10:47:37.846699-06
+189	ar		hunaa	here	2018-09-26 10:47:37.854643-06
+190	ar		jaamicah	university	2018-09-26 10:47:37.863049-06
+191	ar		halab	Aleppo	2018-09-26 10:47:37.870073-06
+192	ar		lakinn	but	2018-09-26 10:48:58.244253-06
+193	ar		-ii	I	2018-09-26 10:48:58.251656-06
+194	ar		madiinah	city	2018-09-26 10:48:58.259356-06
+195	ar		-i	GEN	2018-09-26 10:48:58.267019-06
+196	ar		gurfahu	room	2018-09-26 10:49:30.879632-06
+197	ar		Saff	class	2018-09-26 10:49:30.887368-06
+198	ar		'ustaadh	professor	2018-09-26 10:50:04.369936-06
+199	ar		-uhu	his	2018-09-26 10:50:38.711893-06
+200	ar		ilyaas	Elias	2018-09-26 10:50:38.719453-06
+201	ar		dhiyaadah	Ziadeh	2018-09-26 10:50:38.727258-06
+202	ar		riyaaDiyyaat	math	2018-09-26 10:51:46.560808-06
+203	ar		al-	the	2018-09-26 10:54:51.646176-06
+204	ar		bi-	on	2018-09-26 10:54:51.649135-06
+205	ar		janib	side	2018-09-26 10:54:51.650173-06
+206	ar		daftar	notebook	2018-09-26 10:54:51.651632-06
+207	ar		janibi	side	2018-09-26 11:01:29.375048-06
+208	ar		eld-	the	2018-09-26 11:01:29.382034-06
+209	ar		calae	on	2018-09-26 11:04:59.514277-06
+210	ar		elT-	the	2018-09-26 11:04:59.521831-06
+211	ar		elS-	the	2018-09-26 11:07:05.265972-06
+212	ar		Saff	classroom.	2018-09-26 11:07:05.267089-06
+213	ar		Taalib	student	2018-09-26 11:08:45.159524-06
+214	ar		Saff	classroom	2018-09-26 11:08:45.168152-06
+235	ar		-aN	ACCUS-INDEF	2018-09-26 11:38:51.717572-06
+236	ar		'ayDaaN	also	2018-09-26 11:39:37.705762-06
+237	ar		jidaar	wall	2018-09-26 11:39:51.726028-06
+238	ar		-iyy	(nisba adjective)	2018-09-26 11:41:27.561527-06
+239	ar		qamar	moon	2018-09-26 11:41:43.442172-06
+240	ar		laysat	not to be (FEM)	2018-09-26 11:45:19.379621-06
+241	ar		'amriikiyyah	American-FEM	2018-09-26 11:45:19.386871-06
+242	ar		kanadiyyah	Canadian-FEM	2018-09-26 11:46:00.020663-06
+243	ar		nadiyah	Nadia	2018-09-26 11:48:39.36505-06
+244	ar		uN	INDEF-NOM	2018-09-26 11:48:39.386092-06
+245	ar		laysa	not to be (MASC)	2018-09-26 11:50:51.516915-06
+246	ar		el-	the	2018-09-26 11:50:51.525087-06
+247	ar		lubnaaniyy	Lebanese	2018-09-26 11:50:51.535448-06
+248	ar		-aan	ACCUS-INDEF	2018-09-26 11:50:51.542664-06
+249	ar		lubnaan‎iyy	Lebanese	2018-09-26 11:52:49.011034-06
+250	ar		tilofaaz‎	television	2018-09-26 11:53:17.856056-06
+251	ar		jariidah	newspaper	2018-09-26 11:53:25.972578-06
+252	ar		Haasuub	computer	2018-09-26 11:53:32.942435-06
+253	ar		musajjil	tape recorder	2018-09-26 11:54:59.383446-06
+254	ar		miftaah	key	2018-09-26 11:55:14.420864-06
+255	ar		nisbah	relative adjective	2018-09-26 11:55:46.948937-06
+256	ar		naZZaarah	eyeglasses	2018-09-26 11:56:07.728997-06
+257	ar		walaayah	state/province	2018-09-26 11:57:09.497818-06
+258	ar		'aHruf	consonants	2018-09-26 12:00:57.190932-06
+259	ar		qamaryah	lunar	2018-09-26 12:00:57.198678-06
+260	ar		-iyyah	(nisba adjective)	2018-09-26 12:01:18.69413-06
+261	ar		harf	consonant	2018-09-26 12:01:30.76454-06
+262	ar		hamzah	hamza	2018-09-26 12:06:52.806838-06
+263	ar		-el	the	2018-09-26 12:06:52.81604-06
+264	ar		waSl	link	2018-09-26 12:06:52.826628-06
 62	ar		-u	he	2018-09-17 23:36:12.789814-06
+215	ar		hunaaka	there	2018-09-26 11:12:09.219216-06
+216	ar		-uN	NOM-INDEF	2018-09-26 11:12:09.227639-06
 149	ar		'almaghrib	Morocco	2018-09-18 00:18:21.259485-06
 144	ar		'alqaahirah	Cairo	2018-09-18 00:16:27.947237-06
 143	ar		humaa	they both	2018-09-18 00:16:27.943911-06
@@ -2614,7 +2711,6 @@ COPY morphemes (id, lang, type, l2, gloss, created_at) FROM stdin;
 33	ar		-u	I	2018-09-17 23:28:03.278278-06
 36	ar		-u	you MASC	2018-09-17 23:28:31.418736-06
 35	ar		ta-	you MASC	2018-09-17 23:28:31.410046-06
-130	ar		'al-	the	2018-09-18 00:01:33.935781-06
 137	ar		'ayna	where	2018-09-18 00:13:29.206767-06
 136	ar		min	from	2018-09-18 00:13:29.204984-06
 139	ar		tuunis	Tunis	2018-09-18 00:14:01.480427-06
@@ -2652,7 +2748,6 @@ COPY morphemes (id, lang, type, l2, gloss, created_at) FROM stdin;
 114	ar		ta-	we-PAST	2018-09-17 23:55:34.43416-06
 116	ar		-naa	we-PAST	2018-09-17 23:55:34.44841-06
 110	ar		calay	unto	2018-09-17 23:54:37.073203-06
-112	ar		'al-	the	2018-09-17 23:54:37.087638-06
 63	ar		-biic-	sell	2018-09-17 23:37:15.760093-06
 111	ar		-kum	you all MASC	2018-09-17 23:54:37.080467-06
 65	ar		Tiir-	fly	2018-09-17 23:37:52.291929-06
@@ -2665,6 +2760,25 @@ COPY morphemes (id, lang, type, l2, gloss, created_at) FROM stdin;
 141	ar		'antumaa	you two	2018-09-18 00:15:37.116688-06
 148	ar		fii	in	2018-09-18 00:18:21.257662-06
 147	ar		baghdaad	Baghdad	2018-09-18 00:17:30.240541-06
+217	ar		darraajah	bicycle	2018-09-26 11:19:04.96489-06
+218	ar		laysa	not to be	2018-09-26 11:19:48.284472-06
+219	ar		cinda	has	2018-09-26 11:19:48.291969-06
+220	ar		laakin	but	2018-09-26 11:20:59.354324-06
+221	ar		laakinna	but	2018-09-26 11:22:14.768493-06
+222	ar		-hu	he	2018-09-26 11:22:14.776992-06
+223	ar		-ha	she	2018-09-26 11:22:31.767357-06
+224	ar		lakinna	but	2018-09-26 11:23:45.494731-06
+225	ar		suuriyyah	Syrian	2018-09-26 11:23:45.502891-06
+226	ar		sayyarah	car	2018-09-26 11:25:26.42365-06
+227	ar		Taalibah	student	2018-09-26 11:33:51.719905-06
+112	ar		els-	the	2018-09-17 23:54:37.087638-06
+228	ar		carabiyyah	Arab	2018-09-26 11:33:51.728505-06
+229	ar		-uN	INDEF-NOM	2018-09-26 11:33:51.735958-06
+231	ar		tuunisiyyah	Tunisian	2018-09-26 11:36:38.265714-06
+233	ar		-a	ACCUS	2018-09-26 11:36:38.282395-06
+234	ar		maghribiyy	Moroccan	2018-09-26 11:36:38.283995-06
+230	ar		Taalibah	student-FEM	2018-09-26 11:36:38.256806-06
+232	ar		Taalib	student-MASC	2018-09-26 11:36:38.276128-06
 \.
 
 
@@ -2672,7 +2786,7 @@ COPY morphemes (id, lang, type, l2, gloss, created_at) FROM stdin;
 -- Name: morphemes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dan
 --
 
-SELECT pg_catalog.setval('morphemes_id_seq', 149, true);
+SELECT pg_catalog.setval('morphemes_id_seq', 264, true);
 
 
 --
@@ -2761,7 +2875,94 @@ COPY new_cards (id, lang, type, en_task, en_content, morpheme_ids_csv, created_a
 83	ar	PhraseCard	Answer	Fez is in Morocco.	138,148,149,88	2018-09-18 00:18:21.260845-06
 51	ar	PhraseCard	Say	Welcome!	99,92	2018-09-17 23:50:52.68272-06
 57	ar	PhraseCard	Respond	And unto you peace.	109,110,111,82,112,102,82,88	2018-09-17 23:54:37.095621-06
-69	ar	PhraseCard	Respond	Praise be to God; good.	130,131,82,132,133,134,128,88	2018-09-18 00:01:33.961338-06
+84	ar	PhraseCard	Ask a man	Do you have a telephone?	150,151,152,75	2018-09-26 09:58:30.538668-06
+85	ar	PhraseCard	Ask a woman	Do you have a telephone?	150,153,152,75	2018-09-26 09:59:23.104073-06
+86	ar	PhraseCard	Say	I have a telephone	154,86,152,88	2018-09-26 10:00:29.700572-06
+87	ar	PhraseCard	Say	I have a book.	154,86,155,88	2018-09-26 10:01:20.632887-06
+88	ar	PhraseCard	Say	He has a book.	154,156,155,88	2018-09-26 10:01:50.082067-06
+89	ar	PhraseCard	Say	She has a book.	154,157,155,88	2018-09-26 10:02:13.953895-06
+90	ar	PhraseCard	Say of two persons	They have a watch.	154,158,159,88	2018-09-26 10:05:27.129185-06
+91	ar	PhraseCard	Say to 2 persons	You have a telephone.	154,160,152,88	2018-09-26 10:07:07.170948-06
+92	ar	PhraseCard	Say	I have a car.	154,86,161,88	2018-09-26 10:07:42.696108-06
+93	ar	PhraseCard	Say of 3+ persons including a man	They have a car.	154,162,161,88	2018-09-26 10:08:52.425725-06
+94	ar	PhraseCard	Say of 3+ women	They have a car.	154,163,161,88	2018-09-26 10:09:29.761985-06
+95	ar	PhraseCard	Say of 3+ persons including a man	They have a car.	154,164,161,88	2018-09-26 10:10:12.940294-06
+96	ar	PhraseCard	Say	We have a car.	154,165,161,88	2018-09-26 10:15:37.64196-06
+97	ar	PhraseCard	Say as a man	I'm American.	166,167,88	2018-09-26 10:21:23.874315-06
+98	ar	PhraseCard	Say	He's American.	15,167,88	2018-09-26 10:21:43.599248-06
+99	ar	PhraseCard	Say	He's Egyptian.	15,168,88	2018-09-26 10:22:03.38729-06
+100	ar	PhraseCard	Say	She's Egyptian	18,169,88	2018-09-26 10:22:24.801828-06
+101	ar	PhraseCard	Say	She's American.	18,170,88	2018-09-26 10:22:44.012404-06
+102	ar	PhraseCard	Say	She's Lebanese.	18,171,88	2018-09-26 10:23:05.385524-06
+103	ar	PhraseCard	Say	This is a book.	172,155,88	2018-09-26 10:23:28.227629-06
+104	ar	PhraseCard	Say	This is a door.	172,173,88	2018-09-26 10:24:00.108182-06
+105	ar	PhraseCard	Say	This is a blackboard.	172,174,88	2018-09-26 10:24:18.839732-06
+106	ar	PhraseCard	Say	This is a chair.	172,175,88	2018-09-26 10:24:38.702505-06
+107	ar	PhraseCard	Say	This is a pen.	172,176,88	2018-09-26 10:25:55.406277-06
+108	ar	PhraseCard	Say	This is a window.	177,178,88	2018-09-26 10:26:14.126656-06
+109	ar	PhraseCard	Say	This is a table.	177,179,88	2018-09-26 10:26:30.980904-06
+110	ar	PhraseCard	Say	This is a ruler.	177,180,88	2018-09-26 10:26:44.941823-06
+111	ar	PhraseCard	Say	This is a bag.	177,181,88	2018-09-26 10:26:57.719499-06
+112	ar	PhraseCard	Say	This is a picture.	177,182,88	2018-09-26 10:27:10.927992-06
+113	ar	PhraseCard	Say	This is a calculator.	177,183,88	2018-09-26 10:27:26.987258-06
+114	ar	PhraseCard	Say	This is an eraser.	177,184,88	2018-09-26 10:27:41.847354-06
+115	ar	PhraseCard	Say	This is a pencil sharpener	177,185,88	2018-09-26 10:27:58.714053-06
+116	ar	PhraseCard	Say	My name is Hala Bustani.	81,86,186,187,88	2018-09-26 10:46:28.275878-06
+117	ar	PhraseCard	Say	I'm a student here in Aleppo University.	30,188,189,148,190,191,88	2018-09-26 10:47:37.871543-06
+118	ar	PhraseCard	Say	But I'm from Damascus.	192,193,136,194,195,146,88	2018-09-26 10:48:58.268718-06
+119	ar	PhraseCard	Say	This is my classroom.	177,196,197,86,88	2018-09-26 10:49:30.895208-06
+120	ar	PhraseCard	Say	And this is my professor.	109,172,198,86,88	2018-09-26 10:50:04.37868-06
+121	ar	PhraseCard	Say	His name is Elias Ziadeh.	81,199,200,201,88	2018-09-26 10:50:38.734248-06
+122	ar	PhraseCard	Say	He's a math professor.	15,198,82,202,88	2018-09-26 10:51:46.570893-06
+126	ar	PhraseCard	Say	The book is beside the notebook.	203,155,82,204,207,208,206,88	2018-09-26 11:02:42.218608-06
+127	ar	PhraseCard	Say	The book is on the table.	203,155,82,209,210,179,88	2018-09-26 11:04:59.529497-06
+128	ar	PhraseCard	Say	The book is on the notebook.	203,155,82,209,208,206,88	2018-09-26 11:05:27.257838-06
+130	ar	PhraseCard	Say	The professor and the student are in the classroom.	203,198,109,210,213,82,148,211,214,88	2018-09-26 11:08:45.17524-06
+131	ar	PhraseCard	Say	I'm here.	30,189,88	2018-09-26 11:09:29.977495-06
+132	ar	PhraseCard	Say	There is a professor in the classroom.	215,198,216,148,211,214,88	2018-09-26 11:12:09.236887-06
+129	ar	PhraseCard	Say	The professor is in the classroom.	203,198,82,148,211,212,88	2018-09-26 11:07:05.2681-06
+133	ar	PhraseCard	Say	There is a book on the table.	215,155,216,209,210,179,88	2018-09-26 11:16:09.257666-06
+134	ar	PhraseCard	Say	my book	155,86	2018-09-26 11:17:35.683825-06
+135	ar	PhraseCard	Say	My book is over there.	155,86,215,88	2018-09-26 11:18:12.542941-06
+136	ar	PhraseCard	Say	I have a car.	154,86,161,88	2018-09-26 11:18:43.603961-06
+137	ar	PhraseCard	Say	I have a bicycle.	154,86,217,88	2018-09-26 11:19:04.969577-06
+138	ar	PhraseCard	Say	I don't have a bicycle.	218,219,86,217,88	2018-09-26 11:19:48.302656-06
+139	ar	PhraseCard	Say	I have a car, but I don't have a bicycle.	219,86,161,220,218,219,86,217,88	2018-09-26 11:20:59.366037-06
+140	ar	PhraseCard	Say	but he	221,222	2018-09-26 11:22:14.783927-06
+141	ar	PhraseCard	Say	But she	221,223	2018-09-26 11:22:31.774102-06
+142	ar	PhraseCard	Say as a man	I'm Egyptian, but she's Syrian.	30,168,224,223,225,88	2018-09-26 11:23:45.510337-06
+143	ar	PhraseCard	Say as a man	I'm Egyptian.	30,168,88	2018-09-26 11:24:25.244654-06
+144	ar	PhraseCard	Say	I don't have a bicycle but a car.	218,219,86,217,224,226,88	2018-09-26 11:25:26.425877-06
+69	ar	PhraseCard	Respond	Praise be to God; good.	118,131,82,132,133,134,128,88	2018-09-18 00:01:33.961338-06
+145	ar	PhraseCard	Say	the Arab student	118,227,82,228,229,88	2018-09-26 11:33:51.742694-06
+147	ar	PhraseCard	Say	The female student is Tunisian, but the male student is Moroccan.	118,230,82,231,229,224,210,232,233,234,235,88	2018-09-26 11:38:51.723388-06
+148	ar	PhraseCard	Say	also	236	2018-09-26 11:39:37.713764-06
+149	ar	PhraseCard	Say	wall	237	2018-09-26 11:39:51.734057-06
+150	ar	PhraseCard	Say	sun	106	2018-09-26 11:39:59.588655-06
+151	ar	PhraseCard	Say	solar	106,238	2018-09-26 11:41:27.563262-06
+152	ar	PhraseCard	Say	lunar	239,238	2018-09-26 11:41:43.452022-06
+153	ar	PhraseCard	Say	My notebook isn't here.	189,218,206,86,88	2018-09-26 11:42:23.080684-06
+154	ar	PhraseCard	Say	She isn't American.	18,240,241,229,88	2018-09-26 11:45:19.396177-06
+155	ar	PhraseCard	Say	She's Canadian.	18,242,216,88	2018-09-26 11:46:00.03-06
+156	ar	PhraseCard	Say	Nadia is not a student.	240,243,82,230,244,88	2018-09-26 11:48:39.389514-06
+158	ar	PhraseCard	Say	The professor isn't Lebanese.	245,246,198,82,249,248,88	2018-09-26 11:52:49.019108-06
+159	ar	PhraseCard	Say	television	250	2018-09-26 11:53:17.862958-06
+160	ar	PhraseCard	Say	newspaper	251	2018-09-26 11:53:25.979278-06
+161	ar	PhraseCard	Say	computer	252	2018-09-26 11:53:32.949138-06
+162	ar	PhraseCard	Say	bicycle	217	2018-09-26 11:53:45.876803-06
+163	ar	PhraseCard	Say	notebook	206	2018-09-26 11:53:57.836594-06
+164	ar	PhraseCard	Say	pen	176	2018-09-26 11:54:21.810144-06
+165	ar	PhraseCard	Say	city	194	2018-09-26 11:54:42.443095-06
+166	ar	PhraseCard	Say	tape recorder	253	2018-09-26 11:54:59.390062-06
+167	ar	PhraseCard	Say	key	254	2018-09-26 11:55:14.427918-06
+168	ar	PhraseCard	Say	relative adjective	255	2018-09-26 11:55:46.955844-06
+169	ar	PhraseCard	Say	eyeglasses	256	2018-09-26 11:56:07.735292-06
+170	ar	PhraseCard	Say	telephone	152	2018-09-26 11:56:23.027092-06
+171	ar	PhraseCard	Say	state/province	257	2018-09-26 11:57:09.504187-06
+172	ar	PhraseCard	Say	lunar consonants	258,259	2018-09-26 12:00:57.205326-06
+173	ar	PhraseCard	Say	solar consonants	106,260	2018-09-26 12:01:18.700503-06
+174	ar	PhraseCard	Say	consonant	261	2018-09-26 12:01:30.770822-06
+175	ar	PhraseCard	Say	hamza link	262,82,263,264,88	2018-09-26 12:06:52.832716-06
 \.
 
 
@@ -2769,7 +2970,7 @@ COPY new_cards (id, lang, type, en_task, en_content, morpheme_ids_csv, created_a
 -- Name: new_cards_id_seq; Type: SEQUENCE SET; Schema: public; Owner: dan
 --
 
-SELECT pg_catalog.setval('new_cards_id_seq', 83, true);
+SELECT pg_catalog.setval('new_cards_id_seq', 175, true);
 
 
 --
