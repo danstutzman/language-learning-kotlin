@@ -308,11 +308,11 @@
                 <artifactId>mouse-maven-plugin</artifactId>
                 <version>1.9.1</version>
                 <configuration>
-                  <mouseGrammar>src/main/resources/grammars/ArabicMorpheme.txt</mouseGrammar>
-                  <mouseDirectory>target/generated-sources/grammars/com/danstutzman/grammars</mouseDirectory>
-                  <mouseParser>ArabicMorphemeParser</mouseParser>
-                  <mouseSemantics>ArabicMorphemeSemantics</mouseSemantics>
-                  <mousePackage>com.danstutzman.grammars</mousePackage>
+                  <mouseGrammar>src/main/resources/grammars/BuckwalterToQalam.txt</mouseGrammar>
+                  <mouseDirectory>target/generated-sources/grammars/com/danstutzman/arabic</mouseDirectory>
+                  <mouseParser>BuckwalterToQalamParser</mouseParser>
+                  <mouseSemantics>BuckwalterToQalamSemantics</mouseSemantics>
+                  <mousePackage>com.danstutzman.arabic</mousePackage>
                 </configuration>
             </plugin>
 

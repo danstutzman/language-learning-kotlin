@@ -1,0 +1,75 @@
+Start
+  = Only !_
+  / First? CVV* {Start}
+  ;
+
+Only
+  = "ato" {Onlyatotoat}
+  / [aiu] // case endings
+  / "yna" {Onlyynatoiina}
+  / "y" {Onlyytoii}
+  / "K" {OnlyKtoiN}
+  / "N" {OnlyNtouN}
+  / "AF" {OnlyAFtoaN}
+  / "wA" {OnlywAtouuaa} // 3rd-MASC-past: aa isn't actually pronounced
+  / "wna" {Onlywnatouuna}
+  / "w" {Onlywtouu}
+  / "{l" [T] {OnlyOpenCurlylConsonanttoelConsonant}
+  ;
+
+First
+  = "{l" "o"? {FirstOpenCurlyltoel}
+  / "{" {FirstOpenCurlytoe}
+  / ">l" "o"? {FirstGreaterThantoQuoteal}
+  ;
+
+CVV
+  = "$" VV {CVVDollartosh}
+  / "*" VV {CVVAsterisktodh}
+  / "g" VV {CVVgtogh}
+  / "v" VV {CVVvtoth}
+  / "<" VV {CVVLessThantoQuote}
+  / ">o" {CVVGreaterThanotoQuote}
+  / ">" !_ {CVVGreaterThan1toQuote}
+  / ">" VV {CVVGreaterThan2toQuoteu}
+  / "|" {CVVPipetoQuoteaa}
+  / "}" VV {CVVCloseCurlytoQuote}
+  / "'" VV {CVVQuotetoQuote}
+  / "&" VV {CVVAmpersandtoQuote}
+  / "E" VV {CVVEtoc}
+  / "p" VV Tanween {CVVptoh}
+  / "w" "A" Tanween {CVVwAtowaa}
+  / "w" "Y" Tanween {CVVwYtowae}
+  / "w" "o" {CVVwotow}
+  / "w" "y" {CVVwytowii}
+  / "w" [Yaiu]? {CVVwtow}
+  / "h" VV {CVVhtoh}
+  / "yy" VV {CVVyytoyy}
+  / C VV {CVVCVV}
+  ;
+
+C
+  = [DHSTZbdfjklmnqrstxyz]
+  ;
+
+VV
+  = "o" {VVOtoEmpty}
+  / "wA" {VVwAtouuaa}
+  / "w" ![a] {VVwtouu}
+  / "AF" {VVAFtoaaN}
+  / "A" {VVAtoaa}
+  / "K" {VVKtoiN}
+  / "y" {VVytoii}
+  / "Y" Tanween {VVYtoae}
+  / "`&" {VVBacktickAmpersandtoAQuoteu}
+  / "`" {VVBacktickToA}
+  / "iy" "o"? ![Ay] {VViytoii}
+  / [aiu]
+  / "EMPTY?" {VVEMPTY}
+  ;
+
+Tanween
+  = "F" {TanweenFtoN}
+  / "N" {TanweenNtoN}
+  / "EMPTY"? {TanweenEMPTY}
+  ;

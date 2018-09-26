@@ -1,6 +1,7 @@
 # How to run locally
 
 - First time only or after a clean:
+  - `mkdir -p target/generated-sources/grammars/com/danstutzman/arabic`
   - `mvn mouse:generate compile`
 - Every time: `./fastbuild run`
 
