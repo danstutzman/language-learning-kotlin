@@ -36,13 +36,13 @@ fun GetNewCards(lang: String, rows: List<NewCardRow>,
 
   html.append("<h2>Add new card</h2>")
   html.append("<input type='text' name='enTask'>Task<br/>\n")
-  html.append("<input type='text' name='enContent'>Content<br/>\n")
+  html.append("<input type='text' size='100' name='enContent'>Content<br/>\n")
   html.append("<table>\n")
   html.append("  <tr>\n")
   html.append("    <th>L2</th>\n")
   html.append("    <th>Gloss</th>\n")
   html.append("  </tr>\n")
-  for (i in 0..9) {
+  for (i in 0..19) {
     html.append("<tr>\n")
     html.append("  <td><input type='text' name='l2$i'></td>\n")
     html.append("  <td><input type='text' name='gloss$i'></td>\n")
