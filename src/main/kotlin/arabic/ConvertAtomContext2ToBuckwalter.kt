@@ -42,6 +42,8 @@ val CONSONANTS = mapOf(
   "y" to "y",
   "z" to "z")
 
+val PUNCTUATION = setOf(".", "?")
+
 val NO_O_AFTER_AL = setOf("l", "T", "r", "sh", "'")
 
 val IS_CASE_ENDING = setOf("a", "i", "u")
@@ -173,6 +175,9 @@ fun convertAtomContext2ToBuckwalter(atomContext2: AtomContext2): String {
 
   if (VOWELS[atom] !== null)
     return handleVowel(atomContext2, VOWELS[atom]!!)
+
+  if (PUNCTUATION.contains(atom))
+    return atom
 
   throw notFound(left, atom, right)
 }

@@ -1,5 +1,7 @@
 package com.danstutzman.arabic
 
+val IS_PUNCTUATION = setOf(".", "?")
+
 data class AtomContext1 (
   val atom: String,
   val endsMorpheme: Boolean,
@@ -86,8 +88,11 @@ fun addContextToAtoms(atomContext1s: List<AtomContext1>): List<AtomContext2> {
           atomContext1, left2, left, right, right2, endsSyllable=isLast))
         currentSyllableHasVowel = true
       }
+    } else if (IS_PUNCTUATION.contains(atom)) {
+      atomContext2s.add(0, AtomContext2(
+        atomContext1, left2, left, right, right2, endsSyllable=isLast))
     } else {
-      throw RuntimeException("Can't handle $atom")
+      throw RuntimeException("Can't handle atom '$atom'")
     }
   }
 
