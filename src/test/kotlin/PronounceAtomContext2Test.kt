@@ -1,7 +1,7 @@
 package com.danstutzman.arabic
 
 import com.danstutzman.arabic.addContextToAtoms
-import com.danstutzman.arabic.pronounceAtomContext2
+import com.danstutzman.arabic.PronounceAtomContext2
 import com.danstutzman.arabic.splitQalamIntoAtoms
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -10,16 +10,9 @@ import org.opentest4j.AssertionFailedError
 
 fun pronounce(qalam: String): String {
   val atoms = splitQalamIntoAtoms(qalam)
-  val contexts1 = atoms.map { atom ->
-    AtomContext1(
-      atom=atom,
-      beginPunctuation="",
-      endPunctuation="",
-      endsMorpheme=false)
-  }
-  val contexts2 = addContextToAtoms(contexts1)
+  val contexts2 = addContextToAtoms(atoms)
   val pronunciations = contexts2.map { context ->
-    pronounceAtomContext2(context) +
+    PronounceAtomContext2.pronounceAtomContext2(context) +
     (if (context.endsSyllable) "." else "")
   }
   return pronunciations.joinToString("").replace("\\.$".toRegex(), "")

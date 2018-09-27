@@ -1,5 +1,6 @@
 package com.danstutzman.db
 
+import com.danstutzman.arabic.AtomAlignment
 import java.sql.Connection
 import java.sql.Timestamp
 import org.jooq.SQLDialect
@@ -11,7 +12,8 @@ data class Morpheme(
   val lang: String,
   val type: String,
   val l2: String,
-  val gloss: String
+  val gloss: String,
+  val atomsJson: String
 )
 
 class MorphemesTable (
@@ -25,7 +27,8 @@ class MorphemesTable (
         MORPHEMES.LANG,
         MORPHEMES.TYPE,
         MORPHEMES.L2,
-        MORPHEMES.GLOSS)
+        MORPHEMES.GLOSS,
+        MORPHEMES.ATOMS_JSON)
       .from(MORPHEMES)
       .where(MORPHEMES.LANG.eq(morpheme.lang))
       .and(MORPHEMES.TYPE.eq(morpheme.type))
@@ -38,7 +41,8 @@ class MorphemesTable (
           it.getValue(MORPHEMES.LANG),
           it.getValue(MORPHEMES.TYPE),
           it.getValue(MORPHEMES.L2),
-          it.getValue(MORPHEMES.GLOSS))
+          it.getValue(MORPHEMES.GLOSS),
+          it.getValue(MORPHEMES.ATOMS_JSON))
       }
 
   fun selectByLang(lang: String) : List<Morpheme> =
@@ -48,7 +52,8 @@ class MorphemesTable (
         MORPHEMES.LANG,
         MORPHEMES.TYPE,
         MORPHEMES.L2,
-        MORPHEMES.GLOSS)
+        MORPHEMES.GLOSS,
+        MORPHEMES.ATOMS_JSON)
       .from(MORPHEMES)
       .where(MORPHEMES.LANG.eq(lang))
       .orderBy(MORPHEMES.ID)
@@ -59,7 +64,8 @@ class MorphemesTable (
           it.getValue(MORPHEMES.LANG),
           it.getValue(MORPHEMES.TYPE),
           it.getValue(MORPHEMES.L2),
-          it.getValue(MORPHEMES.GLOSS))
+          it.getValue(MORPHEMES.GLOSS),
+          it.getValue(MORPHEMES.ATOMS_JSON))
       }
 
   fun selectWithMorphemeIdIn(morphemeIds: List<Int>): List<Morpheme> =
@@ -68,7 +74,8 @@ class MorphemesTable (
       MORPHEMES.LANG,
       MORPHEMES.TYPE,
       MORPHEMES.L2,
-      MORPHEMES.GLOSS)
+      MORPHEMES.GLOSS,
+      MORPHEMES.ATOMS_JSON)
     .from(MORPHEMES)
     .where(MORPHEMES.ID.`in`(morphemeIds))
     .fetch()
@@ -78,7 +85,8 @@ class MorphemesTable (
         it.getValue(MORPHEMES.LANG),
         it.getValue(MORPHEMES.TYPE),
         it.getValue(MORPHEMES.L2),
-        it.getValue(MORPHEMES.GLOSS))
+        it.getValue(MORPHEMES.GLOSS),
+        it.getValue(MORPHEMES.ATOMS_JSON))
     }
 
   fun insert(morpheme: Morpheme): Morpheme =
@@ -104,13 +112,20 @@ class MorphemesTable (
         it.getValue(MORPHEMES.LANG),
         it.getValue(MORPHEMES.TYPE),
         it.getValue(MORPHEMES.L2),
-        it.getValue(MORPHEMES.GLOSS)
+        it.getValue(MORPHEMES.GLOSS),
+        it.getValue(MORPHEMES.ATOMS_JSON)
       )
     }
 
   fun updateL2(morphemeId: Int, l2: String) =
     create.update(MORPHEMES)
       .set(MORPHEMES.L2, l2)
+      .where(MORPHEMES.ID.eq(morphemeId))
+      .execute()
+
+  fun updateAtomsJson(morphemeId: Int, atomsJson: String) =
+    create.update(MORPHEMES)
+      .set(MORPHEMES.ATOMS_JSON, atomsJson)
       .where(MORPHEMES.ID.eq(morphemeId))
       .execute()
 

@@ -1,7 +1,7 @@
 package com.danstutzman.arabic
 
-import com.danstutzman.arabic.addContextToAtoms
 import com.danstutzman.arabic.BuckwalterToQalamParser
+import com.danstutzman.arabic.ConvertMorphemeToBuckwalter
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -35,19 +35,17 @@ fun testRoundTripLine(line: String) {
   val expectedBuckwalter = values[3]
   val correctedBuckwalter =
     if (values.size >= 5 && values[4] != "") values[4] else expectedBuckwalter
-  val buckwalterWords = correctedBuckwalter.split(" ")
 
   val doubleds = mutableListOf<String>()
   val actualQalams = mutableListOf<String>()
-  var roundTripped = ""
-  val allAtomContext2s = mutableListOf<AtomContext2>()
-  for (buckwalterWord in buckwalterWords) {
-    val match1 = "^-".toRegex().find(buckwalterWord)
-    val beginHyphen = if (match1 != null) match1.groupValues[0] else ""
-    val match2 = "-$".toRegex().find(buckwalterWord)
-    val endHyphen = if (match2 != null) match2.groupValues[0] else ""
+  val atomAlignments = mutableListOf<AtomAlignment>()
+  for (morphemeBuckwalter in correctedBuckwalter.split(" ")) {
+    val match1 = "^-".toRegex().find(morphemeBuckwalter)
+    val beginsWithHyphen = (match1 != null)
+    val match2 = "-$".toRegex().find(morphemeBuckwalter)
+    val endsWithHyphen = (match2 != null)
 
-    val doubled = buckwalterWord
+    val doubled = morphemeBuckwalter
       .replace("^-".toRegex(), "")
       .replace("-$".toRegex(), "")
       .replace("([DHSTZbcdfgjklmnqrstvwyz$*])~".toRegex(), "$1$1")
@@ -58,52 +56,29 @@ fun testRoundTripLine(line: String) {
       actualQalam = convertBuckwalterToQalam(doubled)
     } catch (e: RuntimeException) {
       println("correctedBuckwalter: $correctedBuckwalter")
-      println("buckwalterWord: $buckwalterWord")
+      println("morphemeBuckwalter: $morphemeBuckwalter")
       println("doubled: $doubled")
       throw e
     }
-    actualQalams.add(beginHyphen + actualQalam + endHyphen)
+    actualQalams.add(
+      (if (beginsWithHyphen) "-" else "") +
+      actualQalam +
+      (if (endsWithHyphen) "-" else ""))
 
-    val atoms = splitQalamIntoAtoms(actualQalam)
-    val atomContext1s = atoms.withIndex().map { (j: Int, atom: String) ->
-      AtomContext1(
-        atom = atom,
-        endsMorpheme = (j == atoms.size - 1),
-        beginPunctuation = if (j == 0) beginHyphen else "",
-        endPunctuation = if (j == atoms.size - 1) endHyphen else "")
-    }
-
-    val atomContext2s: List<AtomContext2>
+    val morphemeAtomAlignments: List<AtomAlignment>
     try {
-      atomContext2s = addContextToAtoms(atomContext1s)
+      morphemeAtomAlignments =
+        ConvertMorphemeToBuckwalter.convertMorphemeToBuckwalter(
+          actualQalam, beginsWithHyphen, endsWithHyphen)
     } catch (e: RuntimeException) {
       println("correctedQalam: $correctedQalam")
       println("correctedBuckwalter: $correctedBuckwalter")
-      println("buckwalterWord: $buckwalterWord")
+      println("morphemeBuckwalter: $morphemeBuckwalter")
       println("doubled: $doubled")
-      println("actualQalam: $actualQalam")
+      println("atomAlignments: $atomAlignments")
       throw e
     }
-    allAtomContext2s.addAll(atomContext2s)
-
-    val morphemeRoundTripped: String
-    try {
-      morphemeRoundTripped = atomContext2s.map { atomContext2 ->
-        atomContext2.beginPunctuation +
-        convertAtomContext2ToBuckwalter(atomContext2) +
-        atomContext2.endPunctuation +
-        (if (atomContext2.endsMorpheme) " " else "")
-      }.joinToString("")
-    } catch (e: RuntimeException) {
-      println("correctedQalam: $correctedQalam")
-      println("correctedBuckwalter: $correctedBuckwalter")
-      println("buckwalterWord: $buckwalterWord")
-      println("doubled: $doubled")
-      println("actualQalam: $actualQalam")
-      println("atomContext2s: $atomContext2s")
-      throw e
-    }
-    roundTripped += morphemeRoundTripped
+    atomAlignments += morphemeAtomAlignments
   }
 
   val actualQalamsJoined = actualQalams
@@ -119,7 +94,12 @@ fun testRoundTripLine(line: String) {
     throw e
   }
 
-  roundTripped = roundTripped
+  val roundTripped = atomAlignments.map {
+    (if (it.beginsWithHyphen) "-" else "") +
+    it.buckwalter +
+    (if (it.endsWithHyphen) "-" else "") +
+    (if (it.endsMorpheme) " " else "")
+  }.joinToString("")
     .replace("([DHSTZbcdfgjklmnqrstvwyz$*])o?\\1".toRegex(), "$1~")
     .replace("l~l".toRegex(), "ll~")
     .replace(" $".toRegex(), "")
@@ -139,10 +119,10 @@ fun testRoundTripLine(line: String) {
       println("correctedBuckwalter: $correctedBuckwalter")
       println("doubleds: $doubleds")
       println("actualQalams: $actualQalams")
-      println("syllables: " + allAtomContext2s.map { atomContext2 ->
-        atomContext2.atom +
-          (if (atomContext2.endsSyllable) " -" else "") +
-          (if (atomContext2.endsMorpheme) "/" else "")
+      println("syllables: " + atomAlignments.map { atomAlignment ->
+        atomAlignment.atom +
+          (if (atomAlignment.endsSyllable) " -" else "") +
+          (if (atomAlignment.endsMorpheme) "/" else "")
         }.joinToString(" "))
       println("roundTripped: $roundTripped")
       throw e

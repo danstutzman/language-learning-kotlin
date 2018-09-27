@@ -42,7 +42,7 @@ val CONSONANTS = mapOf(
   "y" to "y",
   "z" to "z")
 
-val PUNCTUATION = setOf(".", "?")
+val PUNCTUATION = setOf(".", "?", "!")
 
 val NO_O_AFTER_AL = setOf("l", "T", "r", "sh", "'")
 

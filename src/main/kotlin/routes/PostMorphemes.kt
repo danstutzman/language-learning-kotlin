@@ -1,5 +1,6 @@
 package com.danstutzman.routes
 
+import com.danstutzman.arabic.computeAtomsJson
 import com.danstutzman.db.Db
 import com.danstutzman.db.Morpheme
 
@@ -15,6 +16,7 @@ fun PostMorphemes(db: Db, lang: String, morphemeIdsToDelete: List<Int>,
   }
 
   if (newMorpheme) {
-    db.morphemesTable.insert(Morpheme(0, lang, type, l2, gloss))
+    val atomsJson = computeAtomsJson(l2)
+    db.morphemesTable.insert(Morpheme(0, lang, type, l2, gloss, atomsJson))
   }
 }

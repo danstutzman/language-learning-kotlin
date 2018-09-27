@@ -92,6 +92,7 @@ fi
 
 if [ "$1" == "run" ]; then
   java -cp `cat .mvn-classpath`:target/classes com.danstutzman.WebServerKt
+  #java -cp `cat .mvn-classpath`:target/classes com.danstutzman.arabic.SetMorphemesAtomsJsonKt
 elif [ "$1" == "test" ]; then
   java -cp `cat .mvn-classpath`:target/classes org.junit.platform.console.ConsoleLauncher \
     --scan-classpath target/test-classes -cp target/test-classes
