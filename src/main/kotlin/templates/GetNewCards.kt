@@ -3,6 +3,14 @@ package com.danstutzman.templates
 import com.danstutzman.db.Morpheme
 import com.danstutzman.db.NewCardRow
 
+fun convertL2ToUnicode(lang: String, l2: String): String {
+  if (lang == "ar") {
+    return l2.replace("c", "\u1d9c").replace("'", "\u2019")
+  } else {
+    return l2
+  }
+}
+
 fun GetNewCards(lang: String, rows: List<NewCardRow>,
   morphemeById: Map<Int, Morpheme>): String {
   val html = StringBuilder()
@@ -21,8 +29,8 @@ fun GetNewCards(lang: String, rows: List<NewCardRow>,
   html.append("  </tr>\n")
   for (row in rows) {
     val morphemeIds = row.morphemeIdsCsv.split(",").map { it.toInt() }
-    val morphemeL2s =
-      morphemeIds.map { morphemeById[it]!!.l2 }.joinToString(" ")
+    val morphemeL2s = convertL2ToUnicode(lang,
+      morphemeIds.map { morphemeById[it]!!.l2 }.joinToString(" "))
     html.append("  <tr>\n")
     html.append("    <td>${row.newCardId}</td>\n")
     html.append("    <td>${row.type}</td>\n")
