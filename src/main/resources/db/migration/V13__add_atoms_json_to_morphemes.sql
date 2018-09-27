@@ -1,1 +1,1 @@
-ALTER TABLE morphemes ADD COLUMN atoms_json TEXT;
+ALTER TABLE morphemes ADD COLUMN atoms_json TEXT NOT NULL;

@@ -279,7 +279,7 @@ CREATE TABLE morphemes (
     l2 text NOT NULL,
     gloss text NOT NULL,
     created_at timestamp with time zone DEFAULT now() NOT NULL,
-    atoms_json text
+    atoms_json text NOT NULL
 );
 
 
@@ -3019,7 +3019,7 @@ COPY schema_version (installed_rank, version, description, type, script, checksu
 10	10	add arabic unique conjugations	SQL	V10__add_arabic_unique_conjugations.sql	1328814492	postgres	2018-09-07 18:18:30.616128	41	t
 11	11	add arabic nouns	SQL	V11__add_arabic_nouns.sql	-187805131	postgres	2018-09-07 19:47:13.859369	22	t
 12	12	create morphemes and new cards	SQL	V12__create_morphemes_and_new_cards.sql	208969610	postgres	2018-09-17 21:21:05.001337	152	t
-13	13	add atoms json to morphemes	SQL	V13__add_atoms_json_to_morphemes.sql	2115766021	postgres	2018-09-26 12:24:07.134134	34	t
+13	13	add atoms json to morphemes	SQL	V13__add_atoms_json_to_morphemes.sql	1372585115	postgres	2018-09-26 12:24:07.134134	34	t
 \.
 
 

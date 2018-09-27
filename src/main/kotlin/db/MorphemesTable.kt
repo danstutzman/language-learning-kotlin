@@ -94,17 +94,20 @@ class MorphemesTable (
       MORPHEMES.LANG,
       MORPHEMES.TYPE,
       MORPHEMES.L2,
-      MORPHEMES.GLOSS)
+      MORPHEMES.GLOSS,
+      MORPHEMES.ATOMS_JSON)
     .values(morpheme.lang,
       morpheme.type,
       morpheme.l2,
-      morpheme.gloss)
+      morpheme.gloss,
+      morpheme.atomsJson)
     .returning(
       MORPHEMES.ID,
       MORPHEMES.LANG,
       MORPHEMES.TYPE,
       MORPHEMES.L2,
-      MORPHEMES.GLOSS)
+      MORPHEMES.GLOSS,
+      MORPHEMES.ATOMS_JSON)
     .fetchOne()
     .let {
       Morpheme(
